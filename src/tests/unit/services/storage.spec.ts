@@ -203,6 +203,25 @@ describe('storage service', () => {
             expect(localStorage.getItem('other:key')).toBe('value3');
             expect(localStorage.getItem('unprefixed')).toBe('value4');
         });
+
+        it('should log errors and continue clearing remaining keys on failure', () => {
+            // Arrange
+            const storage = createStorageService('app');
+            const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const genericError = new Error('Removal failed');
+            localStorage.setItem('app:key1', 'value1');
+            localStorage.setItem('app:key2', 'value2');
+            vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+                throw genericError;
+            });
+
+            // Act
+            storage.clear();
+
+            // Assert
+            expect(consoleSpy).toHaveBeenCalledWith(genericError);
+            expect(consoleSpy).toHaveBeenCalledTimes(2);
+        });
     });
 
     describe('remove', () => {

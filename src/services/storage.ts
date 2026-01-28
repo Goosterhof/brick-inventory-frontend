@@ -62,7 +62,11 @@ export const createStorageService = (prefix: string): StorageService => {
             }
         }
         for (const key of keysToRemove) {
-            localStorage.removeItem(key);
+            try {
+                localStorage.removeItem(key);
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
