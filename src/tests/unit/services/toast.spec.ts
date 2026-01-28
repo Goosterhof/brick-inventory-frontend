@@ -2,6 +2,14 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { defineComponent, h } from 'vue';
 import { createToastService } from '@/services/toast';
 
+const TestComponent = defineComponent({
+    props: { message: String },
+    emits: ['close'],
+    render() {
+        return h('div', this.message);
+    },
+});
+
 describe('toast service', () => {
     const mockShowPopover = vi.fn();
     const mockHidePopover = vi.fn();
@@ -21,7 +29,7 @@ describe('toast service', () => {
     describe('createToastService', () => {
         it('should return all expected methods and properties', () => {
             // Act
-            const toastService = createToastService();
+            const toastService = createToastService({ component: TestComponent });
 
             // Assert
             expect(toastService).toHaveProperty('show');
@@ -38,7 +46,7 @@ describe('toast service', () => {
 
         it('should create container with default classes', () => {
             // Act
-            const toastService = createToastService();
+            const toastService = createToastService({ component: TestComponent });
 
             // Assert
             expect(toastService.container.classList.contains('pointer-events-none')).toBe(true);
@@ -53,7 +61,10 @@ describe('toast service', () => {
             const customClasses = ['custom-class', 'another-class'];
 
             // Act
-            const toastService = createToastService({ containerClasses: customClasses });
+            const toastService = createToastService({
+                component: TestComponent,
+                containerClasses: customClasses,
+            });
 
             // Assert
             expect(toastService.container.classList.contains('custom-class')).toBe(true);
@@ -65,7 +76,7 @@ describe('toast service', () => {
 
         it('should set container role and popover attributes', () => {
             // Act
-            const toastService = createToastService();
+            const toastService = createToastService({ component: TestComponent });
 
             // Assert
             expect(toastService.container.role).toBe('region');
@@ -78,17 +89,10 @@ describe('toast service', () => {
     describe('show', () => {
         it('should show popover when creating a toast', () => {
             // Arrange
-            const toastService = createToastService();
-            const TestComponent = defineComponent({
-                props: { message: String },
-                emits: ['close'],
-                render() {
-                    return h('div', this.message);
-                },
-            });
+            const toastService = createToastService({ component: TestComponent });
 
             // Act
-            toastService.show(TestComponent, { message: 'Test message' });
+            toastService.show({ message: 'Test message' });
 
             // Assert
             expect(mockShowPopover).toHaveBeenCalled();
@@ -98,20 +102,13 @@ describe('toast service', () => {
 
         it('should remove oldest toast when exceeding maximum', () => {
             // Arrange
-            const toastService = createToastService({ maxToasts: 2 });
-            const TestComponent = defineComponent({
-                props: { message: String },
-                emits: ['close'],
-                render() {
-                    return h('div', this.message);
-                },
-            });
+            const toastService = createToastService({ component: TestComponent, maxToasts: 2 });
 
             // Act
-            toastService.show(TestComponent, { message: 'Toast 1' });
-            toastService.show(TestComponent, { message: 'Toast 2' });
-            toastService.show(TestComponent, { message: 'Toast 3' });
-            toastService.show(TestComponent, { message: 'Toast 4' });
+            toastService.show({ message: 'Toast 1' });
+            toastService.show({ message: 'Toast 2' });
+            toastService.show({ message: 'Toast 3' });
+            toastService.show({ message: 'Toast 4' });
 
             // Assert
             expect(mockShowPopover).toHaveBeenCalledTimes(4);
@@ -121,18 +118,11 @@ describe('toast service', () => {
 
         it('should use default maxToasts of 4', () => {
             // Arrange
-            const toastService = createToastService();
-            const TestComponent = defineComponent({
-                props: { message: String },
-                emits: ['close'],
-                render() {
-                    return h('div', this.message);
-                },
-            });
+            const toastService = createToastService({ component: TestComponent });
 
             // Act
             for (let i = 0; i < 6; i++) {
-                toastService.show(TestComponent, { message: `Toast ${i}` });
+                toastService.show({ message: `Toast ${i}` });
             }
 
             // Assert
@@ -145,15 +135,8 @@ describe('toast service', () => {
     describe('hide', () => {
         it('should hide popover when last toast is hidden', () => {
             // Arrange
-            const toastService = createToastService();
-            const TestComponent = defineComponent({
-                props: { message: String },
-                emits: ['close'],
-                render() {
-                    return h('div', this.message);
-                },
-            });
-            toastService.show(TestComponent, { message: 'Only toast' });
+            const toastService = createToastService({ component: TestComponent });
+            toastService.show({ message: 'Only toast' });
 
             // Act
             toastService.hide('toast-0');
@@ -166,16 +149,9 @@ describe('toast service', () => {
 
         it('should not hide popover when there are remaining toasts', () => {
             // Arrange
-            const toastService = createToastService();
-            const TestComponent = defineComponent({
-                props: { message: String },
-                emits: ['close'],
-                render() {
-                    return h('div', this.message);
-                },
-            });
-            toastService.show(TestComponent, { message: 'Toast 1' });
-            toastService.show(TestComponent, { message: 'Toast 2' });
+            const toastService = createToastService({ component: TestComponent });
+            toastService.show({ message: 'Toast 1' });
+            toastService.show({ message: 'Toast 2' });
 
             // Act
             toastService.hide('toast-0');
@@ -188,7 +164,7 @@ describe('toast service', () => {
 
         it('should do nothing when hiding non-existent toast', () => {
             // Arrange
-            const toastService = createToastService();
+            const toastService = createToastService({ component: TestComponent });
 
             // Act & Assert
             expect(() => toastService.hide('non-existent')).not.toThrow();
@@ -200,7 +176,7 @@ describe('toast service', () => {
     describe('destroy', () => {
         it('should remove container from DOM', () => {
             // Arrange
-            const toastService = createToastService();
+            const toastService = createToastService({ component: TestComponent });
             const removeSpy = vi.spyOn(toastService.container, 'remove');
 
             // Act
@@ -212,7 +188,7 @@ describe('toast service', () => {
 
         it('should be safe to call multiple times', () => {
             // Arrange
-            const toastService = createToastService();
+            const toastService = createToastService({ component: TestComponent });
 
             // Act & Assert
             expect(() => {
@@ -225,18 +201,11 @@ describe('toast service', () => {
     describe('isolation', () => {
         it('should create independent toast services', () => {
             // Arrange
-            const service1 = createToastService();
-            const service2 = createToastService();
-            const TestComponent = defineComponent({
-                props: { message: String },
-                emits: ['close'],
-                render() {
-                    return h('div', this.message);
-                },
-            });
+            const service1 = createToastService({ component: TestComponent });
+            const service2 = createToastService({ component: TestComponent });
 
             // Act
-            service1.show(TestComponent, { message: 'Service 1 toast' });
+            service1.show({ message: 'Service 1 toast' });
 
             // Assert
             expect(service1.container).not.toBe(service2.container);

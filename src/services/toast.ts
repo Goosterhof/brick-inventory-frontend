@@ -3,13 +3,14 @@ import type { ComponentProps } from 'vue-component-type-helpers';
 
 import { ref, createApp, h } from 'vue';
 
-export interface ToastServiceOptions {
+export interface ToastServiceOptions<C extends Component> {
+    component: C;
     maxToasts?: number;
     containerClasses?: string[];
 }
 
-export interface ToastService {
-    show: <C extends Component>(component: C, props: ComponentProps<C>) => void;
+export interface ToastService<C extends Component> {
+    show: (props: Omit<ComponentProps<C>, 'onClose'>) => void;
     hide: (id: string) => void;
     container: HTMLDivElement;
     destroy: () => void;
@@ -30,8 +31,10 @@ const defaultContainerClasses = [
     'b-none',
 ];
 
-export const createToastService = (options: ToastServiceOptions = {}): ToastService => {
-    const { maxToasts = 4, containerClasses = defaultContainerClasses } = options;
+export const createToastService = <C extends Component>(
+    options: ToastServiceOptions<C>,
+): ToastService<C> => {
+    const { component, maxToasts = 4, containerClasses = defaultContainerClasses } = options;
 
     const toasts = ref<{ node: VNode; id: string }[]>([]);
     let toastId = 0;
@@ -56,7 +59,7 @@ export const createToastService = (options: ToastServiceOptions = {}): ToastServ
         if (!toasts.value.length) container.hidePopover();
     };
 
-    const show = <C extends Component>(toastComponent: C, props: ComponentProps<C>) => {
+    const show = (props: Omit<ComponentProps<C>, 'onClose'>) => {
         if (toasts.value.length > maxToasts && toasts.value[0]) {
             hide(toasts.value[0].id);
         }
@@ -66,7 +69,7 @@ export const createToastService = (options: ToastServiceOptions = {}): ToastServ
         const id = `toast-${toastId++}`;
         const toastHider = () => hide(id);
 
-        toasts.value.push({ node: h(toastComponent, { ...props, onClose: toastHider }), id });
+        toasts.value.push({ node: h(component, { ...props, onClose: toastHider }), id });
     };
 
     const destroy = () => {
