@@ -67,6 +67,28 @@ describe('storage service', () => {
             expect(localStorage.getItem('test:testKey')).toBe('true');
         });
 
+        it('should stringify null to "null"', () => {
+            // Arrange
+            const storage = createStorageService('test');
+
+            // Act
+            storage.put('testKey', null);
+
+            // Assert
+            expect(localStorage.getItem('test:testKey')).toBe('null');
+        });
+
+        it('should stringify undefined to "undefined"', () => {
+            // Arrange
+            const storage = createStorageService('test');
+
+            // Act
+            storage.put('testKey', undefined);
+
+            // Assert
+            expect(localStorage.getItem('test:testKey')).toBe('undefined');
+        });
+
         it('should log error when quota is exceeded', () => {
             // Arrange
             const storage = createStorageService('test');
@@ -182,6 +204,30 @@ describe('storage service', () => {
 
             // Assert
             expect(result).toBe(true);
+        });
+
+        it('should return null when stored value was null', () => {
+            // Arrange
+            const storage = createStorageService('test');
+            storage.put('testKey', null);
+
+            // Act
+            const result = storage.get<null>('testKey');
+
+            // Assert
+            expect(result).toBeNull();
+        });
+
+        it('should return string "undefined" when stored value was undefined', () => {
+            // Arrange
+            const storage = createStorageService('test');
+            storage.put('testKey', undefined);
+
+            // Act
+            const result = storage.get<string>('testKey');
+
+            // Assert
+            expect(result).toBe('undefined');
         });
     });
 
