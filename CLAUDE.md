@@ -48,8 +48,9 @@ npm run lint
 src/
 ├── assets/          # Static assets (images, fonts, etc.)
 ├── components/      # Reusable Vue components
-│   └── __tests__/   # Component tests
 ├── router/          # Vue Router configuration
+├── tests/           # All tests
+│   └── unit/        # Unit tests
 ├── views/           # Page-level components (routed views)
 ├── App.vue          # Root component
 └── main.ts          # Application entry point
@@ -60,7 +61,7 @@ src/
 - Use Composition API with `<script setup>` syntax
 - Use TypeScript for all `.ts` and `.vue` files
 - Use UnoCSS utility classes for styling
-- Place tests in `__tests__` directories adjacent to the code they test
+- Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
 - Use PascalCase for component names
 - Use camelCase for variables and functions
 
