@@ -62,7 +62,7 @@ describe('http service', () => {
     });
 
     describe('createHttpService', () => {
-        it('creates an axios instance with correct config', () => {
+        it('should create an axios instance with correct config', () => {
             createHttpService(baseURL);
 
             expect(mockCreate).toHaveBeenCalledWith({
@@ -74,7 +74,7 @@ describe('http service', () => {
             });
         });
 
-        it('returns all expected methods', () => {
+        it('should return all expected methods', () => {
             const service = createHttpService(baseURL);
 
             expect(service).toHaveProperty('getRequest');
@@ -89,7 +89,7 @@ describe('http service', () => {
     });
 
     describe('request methods', () => {
-        it('getRequest calls axios.get with endpoint and options', async () => {
+        it('should call axios.get with endpoint and options for getRequest', async () => {
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             mockAxiosInstance.get.mockResolvedValue(mockResponse);
@@ -101,7 +101,7 @@ describe('http service', () => {
             expect(result).toEqual(mockResponse);
         });
 
-        it('postRequest calls axios.post with endpoint, data, and options', async () => {
+        it('should call axios.post with endpoint, data, and options for postRequest', async () => {
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             mockAxiosInstance.post.mockResolvedValue(mockResponse);
@@ -114,7 +114,7 @@ describe('http service', () => {
             expect(result).toEqual(mockResponse);
         });
 
-        it('putRequest calls axios.put with endpoint, data, and options', async () => {
+        it('should call axios.put with endpoint, data, and options for putRequest', async () => {
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             mockAxiosInstance.put.mockResolvedValue(mockResponse);
@@ -127,7 +127,7 @@ describe('http service', () => {
             expect(result).toEqual(mockResponse);
         });
 
-        it('patchRequest calls axios.patch with endpoint, data, and options', async () => {
+        it('should call axios.patch with endpoint, data, and options for patchRequest', async () => {
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             mockAxiosInstance.patch.mockResolvedValue(mockResponse);
@@ -140,7 +140,7 @@ describe('http service', () => {
             expect(result).toEqual(mockResponse);
         });
 
-        it('deleteRequest calls axios.delete with endpoint and options', async () => {
+        it('should call axios.delete with endpoint and options for deleteRequest', async () => {
             const service = createHttpService(baseURL);
             const mockResponse = { data: { success: true } };
             mockAxiosInstance.delete.mockResolvedValue(mockResponse);
@@ -154,7 +154,7 @@ describe('http service', () => {
     });
 
     describe('request middleware', () => {
-        it('executes registered request middleware', () => {
+        it('should execute registered request middleware', () => {
             const service = createHttpService(baseURL);
             const middleware: RequestMiddlewareFunc = vi.fn();
 
@@ -166,7 +166,7 @@ describe('http service', () => {
             expect(middleware).toHaveBeenCalledWith(mockRequest);
         });
 
-        it('executes multiple request middlewares in order', () => {
+        it('should execute multiple request middlewares in order', () => {
             const service = createHttpService(baseURL);
             const callOrder: number[] = [];
             const middleware1: RequestMiddlewareFunc = vi.fn(() => callOrder.push(1));
@@ -183,7 +183,7 @@ describe('http service', () => {
     });
 
     describe('response middleware', () => {
-        it('executes registered response middleware', () => {
+        it('should execute registered response middleware', () => {
             const service = createHttpService(baseURL);
             const middleware: ResponseMiddlewareFunc = vi.fn();
 
@@ -195,7 +195,7 @@ describe('http service', () => {
             expect(middleware).toHaveBeenCalledWith(mockResponse);
         });
 
-        it('returns the response after middleware execution', () => {
+        it('should return the response after middleware execution', () => {
             createHttpService(baseURL);
 
             const mockResponse = { data: { id: 1 }, status: 200 } as AxiosResponse;
@@ -206,7 +206,7 @@ describe('http service', () => {
     });
 
     describe('response error middleware', () => {
-        it('executes registered error middleware for axios errors', async () => {
+        it('should execute registered error middleware for axios errors', async () => {
             const service = createHttpService(baseURL);
             const middleware: ResponseErrorMiddlewareFunc = vi.fn();
 
@@ -218,7 +218,7 @@ describe('http service', () => {
             expect(middleware).toHaveBeenCalledWith(axiosError);
         });
 
-        it('does not execute error middleware for non-axios errors', async () => {
+        it('should not execute error middleware for non-axios errors', async () => {
             const service = createHttpService(baseURL);
             const middleware: ResponseErrorMiddlewareFunc = vi.fn();
 
@@ -230,7 +230,7 @@ describe('http service', () => {
             expect(middleware).not.toHaveBeenCalled();
         });
 
-        it('rejects with the error after middleware execution', async () => {
+        it('should reject with the error after middleware execution', async () => {
             createHttpService(baseURL);
 
             const axiosError = new AxiosError('Request failed');

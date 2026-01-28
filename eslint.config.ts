@@ -21,7 +21,13 @@ export default defineConfigWithVueTs(
 
   {
     ...pluginVitest.configs.recommended,
-    files: ['src/**/__tests__/*'],
+    files: ['src/tests/**/*.spec.ts'],
+    rules: {
+      ...pluginVitest.configs.recommended.rules,
+      'vitest/valid-title': ['error', {
+        mustMatch: { it: ['^should'] },
+      }],
+    },
   },
 
   {

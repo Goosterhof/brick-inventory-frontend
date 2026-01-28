@@ -4,7 +4,7 @@ import { createRouter, createMemoryHistory } from 'vue-router'
 import App from '../../App.vue'
 
 describe('App', () => {
-  it('renders navigation links', async () => {
+  it('should render navigation links', async () => {
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
