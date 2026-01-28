@@ -6,7 +6,18 @@ export type RequestMiddlewareFunc = (request: InternalAxiosRequestConfig) => voi
 export type ResponseMiddlewareFunc = (response: AxiosResponse) => void;
 export type ResponseErrorMiddlewareFunc = (error: AxiosError<AxiosResponseError>) => void;
 
-export const createHttpService = (baseURL: string) => {
+export interface HttpService {
+    getRequest: <T = unknown>(endpoint: string, options?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+    postRequest: <T = unknown>(endpoint: string, data: unknown, options?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+    putRequest: <T = unknown>(endpoint: string, data: unknown, options?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+    patchRequest: <T = unknown>(endpoint: string, data: unknown, options?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+    deleteRequest: <T = unknown>(endpoint: string, options?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
+    registerRequestMiddleware: (middlewareFunc: RequestMiddlewareFunc) => void;
+    registerResponseMiddleware: (middlewareFunc: ResponseMiddlewareFunc) => void;
+    registerResponseErrorMiddleware: (middlewareFunc: ResponseErrorMiddlewareFunc) => void;
+}
+
+export const createHttpService = (baseURL: string): HttpService => {
     const http = axios.create({
         baseURL,
         withCredentials: true,
@@ -49,7 +60,11 @@ export const createHttpService = (baseURL: string) => {
     const putRequest = <T = unknown>(endpoint: string, data: unknown, options?: AxiosRequestConfig) =>
         http.put<T>(endpoint, data, options);
 
-    const deleteRequest = <T = unknown>(endpoint: string) => http.delete<T>(endpoint);
+    const patchRequest = <T = unknown>(endpoint: string, data: unknown, options?: AxiosRequestConfig) =>
+        http.patch<T>(endpoint, data, options);
+
+    const deleteRequest = <T = unknown>(endpoint: string, options?: AxiosRequestConfig) =>
+        http.delete<T>(endpoint, options);
 
     const registerRequestMiddleware = (middlewareFunc: RequestMiddlewareFunc) => {
         requestMiddleware.push(middlewareFunc);
@@ -67,9 +82,10 @@ export const createHttpService = (baseURL: string) => {
         getRequest,
         postRequest,
         putRequest,
+        patchRequest,
         deleteRequest,
         registerRequestMiddleware,
         registerResponseMiddleware,
         registerResponseErrorMiddleware,
     };
-}
+};
