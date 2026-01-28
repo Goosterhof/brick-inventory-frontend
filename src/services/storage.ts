@@ -1,3 +1,5 @@
+/* eslint-disable no-console, no-restricted-globals */
+
 /**
  * Store a value in localStorage under the given key.
  * Non-string values are JSON-stringified before storage.

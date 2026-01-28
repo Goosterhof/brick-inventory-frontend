@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { putInStorage, getFromStorage, clearStorage, removeStorageItem } from '@/services/storage';
 

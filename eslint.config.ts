@@ -43,6 +43,11 @@ export default defineConfigWithVueTs(
     rules: {
       'func-style': ['error', 'expression'],
       'prefer-const': 'error',
+      'no-console': 'error',
+      'no-restricted-globals': ['error', {
+        name: 'localStorage',
+        message: 'Use the storage service (src/services/storage.ts) instead of localStorage directly.',
+      }],
     },
   },
 )
