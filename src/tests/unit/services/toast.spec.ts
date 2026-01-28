@@ -20,7 +20,7 @@ describe('toast service', () => {
             // Assert
             expect(toastService).toHaveProperty('show');
             expect(toastService).toHaveProperty('hide');
-            expect(toastService).toHaveProperty('component');
+            expect(toastService).toHaveProperty('ToastContainerComponent');
             expect(typeof toastService.show).toBe('function');
             expect(typeof toastService.hide).toBe('function');
         });
@@ -30,8 +30,8 @@ describe('toast service', () => {
             const toastService = createToastService({ component: TestToast });
 
             // Assert
-            expect(toastService.component).toHaveProperty('render');
-            expect(toastService.component.name).toBe('ToastContainer');
+            expect(toastService.ToastContainerComponent).toHaveProperty('render');
+            expect(toastService.ToastContainerComponent.name).toBe('ToastContainer');
         });
     });
 
@@ -39,7 +39,7 @@ describe('toast service', () => {
         it('should add toast to the container', async () => {
             // Arrange
             const toastService = createToastService({ component: TestToast });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
 
             // Act
             toastService.show({ message: 'Test message' });
@@ -52,7 +52,7 @@ describe('toast service', () => {
         it('should add multiple toasts', async () => {
             // Arrange
             const toastService = createToastService({ component: TestToast });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
 
             // Act
             toastService.show({ message: 'Toast 1' });
@@ -70,7 +70,7 @@ describe('toast service', () => {
         it('should remove oldest toast when exceeding maximum', async () => {
             // Arrange
             const toastService = createToastService({ component: TestToast, maxToasts: 2 });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
 
             // Act
             toastService.show({ message: 'Toast 1' });
@@ -90,7 +90,7 @@ describe('toast service', () => {
         it('should use default maxToasts of 4', async () => {
             // Arrange
             const toastService = createToastService({ component: TestToast });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
 
             // Act
             for (let i = 1; i <= 6; i++) {
@@ -109,7 +109,7 @@ describe('toast service', () => {
         it('should remove toast by id', async () => {
             // Arrange
             const toastService = createToastService({ component: TestToast });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
             toastService.show({ message: 'Toast to hide' });
             await nextTick();
 
@@ -124,7 +124,7 @@ describe('toast service', () => {
         it('should only remove specified toast', async () => {
             // Arrange
             const toastService = createToastService({ component: TestToast });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
             toastService.show({ message: 'Toast 1' });
             toastService.show({ message: 'Toast 2' });
             toastService.show({ message: 'Toast 3' });
@@ -144,7 +144,7 @@ describe('toast service', () => {
         it('should do nothing when hiding non-existent toast', async () => {
             // Arrange
             const toastService = createToastService({ component: TestToast });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
             toastService.show({ message: 'Toast 1' });
             await nextTick();
 
@@ -168,7 +168,7 @@ describe('toast service', () => {
                 },
             });
             const toastService = createToastService({ component: ClosableToast });
-            const wrapper = mount(toastService.component);
+            const wrapper = mount(toastService.ToastContainerComponent);
             toastService.show({ message: 'Closable toast' });
             await nextTick();
 
@@ -186,8 +186,8 @@ describe('toast service', () => {
             // Arrange
             const service1 = createToastService({ component: TestToast });
             const service2 = createToastService({ component: TestToast });
-            const wrapper1 = mount(service1.component);
-            const wrapper2 = mount(service2.component);
+            const wrapper1 = mount(service1.ToastContainerComponent);
+            const wrapper2 = mount(service2.ToastContainerComponent);
 
             // Act
             service1.show({ message: 'Service 1 toast' });

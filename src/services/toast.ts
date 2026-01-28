@@ -11,7 +11,7 @@ export interface ToastServiceOptions<C extends Component> {
 export interface ToastService<C extends Component> {
     show: (props: Omit<ComponentProps<C>, 'onClose'>) => void;
     hide: (id: string) => void;
-    component: Component;
+    ToastContainerComponent: Component;
 }
 
 export const createToastService = <C extends Component>(
@@ -40,12 +40,12 @@ export const createToastService = <C extends Component>(
         toasts.value.push({ node: h(toastComponent, { ...props, onClose: toastHider }), id });
     };
 
-    const component = defineComponent({
+    const ToastContainerComponent = defineComponent({
         name: 'ToastContainer',
         render() {
             return toasts.value.map(toast => toast.node);
         },
     });
 
-    return { show, hide, component };
+    return { show, hide, ToastContainerComponent };
 };
