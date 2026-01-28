@@ -1,83 +1,84 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { defineComponent, h } from 'vue';
-
-const mockShowPopover = vi.fn();
-const mockHidePopover = vi.fn();
-const mockMount = vi.fn();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockCreateApp = vi.fn(() => ({ mount: mockMount })) as any;
-
-vi.mock('vue', async () => {
-    const actual = await vi.importActual<typeof import('vue')>('vue');
-    return {
-        ...actual,
-        createApp: (options: unknown) => mockCreateApp(options),
-    };
-});
+import { createToastService } from '@/services/toast';
 
 describe('toast service', () => {
-    let originalCreateElement: typeof document.createElement;
-    let mockContainer: HTMLDivElement;
+    const mockShowPopover = vi.fn();
+    const mockHidePopover = vi.fn();
 
     beforeEach(() => {
-        vi.resetModules();
         mockShowPopover.mockClear();
         mockHidePopover.mockClear();
-        mockMount.mockClear();
-        mockCreateApp.mockClear();
 
-        originalCreateElement = document.createElement.bind(document);
-        mockContainer = originalCreateElement('div');
-        mockContainer.showPopover = mockShowPopover;
-        mockContainer.hidePopover = mockHidePopover;
-
-        vi.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
-            if (tagName === 'div') return mockContainer;
-            return originalCreateElement(tagName);
-        });
-
-        vi.spyOn(document.body, 'appendChild').mockImplementation(() => mockContainer);
+        HTMLElement.prototype.showPopover = mockShowPopover;
+        HTMLElement.prototype.hidePopover = mockHidePopover;
     });
 
     afterEach(() => {
         vi.restoreAllMocks();
     });
 
-    describe('initialization', () => {
-        it('should create a container element with correct attributes', async () => {
+    describe('createToastService', () => {
+        it('should return all expected methods and properties', () => {
             // Act
-            await import('@/services/toast');
+            const toastService = createToastService();
 
             // Assert
-            expect(mockContainer.role).toBe('region');
-            expect(mockContainer.popover).toBe('manual');
-            expect(mockContainer.classList.contains('pointer-events-none')).toBe(true);
-            expect(mockContainer.classList.contains('flex')).toBe(true);
-            expect(mockContainer.classList.contains('flex-col-reverse')).toBe(true);
+            expect(toastService).toHaveProperty('show');
+            expect(toastService).toHaveProperty('hide');
+            expect(toastService).toHaveProperty('container');
+            expect(toastService).toHaveProperty('destroy');
+            expect(typeof toastService.show).toBe('function');
+            expect(typeof toastService.hide).toBe('function');
+            expect(typeof toastService.destroy).toBe('function');
+            expect(toastService.container).toBeInstanceOf(HTMLDivElement);
+
+            toastService.destroy();
         });
 
-        it('should append container to document body', async () => {
+        it('should create container with default classes', () => {
             // Act
-            await import('@/services/toast');
+            const toastService = createToastService();
 
             // Assert
-            expect(document.body.appendChild).toHaveBeenCalledWith(mockContainer);
+            expect(toastService.container.classList.contains('pointer-events-none')).toBe(true);
+            expect(toastService.container.classList.contains('flex')).toBe(true);
+            expect(toastService.container.classList.contains('flex-col-reverse')).toBe(true);
+
+            toastService.destroy();
         });
 
-        it('should mount a Vue app to the container', async () => {
+        it('should create container with custom classes when provided', () => {
+            // Arrange
+            const customClasses = ['custom-class', 'another-class'];
+
             // Act
-            await import('@/services/toast');
+            const toastService = createToastService({ containerClasses: customClasses });
 
             // Assert
-            expect(mockCreateApp).toHaveBeenCalled();
-            expect(mockMount).toHaveBeenCalledWith(mockContainer);
+            expect(toastService.container.classList.contains('custom-class')).toBe(true);
+            expect(toastService.container.classList.contains('another-class')).toBe(true);
+            expect(toastService.container.classList.contains('pointer-events-none')).toBe(false);
+
+            toastService.destroy();
+        });
+
+        it('should set container role and popover attributes', () => {
+            // Act
+            const toastService = createToastService();
+
+            // Assert
+            expect(toastService.container.role).toBe('region');
+            expect(toastService.container.popover).toBe('manual');
+
+            toastService.destroy();
         });
     });
 
-    describe('createToast', () => {
-        it('should show popover when creating a toast', async () => {
+    describe('show', () => {
+        it('should show popover when creating a toast', () => {
             // Arrange
-            const { createToast } = await import('@/services/toast');
+            const toastService = createToastService();
             const TestComponent = defineComponent({
                 props: { message: String },
                 emits: ['close'],
@@ -87,15 +88,17 @@ describe('toast service', () => {
             });
 
             // Act
-            createToast(TestComponent, { message: 'Test message' });
+            toastService.show(TestComponent, { message: 'Test message' });
 
             // Assert
             expect(mockShowPopover).toHaveBeenCalled();
+
+            toastService.destroy();
         });
 
-        it('should create toast with unique id', async () => {
+        it('should remove oldest toast when exceeding maximum', () => {
             // Arrange
-            const { createToast } = await import('@/services/toast');
+            const toastService = createToastService({ maxToasts: 2 });
             const TestComponent = defineComponent({
                 props: { message: String },
                 emits: ['close'],
@@ -105,16 +108,20 @@ describe('toast service', () => {
             });
 
             // Act
-            createToast(TestComponent, { message: 'Toast 1' });
-            createToast(TestComponent, { message: 'Toast 2' });
+            toastService.show(TestComponent, { message: 'Toast 1' });
+            toastService.show(TestComponent, { message: 'Toast 2' });
+            toastService.show(TestComponent, { message: 'Toast 3' });
+            toastService.show(TestComponent, { message: 'Toast 4' });
 
             // Assert
-            expect(mockShowPopover).toHaveBeenCalledTimes(2);
+            expect(mockShowPopover).toHaveBeenCalledTimes(4);
+
+            toastService.destroy();
         });
 
-        it('should remove oldest toast when exceeding maximum', async () => {
+        it('should use default maxToasts of 4', () => {
             // Arrange
-            const { createToast } = await import('@/services/toast');
+            const toastService = createToastService();
             const TestComponent = defineComponent({
                 props: { message: String },
                 emits: ['close'],
@@ -125,72 +132,103 @@ describe('toast service', () => {
 
             // Act
             for (let i = 0; i < 6; i++) {
-                createToast(TestComponent, { message: `Toast ${i}` });
+                toastService.show(TestComponent, { message: `Toast ${i}` });
             }
 
             // Assert
             expect(mockShowPopover).toHaveBeenCalledTimes(6);
-        });
 
-        it('should pass onClose prop to toast component', async () => {
+            toastService.destroy();
+        });
+    });
+
+    describe('hide', () => {
+        it('should hide popover when last toast is hidden', () => {
             // Arrange
-            const { createToast } = await import('@/services/toast');
+            const toastService = createToastService();
             const TestComponent = defineComponent({
-                props: {
-                    message: String,
-                    onClose: Function,
-                },
+                props: { message: String },
                 emits: ['close'],
                 render() {
                     return h('div', this.message);
                 },
             });
+            toastService.show(TestComponent, { message: 'Only toast' });
 
             // Act
-            createToast(TestComponent, { message: 'Test' });
-
-            // Assert
-            const appOptions = mockCreateApp.mock.calls[0]![0] as unknown as { render: () => { props: Record<string, unknown> }[] };
-            const vnodes = appOptions.render();
-
-            expect(vnodes).toHaveLength(1);
-            expect(vnodes[0]?.props).toHaveProperty('onClose');
-            expect(typeof vnodes[0]?.props?.onClose).toBe('function');
-        });
-
-        it('should hide popover when last toast is closed', async () => {
-            // Arrange
-            const { createToast } = await import('@/services/toast');
-            const TestComponent = defineComponent({
-                props: {
-                    message: String,
-                    onClose: Function,
-                },
-                emits: ['close'],
-                render() {
-                    return h('div', this.message);
-                },
-            });
-
-            // Act
-            createToast(TestComponent, { message: 'Only toast' });
-            const appOptions = mockCreateApp.mock.calls[0]![0] as unknown as { render: () => { props: Record<string, unknown> }[] };
-            const vnodes = appOptions.render();
-            const onClose = vnodes[0]?.props?.onClose as () => void;
-            onClose();
+            toastService.hide('toast-0');
 
             // Assert
             expect(mockHidePopover).toHaveBeenCalled();
+
+            toastService.destroy();
         });
 
-        it('should not hide popover when there are remaining toasts', async () => {
+        it('should not hide popover when there are remaining toasts', () => {
             // Arrange
-            const { createToast } = await import('@/services/toast');
+            const toastService = createToastService();
             const TestComponent = defineComponent({
-                props: {
-                    message: String,
-                    onClose: Function,
+                props: { message: String },
+                emits: ['close'],
+                render() {
+                    return h('div', this.message);
                 },
+            });
+            toastService.show(TestComponent, { message: 'Toast 1' });
+            toastService.show(TestComponent, { message: 'Toast 2' });
+
+            // Act
+            toastService.hide('toast-0');
+
+            // Assert
+            expect(mockHidePopover).not.toHaveBeenCalled();
+
+            toastService.destroy();
+        });
+
+        it('should do nothing when hiding non-existent toast', () => {
+            // Arrange
+            const toastService = createToastService();
+
+            // Act & Assert
+            expect(() => toastService.hide('non-existent')).not.toThrow();
+
+            toastService.destroy();
+        });
+    });
+
+    describe('destroy', () => {
+        it('should remove container from DOM', () => {
+            // Arrange
+            const toastService = createToastService();
+            const removeSpy = vi.spyOn(toastService.container, 'remove');
+
+            // Act
+            toastService.destroy();
+
+            // Assert
+            expect(removeSpy).toHaveBeenCalled();
+        });
+
+        it('should be safe to call multiple times', () => {
+            // Arrange
+            const toastService = createToastService();
+
+            // Act & Assert
+            expect(() => {
+                toastService.destroy();
+                toastService.destroy();
+            }).not.toThrow();
+        });
+    });
+
+    describe('isolation', () => {
+        it('should create independent toast services', () => {
+            // Arrange
+            const service1 = createToastService();
+            const service2 = createToastService();
+            const TestComponent = defineComponent({
+                props: { message: String },
                 emits: ['close'],
                 render() {
                     return h('div', this.message);
@@ -198,15 +236,13 @@ describe('toast service', () => {
             });
 
             // Act
-            createToast(TestComponent, { message: 'Toast 1' });
-            createToast(TestComponent, { message: 'Toast 2' });
-            const appOptions = mockCreateApp.mock.calls[0]![0] as unknown as { render: () => { props: Record<string, unknown> }[] };
-            const vnodes = appOptions.render();
-            const firstOnClose = vnodes[0]?.props?.onClose as () => void;
-            firstOnClose();
+            service1.show(TestComponent, { message: 'Service 1 toast' });
 
             // Assert
-            expect(mockHidePopover).not.toHaveBeenCalled();
+            expect(service1.container).not.toBe(service2.container);
+
+            service1.destroy();
+            service2.destroy();
         });
     });
 });

@@ -1,15 +1,21 @@
-import type { VNode, Component } from 'vue';
+import type { VNode, Component, App } from 'vue';
 import type { ComponentProps } from 'vue-component-type-helpers';
 
 import { ref, createApp, h } from 'vue';
 
-const toasts = ref<{ node: VNode; id: string }[]>([]);
+export interface ToastServiceOptions {
+    maxToasts?: number;
+    containerClasses?: string[];
+}
 
-const toastContainer = document.createElement('div');
+export interface ToastService {
+    show: <C extends Component>(component: C, props: ComponentProps<C>) => void;
+    hide: (id: string) => void;
+    container: HTMLDivElement;
+    destroy: () => void;
+}
 
-const maximumToasts = 4;
-
-toastContainer.classList.add(
+const defaultContainerClasses = [
     'pointer-events-none',
     'flex',
     'flex-col-reverse',
@@ -22,35 +28,55 @@ toastContainer.classList.add(
     'top-[calc(100%-725px)]',
     'bg-transparent',
     'b-none',
-);
+];
 
-toastContainer.role = 'region';
-toastContainer.popover = 'manual';
+export const createToastService = (options: ToastServiceOptions = {}): ToastService => {
+    const { maxToasts = 4, containerClasses = defaultContainerClasses } = options;
 
-document.body.appendChild(toastContainer);
+    const toasts = ref<{ node: VNode; id: string }[]>([]);
+    let toastId = 0;
+    let app: App | null = null;
 
-createApp({
-    render: () => toasts.value.map(toast => toast.node),
-}).mount(toastContainer);
+    const container = document.createElement('div');
+    container.classList.add(...containerClasses);
+    container.role = 'region';
+    container.popover = 'manual';
 
-const hideToast = (id: string) => {
-    const index = toasts.value.findIndex(toast => toast.id === id);
+    app = createApp({
+        render: () => toasts.value.map(toast => toast.node),
+    });
+    app.mount(container);
 
-    toasts.value.splice(index, 1);
+    const hide = (id: string) => {
+        const index = toasts.value.findIndex(toast => toast.id === id);
+        if (index === -1) return;
 
-    if (!toasts.value.length) toastContainer.hidePopover();
-};
+        toasts.value.splice(index, 1);
 
-let toastId = 0;
+        if (!toasts.value.length) container.hidePopover();
+    };
 
-export const createToast = <C extends Component>(toastComponent: C, props: ComponentProps<C>) => {
-    if (toasts.value.length > maximumToasts && toasts.value[0]) hideToast(toasts.value[0].id);
+    const show = <C extends Component>(toastComponent: C, props: ComponentProps<C>) => {
+        if (toasts.value.length > maxToasts && toasts.value[0]) {
+            hide(toasts.value[0].id);
+        }
 
-    toastContainer.showPopover();
+        container.showPopover();
 
-    const id = `toast-${toastId++}`;
+        const id = `toast-${toastId++}`;
+        const toastHider = () => hide(id);
 
-    const toastHider = () => hideToast(id);
+        toasts.value.push({ node: h(toastComponent, { ...props, onClose: toastHider }), id });
+    };
 
-    toasts.value.push({ node: h(toastComponent, { ...props, onClose: toastHider }), id });
+    const destroy = () => {
+        if (app) {
+            app.unmount();
+            app = null;
+        }
+        container.remove();
+        toasts.value = [];
+    };
+
+    return { show, hide, container, destroy };
 };
