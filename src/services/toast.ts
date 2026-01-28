@@ -31,7 +31,7 @@ export const createToastService = <C extends Component>(
         const id = `toast-${toastId++}`;
         const toastHider = () => hide(id);
 
-        toasts.value.push({ node: h(component, { ...props, onClose: toastHider }), id });
+        toasts.value.push({ node: h(component, { key: id, ...props, onClose: toastHider }), id });
     };
 
     const ToastContainerComponent = defineComponent({
