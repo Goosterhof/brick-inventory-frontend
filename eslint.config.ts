@@ -27,6 +27,8 @@ export default defineConfigWithVueTs(
       'vitest/valid-title': ['error', {
         mustMatch: { it: ['^should'] },
       }],
+      'vitest/padding-around-expect-groups': 'error',
+      'vitest/padding-around-test-blocks': 'error',
     },
   },
 
