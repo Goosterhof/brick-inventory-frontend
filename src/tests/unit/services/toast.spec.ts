@@ -49,6 +49,18 @@ describe('toast service', () => {
             expect(wrapper.text()).toContain('Test message');
         });
 
+        it('should return toast id', () => {
+            // Arrange
+            const toastService = createToastService(TestToast);
+
+            // Act
+            const id = toastService.show({ message: 'Test' });
+
+            // Assert
+            expect(typeof id).toBe('string');
+            expect(id.length).toBeGreaterThan(0);
+        });
+
         it('should add multiple toasts', async () => {
             // Arrange
             const toastService = createToastService(TestToast);
@@ -157,11 +169,11 @@ describe('toast service', () => {
             // Arrange
             const toastService = createToastService(TestToast);
             const wrapper = shallowMount(toastService.ToastContainerComponent);
-            toastService.show({ message: 'Toast to hide' });
+            const id = toastService.show({ message: 'Toast to hide' });
             await nextTick();
 
             // Act
-            toastService.hide('toast-0');
+            toastService.hide(id);
             await nextTick();
 
             // Assert
@@ -173,12 +185,12 @@ describe('toast service', () => {
             const toastService = createToastService(TestToast);
             const wrapper = shallowMount(toastService.ToastContainerComponent);
             toastService.show({ message: 'Toast 1' });
-            toastService.show({ message: 'Toast 2' });
+            const id2 = toastService.show({ message: 'Toast 2' });
             toastService.show({ message: 'Toast 3' });
             await nextTick();
 
             // Act
-            toastService.hide('toast-1');
+            toastService.hide(id2);
             await nextTick();
 
             // Assert

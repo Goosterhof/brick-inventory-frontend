@@ -4,7 +4,7 @@ import type { ComponentProps } from 'vue-component-type-helpers';
 import { ref, h, defineComponent } from 'vue';
 
 export interface ToastService<C extends Component> {
-    show: (props: Omit<ComponentProps<C>, 'onClose'>) => void;
+    show: (props: Omit<ComponentProps<C>, 'onClose'>) => string;
     hide: (id: string) => void;
     ToastContainerComponent: Component;
 }
@@ -24,7 +24,7 @@ export const createToastService = <C extends Component>(
         toasts.value.splice(index, 1);
     };
 
-    const show = (props: Omit<ComponentProps<C>, 'onClose'>) => {
+    const show = (props: Omit<ComponentProps<C>, 'onClose'>): string => {
         if (toasts.value.length >= validatedMaxToasts && toasts.value[0]) {
             hide(toasts.value[0].id);
         }
@@ -33,6 +33,8 @@ export const createToastService = <C extends Component>(
         const toastHider = () => hide(id);
 
         toasts.value.push({ node: h(component, { key: id, ...props, onClose: toastHider }), id });
+
+        return id;
     };
 
     const ToastContainerComponent = defineComponent({
