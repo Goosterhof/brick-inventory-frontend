@@ -1,10 +1,28 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createHttpService, type RequestMiddlewareFunc, type ResponseMiddlewareFunc, type ResponseErrorMiddlewareFunc } from '@/services/http';
-import axios, { AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, type AxiosInstance, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 
 vi.mock('axios', { spy: true });
 
-const createMockAxiosInstance = () => ({
+type RequestInterceptor = (request: InternalAxiosRequestConfig) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>;
+type ResponseInterceptor = (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>;
+type ResponseErrorInterceptor = (error: unknown) => Promise<never>;
+
+interface Interceptors {
+    request: RequestInterceptor;
+    response: ResponseInterceptor;
+    responseError: ResponseErrorInterceptor;
+}
+
+interface SetupResult {
+    mockAxiosInstance: AxiosInstance;
+    getRequestInterceptor: () => RequestInterceptor;
+    getResponseInterceptor: () => ResponseInterceptor;
+    getResponseErrorInterceptor: () => ResponseErrorInterceptor;
+}
+
+// Single type assertion needed here as mock doesn't implement full AxiosInstance
+const createMockAxiosInstance = (): AxiosInstance => ({
     get: vi.fn(),
     post: vi.fn(),
     put: vi.fn(),
@@ -14,34 +32,27 @@ const createMockAxiosInstance = () => ({
         request: { use: vi.fn() },
         response: { use: vi.fn() },
     },
-});
-
-type MockAxiosInstance = ReturnType<typeof createMockAxiosInstance>;
-
-interface SetupResult {
-    mockAxiosInstance: MockAxiosInstance;
-    getRequestInterceptor: () => (request: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
-    getResponseInterceptor: () => (response: AxiosResponse) => AxiosResponse;
-    getResponseErrorInterceptor: () => (error: unknown) => Promise<never>;
-}
+}) as unknown as AxiosInstance;
 
 const setupHttpServiceTest = (): SetupResult => {
     const mockAxiosInstance = createMockAxiosInstance();
-    const interceptors = {
-        request: undefined as unknown as (request: InternalAxiosRequestConfig) => InternalAxiosRequestConfig,
-        response: undefined as unknown as (response: AxiosResponse) => AxiosResponse,
-        responseError: undefined as unknown as (error: unknown) => Promise<never>,
+    const interceptors: Interceptors = {
+        request: null!,
+        response: null!,
+        responseError: null!,
     };
 
-    vi.mocked(axios.create).mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
+    vi.mocked(axios.create).mockReturnValue(mockAxiosInstance);
 
-    mockAxiosInstance.interceptors.request.use.mockImplementation((interceptor) => {
-        interceptors.request = interceptor;
+    vi.mocked(mockAxiosInstance.interceptors.request.use).mockImplementation((onFulfilled) => {
+        interceptors.request = onFulfilled!;
+        return 0;
     });
 
-    mockAxiosInstance.interceptors.response.use.mockImplementation((successInterceptor, errorInterceptor) => {
-        interceptors.response = successInterceptor;
-        interceptors.responseError = errorInterceptor;
+    vi.mocked(mockAxiosInstance.interceptors.response.use).mockImplementation((onFulfilled, onRejected) => {
+        interceptors.response = onFulfilled!;
+        interceptors.responseError = onRejected as ResponseErrorInterceptor;
+        return 0;
     });
 
     return {
@@ -103,7 +114,7 @@ describe('http service', () => {
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             const options = { params: { search: 'test' } };
-            mockAxiosInstance.get.mockResolvedValue(mockResponse);
+            vi.mocked(mockAxiosInstance.get).mockResolvedValue(mockResponse);
 
             // Act
             const result = await service.getRequest('/users', options);
@@ -120,7 +131,7 @@ describe('http service', () => {
             const mockResponse = { data: { id: 1 } };
             const data = { name: 'Test' };
             const options = { headers: { 'X-Custom': 'value' } };
-            mockAxiosInstance.post.mockResolvedValue(mockResponse);
+            vi.mocked(mockAxiosInstance.post).mockResolvedValue(mockResponse);
 
             // Act
             const result = await service.postRequest('/users', data, options);
@@ -137,7 +148,7 @@ describe('http service', () => {
             const mockResponse = { data: { id: 1 } };
             const data = { name: 'Updated' };
             const options = { headers: { 'X-Custom': 'value' } };
-            mockAxiosInstance.put.mockResolvedValue(mockResponse);
+            vi.mocked(mockAxiosInstance.put).mockResolvedValue(mockResponse);
 
             // Act
             const result = await service.putRequest('/users/1', data, options);
@@ -154,7 +165,7 @@ describe('http service', () => {
             const mockResponse = { data: { id: 1 } };
             const data = { name: 'Patched' };
             const options = { headers: { 'X-Custom': 'value' } };
-            mockAxiosInstance.patch.mockResolvedValue(mockResponse);
+            vi.mocked(mockAxiosInstance.patch).mockResolvedValue(mockResponse);
 
             // Act
             const result = await service.patchRequest('/users/1', data, options);
@@ -170,7 +181,7 @@ describe('http service', () => {
             const service = createHttpService(baseURL);
             const mockResponse = { data: { success: true } };
             const options = { headers: { 'X-Custom': 'value' } };
-            mockAxiosInstance.delete.mockResolvedValue(mockResponse);
+            vi.mocked(mockAxiosInstance.delete).mockResolvedValue(mockResponse);
 
             // Act
             const result = await service.deleteRequest('/users/1', options);
