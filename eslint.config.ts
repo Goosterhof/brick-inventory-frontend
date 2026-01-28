@@ -23,4 +23,11 @@ export default defineConfigWithVueTs(
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
   },
+
+  {
+    name: 'app/rules',
+    rules: {
+      'func-style': ['error', 'expression'],
+    },
+  },
 )
