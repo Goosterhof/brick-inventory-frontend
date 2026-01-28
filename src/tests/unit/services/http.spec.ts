@@ -2,18 +2,20 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createHttpService, type RequestMiddlewareFunc, type ResponseMiddlewareFunc, type ResponseErrorMiddlewareFunc } from '@/services/http';
 import axios, { AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 
+const { mockCreate } = vi.hoisted(() => ({
+    mockCreate: vi.fn(),
+}));
+
 vi.mock('axios', async (importOriginal) => {
     const actual = await importOriginal<typeof import('axios')>();
     return {
         ...actual,
         default: {
             ...actual.default,
-            create: vi.fn(),
+            create: mockCreate,
         },
     };
 });
-
-const mockedAxios = vi.mocked(axios);
 
 describe('http service', () => {
     const baseURL = 'https://api.example.com';
@@ -47,7 +49,7 @@ describe('http service', () => {
             },
         };
 
-        mockedAxios.create.mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
+        mockCreate.mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
 
         mockAxiosInstance.interceptors.request.use.mockImplementation((interceptor) => {
             requestInterceptor = interceptor;
@@ -63,7 +65,7 @@ describe('http service', () => {
         it('creates an axios instance with correct config', () => {
             createHttpService(baseURL);
 
-            expect(mockedAxios.create).toHaveBeenCalledWith({
+            expect(mockCreate).toHaveBeenCalledWith({
                 baseURL,
                 withCredentials: true,
                 headers: {
