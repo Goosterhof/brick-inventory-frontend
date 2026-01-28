@@ -12,8 +12,8 @@ export interface StorageService {
     clear: () => void;
 }
 
-export const createStorageService = (prefix?: string): StorageService => {
-    const prefixKey = (key: string): string => prefix ? `${prefix}:${key}` : key;
+export const createStorageService = (prefix: string): StorageService => {
+    const prefixKey = (key: string): string => `${prefix}:${key}`;
 
     const put = (key: string, value: unknown): void => {
         const valueToStore = typeof value === 'string' ? value : JSON.stringify(value);
@@ -54,11 +54,6 @@ export const createStorageService = (prefix?: string): StorageService => {
     };
 
     const clear = (): void => {
-        if (!prefix) {
-            localStorage.clear();
-            return;
-        }
-
         const keysToRemove: string[] = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);

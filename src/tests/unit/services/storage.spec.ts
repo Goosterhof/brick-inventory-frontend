@@ -11,7 +11,7 @@ describe('storage service', () => {
     describe('createStorageService', () => {
         it('should return all expected methods', () => {
             // Act
-            const storage = createStorageService();
+            const storage = createStorageService('test');
 
             // Assert
             expect(storage).toHaveProperty('put');
@@ -22,65 +22,54 @@ describe('storage service', () => {
     });
 
     describe('put', () => {
-        it('should store string values directly', () => {
+        it('should store string values with prefix', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
 
             // Act
             storage.put('testKey', 'testValue');
 
             // Assert
-            expect(localStorage.getItem('testKey')).toBe('testValue');
+            expect(localStorage.getItem('test:testKey')).toBe('testValue');
         });
 
         it('should stringify non-string values', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
             const value = { name: 'test', count: 42 };
 
             // Act
             storage.put('testKey', value);
 
             // Assert
-            expect(localStorage.getItem('testKey')).toBe('{"name":"test","count":42}');
+            expect(localStorage.getItem('test:testKey')).toBe('{"name":"test","count":42}');
         });
 
         it('should stringify arrays', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
 
             // Act
             storage.put('testKey', [1, 2, 3]);
 
             // Assert
-            expect(localStorage.getItem('testKey')).toBe('[1,2,3]');
+            expect(localStorage.getItem('test:testKey')).toBe('[1,2,3]');
         });
 
         it('should stringify boolean values', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
 
             // Act
             storage.put('testKey', true);
 
             // Assert
-            expect(localStorage.getItem('testKey')).toBe('true');
-        });
-
-        it('should store with prefix when provided', () => {
-            // Arrange
-            const storage = createStorageService('auth');
-
-            // Act
-            storage.put('token', 'abc123');
-
-            // Assert
-            expect(localStorage.getItem('auth:token')).toBe('abc123');
+            expect(localStorage.getItem('test:testKey')).toBe('true');
         });
 
         it('should log error when quota is exceeded', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
             const quotaError = new DOMException('Quota exceeded', 'QuotaExceededError');
             vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
@@ -96,7 +85,7 @@ describe('storage service', () => {
 
         it('should log other errors', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
             const genericError = new Error('Some error');
             vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
@@ -114,7 +103,7 @@ describe('storage service', () => {
     describe('get', () => {
         it('should return undefined when key does not exist', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
 
             // Act
             const result = storage.get('nonExistentKey');
@@ -125,7 +114,7 @@ describe('storage service', () => {
 
         it('should return default value when key does not exist', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
 
             // Act
             const result = storage.get('nonExistentKey', 'default');
@@ -136,9 +125,9 @@ describe('storage service', () => {
 
         it('should return parsed JSON for object values', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
             const value = { name: 'test', count: 42 };
-            localStorage.setItem('testKey', JSON.stringify(value));
+            localStorage.setItem('test:testKey', JSON.stringify(value));
 
             // Act
             const result = storage.get<typeof value>('testKey');
@@ -149,8 +138,8 @@ describe('storage service', () => {
 
         it('should return parsed JSON for array values', () => {
             // Arrange
-            const storage = createStorageService();
-            localStorage.setItem('testKey', '[1,2,3]');
+            const storage = createStorageService('test');
+            localStorage.setItem('test:testKey', '[1,2,3]');
 
             // Act
             const result = storage.get<number[]>('testKey');
@@ -161,8 +150,8 @@ describe('storage service', () => {
 
         it('should return raw string when default is a string', () => {
             // Arrange
-            const storage = createStorageService();
-            localStorage.setItem('testKey', '5e3');
+            const storage = createStorageService('test');
+            localStorage.setItem('test:testKey', '5e3');
 
             // Act
             const result = storage.get('testKey', 'default');
@@ -173,8 +162,8 @@ describe('storage service', () => {
 
         it('should return string value when JSON parse fails', () => {
             // Arrange
-            const storage = createStorageService();
-            localStorage.setItem('testKey', 'not-json');
+            const storage = createStorageService('test');
+            localStorage.setItem('test:testKey', 'not-json');
 
             // Act
             const result = storage.get<string>('testKey');
@@ -185,8 +174,8 @@ describe('storage service', () => {
 
         it('should return boolean values correctly', () => {
             // Arrange
-            const storage = createStorageService();
-            localStorage.setItem('testKey', 'true');
+            const storage = createStorageService('test');
+            localStorage.setItem('test:testKey', 'true');
 
             // Act
             const result = storage.get<boolean>('testKey');
@@ -194,35 +183,10 @@ describe('storage service', () => {
             // Assert
             expect(result).toBe(true);
         });
-
-        it('should get with prefix when provided', () => {
-            // Arrange
-            const storage = createStorageService('auth');
-            localStorage.setItem('auth:token', 'abc123');
-
-            // Act
-            const result = storage.get<string>('token');
-
-            // Assert
-            expect(result).toBe('abc123');
-        });
     });
 
     describe('clear', () => {
-        it('should clear all items from localStorage when no prefix', () => {
-            // Arrange
-            const storage = createStorageService();
-            localStorage.setItem('key1', 'value1');
-            localStorage.setItem('key2', 'value2');
-
-            // Act
-            storage.clear();
-
-            // Assert
-            expect(localStorage.length).toBe(0);
-        });
-
-        it('should only clear prefixed items when prefix is set', () => {
+        it('should only clear items with matching prefix', () => {
             // Arrange
             const storage = createStorageService('app');
             localStorage.setItem('app:key1', 'value1');
@@ -242,21 +206,21 @@ describe('storage service', () => {
     });
 
     describe('remove', () => {
-        it('should remove specific item from localStorage', () => {
+        it('should remove specific prefixed item from localStorage', () => {
             // Arrange
-            const storage = createStorageService();
-            localStorage.setItem('key1', 'value1');
-            localStorage.setItem('key2', 'value2');
+            const storage = createStorageService('test');
+            localStorage.setItem('test:key1', 'value1');
+            localStorage.setItem('test:key2', 'value2');
 
             // Act
             storage.remove('key1');
 
             // Assert
-            expect(localStorage.getItem('key1')).toBeNull();
-            expect(localStorage.getItem('key2')).toBe('value2');
+            expect(localStorage.getItem('test:key1')).toBeNull();
+            expect(localStorage.getItem('test:key2')).toBe('value2');
         });
 
-        it('should remove prefixed item when prefix is set', () => {
+        it('should not affect items with different prefix', () => {
             // Arrange
             const storage = createStorageService('auth');
             localStorage.setItem('auth:token', 'abc123');
@@ -272,7 +236,7 @@ describe('storage service', () => {
 
         it('should not throw when removing non-existent key', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
 
             // Act & Assert
             expect(() => storage.remove('nonExistentKey')).not.toThrow();
@@ -280,7 +244,7 @@ describe('storage service', () => {
 
         it('should log errors on removal failure', () => {
             // Arrange
-            const storage = createStorageService();
+            const storage = createStorageService('test');
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
             const genericError = new Error('Removal failed');
             vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
