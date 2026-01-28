@@ -4,52 +4,64 @@ import axios, { AxiosError, type AxiosResponse, type InternalAxiosRequestConfig 
 
 vi.mock('axios', { spy: true });
 
-describe('http service', () => {
-    const baseURL = 'https://api.example.com';
-    let mockAxiosInstance: {
-        get: ReturnType<typeof vi.fn>;
-        post: ReturnType<typeof vi.fn>;
-        put: ReturnType<typeof vi.fn>;
-        patch: ReturnType<typeof vi.fn>;
-        delete: ReturnType<typeof vi.fn>;
-        interceptors: {
-            request: { use: ReturnType<typeof vi.fn> };
-            response: { use: ReturnType<typeof vi.fn> };
-        };
-    };
+const createMockAxiosInstance = () => ({
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+    interceptors: {
+        request: { use: vi.fn() },
+        response: { use: vi.fn() },
+    },
+});
+
+type MockAxiosInstance = ReturnType<typeof createMockAxiosInstance>;
+
+interface SetupResult {
+    mockAxiosInstance: MockAxiosInstance;
+    getRequestInterceptor: () => (request: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
+    getResponseInterceptor: () => (response: AxiosResponse) => AxiosResponse;
+    getResponseErrorInterceptor: () => (error: unknown) => Promise<never>;
+}
+
+const setupHttpServiceTest = (): SetupResult => {
+    const mockAxiosInstance = createMockAxiosInstance();
     let requestInterceptor: (request: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
     let responseInterceptor: (response: AxiosResponse) => AxiosResponse;
     let responseErrorInterceptor: (error: unknown) => Promise<never>;
 
+    vi.mocked(axios.create).mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
+
+    mockAxiosInstance.interceptors.request.use.mockImplementation((interceptor) => {
+        requestInterceptor = interceptor;
+    });
+
+    mockAxiosInstance.interceptors.response.use.mockImplementation((successInterceptor, errorInterceptor) => {
+        responseInterceptor = successInterceptor;
+        responseErrorInterceptor = errorInterceptor;
+    });
+
+    return {
+        mockAxiosInstance,
+        getRequestInterceptor: () => requestInterceptor,
+        getResponseInterceptor: () => responseInterceptor,
+        getResponseErrorInterceptor: () => responseErrorInterceptor,
+    };
+};
+
+describe('http service', () => {
+    const baseURL = 'https://api.example.com';
+
     beforeEach(() => {
         vi.clearAllMocks();
-
-        mockAxiosInstance = {
-            get: vi.fn(),
-            post: vi.fn(),
-            put: vi.fn(),
-            patch: vi.fn(),
-            delete: vi.fn(),
-            interceptors: {
-                request: { use: vi.fn() },
-                response: { use: vi.fn() },
-            },
-        };
-
-        vi.mocked(axios.create).mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
-
-        mockAxiosInstance.interceptors.request.use.mockImplementation((interceptor) => {
-            requestInterceptor = interceptor;
-        });
-
-        mockAxiosInstance.interceptors.response.use.mockImplementation((successInterceptor, errorInterceptor) => {
-            responseInterceptor = successInterceptor;
-            responseErrorInterceptor = errorInterceptor;
-        });
     });
 
     describe('createHttpService', () => {
         it('should create an axios instance with correct config', () => {
+            // Arrange
+            setupHttpServiceTest();
+
             // Act
             createHttpService(baseURL);
 
@@ -64,6 +76,9 @@ describe('http service', () => {
         });
 
         it('should return all expected methods', () => {
+            // Arrange
+            setupHttpServiceTest();
+
             // Act
             const service = createHttpService(baseURL);
 
@@ -82,6 +97,7 @@ describe('http service', () => {
     describe('request methods', () => {
         it('should call axios.get with endpoint and options for getRequest', async () => {
             // Arrange
+            const { mockAxiosInstance } = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             const options = { params: { search: 'test' } };
@@ -97,6 +113,7 @@ describe('http service', () => {
 
         it('should call axios.post with endpoint, data, and options for postRequest', async () => {
             // Arrange
+            const { mockAxiosInstance } = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             const data = { name: 'Test' };
@@ -113,6 +130,7 @@ describe('http service', () => {
 
         it('should call axios.put with endpoint, data, and options for putRequest', async () => {
             // Arrange
+            const { mockAxiosInstance } = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             const data = { name: 'Updated' };
@@ -129,6 +147,7 @@ describe('http service', () => {
 
         it('should call axios.patch with endpoint, data, and options for patchRequest', async () => {
             // Arrange
+            const { mockAxiosInstance } = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const mockResponse = { data: { id: 1 } };
             const data = { name: 'Patched' };
@@ -145,6 +164,7 @@ describe('http service', () => {
 
         it('should call axios.delete with endpoint and options for deleteRequest', async () => {
             // Arrange
+            const { mockAxiosInstance } = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const mockResponse = { data: { success: true } };
             const options = { headers: { 'X-Custom': 'value' } };
@@ -162,13 +182,14 @@ describe('http service', () => {
     describe('request middleware', () => {
         it('should execute registered request middleware', () => {
             // Arrange
+            const setup = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const middleware: RequestMiddlewareFunc = vi.fn();
             const mockRequest = { headers: {} } as InternalAxiosRequestConfig;
 
             // Act
             service.registerRequestMiddleware(middleware);
-            requestInterceptor(mockRequest);
+            setup.getRequestInterceptor()(mockRequest);
 
             // Assert
             expect(middleware).toHaveBeenCalledWith(mockRequest);
@@ -176,6 +197,7 @@ describe('http service', () => {
 
         it('should execute multiple request middlewares in order', () => {
             // Arrange
+            const setup = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const callOrder: number[] = [];
             const middleware1: RequestMiddlewareFunc = vi.fn(() => callOrder.push(1));
@@ -185,7 +207,7 @@ describe('http service', () => {
             // Act
             service.registerRequestMiddleware(middleware1);
             service.registerRequestMiddleware(middleware2);
-            requestInterceptor(mockRequest);
+            setup.getRequestInterceptor()(mockRequest);
 
             // Assert
             expect(callOrder).toEqual([1, 2]);
@@ -195,13 +217,14 @@ describe('http service', () => {
     describe('response middleware', () => {
         it('should execute registered response middleware', () => {
             // Arrange
+            const setup = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const middleware: ResponseMiddlewareFunc = vi.fn();
             const mockResponse = { data: {}, status: 200 } as AxiosResponse;
 
             // Act
             service.registerResponseMiddleware(middleware);
-            responseInterceptor(mockResponse);
+            setup.getResponseInterceptor()(mockResponse);
 
             // Assert
             expect(middleware).toHaveBeenCalledWith(mockResponse);
@@ -209,11 +232,12 @@ describe('http service', () => {
 
         it('should return the response after middleware execution', () => {
             // Arrange
+            const setup = setupHttpServiceTest();
             createHttpService(baseURL);
             const mockResponse = { data: { id: 1 }, status: 200 } as AxiosResponse;
 
             // Act
-            const result = responseInterceptor(mockResponse);
+            const result = setup.getResponseInterceptor()(mockResponse);
 
             // Assert
             expect(result).toEqual(mockResponse);
@@ -223,35 +247,38 @@ describe('http service', () => {
     describe('response error middleware', () => {
         it('should execute registered error middleware for axios errors', async () => {
             // Arrange
+            const setup = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const middleware: ResponseErrorMiddlewareFunc = vi.fn();
             const axiosError = new AxiosError('Request failed');
             service.registerResponseErrorMiddleware(middleware);
 
             // Act & Assert
-            await expect(responseErrorInterceptor(axiosError)).rejects.toEqual(axiosError);
+            await expect(setup.getResponseErrorInterceptor()(axiosError)).rejects.toEqual(axiosError);
             expect(middleware).toHaveBeenCalledWith(axiosError);
         });
 
         it('should not execute error middleware for non-axios errors', async () => {
             // Arrange
+            const setup = setupHttpServiceTest();
             const service = createHttpService(baseURL);
             const middleware: ResponseErrorMiddlewareFunc = vi.fn();
             const genericError = new Error('Generic error');
             service.registerResponseErrorMiddleware(middleware);
 
             // Act & Assert
-            await expect(responseErrorInterceptor(genericError)).rejects.toEqual(genericError);
+            await expect(setup.getResponseErrorInterceptor()(genericError)).rejects.toEqual(genericError);
             expect(middleware).not.toHaveBeenCalled();
         });
 
         it('should reject with the error after middleware execution', async () => {
             // Arrange
+            const setup = setupHttpServiceTest();
             createHttpService(baseURL);
             const axiosError = new AxiosError('Request failed');
 
             // Act & Assert
-            await expect(responseErrorInterceptor(axiosError)).rejects.toEqual(axiosError);
+            await expect(setup.getResponseErrorInterceptor()(axiosError)).rejects.toEqual(axiosError);
         });
     });
 });
