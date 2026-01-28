@@ -47,7 +47,13 @@ export const createStorageService = (prefix: string): StorageService => {
     };
 
     const get: Get = <T>(key: string, defaultValue?: T): T | undefined => {
-        const storedValue = localStorage.getItem(prefixKey(key));
+        let storedValue: string | null;
+        try {
+            storedValue = localStorage.getItem(prefixKey(key));
+        } catch (error) {
+            console.error(error);
+            return defaultValue;
+        }
 
         if (storedValue === null) return defaultValue;
 

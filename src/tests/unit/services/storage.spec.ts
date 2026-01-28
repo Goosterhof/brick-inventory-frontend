@@ -229,6 +229,23 @@ describe('storage service', () => {
             // Assert
             expect(result).toBe('undefined');
         });
+
+        it('should return default value and log error on storage access failure', () => {
+            // Arrange
+            const storage = createStorageService('test');
+            const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const securityError = new DOMException('Access denied', 'SecurityError');
+            vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+                throw securityError;
+            });
+
+            // Act
+            const result = storage.get('key', 'fallback');
+
+            // Assert
+            expect(result).toBe('fallback');
+            expect(consoleSpy).toHaveBeenCalledWith(securityError);
+        });
     });
 
     describe('clear', () => {
