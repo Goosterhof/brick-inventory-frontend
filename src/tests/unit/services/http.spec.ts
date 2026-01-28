@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createHttpService, type RequestMiddlewareFunc, type ResponseMiddlewareFunc, type ResponseErrorMiddlewareFunc } from '@/services/http';
 import axios, { AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 
@@ -36,7 +36,7 @@ describe('http service', () => {
             },
         };
 
-        (axios.create as Mock).mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
+        vi.mocked(axios.create).mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
 
         mockAxiosInstance.interceptors.request.use.mockImplementation((interceptor) => {
             requestInterceptor = interceptor;
