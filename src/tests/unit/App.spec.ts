@@ -4,7 +4,8 @@ import { createRouter, createMemoryHistory } from 'vue-router'
 import App from '../../App.vue'
 
 describe('App', () => {
-  it('renders navigation links', async () => {
+  it('should render navigation links', async () => {
+    // Arrange
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -13,14 +14,15 @@ describe('App', () => {
       ],
     })
 
+    // Act
     const wrapper = mount(App, {
       global: {
         plugins: [router],
       },
     })
-
     await router.isReady()
 
+    // Assert
     expect(wrapper.text()).toContain('Home')
     expect(wrapper.text()).toContain('About')
   })
