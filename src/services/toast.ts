@@ -3,11 +3,6 @@ import type { ComponentProps } from 'vue-component-type-helpers';
 
 import { ref, h, defineComponent } from 'vue';
 
-export interface ToastServiceOptions<C extends Component> {
-    component: C;
-    maxToasts?: number;
-}
-
 export interface ToastService<C extends Component> {
     show: (props: Omit<ComponentProps<C>, 'onClose'>) => void;
     hide: (id: string) => void;
@@ -15,10 +10,9 @@ export interface ToastService<C extends Component> {
 }
 
 export const createToastService = <C extends Component>(
-    options: ToastServiceOptions<C>,
+    component: C,
+    maxToasts = 4,
 ): ToastService<C> => {
-    const { component: toastComponent, maxToasts = 4 } = options;
-
     const toasts = ref<{ node: VNode; id: string }[]>([]);
     let toastId = 0;
 
@@ -37,7 +31,7 @@ export const createToastService = <C extends Component>(
         const id = `toast-${toastId++}`;
         const toastHider = () => hide(id);
 
-        toasts.value.push({ node: h(toastComponent, { ...props, onClose: toastHider }), id });
+        toasts.value.push({ node: h(component, { ...props, onClose: toastHider }), id });
     };
 
     const ToastContainerComponent = defineComponent({
