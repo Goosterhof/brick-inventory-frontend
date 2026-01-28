@@ -103,6 +103,53 @@ describe('toast service', () => {
             expect(wrapper.text()).not.toContain('Toast 1');
             expect(wrapper.text()).toContain('Toast 6');
         });
+
+        it('should clamp maxToasts to minimum of 1 when 0 is provided', async () => {
+            // Arrange
+            const toastService = createToastService(TestToast, 0);
+            const wrapper = shallowMount(toastService.ToastContainerComponent);
+
+            // Act
+            toastService.show({ message: 'Toast 1' });
+            toastService.show({ message: 'Toast 2' });
+            await nextTick();
+
+            // Assert
+            expect(wrapper.findAll('.toast')).toHaveLength(1);
+            expect(wrapper.text()).toContain('Toast 2');
+        });
+
+        it('should clamp maxToasts to minimum of 1 when negative is provided', async () => {
+            // Arrange
+            const toastService = createToastService(TestToast, -5);
+            const wrapper = shallowMount(toastService.ToastContainerComponent);
+
+            // Act
+            toastService.show({ message: 'Toast 1' });
+            toastService.show({ message: 'Toast 2' });
+            await nextTick();
+
+            // Assert
+            expect(wrapper.findAll('.toast')).toHaveLength(1);
+            expect(wrapper.text()).toContain('Toast 2');
+        });
+
+        it('should floor decimal maxToasts values', async () => {
+            // Arrange
+            const toastService = createToastService(TestToast, 2.9);
+            const wrapper = shallowMount(toastService.ToastContainerComponent);
+
+            // Act
+            toastService.show({ message: 'Toast 1' });
+            toastService.show({ message: 'Toast 2' });
+            toastService.show({ message: 'Toast 3' });
+            await nextTick();
+
+            // Assert
+            expect(wrapper.findAll('.toast')).toHaveLength(2);
+            expect(wrapper.text()).not.toContain('Toast 1');
+            expect(wrapper.text()).toContain('Toast 3');
+        });
     });
 
     describe('hide', () => {

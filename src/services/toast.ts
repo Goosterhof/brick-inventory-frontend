@@ -13,6 +13,7 @@ export const createToastService = <C extends Component>(
     component: C,
     maxToasts = 4,
 ): ToastService<C> => {
+    const validatedMaxToasts = Math.max(1, Math.floor(maxToasts));
     const toasts = ref<{ node: VNode; id: string }[]>([]);
     let toastId = 0;
 
@@ -24,7 +25,7 @@ export const createToastService = <C extends Component>(
     };
 
     const show = (props: Omit<ComponentProps<C>, 'onClose'>) => {
-        if (toasts.value.length >= maxToasts && toasts.value[0]) {
+        if (toasts.value.length >= validatedMaxToasts && toasts.value[0]) {
             hide(toasts.value[0].id);
         }
 
