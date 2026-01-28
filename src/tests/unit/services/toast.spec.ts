@@ -1,217 +1,201 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { describe, it, expect } from 'vitest';
+import { defineComponent, h, nextTick } from 'vue';
+import { mount } from '@vue/test-utils';
 import { createToastService } from '@/services/toast';
 
-const TestComponent = defineComponent({
+const TestToast = defineComponent({
     props: { message: String },
     emits: ['close'],
     render() {
-        return h('div', this.message);
+        return h('div', { class: 'toast' }, this.message);
     },
 });
 
 describe('toast service', () => {
-    const mockShowPopover = vi.fn();
-    const mockHidePopover = vi.fn();
-
-    beforeEach(() => {
-        mockShowPopover.mockClear();
-        mockHidePopover.mockClear();
-
-        HTMLElement.prototype.showPopover = mockShowPopover;
-        HTMLElement.prototype.hidePopover = mockHidePopover;
-    });
-
-    afterEach(() => {
-        vi.restoreAllMocks();
-    });
-
     describe('createToastService', () => {
         it('should return all expected methods and properties', () => {
             // Act
-            const toastService = createToastService({ component: TestComponent });
+            const toastService = createToastService({ component: TestToast });
 
             // Assert
             expect(toastService).toHaveProperty('show');
             expect(toastService).toHaveProperty('hide');
-            expect(toastService).toHaveProperty('container');
-            expect(toastService).toHaveProperty('destroy');
+            expect(toastService).toHaveProperty('component');
             expect(typeof toastService.show).toBe('function');
             expect(typeof toastService.hide).toBe('function');
-            expect(typeof toastService.destroy).toBe('function');
-            expect(toastService.container).toBeInstanceOf(HTMLDivElement);
-
-            toastService.destroy();
         });
 
-        it('should create container with default classes', () => {
+        it('should return a valid Vue component', () => {
             // Act
-            const toastService = createToastService({ component: TestComponent });
+            const toastService = createToastService({ component: TestToast });
 
             // Assert
-            expect(toastService.container.classList.contains('pointer-events-none')).toBe(true);
-            expect(toastService.container.classList.contains('flex')).toBe(true);
-            expect(toastService.container.classList.contains('flex-col-reverse')).toBe(true);
-
-            toastService.destroy();
-        });
-
-        it('should create container with custom classes when provided', () => {
-            // Arrange
-            const customClasses = ['custom-class', 'another-class'];
-
-            // Act
-            const toastService = createToastService({
-                component: TestComponent,
-                containerClasses: customClasses,
-            });
-
-            // Assert
-            expect(toastService.container.classList.contains('custom-class')).toBe(true);
-            expect(toastService.container.classList.contains('another-class')).toBe(true);
-            expect(toastService.container.classList.contains('pointer-events-none')).toBe(false);
-
-            toastService.destroy();
-        });
-
-        it('should set container role and popover attributes', () => {
-            // Act
-            const toastService = createToastService({ component: TestComponent });
-
-            // Assert
-            expect(toastService.container.role).toBe('region');
-            expect(toastService.container.popover).toBe('manual');
-
-            toastService.destroy();
+            expect(toastService.component).toHaveProperty('render');
+            expect(toastService.component.name).toBe('ToastContainer');
         });
     });
 
     describe('show', () => {
-        it('should show popover when creating a toast', () => {
+        it('should add toast to the container', async () => {
             // Arrange
-            const toastService = createToastService({ component: TestComponent });
+            const toastService = createToastService({ component: TestToast });
+            const wrapper = mount(toastService.component);
 
             // Act
             toastService.show({ message: 'Test message' });
+            await nextTick();
 
             // Assert
-            expect(mockShowPopover).toHaveBeenCalled();
-
-            toastService.destroy();
+            expect(wrapper.text()).toContain('Test message');
         });
 
-        it('should remove oldest toast when exceeding maximum', () => {
+        it('should add multiple toasts', async () => {
             // Arrange
-            const toastService = createToastService({ component: TestComponent, maxToasts: 2 });
+            const toastService = createToastService({ component: TestToast });
+            const wrapper = mount(toastService.component);
+
+            // Act
+            toastService.show({ message: 'Toast 1' });
+            toastService.show({ message: 'Toast 2' });
+            toastService.show({ message: 'Toast 3' });
+            await nextTick();
+
+            // Assert
+            expect(wrapper.findAll('.toast')).toHaveLength(3);
+            expect(wrapper.text()).toContain('Toast 1');
+            expect(wrapper.text()).toContain('Toast 2');
+            expect(wrapper.text()).toContain('Toast 3');
+        });
+
+        it('should remove oldest toast when exceeding maximum', async () => {
+            // Arrange
+            const toastService = createToastService({ component: TestToast, maxToasts: 2 });
+            const wrapper = mount(toastService.component);
 
             // Act
             toastService.show({ message: 'Toast 1' });
             toastService.show({ message: 'Toast 2' });
             toastService.show({ message: 'Toast 3' });
             toastService.show({ message: 'Toast 4' });
+            await nextTick();
 
             // Assert
-            expect(mockShowPopover).toHaveBeenCalledTimes(4);
-
-            toastService.destroy();
+            expect(wrapper.findAll('.toast')).toHaveLength(2);
+            expect(wrapper.text()).not.toContain('Toast 1');
+            expect(wrapper.text()).not.toContain('Toast 2');
+            expect(wrapper.text()).toContain('Toast 3');
+            expect(wrapper.text()).toContain('Toast 4');
         });
 
-        it('should use default maxToasts of 4', () => {
+        it('should use default maxToasts of 4', async () => {
             // Arrange
-            const toastService = createToastService({ component: TestComponent });
+            const toastService = createToastService({ component: TestToast });
+            const wrapper = mount(toastService.component);
 
             // Act
-            for (let i = 0; i < 6; i++) {
+            for (let i = 1; i <= 6; i++) {
                 toastService.show({ message: `Toast ${i}` });
             }
+            await nextTick();
 
             // Assert
-            expect(mockShowPopover).toHaveBeenCalledTimes(6);
-
-            toastService.destroy();
+            expect(wrapper.findAll('.toast')).toHaveLength(4);
+            expect(wrapper.text()).not.toContain('Toast 1');
+            expect(wrapper.text()).toContain('Toast 6');
         });
     });
 
     describe('hide', () => {
-        it('should hide popover when last toast is hidden', () => {
+        it('should remove toast by id', async () => {
             // Arrange
-            const toastService = createToastService({ component: TestComponent });
-            toastService.show({ message: 'Only toast' });
+            const toastService = createToastService({ component: TestToast });
+            const wrapper = mount(toastService.component);
+            toastService.show({ message: 'Toast to hide' });
+            await nextTick();
 
             // Act
             toastService.hide('toast-0');
+            await nextTick();
 
             // Assert
-            expect(mockHidePopover).toHaveBeenCalled();
-
-            toastService.destroy();
+            expect(wrapper.findAll('.toast')).toHaveLength(0);
         });
 
-        it('should not hide popover when there are remaining toasts', () => {
+        it('should only remove specified toast', async () => {
             // Arrange
-            const toastService = createToastService({ component: TestComponent });
+            const toastService = createToastService({ component: TestToast });
+            const wrapper = mount(toastService.component);
             toastService.show({ message: 'Toast 1' });
             toastService.show({ message: 'Toast 2' });
+            toastService.show({ message: 'Toast 3' });
+            await nextTick();
 
             // Act
-            toastService.hide('toast-0');
+            toastService.hide('toast-1');
+            await nextTick();
 
             // Assert
-            expect(mockHidePopover).not.toHaveBeenCalled();
-
-            toastService.destroy();
+            expect(wrapper.findAll('.toast')).toHaveLength(2);
+            expect(wrapper.text()).toContain('Toast 1');
+            expect(wrapper.text()).not.toContain('Toast 2');
+            expect(wrapper.text()).toContain('Toast 3');
         });
 
-        it('should do nothing when hiding non-existent toast', () => {
+        it('should do nothing when hiding non-existent toast', async () => {
             // Arrange
-            const toastService = createToastService({ component: TestComponent });
+            const toastService = createToastService({ component: TestToast });
+            const wrapper = mount(toastService.component);
+            toastService.show({ message: 'Toast 1' });
+            await nextTick();
 
             // Act & Assert
             expect(() => toastService.hide('non-existent')).not.toThrow();
-
-            toastService.destroy();
+            expect(wrapper.findAll('.toast')).toHaveLength(1);
         });
     });
 
-    describe('destroy', () => {
-        it('should remove container from DOM', () => {
+    describe('onClose prop', () => {
+        it('should pass onClose handler to toast component', async () => {
             // Arrange
-            const toastService = createToastService({ component: TestComponent });
-            const removeSpy = vi.spyOn(toastService.container, 'remove');
+            const ClosableToast = defineComponent({
+                props: { message: String, onClose: Function },
+                emits: ['close'],
+                render() {
+                    return h('div', { class: 'toast' }, [
+                        this.message,
+                        h('button', { onClick: this.onClose }, 'Close'),
+                    ]);
+                },
+            });
+            const toastService = createToastService({ component: ClosableToast });
+            const wrapper = mount(toastService.component);
+            toastService.show({ message: 'Closable toast' });
+            await nextTick();
 
             // Act
-            toastService.destroy();
+            await wrapper.find('button').trigger('click');
+            await nextTick();
 
             // Assert
-            expect(removeSpy).toHaveBeenCalled();
-        });
-
-        it('should be safe to call multiple times', () => {
-            // Arrange
-            const toastService = createToastService({ component: TestComponent });
-
-            // Act & Assert
-            expect(() => {
-                toastService.destroy();
-                toastService.destroy();
-            }).not.toThrow();
+            expect(wrapper.findAll('.toast')).toHaveLength(0);
         });
     });
 
     describe('isolation', () => {
-        it('should create independent toast services', () => {
+        it('should create independent toast services', async () => {
             // Arrange
-            const service1 = createToastService({ component: TestComponent });
-            const service2 = createToastService({ component: TestComponent });
+            const service1 = createToastService({ component: TestToast });
+            const service2 = createToastService({ component: TestToast });
+            const wrapper1 = mount(service1.component);
+            const wrapper2 = mount(service2.component);
 
             // Act
             service1.show({ message: 'Service 1 toast' });
+            await nextTick();
 
             // Assert
-            expect(service1.container).not.toBe(service2.container);
-
-            service1.destroy();
-            service2.destroy();
+            expect(wrapper1.text()).toContain('Service 1 toast');
+            expect(wrapper2.text()).not.toContain('Service 1 toast');
         });
     });
 });
