@@ -42,6 +42,7 @@ export default defineConfigWithVueTs(
     name: 'app/rules',
     rules: {
       'func-style': ['error', 'expression'],
+      'prefer-const': 'error',
     },
   },
 )

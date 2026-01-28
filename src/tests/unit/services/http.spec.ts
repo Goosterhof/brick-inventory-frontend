@@ -27,26 +27,28 @@ interface SetupResult {
 
 const setupHttpServiceTest = (): SetupResult => {
     const mockAxiosInstance = createMockAxiosInstance();
-    let requestInterceptor: (request: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
-    let responseInterceptor: (response: AxiosResponse) => AxiosResponse;
-    let responseErrorInterceptor: (error: unknown) => Promise<never>;
+    const interceptors = {
+        request: undefined as unknown as (request: InternalAxiosRequestConfig) => InternalAxiosRequestConfig,
+        response: undefined as unknown as (response: AxiosResponse) => AxiosResponse,
+        responseError: undefined as unknown as (error: unknown) => Promise<never>,
+    };
 
     vi.mocked(axios.create).mockReturnValue(mockAxiosInstance as unknown as ReturnType<typeof axios.create>);
 
     mockAxiosInstance.interceptors.request.use.mockImplementation((interceptor) => {
-        requestInterceptor = interceptor;
+        interceptors.request = interceptor;
     });
 
     mockAxiosInstance.interceptors.response.use.mockImplementation((successInterceptor, errorInterceptor) => {
-        responseInterceptor = successInterceptor;
-        responseErrorInterceptor = errorInterceptor;
+        interceptors.response = successInterceptor;
+        interceptors.responseError = errorInterceptor;
     });
 
     return {
         mockAxiosInstance,
-        getRequestInterceptor: () => requestInterceptor,
-        getResponseInterceptor: () => responseInterceptor,
-        getResponseErrorInterceptor: () => responseErrorInterceptor,
+        getRequestInterceptor: () => interceptors.request,
+        getResponseInterceptor: () => interceptors.response,
+        getResponseErrorInterceptor: () => interceptors.responseError,
     };
 };
 
