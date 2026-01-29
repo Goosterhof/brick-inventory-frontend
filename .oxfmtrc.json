@@ -7,11 +7,11 @@
 
   // Line length that the printer will wrap on
   // Default: 100 (Prettier default is 80)
-  "printWidth": 100,
+  "printWidth": 120,
 
   // Number of spaces per indentation-level
   // Default: 2
-  "tabWidth": 2,
+  "tabWidth": 4,
 
   // Indent lines with tabs instead of spaces
   // Default: false
@@ -141,7 +141,7 @@
 
     // Prefix patterns for identifying internal imports
     // Default: ["~/", "@/"]
-    "internalPattern": ["@/"],
+    "internalPattern": [ "@/" ],
 
     // Sort side-effect imports (disabled by default for security)
     // Default: false
@@ -162,17 +162,17 @@
     // Default shown below
     "groups": [
       "type-import",
-      ["value-builtin", "value-external"],
+      [ "value-builtin", "value-external" ],
       "type-internal",
       "value-internal",
-      ["type-parent", "type-sibling", "type-index"],
-      ["value-parent", "value-sibling", "value-index"],
+      [ "type-parent", "type-sibling", "type-index" ],
+      [ "value-parent", "value-sibling", "value-index" ],
       "unknown"
     ],
 
     // Custom groups for specific imports
     // Default: []
-    "customGroups": []
+    "customGroups": [ ]
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
