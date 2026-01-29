@@ -1,36 +1,39 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
+    ci:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js 24
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: 'npm'
+            - name: Setup Node.js 24
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Lint
-        run: npm run lint
+            - name: Lint (oxlint)
+              run: npm run lint
 
-      - name: Type check
-        run: npm run type-check
+            - name: Format check (oxfmt)
+              run: npm run format:check
 
-      - name: Test with coverage
-        run: npm run test:coverage
+            - name: Type check
+              run: npm run type-check
 
-      - name: Build
-        run: npm run build
+            - name: Test with coverage
+              run: npm run test:coverage
+
+            - name: Build
+              run: npm run build

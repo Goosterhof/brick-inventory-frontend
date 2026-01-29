@@ -1,18 +1,20 @@
-import type { DeepSnakeKeys } from 'string-ts';
-import { deepSnakeKeys } from 'string-ts';
-import type { Ref } from 'vue';
-import { ref } from 'vue';
+import type {DeepSnakeKeys} from "string-ts";
+import type {Ref} from "vue";
 
-import { MissingResponseDataError } from '@/errors/missing-response-data';
-import type { Writable } from '@/helpers/copy';
-import { deepCopy } from '@/helpers/copy';
-import { toCamelCaseTyped } from '@/helpers/string';
-import { isExisting } from '@/helpers/type-check';
-import type { HttpService } from '@/services/http';
-import type { New, Updatable } from '@/types/generics';
-import type { Item } from '@/types/item';
+import {deepSnakeKeys} from "string-ts";
+import {ref} from "vue";
 
-type ResourceHttpService = Pick<HttpService, 'postRequest' | 'putRequest' | 'deleteRequest'>;
+import type {Writable} from "@/helpers/copy";
+import type {HttpService} from "@/services/http";
+import type {New, Updatable} from "@/types/generics";
+import type {Item} from "@/types/item";
+
+import {MissingResponseDataError} from "@/errors/missing-response-data";
+import {deepCopy} from "@/helpers/copy";
+import {toCamelCaseTyped} from "@/helpers/string";
+import {isExisting} from "@/helpers/type-check";
+
+type ResourceHttpService = Pick<HttpService, "postRequest" | "putRequest" | "deleteRequest">;
 
 interface AdapterRepository<T extends Item> {
     create: (newItem: New<T>) => Promise<T>;
@@ -44,9 +46,9 @@ type BaseResourceAdapter<T extends Updatable<Item>> = Readonly<T> & {
  */
 export type Adapted<T extends Item> = BaseResourceAdapter<T> & {
     /** Update the resource in the repository */
-    update(): ReturnType<AdapterRepository<T>['update']>;
+    update(): ReturnType<AdapterRepository<T>["update"]>;
     /** Delete the resource from the repository */
-    delete(): ReturnType<AdapterRepository<T>['delete']>;
+    delete(): ReturnType<AdapterRepository<T>["delete"]>;
 };
 
 /**
@@ -55,15 +57,15 @@ export type Adapted<T extends Item> = BaseResourceAdapter<T> & {
  */
 export type NewAdapted<T extends Item> = BaseResourceAdapter<New<T>> & {
     /** Create the resource in the repository */
-    create(): ReturnType<AdapterRepository<T>['create']>;
+    create(): ReturnType<AdapterRepository<T>["create"]>;
 };
 
 const adapterRepositoryFactory = <T extends Item>(
     domainName: string,
-    { setById, deleteById }: AdapterStoreModule<T>,
+    {setById, deleteById}: AdapterStoreModule<T>,
     httpService: ResourceHttpService,
 ): AdapterRepository<T> => {
-    const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: 'create' | 'update'): T => {
+    const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: "create" | "update"): T => {
         if (!data) {
             throw new MissingResponseDataError(
                 `${actionType} route for ${domainName} returned no model in response to put in store.`,
@@ -79,17 +81,17 @@ const adapterRepositoryFactory = <T extends Item>(
 
     return {
         create: async (newItem: New<T>) => {
-            const { data } = await httpService.postRequest<DeepSnakeKeys<T>>(domainName, deepSnakeKeys(newItem));
+            const {data} = await httpService.postRequest<DeepSnakeKeys<T>>(domainName, deepSnakeKeys(newItem));
 
-            return dataHandler(data, 'create');
+            return dataHandler(data, "create");
         },
         update: async (id: number, updatedItem: Updatable<T>) => {
-            const { data } = await httpService.putRequest<DeepSnakeKeys<T>>(
+            const {data} = await httpService.putRequest<DeepSnakeKeys<T>>(
                 `${domainName}/${id}`,
                 deepSnakeKeys(updatedItem),
             );
 
-            return dataHandler(data, 'update');
+            return dataHandler(data, "update");
         },
         delete: async (id: number) => {
             await httpService.deleteRequest<void>(`${domainName}/${id}`);
@@ -97,7 +99,6 @@ const adapterRepositoryFactory = <T extends Item>(
         },
     };
 };
-
 
 /**
  * Factory that adapts a resource by:
@@ -137,7 +138,7 @@ export function resourceAdapter<T extends Item>(
 
         return {
             // existing resource is a proxy, so we unwrap it to avoid issues with Object.freeze
-            ...Object.freeze({ ...resource }),
+            ...Object.freeze({...resource}),
             mutable,
             reset: () => (mutable.value = deepCopy(resource)),
             update: () => repository.update(resource.id, mutable.value as Updatable<T>),

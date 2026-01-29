@@ -1,15 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
-import { isRef } from 'vue';
+import {describe, expect, it, vi} from "vitest";
+import {isRef} from "vue";
 
-import { MissingResponseDataError } from '@/errors/missing-response-data';
-import {
-    type Adapted,
-    type AdapterStoreModule,
-    type NewAdapted,
-    resourceAdapter,
-} from '@/services/resource-adapter';
-import type { New } from '@/types/generics';
-import type { Item } from '@/types/item';
+import type {New} from "@/types/generics";
+import type {Item} from "@/types/item";
+
+import {MissingResponseDataError} from "@/errors/missing-response-data";
+import {type Adapted, type AdapterStoreModule, type NewAdapted, resourceAdapter} from "@/services/resource-adapter";
 
 interface TestItem extends Item {
     id: number;
@@ -17,222 +13,156 @@ interface TestItem extends Item {
     createdAt: string;
 }
 
-describe('resource adapter', () => {
-    describe('adapting existing resource', () => {
-        const existingResource: TestItem = {
-            id: 1,
-            userName: 'testUser',
-            createdAt: '2024-01-01',
-        };
+describe("resource adapter", () => {
+    describe("adapting existing resource", () => {
+        const existingResource: TestItem = {id: 1, userName: "testUser", createdAt: "2024-01-01"};
 
-        it('should return the original resource properties', () => {
+        it("should return the original resource properties", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Assert
             expect(adapted.id).toBe(1);
-            expect(adapted.userName).toBe('testUser');
-            expect(adapted.createdAt).toBe('2024-01-01');
+            expect(adapted.userName).toBe("testUser");
+            expect(adapted.createdAt).toBe("2024-01-01");
         });
 
-        it('should provide a mutable ref with a deep copy of the resource', () => {
+        it("should provide a mutable ref with a deep copy of the resource", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Assert
             expect(isRef(adapted.mutable)).toBe(true);
-            expect(adapted.mutable.value).toEqual({
-                id: 1,
-                userName: 'testUser',
-                createdAt: '2024-01-01',
-            });
+            expect(adapted.mutable.value).toEqual({id: 1, userName: "testUser", createdAt: "2024-01-01"});
             expect(adapted.mutable.value).not.toBe(existingResource);
         });
 
-        it('should allow modifying the mutable ref without affecting original', () => {
+        it("should allow modifying the mutable ref without affecting original", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
-            adapted.mutable.value.userName = 'modifiedUser';
+            adapted.mutable.value.userName = "modifiedUser";
 
             // Assert
-            expect(adapted.mutable.value.userName).toBe('modifiedUser');
-            expect(adapted.userName).toBe('testUser');
-            expect(existingResource.userName).toBe('testUser');
+            expect(adapted.mutable.value.userName).toBe("modifiedUser");
+            expect(adapted.userName).toBe("testUser");
+            expect(existingResource.userName).toBe("testUser");
         });
 
-        it('should reset mutable state to original with reset()', () => {
+        it("should reset mutable state to original with reset()", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
-            adapted.mutable.value.userName = 'modifiedUser';
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
+            adapted.mutable.value.userName = "modifiedUser";
 
             // Act
             adapted.reset();
 
             // Assert
-            expect(adapted.mutable.value.userName).toBe('testUser');
+            expect(adapted.mutable.value.userName).toBe("testUser");
         });
 
-        it('should call httpService.putRequest with snake_case data on update()', async () => {
+        it("should call httpService.putRequest with snake_case data on update()", async () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const putRequest = vi.fn().mockResolvedValue({
-                data: { id: 1, user_name: 'updatedUser', created_at: '2024-01-01' },
-            });
-            const httpService = { postRequest: vi.fn(), putRequest, deleteRequest: vi.fn() };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
-            adapted.mutable.value.userName = 'updatedUser';
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const putRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
+            adapted.mutable.value.userName = "updatedUser";
 
             // Act
             await adapted.update();
 
             // Assert
-            expect(putRequest).toHaveBeenCalledWith('users/1', {
+            expect(putRequest).toHaveBeenCalledWith("users/1", {
                 id: 1,
-                user_name: 'updatedUser',
-                created_at: '2024-01-01',
+                user_name: "updatedUser",
+                created_at: "2024-01-01",
             });
         });
 
-        it('should call setById with camelCase data after update()', async () => {
+        it("should call setById with camelCase data after update()", async () => {
             // Arrange
             const setById = vi.fn();
-            const storeModule: AdapterStoreModule<TestItem> = { setById, deleteById: vi.fn() };
-            const putRequest = vi.fn().mockResolvedValue({
-                data: { id: 1, user_name: 'updatedUser', created_at: '2024-01-01' },
-            });
-            const httpService = { postRequest: vi.fn(), putRequest, deleteRequest: vi.fn() };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
+            const putRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
             await adapted.update();
 
             // Assert
-            expect(setById).toHaveBeenCalledWith({
-                id: 1,
-                userName: 'updatedUser',
-                createdAt: '2024-01-01',
-            });
+            expect(setById).toHaveBeenCalledWith({id: 1, userName: "updatedUser", createdAt: "2024-01-01"});
         });
 
-        it('should return the updated item from update()', async () => {
+        it("should return the updated item from update()", async () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const putRequest = vi.fn().mockResolvedValue({
-                data: { id: 1, user_name: 'updatedUser', created_at: '2024-01-01' },
-            });
-            const httpService = { postRequest: vi.fn(), putRequest, deleteRequest: vi.fn() };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const putRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
             const result = await adapted.update();
 
             // Assert
-            expect(result).toEqual({
-                id: 1,
-                userName: 'updatedUser',
-                createdAt: '2024-01-01',
-            });
+            expect(result).toEqual({id: 1, userName: "updatedUser", createdAt: "2024-01-01"});
         });
 
-        it('should throw MissingResponseDataError when update response has no data', async () => {
+        it("should throw MissingResponseDataError when update response has no data", async () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const putRequest = vi.fn().mockResolvedValue({ data: undefined });
-            const httpService = { postRequest: vi.fn(), putRequest, deleteRequest: vi.fn() };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const putRequest = vi.fn().mockResolvedValue({data: undefined});
+            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act & Assert
             await expect(adapted.update()).rejects.toThrow(MissingResponseDataError);
             await expect(adapted.update()).rejects.toThrow(
-                'update route for users returned no model in response to put in store.',
+                "update route for users returned no model in response to put in store.",
             );
         });
 
-        it('should call httpService.deleteRequest on delete()', async () => {
+        it("should call httpService.deleteRequest on delete()", async () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
             const deleteRequest = vi.fn().mockResolvedValue({});
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
             await adapted.delete();
 
             // Assert
-            expect(deleteRequest).toHaveBeenCalledWith('users/1');
+            expect(deleteRequest).toHaveBeenCalledWith("users/1");
         });
 
-        it('should call deleteById after delete()', async () => {
+        it("should call deleteById after delete()", async () => {
             // Arrange
             const deleteById = vi.fn();
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById};
             const deleteRequest = vi.fn().mockResolvedValue({});
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
             await adapted.delete();
@@ -241,366 +171,272 @@ describe('resource adapter', () => {
             expect(deleteById).toHaveBeenCalledWith(1);
         });
 
-        it('should propagate HTTP errors from update()', async () => {
+        it("should propagate HTTP errors from update()", async () => {
             // Arrange
             const setById = vi.fn();
-            const storeModule: AdapterStoreModule<TestItem> = { setById, deleteById: vi.fn() };
-            const putRequest = vi.fn().mockRejectedValue(new Error('Network error'));
-            const httpService = { postRequest: vi.fn(), putRequest, deleteRequest: vi.fn() };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
+            const putRequest = vi.fn().mockRejectedValue(new Error("Network error"));
+            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act & Assert
-            await expect(adapted.update()).rejects.toThrow('Network error');
+            await expect(adapted.update()).rejects.toThrow("Network error");
             expect(setById).not.toHaveBeenCalled();
         });
 
-        it('should propagate HTTP errors from delete()', async () => {
+        it("should propagate HTTP errors from delete()", async () => {
             // Arrange
             const deleteById = vi.fn();
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById };
-            const deleteRequest = vi.fn().mockRejectedValue(new Error('Network error'));
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest };
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById};
+            const deleteRequest = vi.fn().mockRejectedValue(new Error("Network error"));
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act & Assert
-            await expect(adapted.delete()).rejects.toThrow('Network error');
+            await expect(adapted.delete()).rejects.toThrow("Network error");
             expect(deleteById).not.toHaveBeenCalled();
         });
 
-        it('should have update and delete methods', () => {
+        it("should have update and delete methods", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Assert
-            expect(adapted).toHaveProperty('update');
-            expect(adapted).toHaveProperty('delete');
-            expect(typeof adapted.update).toBe('function');
-            expect(typeof adapted.delete).toBe('function');
+            expect(adapted).toHaveProperty("update");
+            expect(adapted).toHaveProperty("delete");
+            expect(typeof adapted.update).toBe("function");
+            expect(typeof adapted.delete).toBe("function");
         });
 
-        it('should not have create method', () => {
+        it("should not have create method", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: Adapted<TestItem> = resourceAdapter(
-                existingResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Assert
-            expect(adapted).not.toHaveProperty('create');
+            expect(adapted).not.toHaveProperty("create");
         });
     });
 
-    describe('adapting new resource', () => {
-        const newResource: New<TestItem> = {
-            userName: 'newUser',
-        };
+    describe("adapting new resource", () => {
+        const newResource: New<TestItem> = {userName: "newUser"};
 
-        it('should return the original resource properties', () => {
+        it("should return the original resource properties", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Assert
-            expect(adapted.userName).toBe('newUser');
+            expect(adapted.userName).toBe("newUser");
         });
 
-        it('should provide a mutable ref with a deep copy of the resource', () => {
+        it("should provide a mutable ref with a deep copy of the resource", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Assert
             expect(isRef(adapted.mutable)).toBe(true);
-            expect(adapted.mutable.value).toEqual({ userName: 'newUser' });
+            expect(adapted.mutable.value).toEqual({userName: "newUser"});
             expect(adapted.mutable.value).not.toBe(newResource);
         });
 
-        it('should allow modifying the mutable ref without affecting original', () => {
+        it("should allow modifying the mutable ref without affecting original", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
-            adapted.mutable.value.userName = 'modifiedUser';
+            adapted.mutable.value.userName = "modifiedUser";
 
             // Assert
-            expect(adapted.mutable.value.userName).toBe('modifiedUser');
-            expect(adapted.userName).toBe('newUser');
+            expect(adapted.mutable.value.userName).toBe("modifiedUser");
+            expect(adapted.userName).toBe("newUser");
         });
 
-        it('should reset mutable state to original with reset()', () => {
+        it("should reset mutable state to original with reset()", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
-            adapted.mutable.value.userName = 'modifiedUser';
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
+            adapted.mutable.value.userName = "modifiedUser";
 
             // Act
             adapted.reset();
 
             // Assert
-            expect(adapted.mutable.value.userName).toBe('newUser');
+            expect(adapted.mutable.value.userName).toBe("newUser");
         });
 
-        it('should call httpService.postRequest with snake_case data on create()', async () => {
+        it("should call httpService.postRequest with snake_case data on create()", async () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const postRequest = vi.fn().mockResolvedValue({
-                data: { id: 1, user_name: 'newUser', created_at: '2024-01-01' },
-            });
-            const httpService = { postRequest, putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const postRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
             await adapted.create();
 
             // Assert
-            expect(postRequest).toHaveBeenCalledWith('users', { user_name: 'newUser' });
+            expect(postRequest).toHaveBeenCalledWith("users", {user_name: "newUser"});
         });
 
-        it('should call setById with camelCase data after create()', async () => {
+        it("should call setById with camelCase data after create()", async () => {
             // Arrange
             const setById = vi.fn();
-            const storeModule: AdapterStoreModule<TestItem> = { setById, deleteById: vi.fn() };
-            const postRequest = vi.fn().mockResolvedValue({
-                data: { id: 1, user_name: 'newUser', created_at: '2024-01-01' },
-            });
-            const httpService = { postRequest, putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
+            const postRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
             await adapted.create();
 
             // Assert
-            expect(setById).toHaveBeenCalledWith({
-                id: 1,
-                userName: 'newUser',
-                createdAt: '2024-01-01',
-            });
+            expect(setById).toHaveBeenCalledWith({id: 1, userName: "newUser", createdAt: "2024-01-01"});
         });
 
-        it('should return the created item from create()', async () => {
+        it("should return the created item from create()", async () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const postRequest = vi.fn().mockResolvedValue({
-                data: { id: 1, user_name: 'newUser', created_at: '2024-01-01' },
-            });
-            const httpService = { postRequest, putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const postRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
             const result = await adapted.create();
 
             // Assert
-            expect(result).toEqual({
-                id: 1,
-                userName: 'newUser',
-                createdAt: '2024-01-01',
-            });
+            expect(result).toEqual({id: 1, userName: "newUser", createdAt: "2024-01-01"});
         });
 
-        it('should throw MissingResponseDataError when create response has no data', async () => {
+        it("should throw MissingResponseDataError when create response has no data", async () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const postRequest = vi.fn().mockResolvedValue({ data: undefined });
-            const httpService = { postRequest, putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const postRequest = vi.fn().mockResolvedValue({data: undefined});
+            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act & Assert
             await expect(adapted.create()).rejects.toThrow(MissingResponseDataError);
             await expect(adapted.create()).rejects.toThrow(
-                'create route for users returned no model in response to put in store.',
+                "create route for users returned no model in response to put in store.",
             );
         });
 
-        it('should propagate HTTP errors from create()', async () => {
+        it("should propagate HTTP errors from create()", async () => {
             // Arrange
             const setById = vi.fn();
-            const storeModule: AdapterStoreModule<TestItem> = { setById, deleteById: vi.fn() };
-            const postRequest = vi.fn().mockRejectedValue(new Error('Network error'));
-            const httpService = { postRequest, putRequest: vi.fn(), deleteRequest: vi.fn() };
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
+            const postRequest = vi.fn().mockRejectedValue(new Error("Network error"));
+            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act & Assert
-            await expect(adapted.create()).rejects.toThrow('Network error');
+            await expect(adapted.create()).rejects.toThrow("Network error");
             expect(setById).not.toHaveBeenCalled();
         });
 
-        it('should have create method', () => {
+        it("should have create method", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Assert
-            expect(adapted).toHaveProperty('create');
-            expect(typeof adapted.create).toBe('function');
+            expect(adapted).toHaveProperty("create");
+            expect(typeof adapted.create).toBe("function");
         });
 
-        it('should not have update and delete methods', () => {
+        it("should not have update and delete methods", () => {
             // Arrange
-            const storeModule: AdapterStoreModule<TestItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted: NewAdapted<TestItem> = resourceAdapter(
-                newResource,
-                'users',
-                storeModule,
-                httpService,
-            );
+            const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Assert
-            expect(adapted).not.toHaveProperty('update');
-            expect(adapted).not.toHaveProperty('delete');
+            expect(adapted).not.toHaveProperty("update");
+            expect(adapted).not.toHaveProperty("delete");
         });
     });
 
-    describe('deep copy behavior', () => {
-        it('should deeply copy nested objects in mutable', () => {
+    describe("deep copy behavior", () => {
+        it("should deeply copy nested objects in mutable", () => {
             // Arrange
             interface NestedItem extends Item {
                 id: number;
-                nested: { value: string };
+                nested: {value: string};
             }
-            const nestedResource: NestedItem = {
-                id: 1,
-                nested: { value: 'original' },
-            };
-            const storeModule: AdapterStoreModule<NestedItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const nestedResource: NestedItem = {id: 1, nested: {value: "original"}};
+            const storeModule: AdapterStoreModule<NestedItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted = resourceAdapter(nestedResource, 'nested', storeModule, httpService);
-            adapted.mutable.value.nested.value = 'modified';
+            const adapted = resourceAdapter(nestedResource, "nested", storeModule, httpService);
+            adapted.mutable.value.nested.value = "modified";
 
             // Assert
-            expect(adapted.mutable.value.nested.value).toBe('modified');
-            expect(nestedResource.nested.value).toBe('original');
+            expect(adapted.mutable.value.nested.value).toBe("modified");
+            expect(nestedResource.nested.value).toBe("original");
         });
 
-        it('should deeply copy arrays in mutable', () => {
+        it("should deeply copy arrays in mutable", () => {
             // Arrange
             interface ArrayItem extends Item {
                 id: number;
                 items: string[];
             }
-            const arrayResource: ArrayItem = {
-                id: 1,
-                items: ['a', 'b'],
-            };
-            const storeModule: AdapterStoreModule<ArrayItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const arrayResource: ArrayItem = {id: 1, items: ["a", "b"]};
+            const storeModule: AdapterStoreModule<ArrayItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted = resourceAdapter(arrayResource, 'arrays', storeModule, httpService);
-            adapted.mutable.value.items.push('c');
+            const adapted = resourceAdapter(arrayResource, "arrays", storeModule, httpService);
+            adapted.mutable.value.items.push("c");
 
             // Assert
-            expect(adapted.mutable.value.items).toEqual(['a', 'b', 'c']);
-            expect(arrayResource.items).toEqual(['a', 'b']);
+            expect(adapted.mutable.value.items).toEqual(["a", "b", "c"]);
+            expect(arrayResource.items).toEqual(["a", "b"]);
         });
 
-        it('should deeply copy Date objects in mutable', () => {
+        it("should deeply copy Date objects in mutable", () => {
             // Arrange
             interface DateItem extends Item {
                 id: number;
                 createdAt: Date;
             }
-            const originalDate = new Date('2024-01-01');
-            const dateResource: DateItem = {
-                id: 1,
-                createdAt: originalDate,
-            };
-            const storeModule: AdapterStoreModule<DateItem> = { setById: vi.fn(), deleteById: vi.fn() };
-            const httpService = { postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn() };
+            const originalDate = new Date("2024-01-01");
+            const dateResource: DateItem = {id: 1, createdAt: originalDate};
+            const storeModule: AdapterStoreModule<DateItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
             // Act
-            const adapted = resourceAdapter(dateResource, 'dates', storeModule, httpService);
+            const adapted = resourceAdapter(dateResource, "dates", storeModule, httpService);
             adapted.mutable.value.createdAt.setFullYear(2025);
 
             // Assert

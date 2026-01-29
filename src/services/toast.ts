@@ -1,29 +1,27 @@
-import type { Component, VNode } from 'vue';
-import { defineComponent, h, ref } from 'vue';
-import type { ComponentProps } from 'vue-component-type-helpers';
+import type {Component, VNode} from "vue";
+import type {ComponentProps} from "vue-component-type-helpers";
+
+import {defineComponent, h, ref} from "vue";
 
 export interface ToastService<C extends Component> {
-    show: (props: Omit<ComponentProps<C>, 'onClose'>) => string;
+    show: (props: Omit<ComponentProps<C>, "onClose">) => string;
     hide: (id: string) => void;
     ToastContainerComponent: Component;
 }
 
-export const createToastService = <C extends Component>(
-    component: C,
-    maxToasts = 4,
-): ToastService<C> => {
+export const createToastService = <C extends Component>(component: C, maxToasts = 4): ToastService<C> => {
     const validatedMaxToasts = Math.max(1, Math.floor(maxToasts));
-    const toasts = ref<{ node: VNode; id: string }[]>([]);
+    const toasts = ref<{node: VNode; id: string}[]>([]);
     let toastId = 0;
 
     const hide = (id: string) => {
-        const index = toasts.value.findIndex(toast => toast.id === id);
+        const index = toasts.value.findIndex((toast) => toast.id === id);
         if (index === -1) return;
 
         toasts.value.splice(index, 1);
     };
 
-    const show = (props: Omit<ComponentProps<C>, 'onClose'>): string => {
+    const show = (props: Omit<ComponentProps<C>, "onClose">): string => {
         if (toasts.value.length >= validatedMaxToasts && toasts.value[0]) {
             hide(toasts.value[0].id);
         }
@@ -31,17 +29,17 @@ export const createToastService = <C extends Component>(
         const id = `toast-${toastId++}`;
         const toastHider = () => hide(id);
 
-        toasts.value.push({ node: h(component, { key: id, ...props, onClose: toastHider }), id });
+        toasts.value.push({node: h(component, {key: id, ...props, onClose: toastHider}), id});
 
         return id;
     };
 
     const ToastContainerComponent = defineComponent({
-        name: 'ToastContainer',
+        name: "ToastContainer",
         render() {
-            return toasts.value.map(toast => toast.node);
+            return toasts.value.map((toast) => toast.node);
         },
     });
 
-    return { show, hide, ToastContainerComponent };
+    return {show, hide, ToastContainerComponent};
 };

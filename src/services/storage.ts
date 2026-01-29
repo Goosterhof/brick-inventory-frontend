@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-restricted-globals */
+// This module intentionally uses window.localStorage directly.
 
 /**
  * Retrieve a value from storage.
@@ -33,13 +33,13 @@ export const createStorageService = (prefix: string): StorageService => {
     const prefixKey = (key: string): string => `${prefix}:${key}`;
 
     const put = (key: string, value: unknown): void => {
-        const valueToStore = typeof value === 'string' ? value : JSON.stringify(value);
+        const valueToStore = typeof value === "string" ? value : JSON.stringify(value);
 
         try {
             localStorage.setItem(prefixKey(key), valueToStore);
         } catch (error) {
-            if (error instanceof DOMException && error.name === 'QuotaExceededError') {
-                console.error('localStorage quota exceeded');
+            if (error instanceof DOMException && error.name === "QuotaExceededError") {
+                console.error("localStorage quota exceeded");
                 return;
             }
             console.error(error);
@@ -58,7 +58,7 @@ export const createStorageService = (prefix: string): StorageService => {
         if (storedValue === null) return defaultValue;
 
         // If default is a string, return raw value to avoid unintended conversions (e.g., "5e3" -> 5000)
-        if (typeof defaultValue === 'string') return storedValue as T;
+        if (typeof defaultValue === "string") return storedValue as T;
 
         try {
             return JSON.parse(storedValue) as T;
@@ -93,5 +93,5 @@ export const createStorageService = (prefix: string): StorageService => {
         }
     };
 
-    return { put, get, remove, clear };
+    return {put, get, remove, clear};
 };

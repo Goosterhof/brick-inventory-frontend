@@ -1,0 +1,235 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // BASIC FORMATTING OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Line length that the printer will wrap on
+    // Default: 100 (Prettier default is 80)
+    "printWidth": 120,
+
+    // Number of spaces per indentation-level
+    // Default: 2
+    "tabWidth": 4,
+
+    // Indent lines with tabs instead of spaces
+    // Default: false
+    "useTabs": false,
+
+    // Print semicolons at the ends of statements
+    // Default: true
+    "semi": true,
+
+    // Use single quotes instead of double quotes
+    // Default: false
+    "singleQuote": false,
+
+    // Use single quotes in JSX
+    // Default: false
+    "jsxSingleQuote": false,
+
+    // Print trailing commas wherever possible in multi-line structures
+    // Options: "all" | "es5" | "none"
+    // Default: "all"
+    "trailingComma": "all",
+
+    // Print spaces between brackets in object literals
+    // Default: true
+    "bracketSpacing": false,
+
+    // Put the > of a multi-line HTML element at the end of the last line
+    // Default: false
+    "bracketSameLine": false,
+
+    // Include parentheses around a sole arrow function parameter
+    // Options: "always" | "avoid"
+    // Default: "always"
+    "arrowParens": "always",
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // OBJECT & PROPERTY OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // How to wrap object literals
+    // Options: "preserve" | "collapse"
+    // - "preserve": Keep multi-line if there's a newline before first property
+    // - "collapse": Collapse to single line if it fits
+    // Default: "preserve"
+    "objectWrap": "collapse",
+
+    // When to quote properties in objects
+    // Options: "as-needed" | "consistent" | "preserve"
+    // Default: "as-needed"
+    "quoteProps": "as-needed",
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // HTML / VUE / JSX OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Whitespace sensitivity for HTML, Vue, Angular, Handlebars
+    // Options: "css" | "strict" | "ignore"
+    // - "css": Respect CSS display property
+    // - "strict": Whitespace is considered sensitive
+    // - "ignore": Whitespace is considered insensitive
+    // Default: "css"
+    "htmlWhitespaceSensitivity": "css",
+
+    // Enforce single attribute per line in HTML, Vue, and JSX
+    // Default: false
+    "singleAttributePerLine": false,
+
+    // Indent code inside <script> and <style> tags in Vue files
+    // Default: false
+    "vueIndentScriptAndStyle": false,
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // MARKDOWN / PROSE OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // How to wrap prose in markdown
+    // Options: "always" | "never" | "preserve"
+    // Default: "preserve"
+    "proseWrap": "preserve",
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FILE OPTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Which end of line characters to apply
+    // Options: "lf" | "crlf" | "cr"
+    // Default: "lf"
+    "endOfLine": "lf",
+
+    // Insert a final newline at the end of the file
+    // Default: true
+    "insertFinalNewline": true,
+
+    // Format embedded code (CSS-in-JS, JS-in-Vue, etc.)
+    // Options: "auto" | "off"
+    // Default: "auto"
+    "embeddedLanguageFormatting": "auto",
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // IGNORE PATTERNS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Glob patterns to ignore
+    // Default: []
+    "ignorePatterns": ["dist/**", "coverage/**"],
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // EXPERIMENTAL: IMPORT SORTING
+    // Uses similar algorithm as eslint-plugin-perfectionist/sort-imports
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    "experimentalSortImports": {
+        // Sort order: "asc" | "desc"
+        // Default: "asc"
+        "order": "asc",
+
+        // Case-insensitive sorting
+        // Default: true
+        "ignoreCase": true,
+
+        // Add newlines between groups
+        // Default: true
+        "newlinesBetween": true,
+
+        // Prefix patterns for identifying internal imports
+        // Default: ["~/", "@/"]
+        "internalPattern": ["@/"],
+
+        // Sort side-effect imports (disabled by default for security)
+        // Default: false
+        "sortSideEffects": false,
+
+        // Use comments to separate imports into partitions
+        // Default: false
+        "partitionByComment": false,
+
+        // Use empty lines to separate imports into partitions
+        // Default: false
+        "partitionByNewline": false,
+
+        // Import group ordering
+        // Selectors: type, side-effect-style, side-effect, style, index, sibling,
+        //            parent, subpath, internal, builtin, external, import
+        // Modifiers: side-effect, type, value, default, wildcard, named, multiline, singleline
+        // Default shown below
+        "groups": [
+            "type-import",
+            ["value-builtin", "value-external"],
+            "type-internal",
+            "value-internal",
+            ["type-parent", "type-sibling", "type-index"],
+            ["value-parent", "value-sibling", "value-index"],
+            "unknown"
+        ],
+
+        // Custom groups for specific imports
+        // Default: []
+        "customGroups": []
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // EXPERIMENTAL: PACKAGE.JSON SORTING
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Sort package.json keys
+    // Can be boolean or object with options
+    // Default: true
+    "experimentalSortPackageJson": {
+        // Sort the scripts field alphabetically
+        // Default: false
+        "sortScripts": true
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // EXPERIMENTAL: TAILWIND CSS CLASS SORTING
+    // Uses same algorithm as prettier-plugin-tailwindcss
+    // NOTE: This project uses UnoCSS, not Tailwind, so this is disabled
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Uncomment to enable Tailwind class sorting:
+    // "experimentalTailwindcss": {
+    //   // Path to Tailwind config (v3) - auto-detected by default
+    //   "config": null,
+    //
+    //   // Path to Tailwind stylesheet (v4)
+    //   "stylesheet": null,
+    //
+    //   // Additional attributes to sort (beyond class/className)
+    //   // Example: ["myClassProp", ":class"]
+    //   "attributes": [],
+    //
+    //   // Function names whose arguments should be sorted
+    //   // Example: ["clsx", "cn", "cva", "tw"]
+    //   "functions": [],
+    //
+    //   // Preserve duplicate classes
+    //   // Default: false
+    //   "preserveDuplicates": false,
+    //
+    //   // Preserve whitespace around classes
+    //   // Default: false
+    //   "preserveWhitespace": false
+    // },
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FILE-SPECIFIC OVERRIDES
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Override options for specific file patterns
+    // Later overrides take precedence
+    "overrides": [
+        // Example: Different settings for test files
+        // {
+        //   "files": ["**/*.spec.ts", "**/*.test.ts"],
+        //   "excludeFiles": [],
+        //   "options": {
+        //     "printWidth": 120
+        //   }
+        // }
+    ]
+}
