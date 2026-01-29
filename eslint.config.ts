@@ -1,7 +1,11 @@
-import { globalIgnores } from 'eslint/config'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import pluginVue from 'eslint-plugin-vue'
+import stylistic from '@stylistic/eslint-plugin'
 import pluginVitest from '@vitest/eslint-plugin'
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
+import { globalIgnores } from 'eslint/config'
+import pluginImport from 'eslint-plugin-import'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import pluginVue from 'eslint-plugin-vue'
+
 import pluginAaaPattern from './eslint-plugins/aaa-pattern'
 
 // To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
@@ -40,6 +44,11 @@ export default defineConfigWithVueTs(
 
   {
     name: 'app/rules',
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+      'import': pluginImport,
+      '@stylistic': stylistic,
+    },
     rules: {
       'func-style': ['error', 'expression'],
       'prefer-const': 'error',
@@ -48,6 +57,13 @@ export default defineConfigWithVueTs(
         name: 'localStorage',
         message: 'Use the storage service (src/services/storage.ts) instead of localStorage directly.',
       }],
+      '@typescript-eslint/no-non-null-assertion': 'error',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'import/first': 'error',
+      'import/newline-after-import': 'error',
+      'import/no-duplicates': 'error',
+      '@stylistic/comma-spacing': ['error', { before: false, after: true }],
     },
   },
 )

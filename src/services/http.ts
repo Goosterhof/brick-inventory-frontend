@@ -1,4 +1,4 @@
-import axios, { isAxiosError, type AxiosError, type AxiosRequestConfig, type InternalAxiosRequestConfig, type AxiosResponse } from 'axios';
+import axios, { type AxiosError, type AxiosRequestConfig, type AxiosResponse, type InternalAxiosRequestConfig, isAxiosError } from 'axios';
 
 export type AxiosResponseError = Record<string, unknown>;
 
