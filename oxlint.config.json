@@ -1,53 +1,30 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "import",
-    "unicorn",
-    "promise"
-  ],
-  "env": {
-    "browser": true,
-    "es2024": true
-  },
-  "ignorePatterns": [
-    "dist/**",
-    "dist-ssr/**",
-    "coverage/**",
-    "node_modules/**"
-  ],
-  "rules": {
-    "no-console": "error",
-    "prefer-const": "error",
-    "eqeqeq": "error",
-    "no-var": "error",
-    "no-undef": "off",
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-non-null-assertion": "error",
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": "warn",
-    "import/no-duplicates": "error",
-    "import/first": "error",
-    "import/no-self-import": "error",
-    "import/no-cycle": "warn",
-    "unicorn/no-array-for-each": "warn",
-    "unicorn/prefer-array-some": "warn",
-    "unicorn/prefer-includes": "warn",
-    "unicorn/prefer-string-starts-ends-with": "warn",
-    "promise/no-return-wrap": "error"
-  },
-  "overrides": [
-    {
-      "files": ["*.vue"],
-      "rules": {
-        "no-undef": "off"
-      }
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["typescript", "import", "unicorn", "promise"],
+    "env": {"browser": true, "es2024": true},
+    "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "node_modules/**"],
+    "rules": {
+        "no-console": "error",
+        "prefer-const": "error",
+        "eqeqeq": "error",
+        "no-var": "error",
+        "no-undef": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "import/no-duplicates": "error",
+        "import/first": "error",
+        "import/no-self-import": "error",
+        "import/no-cycle": "warn",
+        "unicorn/no-array-for-each": "warn",
+        "unicorn/prefer-array-some": "warn",
+        "unicorn/prefer-includes": "warn",
+        "unicorn/prefer-string-starts-ends-with": "warn",
+        "promise/no-return-wrap": "error"
     },
-    {
-      "files": ["src/services/storage.ts"],
-      "rules": {
-        "no-console": "off"
-      }
-    }
-  ]
+    "overrides": [
+        {"files": ["*.vue"], "rules": {"no-undef": "off"}},
+        {"files": ["src/services/storage.ts"], "rules": {"no-console": "off"}}
+    ]
 }

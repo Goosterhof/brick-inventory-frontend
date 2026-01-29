@@ -20,22 +20,22 @@ Write unit tests following the project's established patterns and conventions.
 Every test MUST include AAA (Arrange, Act, Assert) comments:
 
 ```typescript
-it('should do something', () => {
+it("should do something", () => {
     // Arrange
-    const input = 'test';
+    const input = "test";
 
     // Act
     const result = doSomething(input);
 
     // Assert
-    expect(result).toBe('expected');
+    expect(result).toBe("expected");
 });
 ```
 
 For tests where Act and Assert are combined (e.g., testing exceptions):
 
 ```typescript
-it('should throw an error', async () => {
+it("should throw an error", async () => {
     // Arrange
     const service = createService();
 
@@ -51,12 +51,12 @@ it('should throw an error', async () => {
 
 ```typescript
 // Good
-it('should return user data when valid id is provided', () => {});
-it('should throw error when user is not found', () => {});
+it("should return user data when valid id is provided", () => {});
+it("should throw error when user is not found", () => {});
 
 // Bad
-it('returns user data', () => {});
-it('test error case', () => {});
+it("returns user data", () => {});
+it("test error case", () => {});
 ```
 
 ### Self-Contained Tests
@@ -67,17 +67,17 @@ it('test error case', () => {});
 
 ```typescript
 // Good - self-contained
-it('should make a GET request', async () => {
+it("should make a GET request", async () => {
     // Arrange
     const mock = new MockAdapter(axios);
     const service = createService();
-    mock.onGet('/users').reply(200, { id: 1 });
+    mock.onGet("/users").reply(200, {id: 1});
 
     // Act
     const result = await service.getUsers();
 
     // Assert
-    expect(result.data).toEqual({ id: 1 });
+    expect(result.data).toEqual({id: 1});
 
     mock.restore();
 });
@@ -94,19 +94,19 @@ beforeEach(() => {
 ### HTTP Requests with axios-mock-adapter
 
 ```typescript
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
+import axios from "axios";
+import MockAdapter from "axios-mock-adapter";
 
-it('should fetch data', async () => {
+it("should fetch data", async () => {
     // Arrange
     const mock = new MockAdapter(axios);
-    mock.onGet(`${baseURL}/endpoint`).reply(200, { data: 'value' });
+    mock.onGet(`${baseURL}/endpoint`).reply(200, {data: "value"});
 
     // Act
     const result = await service.getData();
 
     // Assert
-    expect(result.data).toEqual({ data: 'value' });
+    expect(result.data).toEqual({data: "value"});
 
     mock.restore();
 });
@@ -125,7 +125,7 @@ const middleware = vi.fn();
 Use `vi.spyOn()` to spy on existing methods:
 
 ```typescript
-const createSpy = vi.spyOn(axios, 'create');
+const createSpy = vi.spyOn(axios, "create");
 ```
 
 ### Type-Safe Mock Access

@@ -68,6 +68,7 @@ src/
 ## UnoCSS
 
 This project uses UnoCSS with the following presets:
+
 - `presetUno`: Default preset (Tailwind-compatible utilities)
 - `presetAttributify`: Attributify mode for cleaner templates
 - `presetIcons`: Icon support
