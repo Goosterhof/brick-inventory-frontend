@@ -8,7 +8,7 @@ import type { HttpService } from '@/services/http';
 import { deepSnakeKeys } from 'string-ts';
 import { ref } from 'vue';
 
-import { MissingDataInPostResponseError } from '@/errors/missing-data-in-post-response';
+import { MissingResponseDataError } from '@/errors/missing-response-data';
 import { deepCopy } from '@/helpers/copy';
 import { toCamelCaseTyped } from '@/helpers/string';
 import { isExisting } from '@/helpers/type-check';
@@ -41,11 +41,11 @@ type BaseResourceAdapter<T extends Updatable<Item>> = Readonly<T> & {
  * Adapter for an existing resource (with an id).
  * Provides update and delete methods from the repository.
  */
-export type Adapted<T extends Item, D extends number | null | void = void> = BaseResourceAdapter<T> & {
+export type Adapted<T extends Item> = BaseResourceAdapter<T> & {
     /** Update the resource in the repository */
     update(): ReturnType<AdapterRepository<T>['update']>;
     /** Delete the resource from the repository */
-    delete(...extra: D extends void ? [] : [D]): ReturnType<AdapterRepository<T>['delete']>;
+    delete(): ReturnType<AdapterRepository<T>['delete']>;
 };
 
 /**
@@ -64,7 +64,7 @@ const adapterRepositoryFactory = <T extends Item>(
 ): AdapterRepository<T> => {
     const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: 'create' | 'update'): T => {
         if (!data) {
-            throw new MissingDataInPostResponseError(
+            throw new MissingResponseDataError(
                 `${actionType} route for ${domainName} returned no model in response to put in store.`,
             );
         }
@@ -97,24 +97,6 @@ const adapterRepositoryFactory = <T extends Item>(
     };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const repositoryCache = new Map<string, AdapterRepository<any>>();
-
-/**
- * Cached version of adapterRepositoryFactory
- */
-const getCachedRepository = <T extends Item>(
-    domainName: string,
-    storeModule: AdapterStoreModule<T>,
-    httpService: HttpService,
-): AdapterRepository<T> => {
-    if (repositoryCache.has(domainName)) return <AdapterRepository<T>>repositoryCache.get(domainName);
-
-    const repository = adapterRepositoryFactory<T>(domainName, storeModule, httpService);
-    repositoryCache.set(domainName, repository);
-
-    return repository;
-};
 
 /**
  * Factory that adapts a resource by:
@@ -146,7 +128,7 @@ export function resourceAdapter<T extends Item>(
     storeModule: AdapterStoreModule<T>,
     httpService: HttpService,
 ): Adapted<T> | NewAdapted<T> {
-    const repository = getCachedRepository<T>(domainName, storeModule, httpService);
+    const repository = adapterRepositoryFactory<T>(domainName, storeModule, httpService);
 
     if (isExisting(resource)) {
         // Assertion: UnwrapRef widens to unknown for generic T; object is a plain POJO so this is safe.

@@ -8,7 +8,7 @@ import {
 import type { HttpService } from '@/services/http';
 import type { Item } from '@/types/item';
 import type { New } from '@/types/generics';
-import { MissingDataInPostResponseError } from '@/errors/missing-data-in-post-response';
+import { MissingResponseDataError } from '@/errors/missing-response-data';
 import { isRef } from 'vue';
 
 interface TestItem extends Item {
@@ -17,17 +17,12 @@ interface TestItem extends Item {
     createdAt: string;
 }
 
-let testId = 0;
-const uniqueDomain = (base: string) => `${base}-${testId++}`;
-
 describe('resource adapter', () => {
     let mockHttpService: HttpService;
     let mockStoreModule: AdapterStoreModule<TestItem>;
-    let domainName: string;
+    const domainName = 'users';
 
     beforeEach(() => {
-        domainName = uniqueDomain('users');
-
         mockHttpService = {
             getRequest: vi.fn(),
             postRequest: vi.fn(),
@@ -156,13 +151,13 @@ describe('resource adapter', () => {
             });
         });
 
-        it('should throw MissingDataInPostResponseError when update response has no data', async () => {
+        it('should throw MissingResponseDataError when update response has no data', async () => {
             // Arrange
             vi.mocked(mockHttpService.putRequest).mockResolvedValue({ data: undefined } as never);
             const adapted = createAdapted();
 
             // Act & Assert
-            await expect(adapted.update()).rejects.toThrow(MissingDataInPostResponseError);
+            await expect(adapted.update()).rejects.toThrow(MissingResponseDataError);
             await expect(adapted.update()).rejects.toThrow(
                 `update route for ${domainName} returned no model in response to put in store.`,
             );
@@ -190,6 +185,28 @@ describe('resource adapter', () => {
 
             // Assert
             expect(mockStoreModule.deleteById).toHaveBeenCalledWith(1);
+        });
+
+        it('should propagate HTTP errors from update()', async () => {
+            // Arrange
+            const httpError = new Error('Network error');
+            vi.mocked(mockHttpService.putRequest).mockRejectedValue(httpError);
+            const adapted = createAdapted();
+
+            // Act & Assert
+            await expect(adapted.update()).rejects.toThrow('Network error');
+            expect(mockStoreModule.setById).not.toHaveBeenCalled();
+        });
+
+        it('should propagate HTTP errors from delete()', async () => {
+            // Arrange
+            const httpError = new Error('Network error');
+            vi.mocked(mockHttpService.deleteRequest).mockRejectedValue(httpError);
+            const adapted = createAdapted();
+
+            // Act & Assert
+            await expect(adapted.delete()).rejects.toThrow('Network error');
+            expect(mockStoreModule.deleteById).not.toHaveBeenCalled();
         });
 
         it('should have update and delete methods', () => {
@@ -309,16 +326,27 @@ describe('resource adapter', () => {
             });
         });
 
-        it('should throw MissingDataInPostResponseError when create response has no data', async () => {
+        it('should throw MissingResponseDataError when create response has no data', async () => {
             // Arrange
             vi.mocked(mockHttpService.postRequest).mockResolvedValue({ data: undefined } as never);
             const adapted = createNewAdapted();
 
             // Act & Assert
-            await expect(adapted.create()).rejects.toThrow(MissingDataInPostResponseError);
+            await expect(adapted.create()).rejects.toThrow(MissingResponseDataError);
             await expect(adapted.create()).rejects.toThrow(
                 `create route for ${domainName} returned no model in response to put in store.`,
             );
+        });
+
+        it('should propagate HTTP errors from create()', async () => {
+            // Arrange
+            const httpError = new Error('Network error');
+            vi.mocked(mockHttpService.postRequest).mockRejectedValue(httpError);
+            const adapted = createNewAdapted();
+
+            // Act & Assert
+            await expect(adapted.create()).rejects.toThrow('Network error');
+            expect(mockStoreModule.setById).not.toHaveBeenCalled();
         });
 
         it('should have create method', () => {
@@ -389,6 +417,32 @@ describe('resource adapter', () => {
             // Assert
             expect(adapted.mutable.value.items).toEqual(['a', 'b', 'c']);
             expect(arrayResource.items).toEqual(['a', 'b']);
+        });
+
+        it('should deeply copy Date objects in mutable', () => {
+            // Arrange
+            interface DateItem extends Item {
+                id: number;
+                createdAt: Date;
+            }
+            const originalDate = new Date('2024-01-01');
+            const dateResource: DateItem = {
+                id: 1,
+                createdAt: originalDate,
+            };
+
+            // Act
+            const adapted = resourceAdapter(
+                dateResource,
+                domainName,
+                mockStoreModule as unknown as AdapterStoreModule<DateItem>,
+                mockHttpService,
+            );
+            adapted.mutable.value.createdAt.setFullYear(2025);
+
+            // Assert
+            expect(adapted.mutable.value.createdAt.getFullYear()).toBe(2025);
+            expect(originalDate.getFullYear()).toBe(2024);
         });
     });
 });
