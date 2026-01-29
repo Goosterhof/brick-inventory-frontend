@@ -45,6 +45,7 @@
         "typescript/prefer-optional-chain": "warn",
         "typescript/prefer-nullish-coalescing": "warn",
         "typescript/switch-exhaustiveness-check": "warn",
+        // Use the type-aware version of require-await; the core rule was removed from the general rules to avoid duplicate configuration.
         "typescript/require-await": "warn",
 
         // Import rules
