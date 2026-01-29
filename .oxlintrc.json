@@ -18,7 +18,6 @@
         "no-template-curly-in-string": "warn",
         "no-unreachable": "error",
         "no-unsafe-negation": "error",
-        "require-await": "warn",
         "no-return-await": "warn",
         "no-throw-literal": "error",
         "radix": "warn",
@@ -31,6 +30,23 @@
         "@typescript-eslint/prefer-as-const": "warn",
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/no-duplicate-enum-values": "error",
+
+        // Type-aware rules (require --type-aware flag)
+        "typescript/no-floating-promises": "error",
+        "typescript/no-misused-promises": "error",
+        "typescript/await-thenable": "error",
+        "typescript/no-for-in-array": "error",
+        "typescript/only-throw-error": "error",
+        "typescript/no-unsafe-argument": "warn",
+        "typescript/no-unsafe-assignment": "warn",
+        "typescript/no-unsafe-call": "warn",
+        "typescript/no-unsafe-return": "warn",
+        "typescript/no-unnecessary-type-assertion": "warn",
+        "typescript/prefer-optional-chain": "warn",
+        "typescript/prefer-nullish-coalescing": "warn",
+        "typescript/switch-exhaustiveness-check": "warn",
+        // Use the type-aware version of require-await; the core rule was removed from the general rules to avoid duplicate configuration.
+        "typescript/require-await": "warn",
 
         // Import rules
         "import/no-duplicates": "error",
