@@ -1,0 +1,66 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["typescript", "import", "unicorn", "promise"],
+    "env": {"browser": true, "es2024": true},
+    "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "node_modules/**"],
+    "rules": {
+        // Core rules
+        "no-console": "error",
+        "prefer-const": "error",
+        "eqeqeq": "error",
+        "no-var": "error",
+        "no-undef": "off", // handled by TypeScript
+        "no-unused-vars": "off", // handled by @typescript-eslint/no-unused-vars
+        "no-debugger": "error",
+        "no-empty": "warn",
+        "no-duplicate-imports": "off", // import/no-duplicates handles this better with type imports
+        "no-self-compare": "error",
+        "no-template-curly-in-string": "warn",
+        "no-unreachable": "error",
+        "no-unsafe-negation": "error",
+        "require-await": "warn",
+        "no-return-await": "warn",
+        "no-throw-literal": "error",
+        "radix": "warn",
+
+        // TypeScript rules
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-empty-interface": "warn",
+        "@typescript-eslint/prefer-as-const": "warn",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-duplicate-enum-values": "error",
+
+        // Import rules
+        "import/no-duplicates": "error",
+        "import/first": "error",
+        "import/no-self-import": "error",
+        "import/no-cycle": "warn",
+        "import/no-default-export": "off", // Vue components use default exports
+
+        // Unicorn rules - modern JS best practices
+        "unicorn/no-array-for-each": "warn",
+        "unicorn/prefer-array-some": "warn",
+        "unicorn/prefer-includes": "warn",
+        "unicorn/prefer-string-starts-ends-with": "warn",
+        "unicorn/no-null": "off", // null is fine in this project
+        "unicorn/prefer-array-flat": "warn",
+        "unicorn/prefer-array-flat-map": "warn",
+        "unicorn/prefer-number-properties": "warn",
+        "unicorn/prefer-optional-catch-binding": "warn",
+        "unicorn/throw-new-error": "error",
+        "unicorn/no-useless-spread": "warn",
+        "unicorn/prefer-ternary": "off", // can reduce readability
+
+        // Promise rules
+        "promise/no-return-wrap": "error",
+        "promise/catch-or-return": "warn",
+        "promise/no-nesting": "warn",
+        "promise/param-names": "warn"
+    },
+    "overrides": [
+        {"files": ["*.vue"], "rules": {"no-undef": "off"}},
+        {"files": ["src/services/storage.ts"], "rules": {"no-console": "off"}}
+    ]
+}
