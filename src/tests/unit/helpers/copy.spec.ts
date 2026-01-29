@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 
-import { deepCopy } from "@/helpers/copy";
+import {deepCopy} from "@/helpers/copy";
 
 describe("deepCopy", () => {
     describe("primitives", () => {
@@ -50,7 +50,7 @@ describe("deepCopy", () => {
     describe("objects", () => {
         it("should create a shallow copy of a simple object", () => {
             // Arrange
-            const original = { a: 1, b: 2 };
+            const original = {a: 1, b: 2};
 
             // Act
             const copy = deepCopy(original);
@@ -62,7 +62,7 @@ describe("deepCopy", () => {
 
         it("should create a deep copy of nested objects", () => {
             // Arrange
-            const original = { a: { b: { c: 1 } } };
+            const original = {a: {b: {c: 1}}};
 
             // Act
             const copy = deepCopy(original);
@@ -75,8 +75,8 @@ describe("deepCopy", () => {
 
         it("should not copy inherited properties", () => {
             // Arrange
-            const parent = { inherited: true };
-            const original = Object.create(parent) as { own: boolean; inherited?: boolean };
+            const parent = {inherited: true};
+            const original = Object.create(parent) as {own: boolean; inherited?: boolean};
             original.own = true;
 
             // Act
@@ -131,7 +131,7 @@ describe("deepCopy", () => {
 
         it("should create a deep copy of arrays containing objects", () => {
             // Arrange
-            const original: Array<{ a?: number; b?: number }> = [{ a: 1 }, { b: 2 }];
+            const original: Array<{a?: number; b?: number}> = [{a: 1}, {b: 2}];
 
             // Act
             const copy = deepCopy(original);
@@ -184,7 +184,7 @@ describe("deepCopy", () => {
 
         it("should handle Date objects nested in objects", () => {
             // Arrange
-            const original = { date: new Date("2024-01-01") };
+            const original = {date: new Date("2024-01-01")};
 
             // Act
             const copy = deepCopy(original);
@@ -199,7 +199,7 @@ describe("deepCopy", () => {
     describe("mixed structures", () => {
         it("should handle objects with arrays", () => {
             // Arrange
-            const original = { items: [1, 2, 3], name: "test" };
+            const original = {items: [1, 2, 3], name: "test"};
 
             // Act
             const copy = deepCopy(original);
@@ -212,7 +212,7 @@ describe("deepCopy", () => {
 
         it("should handle arrays with objects", () => {
             // Arrange
-            const original: [{ id: number }, { id: number }] = [{ id: 1 }, { id: 2 }];
+            const original: [{id: number}, {id: number}] = [{id: 1}, {id: 2}];
 
             // Act
             const copy = deepCopy(original);
@@ -225,18 +225,18 @@ describe("deepCopy", () => {
 
         it("should handle deeply nested mixed structures", () => {
             // Arrange
-            type User = { name: string; tags: string[] };
+            type User = {name: string; tags: string[]};
             const original: {
                 users: [User, User];
-                metadata: { createdAt: Date; nested: { deep: { value: number } } };
+                metadata: {createdAt: Date; nested: {deep: {value: number}}};
             } = {
                 users: [
-                    { name: "Alice", tags: ["admin", "user"] },
-                    { name: "Bob", tags: ["user"] },
+                    {name: "Alice", tags: ["admin", "user"]},
+                    {name: "Bob", tags: ["user"]},
                 ],
                 metadata: {
                     createdAt: new Date("2024-01-01"),
-                    nested: { deep: { value: 42 } },
+                    nested: {deep: {value: 42}},
                 },
             };
 

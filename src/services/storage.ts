@@ -93,5 +93,5 @@ export const createStorageService = (prefix: string): StorageService => {
         }
     };
 
-    return { put, get, remove, clear };
+    return {put, get, remove, clear};
 };

@@ -3,11 +3,11 @@ type WritablePrimitive = undefined | null | boolean | string | number | Date;
 export type Writable<T> = T extends WritablePrimitive
     ? T
     : T extends readonly [...infer U]
-      ? { -readonly [K in keyof U]: Writable<U[K]> }
+      ? {-readonly [K in keyof U]: Writable<U[K]>}
       : T extends ReadonlyArray<infer U>
         ? Array<Writable<U>>
         : T extends object
-          ? { -readonly [K in keyof T]: Writable<T[K]> }
+          ? {-readonly [K in keyof T]: Writable<T[K]>}
           : T;
 
 /**

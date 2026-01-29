@@ -1,18 +1,18 @@
-import type { DeepSnakeKeys } from "string-ts";
-import type { Ref } from "vue";
+import type {DeepSnakeKeys} from "string-ts";
+import type {Ref} from "vue";
 
-import { deepSnakeKeys } from "string-ts";
-import { ref } from "vue";
+import {deepSnakeKeys} from "string-ts";
+import {ref} from "vue";
 
-import type { Writable } from "@/helpers/copy";
-import type { HttpService } from "@/services/http";
-import type { New, Updatable } from "@/types/generics";
-import type { Item } from "@/types/item";
+import type {Writable} from "@/helpers/copy";
+import type {HttpService} from "@/services/http";
+import type {New, Updatable} from "@/types/generics";
+import type {Item} from "@/types/item";
 
-import { MissingResponseDataError } from "@/errors/missing-response-data";
-import { deepCopy } from "@/helpers/copy";
-import { toCamelCaseTyped } from "@/helpers/string";
-import { isExisting } from "@/helpers/type-check";
+import {MissingResponseDataError} from "@/errors/missing-response-data";
+import {deepCopy} from "@/helpers/copy";
+import {toCamelCaseTyped} from "@/helpers/string";
+import {isExisting} from "@/helpers/type-check";
 
 type ResourceHttpService = Pick<HttpService, "postRequest" | "putRequest" | "deleteRequest">;
 
@@ -62,7 +62,7 @@ export type NewAdapted<T extends Item> = BaseResourceAdapter<New<T>> & {
 
 const adapterRepositoryFactory = <T extends Item>(
     domainName: string,
-    { setById, deleteById }: AdapterStoreModule<T>,
+    {setById, deleteById}: AdapterStoreModule<T>,
     httpService: ResourceHttpService,
 ): AdapterRepository<T> => {
     const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: "create" | "update"): T => {
@@ -81,12 +81,12 @@ const adapterRepositoryFactory = <T extends Item>(
 
     return {
         create: async (newItem: New<T>) => {
-            const { data } = await httpService.postRequest<DeepSnakeKeys<T>>(domainName, deepSnakeKeys(newItem));
+            const {data} = await httpService.postRequest<DeepSnakeKeys<T>>(domainName, deepSnakeKeys(newItem));
 
             return dataHandler(data, "create");
         },
         update: async (id: number, updatedItem: Updatable<T>) => {
-            const { data } = await httpService.putRequest<DeepSnakeKeys<T>>(
+            const {data} = await httpService.putRequest<DeepSnakeKeys<T>>(
                 `${domainName}/${id}`,
                 deepSnakeKeys(updatedItem),
             );
@@ -138,7 +138,7 @@ export function resourceAdapter<T extends Item>(
 
         return {
             // existing resource is a proxy, so we unwrap it to avoid issues with Object.freeze
-            ...Object.freeze({ ...resource }),
+            ...Object.freeze({...resource}),
             mutable,
             reset: () => (mutable.value = deepCopy(resource)),
             update: () => repository.update(resource.id, mutable.value as Updatable<T>),

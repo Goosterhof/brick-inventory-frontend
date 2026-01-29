@@ -1,7 +1,7 @@
-import type { Component, VNode } from "vue";
-import type { ComponentProps } from "vue-component-type-helpers";
+import type {Component, VNode} from "vue";
+import type {ComponentProps} from "vue-component-type-helpers";
 
-import { defineComponent, h, ref } from "vue";
+import {defineComponent, h, ref} from "vue";
 
 export interface ToastService<C extends Component> {
     show: (props: Omit<ComponentProps<C>, "onClose">) => string;
@@ -11,7 +11,7 @@ export interface ToastService<C extends Component> {
 
 export const createToastService = <C extends Component>(component: C, maxToasts = 4): ToastService<C> => {
     const validatedMaxToasts = Math.max(1, Math.floor(maxToasts));
-    const toasts = ref<{ node: VNode; id: string }[]>([]);
+    const toasts = ref<{node: VNode; id: string}[]>([]);
     let toastId = 0;
 
     const hide = (id: string) => {
@@ -29,7 +29,7 @@ export const createToastService = <C extends Component>(component: C, maxToasts 
         const id = `toast-${toastId++}`;
         const toastHider = () => hide(id);
 
-        toasts.value.push({ node: h(component, { key: id, ...props, onClose: toastHider }), id });
+        toasts.value.push({node: h(component, {key: id, ...props, onClose: toastHider}), id});
 
         return id;
     };
@@ -41,5 +41,5 @@ export const createToastService = <C extends Component>(component: C, maxToasts 
         },
     });
 
-    return { show, hide, ToastContainerComponent };
+    return {show, hide, ToastContainerComponent};
 };

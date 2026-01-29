@@ -1,6 +1,6 @@
-import { mount } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
-import { createMemoryHistory, createRouter } from "vue-router";
+import {mount} from "@vue/test-utils";
+import {describe, expect, it} from "vitest";
+import {createMemoryHistory, createRouter} from "vue-router";
 
 import App from "../../App.vue";
 
@@ -10,8 +10,8 @@ describe("App", () => {
         const router = createRouter({
             history: createMemoryHistory(),
             routes: [
-                { path: "/", component: { template: "<div>Home</div>" } },
-                { path: "/about", component: { template: "<div>About</div>" } },
+                {path: "/", component: {template: "<div>Home</div>"}},
+                {path: "/about", component: {template: "<div>About</div>"}},
             ],
         });
 

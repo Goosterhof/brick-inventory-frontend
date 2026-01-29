@@ -1,6 +1,6 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { describe, expect, it, vi } from "vitest";
+import {describe, expect, it, vi} from "vitest";
 
 import {
     createHttpService,
@@ -51,7 +51,7 @@ describe("http service", () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const service = createHttpService(baseURL);
-            const responseData = { id: 1 };
+            const responseData = {id: 1};
             mock.onGet(`${baseURL}/users`).reply(200, responseData);
 
             // Act
@@ -68,8 +68,8 @@ describe("http service", () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const service = createHttpService(baseURL);
-            const requestData = { name: "Test" };
-            const responseData = { id: 1, name: "Test" };
+            const requestData = {name: "Test"};
+            const responseData = {id: 1, name: "Test"};
             mock.onPost(`${baseURL}/users`, requestData).reply(201, responseData);
 
             // Act
@@ -86,8 +86,8 @@ describe("http service", () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const service = createHttpService(baseURL);
-            const requestData = { name: "Updated" };
-            const responseData = { id: 1, name: "Updated" };
+            const requestData = {name: "Updated"};
+            const responseData = {id: 1, name: "Updated"};
             mock.onPut(`${baseURL}/users/1`, requestData).reply(200, responseData);
 
             // Act
@@ -104,8 +104,8 @@ describe("http service", () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const service = createHttpService(baseURL);
-            const requestData = { name: "Patched" };
-            const responseData = { id: 1, name: "Patched" };
+            const requestData = {name: "Patched"};
+            const responseData = {id: 1, name: "Patched"};
             mock.onPatch(`${baseURL}/users/1`, requestData).reply(200, responseData);
 
             // Act
@@ -122,7 +122,7 @@ describe("http service", () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const service = createHttpService(baseURL);
-            const responseData = { success: true };
+            const responseData = {success: true};
             mock.onDelete(`${baseURL}/users/1`).reply(200, responseData);
 
             // Act
@@ -181,7 +181,7 @@ describe("http service", () => {
             const mock = new MockAdapter(axios);
             const service = createHttpService(baseURL);
             const middleware: ResponseMiddlewareFunc = vi.fn();
-            mock.onGet(`${baseURL}/users`).reply(200, { id: 1 });
+            mock.onGet(`${baseURL}/users`).reply(200, {id: 1});
 
             // Act
             service.registerResponseMiddleware(middleware);
@@ -197,7 +197,7 @@ describe("http service", () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const service = createHttpService(baseURL);
-            const responseData = { id: 1 };
+            const responseData = {id: 1};
             mock.onGet(`${baseURL}/users`).reply(200, responseData);
 
             // Act

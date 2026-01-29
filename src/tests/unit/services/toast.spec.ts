@@ -1,14 +1,14 @@
-import { shallowMount } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
-import { defineComponent, h, nextTick } from "vue";
+import {shallowMount} from "@vue/test-utils";
+import {describe, expect, it} from "vitest";
+import {defineComponent, h, nextTick} from "vue";
 
-import { createToastService } from "@/services/toast";
+import {createToastService} from "@/services/toast";
 
 const TestToast = defineComponent({
-    props: { message: String },
+    props: {message: String},
     emits: ["close"],
     render() {
-        return h("div", { class: "toast" }, this.message);
+        return h("div", {class: "toast"}, this.message);
     },
 });
 
@@ -43,7 +43,7 @@ describe("toast service", () => {
             const wrapper = shallowMount(toastService.ToastContainerComponent);
 
             // Act
-            toastService.show({ message: "Test message" });
+            toastService.show({message: "Test message"});
             await nextTick();
 
             // Assert
@@ -55,7 +55,7 @@ describe("toast service", () => {
             const toastService = createToastService(TestToast);
 
             // Act
-            const id = toastService.show({ message: "Test" });
+            const id = toastService.show({message: "Test"});
 
             // Assert
             expect(typeof id).toBe("string");
@@ -68,9 +68,9 @@ describe("toast service", () => {
             const wrapper = shallowMount(toastService.ToastContainerComponent);
 
             // Act
-            toastService.show({ message: "Toast 1" });
-            toastService.show({ message: "Toast 2" });
-            toastService.show({ message: "Toast 3" });
+            toastService.show({message: "Toast 1"});
+            toastService.show({message: "Toast 2"});
+            toastService.show({message: "Toast 3"});
             await nextTick();
 
             // Assert
@@ -86,10 +86,10 @@ describe("toast service", () => {
             const wrapper = shallowMount(toastService.ToastContainerComponent);
 
             // Act
-            toastService.show({ message: "Toast 1" });
-            toastService.show({ message: "Toast 2" });
-            toastService.show({ message: "Toast 3" });
-            toastService.show({ message: "Toast 4" });
+            toastService.show({message: "Toast 1"});
+            toastService.show({message: "Toast 2"});
+            toastService.show({message: "Toast 3"});
+            toastService.show({message: "Toast 4"});
             await nextTick();
 
             // Assert
@@ -107,7 +107,7 @@ describe("toast service", () => {
 
             // Act
             for (let i = 1; i <= 6; i++) {
-                toastService.show({ message: `Toast ${i}` });
+                toastService.show({message: `Toast ${i}`});
             }
             await nextTick();
 
@@ -123,8 +123,8 @@ describe("toast service", () => {
             const wrapper = shallowMount(toastService.ToastContainerComponent);
 
             // Act
-            toastService.show({ message: "Toast 1" });
-            toastService.show({ message: "Toast 2" });
+            toastService.show({message: "Toast 1"});
+            toastService.show({message: "Toast 2"});
             await nextTick();
 
             // Assert
@@ -138,8 +138,8 @@ describe("toast service", () => {
             const wrapper = shallowMount(toastService.ToastContainerComponent);
 
             // Act
-            toastService.show({ message: "Toast 1" });
-            toastService.show({ message: "Toast 2" });
+            toastService.show({message: "Toast 1"});
+            toastService.show({message: "Toast 2"});
             await nextTick();
 
             // Assert
@@ -153,9 +153,9 @@ describe("toast service", () => {
             const wrapper = shallowMount(toastService.ToastContainerComponent);
 
             // Act
-            toastService.show({ message: "Toast 1" });
-            toastService.show({ message: "Toast 2" });
-            toastService.show({ message: "Toast 3" });
+            toastService.show({message: "Toast 1"});
+            toastService.show({message: "Toast 2"});
+            toastService.show({message: "Toast 3"});
             await nextTick();
 
             // Assert
@@ -170,7 +170,7 @@ describe("toast service", () => {
             // Arrange
             const toastService = createToastService(TestToast);
             const wrapper = shallowMount(toastService.ToastContainerComponent);
-            const id = toastService.show({ message: "Toast to hide" });
+            const id = toastService.show({message: "Toast to hide"});
             await nextTick();
 
             // Act
@@ -185,9 +185,9 @@ describe("toast service", () => {
             // Arrange
             const toastService = createToastService(TestToast);
             const wrapper = shallowMount(toastService.ToastContainerComponent);
-            toastService.show({ message: "Toast 1" });
-            const id2 = toastService.show({ message: "Toast 2" });
-            toastService.show({ message: "Toast 3" });
+            toastService.show({message: "Toast 1"});
+            const id2 = toastService.show({message: "Toast 2"});
+            toastService.show({message: "Toast 3"});
             await nextTick();
 
             // Act
@@ -205,7 +205,7 @@ describe("toast service", () => {
             // Arrange
             const toastService = createToastService(TestToast);
             const wrapper = shallowMount(toastService.ToastContainerComponent);
-            toastService.show({ message: "Toast 1" });
+            toastService.show({message: "Toast 1"});
             await nextTick();
 
             // Act & Assert
@@ -218,18 +218,15 @@ describe("toast service", () => {
         it("should pass onClose handler to toast component", async () => {
             // Arrange
             const ClosableToast = defineComponent({
-                props: { message: String, onClose: Function },
+                props: {message: String, onClose: Function},
                 emits: ["close"],
                 render() {
-                    return h("div", { class: "toast" }, [
-                        this.message,
-                        h("button", { onClick: this.onClose }, "Close"),
-                    ]);
+                    return h("div", {class: "toast"}, [this.message, h("button", {onClick: this.onClose}, "Close")]);
                 },
             });
             const toastService = createToastService(ClosableToast);
             const wrapper = shallowMount(toastService.ToastContainerComponent);
-            toastService.show({ message: "Closable toast" });
+            toastService.show({message: "Closable toast"});
             await nextTick();
 
             // Act
@@ -250,7 +247,7 @@ describe("toast service", () => {
             const wrapper2 = shallowMount(service2.ToastContainerComponent);
 
             // Act
-            service1.show({ message: "Service 1 toast" });
+            service1.show({message: "Service 1 toast"});
             await nextTick();
 
             // Assert

@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 
-import type { Item } from "@/types/item";
+import type {Item} from "@/types/item";
 
-import { toCamelCaseTyped } from "@/helpers/string";
+import {toCamelCaseTyped} from "@/helpers/string";
 
 interface TestItem extends Item {
     id: number;
@@ -13,7 +13,7 @@ interface TestItem extends Item {
 describe("toCamelCaseTyped", () => {
     it("should convert snake_case keys to camelCase", () => {
         // Arrange
-        const snakeCase = { id: 1, user_name: "test", created_at: "2024-01-01" };
+        const snakeCase = {id: 1, user_name: "test", created_at: "2024-01-01"};
 
         // Act
         const result = toCamelCaseTyped<TestItem>(snakeCase);
@@ -28,7 +28,7 @@ describe("toCamelCaseTyped", () => {
 
     it("should handle already camelCase data", () => {
         // Arrange
-        const camelCase: TestItem = { id: 1, userName: "test", createdAt: "2024-01-01" };
+        const camelCase: TestItem = {id: 1, userName: "test", createdAt: "2024-01-01"};
 
         // Act
         const result = toCamelCaseTyped<TestItem>(camelCase);
@@ -75,11 +75,11 @@ describe("toCamelCaseTyped", () => {
         // Arrange
         interface ItemWithArray extends Item {
             id: number;
-            userTags: Array<{ tagName: string }>;
+            userTags: Array<{tagName: string}>;
         }
         const snakeCase = {
             id: 1,
-            user_tags: [{ tag_name: "admin" }, { tag_name: "user" }],
+            user_tags: [{tag_name: "admin"}, {tag_name: "user"}],
         };
 
         // Act
@@ -88,7 +88,7 @@ describe("toCamelCaseTyped", () => {
         // Assert
         expect(result).toEqual({
             id: 1,
-            userTags: [{ tagName: "admin" }, { tagName: "user" }],
+            userTags: [{tagName: "admin"}, {tagName: "user"}],
         });
     });
 

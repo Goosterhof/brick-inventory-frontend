@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import {beforeEach, describe, expect, it, vi} from "vitest";
 
-import { createStorageService } from "@/services/storage";
+import {createStorageService} from "@/services/storage";
 
 describe("storage service", () => {
     beforeEach(() => {
@@ -36,7 +36,7 @@ describe("storage service", () => {
         it("should stringify non-string values", () => {
             // Arrange
             const storage = createStorageService("test");
-            const value = { name: "test", count: 42 };
+            const value = {name: "test", count: 42};
 
             // Act
             storage.put("testKey", value);
@@ -148,14 +148,14 @@ describe("storage service", () => {
         it("should return parsed JSON for object values", () => {
             // Arrange
             const storage = createStorageService("test");
-            const value = { name: "test", count: 42 };
+            const value = {name: "test", count: 42};
             localStorage.setItem("test:testKey", JSON.stringify(value));
 
             // Act
             const result = storage.get<typeof value>("testKey");
 
             // Assert
-            expect(result).toEqual({ name: "test", count: 42 });
+            expect(result).toEqual({name: "test", count: 42});
         });
 
         it("should return parsed JSON for array values", () => {

@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 
-import type { New } from "@/types/generics";
-import type { Item } from "@/types/item";
+import type {New} from "@/types/generics";
+import type {Item} from "@/types/item";
 
-import { isExisting } from "@/helpers/type-check";
+import {isExisting} from "@/helpers/type-check";
 
 interface TestItem extends Item {
     id: number;
@@ -13,7 +13,7 @@ interface TestItem extends Item {
 describe("isExisting", () => {
     it("should return true for objects with an id", () => {
         // Arrange
-        const existing: TestItem = { id: 1, name: "test" };
+        const existing: TestItem = {id: 1, name: "test"};
 
         // Act
         const result = isExisting<TestItem>(existing);
@@ -24,7 +24,7 @@ describe("isExisting", () => {
 
     it("should return false for objects without an id", () => {
         // Arrange
-        const newItem: New<TestItem> = { name: "test" };
+        const newItem: New<TestItem> = {name: "test"};
 
         // Act
         const result = isExisting<TestItem>(newItem);
@@ -35,7 +35,7 @@ describe("isExisting", () => {
 
     it("should return true for objects with id of 0", () => {
         // Arrange
-        const existing: TestItem = { id: 0, name: "test" };
+        const existing: TestItem = {id: 0, name: "test"};
 
         // Act
         const result = isExisting<TestItem>(existing);
@@ -46,7 +46,7 @@ describe("isExisting", () => {
 
     it("should narrow type to existing item when returning true", () => {
         // Arrange
-        const item: TestItem = { id: 1, name: "test" };
+        const item: TestItem = {id: 1, name: "test"};
 
         // Act
         const result = isExisting<TestItem>(item);
@@ -58,7 +58,7 @@ describe("isExisting", () => {
 
     it("should narrow type to new item when returning false", () => {
         // Arrange
-        const item: New<TestItem> = { name: "test" };
+        const item: New<TestItem> = {name: "test"};
 
         // Act
         const result = isExisting<TestItem>(item);
