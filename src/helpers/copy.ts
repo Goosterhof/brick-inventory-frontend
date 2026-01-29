@@ -25,7 +25,7 @@ export const deepCopy = <T>(toCopy: T): Writable<T> => {
 
     if (toCopy instanceof Date) return new Date(toCopy.getTime()) as Writable<T>;
 
-    if (Array.isArray(toCopy)) return toCopy.map((value) => deepCopy(value)) as Writable<T>;
+    if (Array.isArray(toCopy)) return toCopy.map((value: unknown) => deepCopy(value)) as Writable<T>;
 
     const copiedObject: Record<string, unknown> = {};
 
