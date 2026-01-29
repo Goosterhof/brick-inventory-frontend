@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-globals */
+// This module intentionally uses window.localStorage directly.
 
 /**
  * Retrieve a value from storage.
