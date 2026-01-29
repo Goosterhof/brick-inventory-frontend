@@ -1,6 +1,7 @@
 import pluginVitest from '@vitest/eslint-plugin'
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import { globalIgnores } from 'eslint/config'
+import pluginImport from 'eslint-plugin-import'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import pluginVue from 'eslint-plugin-vue'
 
@@ -44,6 +45,7 @@ export default defineConfigWithVueTs(
     name: 'app/rules',
     plugins: {
       'simple-import-sort': simpleImportSort,
+      'import': pluginImport,
     },
     rules: {
       'func-style': ['error', 'expression'],
@@ -56,6 +58,9 @@ export default defineConfigWithVueTs(
       '@typescript-eslint/no-non-null-assertion': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      'import/first': 'error',
+      'import/newline-after-import': 'error',
+      'import/no-duplicates': 'error',
     },
   },
 )
