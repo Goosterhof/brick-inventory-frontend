@@ -1,4 +1,4 @@
-import { describe, expect,it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { isExisting } from '@/helpers/type-check';
 import type { New } from '@/types/generics';

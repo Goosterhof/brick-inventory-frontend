@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import { describe, expect,it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 
 import { createToastService } from '@/services/toast';

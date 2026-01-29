@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect,it } from 'vitest'
-import { createMemoryHistory,createRouter } from 'vue-router'
+import { describe, expect, it } from 'vitest'
+import { createMemoryHistory, createRouter } from 'vue-router'
 
 import App from '../../App.vue'
 

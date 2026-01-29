@@ -1,3 +1,4 @@
+import stylistic from '@stylistic/eslint-plugin'
 import pluginVitest from '@vitest/eslint-plugin'
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import { globalIgnores } from 'eslint/config'
@@ -46,6 +47,7 @@ export default defineConfigWithVueTs(
     plugins: {
       'simple-import-sort': simpleImportSort,
       'import': pluginImport,
+      '@stylistic': stylistic,
     },
     rules: {
       'func-style': ['error', 'expression'],
@@ -61,6 +63,7 @@ export default defineConfigWithVueTs(
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-duplicates': 'error',
+      '@stylistic/comma-spacing': ['error', { before: false, after: true }],
     },
   },
 )

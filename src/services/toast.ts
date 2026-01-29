@@ -1,5 +1,5 @@
-import type { Component,VNode } from 'vue';
-import { defineComponent,h, ref } from 'vue';
+import type { Component, VNode } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 import type { ComponentProps } from 'vue-component-type-helpers';
 
 export interface ToastService<C extends Component> {
