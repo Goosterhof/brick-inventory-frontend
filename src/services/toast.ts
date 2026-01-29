@@ -1,7 +1,6 @@
-import type { VNode, Component } from 'vue';
+import type { Component,VNode } from 'vue';
+import { defineComponent,h, ref } from 'vue';
 import type { ComponentProps } from 'vue-component-type-helpers';
-
-import { ref, h, defineComponent } from 'vue';
 
 export interface ToastService<C extends Component> {
     show: (props: Omit<ComponentProps<C>, 'onClose'>) => string;

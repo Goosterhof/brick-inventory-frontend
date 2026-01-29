@@ -1,7 +1,9 @@
-import { globalIgnores } from 'eslint/config'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import pluginVue from 'eslint-plugin-vue'
 import pluginVitest from '@vitest/eslint-plugin'
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
+import { globalIgnores } from 'eslint/config'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import pluginVue from 'eslint-plugin-vue'
+
 import pluginAaaPattern from './eslint-plugins/aaa-pattern'
 
 // To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
@@ -40,6 +42,9 @@ export default defineConfigWithVueTs(
 
   {
     name: 'app/rules',
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
     rules: {
       'func-style': ['error', 'expression'],
       'prefer-const': 'error',
@@ -49,6 +54,8 @@ export default defineConfigWithVueTs(
         message: 'Use the storage service (src/services/storage.ts) instead of localStorage directly.',
       }],
       '@typescript-eslint/no-non-null-assertion': 'error',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
 )

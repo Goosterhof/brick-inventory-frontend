@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { defineComponent, h, nextTick } from 'vue';
 import { shallowMount } from '@vue/test-utils';
+import { describe, expect,it } from 'vitest';
+import { defineComponent, h, nextTick } from 'vue';
+
 import { createToastService } from '@/services/toast';
 
 const TestToast = defineComponent({

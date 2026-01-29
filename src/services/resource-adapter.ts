@@ -1,19 +1,18 @@
-import type { Writable } from '@/helpers/copy';
-import type { Item } from '@/types/item';
 import type { DeepSnakeKeys } from 'string-ts';
-import type { New, Updatable } from '@/types/generics';
-import type { Ref } from 'vue';
-import type { HttpService } from '@/services/http';
-
-type ResourceHttpService = Pick<HttpService, 'postRequest' | 'putRequest' | 'deleteRequest'>;
-
 import { deepSnakeKeys } from 'string-ts';
+import type { Ref } from 'vue';
 import { ref } from 'vue';
 
 import { MissingResponseDataError } from '@/errors/missing-response-data';
+import type { Writable } from '@/helpers/copy';
 import { deepCopy } from '@/helpers/copy';
 import { toCamelCaseTyped } from '@/helpers/string';
 import { isExisting } from '@/helpers/type-check';
+import type { HttpService } from '@/services/http';
+import type { New, Updatable } from '@/types/generics';
+import type { Item } from '@/types/item';
+
+type ResourceHttpService = Pick<HttpService, 'postRequest' | 'putRequest' | 'deleteRequest'>;
 
 interface AdapterRepository<T extends Item> {
     create: (newItem: New<T>) => Promise<T>;
