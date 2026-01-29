@@ -1,28 +1,28 @@
-import type { DeepSnakeKeys } from 'string-ts';
-import { deepSnakeKeys } from 'string-ts';
-import type { Ref } from 'vue';
-import { ref } from 'vue';
+import type { DeepSnakeKeys } from "string-ts";
+import { deepSnakeKeys } from "string-ts";
+import type { Ref } from "vue";
+import { ref } from "vue";
 
-import { MissingResponseDataError } from '@/errors/missing-response-data';
-import type { Writable } from '@/helpers/copy';
-import { deepCopy } from '@/helpers/copy';
-import { toCamelCaseTyped } from '@/helpers/string';
-import { isExisting } from '@/helpers/type-check';
-import type { HttpService } from '@/services/http';
-import type { New, Updatable } from '@/types/generics';
-import type { Item } from '@/types/item';
+import { MissingResponseDataError } from "@/errors/missing-response-data";
+import type { Writable } from "@/helpers/copy";
+import { deepCopy } from "@/helpers/copy";
+import { toCamelCaseTyped } from "@/helpers/string";
+import { isExisting } from "@/helpers/type-check";
+import type { HttpService } from "@/services/http";
+import type { New, Updatable } from "@/types/generics";
+import type { Item } from "@/types/item";
 
-type ResourceHttpService = Pick<HttpService, 'postRequest' | 'putRequest' | 'deleteRequest'>;
+type ResourceHttpService = Pick<HttpService, "postRequest" | "putRequest" | "deleteRequest">;
 
 interface AdapterRepository<T extends Item> {
-    create: (newItem: New<T>) => Promise<T>;
-    update: (id: number, updatedItem: Updatable<T>) => Promise<T>;
-    delete: (id: number) => Promise<void>;
+  create: (newItem: New<T>) => Promise<T>;
+  update: (id: number, updatedItem: Updatable<T>) => Promise<T>;
+  delete: (id: number) => Promise<void>;
 }
 
 export interface AdapterStoreModule<T extends Item> {
-    setById: (item: T) => void;
-    deleteById: (id: number) => void;
+  setById: (item: T) => void;
+  deleteById: (id: number) => void;
 }
 
 /**
@@ -32,10 +32,10 @@ export interface AdapterStoreModule<T extends Item> {
  * - a `reset` function to restore the original state
  */
 type BaseResourceAdapter<T extends Updatable<Item>> = Readonly<T> & {
-    /** Reactive, mutable copy of the resource */
-    mutable: Ref<Writable<T>>;
-    /** Reset the `mutable` state to the original resource */
-    reset: () => void;
+  /** Reactive, mutable copy of the resource */
+  mutable: Ref<Writable<T>>;
+  /** Reset the `mutable` state to the original resource */
+  reset: () => void;
 };
 
 /**
@@ -43,10 +43,10 @@ type BaseResourceAdapter<T extends Updatable<Item>> = Readonly<T> & {
  * Provides update and delete methods from the repository.
  */
 export type Adapted<T extends Item> = BaseResourceAdapter<T> & {
-    /** Update the resource in the repository */
-    update(): ReturnType<AdapterRepository<T>['update']>;
-    /** Delete the resource from the repository */
-    delete(): ReturnType<AdapterRepository<T>['delete']>;
+  /** Update the resource in the repository */
+  update(): ReturnType<AdapterRepository<T>["update"]>;
+  /** Delete the resource from the repository */
+  delete(): ReturnType<AdapterRepository<T>["delete"]>;
 };
 
 /**
@@ -54,50 +54,52 @@ export type Adapted<T extends Item> = BaseResourceAdapter<T> & {
  * Provides a create method from the repository.
  */
 export type NewAdapted<T extends Item> = BaseResourceAdapter<New<T>> & {
-    /** Create the resource in the repository */
-    create(): ReturnType<AdapterRepository<T>['create']>;
+  /** Create the resource in the repository */
+  create(): ReturnType<AdapterRepository<T>["create"]>;
 };
 
 const adapterRepositoryFactory = <T extends Item>(
-    domainName: string,
-    { setById, deleteById }: AdapterStoreModule<T>,
-    httpService: ResourceHttpService,
+  domainName: string,
+  { setById, deleteById }: AdapterStoreModule<T>,
+  httpService: ResourceHttpService,
 ): AdapterRepository<T> => {
-    const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: 'create' | 'update'): T => {
-        if (!data) {
-            throw new MissingResponseDataError(
-                `${actionType} route for ${domainName} returned no model in response to put in store.`,
-            );
-        }
+  const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: "create" | "update"): T => {
+    if (!data) {
+      throw new MissingResponseDataError(
+        `${actionType} route for ${domainName} returned no model in response to put in store.`,
+      );
+    }
 
-        const camelCasedData = toCamelCaseTyped<T>(data);
+    const camelCasedData = toCamelCaseTyped<T>(data);
 
-        setById(camelCasedData);
+    setById(camelCasedData);
 
-        return camelCasedData;
-    };
+    return camelCasedData;
+  };
 
-    return {
-        create: async (newItem: New<T>) => {
-            const { data } = await httpService.postRequest<DeepSnakeKeys<T>>(domainName, deepSnakeKeys(newItem));
+  return {
+    create: async (newItem: New<T>) => {
+      const { data } = await httpService.postRequest<DeepSnakeKeys<T>>(
+        domainName,
+        deepSnakeKeys(newItem),
+      );
 
-            return dataHandler(data, 'create');
-        },
-        update: async (id: number, updatedItem: Updatable<T>) => {
-            const { data } = await httpService.putRequest<DeepSnakeKeys<T>>(
-                `${domainName}/${id}`,
-                deepSnakeKeys(updatedItem),
-            );
+      return dataHandler(data, "create");
+    },
+    update: async (id: number, updatedItem: Updatable<T>) => {
+      const { data } = await httpService.putRequest<DeepSnakeKeys<T>>(
+        `${domainName}/${id}`,
+        deepSnakeKeys(updatedItem),
+      );
 
-            return dataHandler(data, 'update');
-        },
-        delete: async (id: number) => {
-            await httpService.deleteRequest<void>(`${domainName}/${id}`);
-            deleteById(id);
-        },
-    };
+      return dataHandler(data, "update");
+    },
+    delete: async (id: number) => {
+      await httpService.deleteRequest<void>(`${domainName}/${id}`);
+      deleteById(id);
+    },
+  };
 };
-
 
 /**
  * Factory that adapts a resource by:
@@ -112,45 +114,45 @@ const adapterRepositoryFactory = <T extends Item>(
  * @returns An adapter with mutable state and CRUD methods
  */
 export function resourceAdapter<T extends Item>(
-    resource: T,
-    domainName: string,
-    storeModule: AdapterStoreModule<T>,
-    httpService: ResourceHttpService,
+  resource: T,
+  domainName: string,
+  storeModule: AdapterStoreModule<T>,
+  httpService: ResourceHttpService,
 ): Adapted<T>;
 export function resourceAdapter<T extends Item>(
-    resource: New<T>,
-    domainName: string,
-    storeModule: AdapterStoreModule<T>,
-    httpService: ResourceHttpService,
+  resource: New<T>,
+  domainName: string,
+  storeModule: AdapterStoreModule<T>,
+  httpService: ResourceHttpService,
 ): NewAdapted<T>;
 export function resourceAdapter<T extends Item>(
-    resource: T | New<T>,
-    domainName: string,
-    storeModule: AdapterStoreModule<T>,
-    httpService: ResourceHttpService,
+  resource: T | New<T>,
+  domainName: string,
+  storeModule: AdapterStoreModule<T>,
+  httpService: ResourceHttpService,
 ): Adapted<T> | NewAdapted<T> {
-    const repository = adapterRepositoryFactory<T>(domainName, storeModule, httpService);
+  const repository = adapterRepositoryFactory<T>(domainName, storeModule, httpService);
 
-    if (isExisting(resource)) {
-        // Assertion: UnwrapRef widens to unknown for generic T; object is a plain POJO so this is safe.
-        const mutable = <Ref<Writable<T>>>ref(deepCopy(resource));
-
-        return {
-            // existing resource is a proxy, so we unwrap it to avoid issues with Object.freeze
-            ...Object.freeze({ ...resource }),
-            mutable,
-            reset: () => (mutable.value = deepCopy(resource)),
-            update: () => repository.update(resource.id, mutable.value as Updatable<T>),
-            delete: () => repository.delete(resource.id),
-        };
-    }
+  if (isExisting(resource)) {
     // Assertion: UnwrapRef widens to unknown for generic T; object is a plain POJO so this is safe.
-    const mutable = <Ref<Writable<New<T>>>>ref(deepCopy(resource));
+    const mutable = <Ref<Writable<T>>>ref(deepCopy(resource));
 
     return {
-        ...Object.freeze(resource),
-        mutable,
-        reset: () => (mutable.value = deepCopy(resource)),
-        create: () => repository.create(mutable.value as New<T>),
+      // existing resource is a proxy, so we unwrap it to avoid issues with Object.freeze
+      ...Object.freeze({ ...resource }),
+      mutable,
+      reset: () => (mutable.value = deepCopy(resource)),
+      update: () => repository.update(resource.id, mutable.value as Updatable<T>),
+      delete: () => repository.delete(resource.id),
     };
+  }
+  // Assertion: UnwrapRef widens to unknown for generic T; object is a plain POJO so this is safe.
+  const mutable = <Ref<Writable<New<T>>>>ref(deepCopy(resource));
+
+  return {
+    ...Object.freeze(resource),
+    mutable,
+    reset: () => (mutable.value = deepCopy(resource)),
+    create: () => repository.create(mutable.value as New<T>),
+  };
 }
