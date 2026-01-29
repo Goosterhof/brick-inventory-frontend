@@ -1,8 +1,8 @@
 import type { Item } from '@/types/item';
 
 /**
- * Omits the id from item
- * Being used when items are being created, because they don't have an id yet
+ * Omits id, createdAt, and updatedAt from item
+ * Being used when items are being created, because they don't have these fields yet
  */
 export type New<T extends Item> = Omit<T, 'id' | 'createdAt' | 'updatedAt'>;
 
