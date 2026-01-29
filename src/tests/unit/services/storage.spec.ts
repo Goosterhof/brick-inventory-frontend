@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createStorageService } from "@/services/storage";
