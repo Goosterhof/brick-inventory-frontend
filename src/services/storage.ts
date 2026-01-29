@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-restricted-globals */
+/* eslint-disable no-restricted-globals */
 
 /**
  * Retrieve a value from storage.

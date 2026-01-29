@@ -42,6 +42,11 @@ export default defineConfigWithVueTs(
     },
   },
 
+  // Rules handled by oxlint (50-100x faster):
+  // - func-style, prefer-const, no-console
+  // - @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-explicit-any
+  // - import/first, import/no-duplicates, import/no-self-import, import/no-cycle
+  // ESLint handles Vue-specific, import sorting, and custom rules below
   {
     name: 'app/rules',
     plugins: {
@@ -50,19 +55,17 @@ export default defineConfigWithVueTs(
       '@stylistic': stylistic,
     },
     rules: {
-      'func-style': ['error', 'expression'],
-      'prefer-const': 'error',
-      'no-console': 'error',
+      // Custom project rules (not in oxlint)
       'no-restricted-globals': ['error', {
         name: 'localStorage',
         message: 'Use the storage service (src/services/storage.ts) instead of localStorage directly.',
       }],
-      '@typescript-eslint/no-non-null-assertion': 'error',
+      // Import sorting with auto-fix (oxlint doesn't have auto-fix for sorting)
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
-      'import/first': 'error',
+      // Import spacing
       'import/newline-after-import': 'error',
-      'import/no-duplicates': 'error',
+      // Stylistic rules
       '@stylistic/comma-spacing': ['error', { before: false, after: true }],
     },
   },
