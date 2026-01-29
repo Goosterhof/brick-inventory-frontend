@@ -9,7 +9,7 @@
         "dev": "vite",
         "format": "oxfmt --write .",
         "format:check": "oxfmt --check .",
-        "lint": "oxlint --config oxlint.config.json",
+        "lint": "oxlint",
         "preview": "vite preview",
         "test:coverage": "vitest run --coverage",
         "test:unit": "vitest",

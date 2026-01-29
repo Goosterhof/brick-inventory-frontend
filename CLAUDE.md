@@ -12,7 +12,8 @@ This is a Vue 3 Single Page Application (SPA) for the Lego Storage API. Built wi
 - **Routing**: Vue Router
 - **Styling**: UnoCSS (utility-first CSS, similar to Tailwind)
 - **Testing**: Vitest
-- **Linting**: ESLint with Vue and TypeScript configs
+- **Linting**: oxlint (fast Rust-based linter)
+- **Formatting**: oxfmt (fast Rust-based formatter)
 
 ## Commands
 
@@ -38,8 +39,14 @@ npm run test:unit -- --watch
 # Type check
 npm run type-check
 
-# Lint and fix
+# Lint
 npm run lint
+
+# Format code
+npm run format
+
+# Check formatting
+npm run format:check
 ```
 
 ## Project Structure
