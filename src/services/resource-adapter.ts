@@ -5,6 +5,8 @@ import type { New, Updatable } from '@/types/generics';
 import type { Ref } from 'vue';
 import type { HttpService } from '@/services/http';
 
+type ResourceHttpService = Pick<HttpService, 'postRequest' | 'putRequest' | 'deleteRequest'>;
+
 import { deepSnakeKeys } from 'string-ts';
 import { ref } from 'vue';
 
@@ -60,7 +62,7 @@ export type NewAdapted<T extends Item> = BaseResourceAdapter<New<T>> & {
 const adapterRepositoryFactory = <T extends Item>(
     domainName: string,
     { setById, deleteById }: AdapterStoreModule<T>,
-    httpService: HttpService,
+    httpService: ResourceHttpService,
 ): AdapterRepository<T> => {
     const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: 'create' | 'update'): T => {
         if (!data) {
@@ -114,19 +116,19 @@ export function resourceAdapter<T extends Item>(
     resource: T,
     domainName: string,
     storeModule: AdapterStoreModule<T>,
-    httpService: HttpService,
+    httpService: ResourceHttpService,
 ): Adapted<T>;
 export function resourceAdapter<T extends Item>(
     resource: New<T>,
     domainName: string,
     storeModule: AdapterStoreModule<T>,
-    httpService: HttpService,
+    httpService: ResourceHttpService,
 ): NewAdapted<T>;
 export function resourceAdapter<T extends Item>(
     resource: T | New<T>,
     domainName: string,
     storeModule: AdapterStoreModule<T>,
-    httpService: HttpService,
+    httpService: ResourceHttpService,
 ): Adapted<T> | NewAdapted<T> {
     const repository = adapterRepositoryFactory<T>(domainName, storeModule, httpService);
 
