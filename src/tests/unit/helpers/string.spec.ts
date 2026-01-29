@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { toCamelCaseTyped } from "@/helpers/string";
 import type { Item } from "@/types/item";
+
+import { toCamelCaseTyped } from "@/helpers/string";
 
 interface TestItem extends Item {
   id: number;

@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { isRef } from "vue";
 
+import type { New } from "@/types/generics";
+import type { Item } from "@/types/item";
+
 import { MissingResponseDataError } from "@/errors/missing-response-data";
 import {
   type Adapted,
@@ -8,8 +11,6 @@ import {
   type NewAdapted,
   resourceAdapter,
 } from "@/services/resource-adapter";
-import type { New } from "@/types/generics";
-import type { Item } from "@/types/item";
 
 interface TestItem extends Item {
   id: number;
