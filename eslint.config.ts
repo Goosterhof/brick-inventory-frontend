@@ -48,6 +48,7 @@ export default defineConfigWithVueTs(
         name: 'localStorage',
         message: 'Use the storage service (src/services/storage.ts) instead of localStorage directly.',
       }],
+      '@typescript-eslint/no-non-null-assertion': 'error',
     },
   },
 )

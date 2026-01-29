@@ -1,4 +1,14 @@
-export type Writable<T> = { -readonly [P in keyof T]: T[P] };
+type WritablePrimitive = undefined | null | boolean | string | number | Date;
+
+export type Writable<T> = T extends WritablePrimitive
+    ? T
+    : T extends readonly [...infer U]
+      ? { -readonly [K in keyof U]: Writable<U[K]> }
+      : T extends ReadonlyArray<infer U>
+        ? Array<Writable<U>>
+        : T extends object
+          ? { -readonly [K in keyof T]: Writable<T[K]> }
+          : T;
 
 /**
  * Makes a deep copy of plain objects and arrays.
@@ -10,12 +20,12 @@ export type Writable<T> = { -readonly [P in keyof T]: T[P] };
  * We use deepCopy over structuredClone because deepCopy can be significantly faster (up to ~10x times)
  * depending on the type and size of an object.
  */
-export const deepCopy = <T = unknown>(toCopy: T): Writable<T> => {
-    if (typeof toCopy !== 'object' || toCopy === null) return toCopy;
+export const deepCopy = <T>(toCopy: T): Writable<T> => {
+    if (typeof toCopy !== 'object' || toCopy === null) return toCopy as Writable<T>;
 
-    if (toCopy instanceof Date) return <T>new Date(toCopy.getTime());
+    if (toCopy instanceof Date) return new Date(toCopy.getTime()) as Writable<T>;
 
-    if (Array.isArray(toCopy)) return <T>toCopy.map(value => deepCopy(value));
+    if (Array.isArray(toCopy)) return toCopy.map(value => deepCopy(value)) as Writable<T>;
 
     const copiedObject: Record<string, unknown> = {};
 
@@ -23,5 +33,5 @@ export const deepCopy = <T = unknown>(toCopy: T): Writable<T> => {
         copiedObject[key] = deepCopy((toCopy as Record<string, unknown>)[key]);
     }
 
-    return copiedObject as T;
+    return copiedObject as Writable<T>;
 };

@@ -114,7 +114,7 @@ describe('deepCopy', () => {
 
         it('should create a deep copy of nested arrays', () => {
             // Arrange
-            const original = [[1, 2], [3, 4]];
+            const original: number[][] = [[1, 2], [3, 4]];
 
             // Act
             const copy = deepCopy(original);
@@ -127,7 +127,7 @@ describe('deepCopy', () => {
 
         it('should create a deep copy of arrays containing objects', () => {
             // Arrange
-            const original = [{ a: 1 }, { b: 2 }];
+            const original: Array<{ a?: number; b?: number }> = [{ a: 1 }, { b: 2 }];
 
             // Act
             const copy = deepCopy(original);
@@ -208,20 +208,24 @@ describe('deepCopy', () => {
 
         it('should handle arrays with objects', () => {
             // Arrange
-            const original = [{ id: 1 }, { id: 2 }];
+            const original: [{ id: number }, { id: number }] = [{ id: 1 }, { id: 2 }];
 
             // Act
             const copy = deepCopy(original);
-            copy[0]!.id = 100;
+            copy[0].id = 100;
 
             // Assert
-            expect(original[0]!.id).toBe(1);
-            expect(copy[0]!.id).toBe(100);
+            expect(original[0].id).toBe(1);
+            expect(copy[0].id).toBe(100);
         });
 
         it('should handle deeply nested mixed structures', () => {
             // Arrange
-            const original = {
+            type User = { name: string; tags: string[] };
+            const original: {
+                users: [User, User];
+                metadata: { createdAt: Date; nested: { deep: { value: number } } };
+            } = {
                 users: [
                     { name: 'Alice', tags: ['admin', 'user'] },
                     { name: 'Bob', tags: ['user'] },
@@ -234,12 +238,12 @@ describe('deepCopy', () => {
 
             // Act
             const copy = deepCopy(original);
-            copy.users[0]!.tags.push('super');
+            copy.users[0].tags.push('super');
             copy.metadata.nested.deep.value = 100;
             copy.metadata.createdAt.setFullYear(2025);
 
             // Assert
-            expect(original.users[0]!.tags).toEqual(['admin', 'user']);
+            expect(original.users[0].tags).toEqual(['admin', 'user']);
             expect(original.metadata.nested.deep.value).toBe(42);
             expect(original.metadata.createdAt.getFullYear()).toBe(2024);
         });

@@ -141,7 +141,7 @@ export function resourceAdapter<T extends Item>(
             ...Object.freeze({ ...resource }),
             mutable,
             reset: () => (mutable.value = deepCopy(resource)),
-            update: () => repository.update(resource.id, mutable.value),
+            update: () => repository.update(resource.id, mutable.value as Updatable<T>),
             delete: () => repository.delete(resource.id),
         };
     }
@@ -152,6 +152,6 @@ export function resourceAdapter<T extends Item>(
         ...Object.freeze(resource),
         mutable,
         reset: () => (mutable.value = deepCopy(resource)),
-        create: () => repository.create(mutable.value),
+        create: () => repository.create(mutable.value as New<T>),
     };
 }
