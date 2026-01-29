@@ -15,11 +15,7 @@ interface TestItem extends Item {
 
 describe("resource adapter", () => {
     describe("adapting existing resource", () => {
-        const existingResource: TestItem = {
-            id: 1,
-            userName: "testUser",
-            createdAt: "2024-01-01",
-        };
+        const existingResource: TestItem = {id: 1, userName: "testUser", createdAt: "2024-01-01"};
 
         it("should return the original resource properties", () => {
             // Arrange
@@ -45,11 +41,7 @@ describe("resource adapter", () => {
 
             // Assert
             expect(isRef(adapted.mutable)).toBe(true);
-            expect(adapted.mutable.value).toEqual({
-                id: 1,
-                userName: "testUser",
-                createdAt: "2024-01-01",
-            });
+            expect(adapted.mutable.value).toEqual({id: 1, userName: "testUser", createdAt: "2024-01-01"});
             expect(adapted.mutable.value).not.toBe(existingResource);
         });
 
@@ -85,9 +77,9 @@ describe("resource adapter", () => {
         it("should call httpService.putRequest with snake_case data on update()", async () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const putRequest = vi.fn().mockResolvedValue({
-                data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"},
-            });
+            const putRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
             const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
             adapted.mutable.value.userName = "updatedUser";
@@ -107,9 +99,9 @@ describe("resource adapter", () => {
             // Arrange
             const setById = vi.fn();
             const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
-            const putRequest = vi.fn().mockResolvedValue({
-                data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"},
-            });
+            const putRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
             const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
@@ -117,19 +109,15 @@ describe("resource adapter", () => {
             await adapted.update();
 
             // Assert
-            expect(setById).toHaveBeenCalledWith({
-                id: 1,
-                userName: "updatedUser",
-                createdAt: "2024-01-01",
-            });
+            expect(setById).toHaveBeenCalledWith({id: 1, userName: "updatedUser", createdAt: "2024-01-01"});
         });
 
         it("should return the updated item from update()", async () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const putRequest = vi.fn().mockResolvedValue({
-                data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"},
-            });
+            const putRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
             const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
@@ -137,11 +125,7 @@ describe("resource adapter", () => {
             const result = await adapted.update();
 
             // Assert
-            expect(result).toEqual({
-                id: 1,
-                userName: "updatedUser",
-                createdAt: "2024-01-01",
-            });
+            expect(result).toEqual({id: 1, userName: "updatedUser", createdAt: "2024-01-01"});
         });
 
         it("should throw MissingResponseDataError when update response has no data", async () => {
@@ -242,9 +226,7 @@ describe("resource adapter", () => {
     });
 
     describe("adapting new resource", () => {
-        const newResource: New<TestItem> = {
-            userName: "newUser",
-        };
+        const newResource: New<TestItem> = {userName: "newUser"};
 
         it("should return the original resource properties", () => {
             // Arrange
@@ -303,9 +285,9 @@ describe("resource adapter", () => {
         it("should call httpService.postRequest with snake_case data on create()", async () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const postRequest = vi.fn().mockResolvedValue({
-                data: {id: 1, user_name: "newUser", created_at: "2024-01-01"},
-            });
+            const postRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
             const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
@@ -320,9 +302,9 @@ describe("resource adapter", () => {
             // Arrange
             const setById = vi.fn();
             const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
-            const postRequest = vi.fn().mockResolvedValue({
-                data: {id: 1, user_name: "newUser", created_at: "2024-01-01"},
-            });
+            const postRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
             const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
@@ -330,19 +312,15 @@ describe("resource adapter", () => {
             await adapted.create();
 
             // Assert
-            expect(setById).toHaveBeenCalledWith({
-                id: 1,
-                userName: "newUser",
-                createdAt: "2024-01-01",
-            });
+            expect(setById).toHaveBeenCalledWith({id: 1, userName: "newUser", createdAt: "2024-01-01"});
         });
 
         it("should return the created item from create()", async () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const postRequest = vi.fn().mockResolvedValue({
-                data: {id: 1, user_name: "newUser", created_at: "2024-01-01"},
-            });
+            const postRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
             const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
@@ -350,11 +328,7 @@ describe("resource adapter", () => {
             const result = await adapted.create();
 
             // Assert
-            expect(result).toEqual({
-                id: 1,
-                userName: "newUser",
-                createdAt: "2024-01-01",
-            });
+            expect(result).toEqual({id: 1, userName: "newUser", createdAt: "2024-01-01"});
         });
 
         it("should throw MissingResponseDataError when create response has no data", async () => {
@@ -418,10 +392,7 @@ describe("resource adapter", () => {
                 id: number;
                 nested: {value: string};
             }
-            const nestedResource: NestedItem = {
-                id: 1,
-                nested: {value: "original"},
-            };
+            const nestedResource: NestedItem = {id: 1, nested: {value: "original"}};
             const storeModule: AdapterStoreModule<NestedItem> = {setById: vi.fn(), deleteById: vi.fn()};
             const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
@@ -440,10 +411,7 @@ describe("resource adapter", () => {
                 id: number;
                 items: string[];
             }
-            const arrayResource: ArrayItem = {
-                id: 1,
-                items: ["a", "b"],
-            };
+            const arrayResource: ArrayItem = {id: 1, items: ["a", "b"]};
             const storeModule: AdapterStoreModule<ArrayItem> = {setById: vi.fn(), deleteById: vi.fn()};
             const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 
@@ -463,10 +431,7 @@ describe("resource adapter", () => {
                 createdAt: Date;
             }
             const originalDate = new Date("2024-01-01");
-            const dateResource: DateItem = {
-                id: 1,
-                createdAt: originalDate,
-            };
+            const dateResource: DateItem = {id: 1, createdAt: originalDate};
             const storeModule: AdapterStoreModule<DateItem> = {setById: vi.fn(), deleteById: vi.fn()};
             const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
 

@@ -16,11 +16,7 @@ describe("App", () => {
         });
 
         // Act
-        const wrapper = mount(App, {
-            global: {
-                plugins: [router],
-            },
-        });
+        const wrapper = mount(App, {global: {plugins: [router]}});
         await router.isReady();
 
         // Assert

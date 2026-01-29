@@ -19,11 +19,7 @@ describe("toCamelCaseTyped", () => {
         const result = toCamelCaseTyped<TestItem>(snakeCase);
 
         // Assert
-        expect(result).toEqual({
-            id: 1,
-            userName: "test",
-            createdAt: "2024-01-01",
-        });
+        expect(result).toEqual({id: 1, userName: "test", createdAt: "2024-01-01"});
     });
 
     it("should handle already camelCase data", () => {
@@ -34,41 +30,22 @@ describe("toCamelCaseTyped", () => {
         const result = toCamelCaseTyped<TestItem>(camelCase);
 
         // Assert
-        expect(result).toEqual({
-            id: 1,
-            userName: "test",
-            createdAt: "2024-01-01",
-        });
+        expect(result).toEqual({id: 1, userName: "test", createdAt: "2024-01-01"});
     });
 
     it("should handle nested snake_case objects", () => {
         // Arrange
         interface NestedItem extends Item {
             id: number;
-            userProfile: {
-                firstName: string;
-                lastName: string;
-            };
+            userProfile: {firstName: string; lastName: string};
         }
-        const snakeCase = {
-            id: 1,
-            user_profile: {
-                first_name: "John",
-                last_name: "Doe",
-            },
-        };
+        const snakeCase = {id: 1, user_profile: {first_name: "John", last_name: "Doe"}};
 
         // Act
         const result = toCamelCaseTyped<NestedItem>(snakeCase);
 
         // Assert
-        expect(result).toEqual({
-            id: 1,
-            userProfile: {
-                firstName: "John",
-                lastName: "Doe",
-            },
-        });
+        expect(result).toEqual({id: 1, userProfile: {firstName: "John", lastName: "Doe"}});
     });
 
     it("should handle arrays with snake_case objects", () => {
@@ -77,19 +54,13 @@ describe("toCamelCaseTyped", () => {
             id: number;
             userTags: Array<{tagName: string}>;
         }
-        const snakeCase = {
-            id: 1,
-            user_tags: [{tag_name: "admin"}, {tag_name: "user"}],
-        };
+        const snakeCase = {id: 1, user_tags: [{tag_name: "admin"}, {tag_name: "user"}]};
 
         // Act
         const result = toCamelCaseTyped<ItemWithArray>(snakeCase);
 
         // Assert
-        expect(result).toEqual({
-            id: 1,
-            userTags: [{tagName: "admin"}, {tagName: "user"}],
-        });
+        expect(result).toEqual({id: 1, userTags: [{tagName: "admin"}, {tagName: "user"}]});
     });
 
     it("should preserve primitive values", () => {
@@ -100,22 +71,12 @@ describe("toCamelCaseTyped", () => {
             score: number;
             description: string | null;
         }
-        const snakeCase = {
-            id: 1,
-            is_active: true,
-            score: 42,
-            description: null,
-        };
+        const snakeCase = {id: 1, is_active: true, score: 42, description: null};
 
         // Act
         const result = toCamelCaseTyped<ItemWithPrimitives>(snakeCase);
 
         // Assert
-        expect(result).toEqual({
-            id: 1,
-            isActive: true,
-            score: 42,
-            description: null,
-        });
+        expect(result).toEqual({id: 1, isActive: true, score: 42, description: null});
     });
 });

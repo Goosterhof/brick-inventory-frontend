@@ -56,7 +56,7 @@
   // - "preserve": Keep multi-line if there's a newline before first property
   // - "collapse": Collapse to single line if it fits
   // Default: "preserve"
-  "objectWrap": "preserve",
+  "objectWrap": "collapse",
 
   // When to quote properties in objects
   // Options: "as-needed" | "consistent" | "preserve"

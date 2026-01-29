@@ -36,13 +36,7 @@ export interface HttpService {
 }
 
 export const createHttpService = (baseURL: string): HttpService => {
-    const http = axios.create({
-        baseURL,
-        withCredentials: true,
-        headers: {
-            Accept: "application/json",
-        },
-    });
+    const http = axios.create({baseURL, withCredentials: true, headers: {Accept: "application/json"}});
 
     const requestMiddleware: RequestMiddlewareFunc[] = [];
     const responseMiddleware: ResponseMiddlewareFunc[] = [];

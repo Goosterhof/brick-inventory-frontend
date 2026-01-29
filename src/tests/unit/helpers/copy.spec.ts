@@ -226,18 +226,12 @@ describe("deepCopy", () => {
         it("should handle deeply nested mixed structures", () => {
             // Arrange
             type User = {name: string; tags: string[]};
-            const original: {
-                users: [User, User];
-                metadata: {createdAt: Date; nested: {deep: {value: number}}};
-            } = {
+            const original: {users: [User, User]; metadata: {createdAt: Date; nested: {deep: {value: number}}}} = {
                 users: [
                     {name: "Alice", tags: ["admin", "user"]},
                     {name: "Bob", tags: ["user"]},
                 ],
-                metadata: {
-                    createdAt: new Date("2024-01-01"),
-                    nested: {deep: {value: 42}},
-                },
+                metadata: {createdAt: new Date("2024-01-01"), nested: {deep: {value: 42}}},
             };
 
             // Act

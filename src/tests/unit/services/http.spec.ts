@@ -24,9 +24,7 @@ describe("http service", () => {
             expect(createSpy).toHaveBeenCalledWith({
                 baseURL,
                 withCredentials: true,
-                headers: {
-                    Accept: "application/json",
-                },
+                headers: {Accept: "application/json"},
             });
         });
 
