@@ -2,7 +2,7 @@ import {mount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 import {createMemoryHistory, createRouter} from "vue-router";
 
-import App from "../../App.vue";
+import App from "@/App.vue";
 
 describe("App", () => {
     it("should render navigation links", async () => {
@@ -20,7 +20,9 @@ describe("App", () => {
         await router.isReady();
 
         // Assert
-        expect(wrapper.text()).toContain("Home");
-        expect(wrapper.text()).toContain("About");
+        const links = wrapper.findAllComponents({name: "RouterLink"});
+        expect(links).toHaveLength(2);
+        expect(links[0].text()).toBe("Home");
+        expect(links[1].text()).toBe("About");
     });
 });
