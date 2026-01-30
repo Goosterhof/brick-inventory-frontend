@@ -1,11 +1,11 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 import TextInput from "../../../components/TextInput.vue";
 
 describe("TextInput", () => {
     it("should render label and input", () => {
-        const wrapper = mount(TextInput, {
+        const wrapper = shallowMount(TextInput, {
             props: {label: "Username"},
         });
 
@@ -14,7 +14,7 @@ describe("TextInput", () => {
     });
 
     it("should associate label with input via id", () => {
-        const wrapper = mount(TextInput, {
+        const wrapper = shallowMount(TextInput, {
             props: {label: "Email"},
         });
 
@@ -27,7 +27,7 @@ describe("TextInput", () => {
     });
 
     it("should emit update:modelValue on input", async () => {
-        const wrapper = mount(TextInput, {
+        const wrapper = shallowMount(TextInput, {
             props: {label: "Name", modelValue: ""},
         });
 
@@ -39,7 +39,7 @@ describe("TextInput", () => {
     });
 
     it("should show required indicator when required", () => {
-        const wrapper = mount(TextInput, {
+        const wrapper = shallowMount(TextInput, {
             props: {label: "Email", required: true},
         });
 
@@ -48,7 +48,7 @@ describe("TextInput", () => {
     });
 
     it("should display error message and set aria-invalid", () => {
-        const wrapper = mount(TextInput, {
+        const wrapper = shallowMount(TextInput, {
             props: {label: "Email", error: "Invalid email address"},
         });
 
@@ -61,7 +61,7 @@ describe("TextInput", () => {
     });
 
     it("should be disabled when disabled prop is true", () => {
-        const wrapper = mount(TextInput, {
+        const wrapper = shallowMount(TextInput, {
             props: {label: "Name", disabled: true},
         });
 
@@ -69,7 +69,7 @@ describe("TextInput", () => {
     });
 
     it("should render with correct input type", () => {
-        const wrapper = mount(TextInput, {
+        const wrapper = shallowMount(TextInput, {
             props: {label: "Password", type: "password"},
         });
 

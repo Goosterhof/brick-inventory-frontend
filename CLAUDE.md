@@ -69,6 +69,7 @@ src/
 - Use TypeScript for all `.ts` and `.vue` files
 - Use UnoCSS utility classes for styling
 - Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
+- Use `shallowMount` for unit testing Vue components (isolates component from children)
 - Use PascalCase for component names
 - Use camelCase for variables and functions
 
