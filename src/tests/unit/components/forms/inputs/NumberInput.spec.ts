@@ -1,6 +1,9 @@
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
+import FormError from "@/components/forms/FormError.vue";
+import FormField from "@/components/forms/FormField.vue";
+import FormLabel from "@/components/forms/FormLabel.vue";
 import NumberInput from "@/components/forms/inputs/NumberInput.vue";
 
 describe("NumberInput", () => {
@@ -9,7 +12,8 @@ describe("NumberInput", () => {
         const wrapper = shallowMount(NumberInput, {props: {label: "Quantity", modelValue: null}});
 
         // Assert
-        expect(wrapper.find("label").text()).toContain("Quantity");
+        const label = wrapper.findComponent(FormLabel);
+        expect(label.text()).toContain("Quantity");
         expect(wrapper.find("input").exists()).toBe(true);
         expect(wrapper.find("input").attributes("type")).toBe("number");
     });
@@ -18,12 +22,12 @@ describe("NumberInput", () => {
         // Arrange
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
         const input = wrapper.find("input");
-        const label = wrapper.find("label");
+        const label = wrapper.findComponent(FormLabel);
         const inputId = input.attributes("id");
 
         // Assert
         expect(inputId).toBeTruthy();
-        expect(label.attributes("for")).toBe(inputId);
+        expect(label.props("for")).toBe(inputId);
     });
 
     it("should emit update:modelValue on input", async () => {
@@ -44,7 +48,8 @@ describe("NumberInput", () => {
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null, required: true}});
 
         // Assert
-        expect(wrapper.find("label").text()).toContain("*");
+        const label = wrapper.findComponent(FormLabel);
+        expect(label.props("required")).toBe(true);
         expect(wrapper.find("input").attributes("required")).toBeDefined();
     });
 
@@ -53,7 +58,8 @@ describe("NumberInput", () => {
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
 
         // Assert
-        expect(wrapper.find("label").text()).not.toContain("*");
+        const label = wrapper.findComponent(FormLabel);
+        expect(label.props("required")).toBe(false);
         expect(wrapper.find("input").attributes("required")).toBeUndefined();
     });
 
@@ -63,12 +69,12 @@ describe("NumberInput", () => {
             props: {label: "Amount", modelValue: null, error: "Must be a positive number"},
         });
         const input = wrapper.find("input");
-        const errorMessage = wrapper.find("[role='alert']");
+        const errorComponent = wrapper.findComponent(FormError);
 
         // Assert
-        expect(errorMessage.text()).toBe("Must be a positive number");
+        expect(errorComponent.text()).toBe("Must be a positive number");
         expect(input.attributes("aria-invalid")).toBe("true");
-        expect(input.attributes("aria-describedby")).toBe(errorMessage.attributes("id"));
+        expect(input.attributes("aria-describedby")).toBe(errorComponent.props("id"));
     });
 
     it("should be disabled when disabled prop is true", () => {
@@ -131,5 +137,21 @@ describe("NumberInput", () => {
 
         // Assert
         expect(wrapper.find("input").element.value).toBe("5");
+    });
+
+    it("should wrap content in FormField", () => {
+        // Arrange
+        const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
+
+        // Assert
+        expect(wrapper.findComponent(FormField).exists()).toBe(true);
+    });
+
+    it("should not render FormError when no error", () => {
+        // Arrange
+        const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
+
+        // Assert
+        expect(wrapper.findComponent(FormError).exists()).toBe(false);
     });
 });
