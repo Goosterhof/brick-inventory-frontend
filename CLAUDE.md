@@ -79,7 +79,7 @@ src/
 
 Use prop destructuring with inline defaults (no `withDefaults` needed):
 
-```vue
+```ts
 const {
     label,
     type = "text",
@@ -95,8 +95,8 @@ const {
 
 Use `defineModel` for two-way binding instead of manual prop + emit:
 
-```vue
-const model = defineModel<string>({default: ""});
+```ts
+const model = defineModel<string>({required: true});
 ```
 
 Then bind directly in template:
