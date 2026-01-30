@@ -123,7 +123,7 @@ Input components should compose the form primitives (FormField, FormLabel, FormE
     <FormField>
         <FormLabel :for="inputId" :required="required">{{ label }}</FormLabel>
         <input :id="inputId" v-model="model" ... />
-        <FormError v-if="error" :id="errorId">{{ error }}</FormError>
+        <FormError v-if="error" :id="errorId" :message="error" />
     </FormField>
 </template>
 ```

@@ -57,6 +57,6 @@ const inputStateClass = computed(() => {
             outline="none"
             :class="inputStateClass"
         />
-        <FormError v-if="error" :id="errorId">{{ error }}</FormError>
+        <FormError v-if="error" :id="errorId" :message="error" />
     </FormField>
 </template>

@@ -1,4 +1,4 @@
-import {shallowMount} from "@vue/test-utils";
+import {mount, shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 import FormError from "@/components/forms/FormError.vue";
@@ -72,7 +72,7 @@ describe("NumberInput", () => {
         const errorComponent = wrapper.findComponent(FormError);
 
         // Assert
-        expect(errorComponent.text()).toBe("Must be a positive number");
+        expect(errorComponent.props("message")).toBe("Must be a positive number");
         expect(input.attributes("aria-invalid")).toBe("true");
         expect(input.attributes("aria-describedby")).toBe(errorComponent.props("id"));
     });
@@ -147,11 +147,33 @@ describe("NumberInput", () => {
         expect(wrapper.findComponent(FormField).exists()).toBe(true);
     });
 
-    it("should not render FormError when no error", () => {
-        // Arrange
-        const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
+    it("should apply normal styling when not disabled and no error", () => {
+        // Arrange - use mount for coverage
+        const wrapper = mount(NumberInput, {props: {label: "Amount", modelValue: null}});
+        const input = wrapper.find("input");
 
         // Assert
-        expect(wrapper.findComponent(FormError).exists()).toBe(false);
+        expect(input.classes()).toContain("bg-white");
+    });
+
+    it("should apply error styling when error is present", () => {
+        // Arrange - use mount to fully render FormError for coverage
+        const wrapper = mount(NumberInput, {props: {label: "Amount", modelValue: null, error: "Invalid"}});
+        const input = wrapper.find("input");
+
+        // Assert
+        expect(input.classes()).toContain("bg-red-100");
+        expect(wrapper.find("[role='alert']").text()).toBe("Invalid");
+    });
+
+    it("should not render FormError when no error", () => {
+        // Arrange - use mount to fully exercise v-if branch for coverage
+        const wrapper = mount(NumberInput, {props: {label: "Amount", modelValue: null}});
+        const input = wrapper.find("input");
+
+        // Assert
+        expect(wrapper.find("[role='alert']").exists()).toBe(false);
+        expect(input.attributes("aria-invalid")).toBeUndefined();
+        expect(input.attributes("aria-describedby")).toBeUndefined();
     });
 });
