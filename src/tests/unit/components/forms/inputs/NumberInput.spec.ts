@@ -43,6 +43,19 @@ describe("NumberInput", () => {
         expect(emitted?.[0]).toEqual([42]);
     });
 
+    it("should emit null when input is cleared", async () => {
+        // Arrange
+        const wrapper = shallowMount(NumberInput, {props: {label: "Count", modelValue: 42}});
+
+        // Act
+        await wrapper.find("input").setValue("");
+
+        // Assert
+        const emitted = wrapper.emitted("update:modelValue");
+        expect(emitted).toBeTruthy();
+        expect(emitted?.[0]).toEqual([null]);
+    });
+
     it("should show required indicator when required", () => {
         // Arrange
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null, required: true}});
