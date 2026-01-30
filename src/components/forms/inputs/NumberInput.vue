@@ -1,23 +1,37 @@
 <script setup lang="ts">
 import {computed, useId} from "vue";
 
+import FormError from "@/components/forms/FormError.vue";
+import FormField from "@/components/forms/FormField.vue";
+import FormLabel from "@/components/forms/FormLabel.vue";
+
 const {
     label,
-    type = "text",
     placeholder = "",
     disabled = false,
     required = false,
     error = "",
+    min,
+    max,
+    step,
 } = defineProps<{
     label: string;
-    type?: "text" | "email" | "password" | "search" | "tel" | "url";
     placeholder?: string;
     disabled?: boolean;
     required?: boolean;
     error?: string;
+    min?: number;
+    max?: number;
+    step?: number;
 }>();
 
-const model = defineModel<string>({required: true});
+const model = defineModel<number | null>({required: true});
+
+const handleInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    const value = input.valueAsNumber;
+    model.value = Number.isNaN(value) ? null : value;
+};
 
 const inputId = useId();
 const errorId = computed(() => (error ? `${inputId}-error` : undefined));
@@ -34,18 +48,19 @@ const inputStateClass = computed(() => {
 </script>
 
 <template>
-    <div flex="~ col" gap="2">
-        <label :for="inputId" text="sm black" font="bold" uppercase tracking="wide">
-            {{ label }}
-            <span v-if="required" text="red-500" aria-hidden="true">*</span>
-        </label>
+    <FormField>
+        <FormLabel :for="inputId" :required="required">{{ label }}</FormLabel>
         <input
             :id="inputId"
-            v-model="model"
-            :type="type"
+            :value="model"
+            type="number"
+            @input="handleInput"
             :placeholder="placeholder"
             :disabled="disabled"
             :required="required"
+            :min="min"
+            :max="max"
+            :step="step"
             :aria-invalid="error ? true : undefined"
             :aria-describedby="errorId"
             p="x-4 y-3"
@@ -56,8 +71,6 @@ const inputStateClass = computed(() => {
             outline="none"
             :class="inputStateClass"
         />
-        <p v-if="error" :id="errorId" text="sm red-600" font="bold" role="alert">
-            {{ error }}
-        </p>
-    </div>
+        <FormError v-if="error" :id="errorId" :message="error" />
+    </FormField>
 </template>
