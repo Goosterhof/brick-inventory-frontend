@@ -88,4 +88,14 @@ describe("TextInput", () => {
         expect(input.classes()).toContain("bg-gray-200");
         expect(input.classes()).not.toContain("bg-red-100");
     });
+
+    it("should render placeholder text", () => {
+        // Arrange
+        const wrapper = shallowMount(TextInput, {
+            props: {label: "Email", modelValue: "", placeholder: "Enter your email"},
+        });
+
+        // Assert
+        expect(wrapper.find("input").attributes("placeholder")).toBe("Enter your email");
+    });
 });
