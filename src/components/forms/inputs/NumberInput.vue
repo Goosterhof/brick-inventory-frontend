@@ -27,11 +27,11 @@ const {
 
 const model = defineModel<number | null>({required: true});
 
-function handleInput(event: Event) {
+const handleInput = (event: Event) => {
     const input = event.target as HTMLInputElement;
     const value = input.valueAsNumber;
     model.value = Number.isNaN(value) ? null : value;
-}
+};
 
 const inputId = useId();
 const errorId = computed(() => (error ? `${inputId}-error` : undefined));
