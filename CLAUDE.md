@@ -72,6 +72,7 @@ src/
 - Use `shallowMount` for unit testing Vue components (isolates component from children)
 - Use PascalCase for component names
 - Use camelCase for variables and functions
+- Avoid nested ternaries - use computed properties with if/else instead
 
 ## Vue Component Patterns
 
