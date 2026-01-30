@@ -1,8 +1,5 @@
 <script setup lang="ts">
-const {for: forId, required = false} = defineProps<{
-    for?: string;
-    required?: boolean;
-}>();
+const {for: forId, required = false} = defineProps<{for?: string; required?: boolean}>();
 </script>
 
 <template>

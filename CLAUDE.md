@@ -55,9 +55,16 @@ npm run format:check
 src/
 ├── assets/          # Static assets (images, fonts, etc.)
 ├── components/      # Reusable Vue components
+│   └── forms/       # Form-related components
+│       ├── FormError.vue    # Error message with alert role
+│       ├── FormField.vue    # Flex column wrapper for form fields
+│       ├── FormLabel.vue    # Label with optional required indicator
+│       └── inputs/          # Input components
+│           ├── NumberInput.vue
+│           └── TextInput.vue
 ├── router/          # Vue Router configuration
 ├── tests/           # All tests
-│   └── unit/        # Unit tests
+│   └── unit/        # Unit tests (mirrors src/ structure)
 ├── views/           # Page-level components (routed views)
 ├── App.vue          # Root component
 └── main.ts          # Application entry point
@@ -70,7 +77,8 @@ src/
 - Use UnoCSS attributify syntax for styling (see UnoCSS section)
 - Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
 - Use `shallowMount` for unit testing Vue components (isolates component from children)
-- Use PascalCase for component names
+- When testing components that use child components, use `findComponent()` to check props passed to stubs
+- Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink)
 - Use camelCase for variables and functions
 - Avoid nested ternaries - use computed properties with if/else instead
 
@@ -104,6 +112,20 @@ Then bind directly in template:
 
 ```vue
 <input v-model="model" />
+```
+
+### Form Component Composition
+
+Input components should compose the form primitives (FormField, FormLabel, FormError):
+
+```vue
+<template>
+    <FormField>
+        <FormLabel :for="inputId" :required="required">{{ label }}</FormLabel>
+        <input :id="inputId" v-model="model" ... />
+        <FormError v-if="error" :id="errorId">{{ error }}</FormError>
+    </FormField>
+</template>
 ```
 
 ## UnoCSS
