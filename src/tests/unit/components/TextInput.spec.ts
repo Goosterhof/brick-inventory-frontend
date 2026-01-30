@@ -5,14 +5,14 @@ import TextInput from "../../../components/TextInput.vue";
 
 describe("TextInput", () => {
     it("should render label and input", () => {
-        const wrapper = shallowMount(TextInput, {props: {label: "Username"}});
+        const wrapper = shallowMount(TextInput, {props: {label: "Username", modelValue: ""}});
 
         expect(wrapper.find("label").text()).toContain("Username");
         expect(wrapper.find("input").exists()).toBe(true);
     });
 
     it("should associate label with input via id", () => {
-        const wrapper = shallowMount(TextInput, {props: {label: "Email"}});
+        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
 
         const input = wrapper.find("input");
         const label = wrapper.find("label");
@@ -33,14 +33,16 @@ describe("TextInput", () => {
     });
 
     it("should show required indicator when required", () => {
-        const wrapper = shallowMount(TextInput, {props: {label: "Email", required: true}});
+        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: "", required: true}});
 
         expect(wrapper.find("label").text()).toContain("*");
         expect(wrapper.find("input").attributes("required")).toBeDefined();
     });
 
     it("should display error message and set aria-invalid", () => {
-        const wrapper = shallowMount(TextInput, {props: {label: "Email", error: "Invalid email address"}});
+        const wrapper = shallowMount(TextInput, {
+            props: {label: "Email", modelValue: "", error: "Invalid email address"},
+        });
 
         const input = wrapper.find("input");
         const errorMessage = wrapper.find("[role='alert']");
@@ -51,13 +53,13 @@ describe("TextInput", () => {
     });
 
     it("should be disabled when disabled prop is true", () => {
-        const wrapper = shallowMount(TextInput, {props: {label: "Name", disabled: true}});
+        const wrapper = shallowMount(TextInput, {props: {label: "Name", modelValue: "", disabled: true}});
 
         expect(wrapper.find("input").attributes("disabled")).toBeDefined();
     });
 
     it("should render with correct input type", () => {
-        const wrapper = shallowMount(TextInput, {props: {label: "Password", type: "password"}});
+        const wrapper = shallowMount(TextInput, {props: {label: "Password", modelValue: "", type: "password"}});
 
         expect(wrapper.find("input").attributes("type")).toBe("password");
     });

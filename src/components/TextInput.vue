@@ -17,7 +17,7 @@ const {
     error?: string;
 }>();
 
-const model = defineModel<string>({default: ""});
+const model = defineModel<string>({required: true});
 
 const inputId = useId();
 const errorId = computed(() => (error ? `${inputId}-error` : undefined));
