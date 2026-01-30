@@ -76,4 +76,16 @@ describe("TextInput", () => {
         // Assert
         expect(wrapper.find("input").attributes("type")).toBe("password");
     });
+
+    it("should prioritize disabled state over error state", () => {
+        // Arrange
+        const wrapper = shallowMount(TextInput, {
+            props: {label: "Email", modelValue: "", disabled: true, error: "Invalid email"},
+        });
+        const input = wrapper.find("input");
+
+        // Assert
+        expect(input.classes()).toContain("bg-gray-200");
+        expect(input.classes()).not.toContain("bg-red-100");
+    });
 });
