@@ -20,9 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
     error: "",
 });
 
-const emit = defineEmits<{
-    "update:modelValue": [value: string];
-}>();
+const emit = defineEmits<{"update:modelValue": [value: string]}>();
 
 const inputId = useId();
 const errorId = computed(() => (props.error ? `${inputId}-error` : undefined));
@@ -35,10 +33,7 @@ function onInput(event: Event) {
 
 <template>
     <div class="flex flex-col gap-2">
-        <label
-            :for="inputId"
-            class="text-sm font-bold text-black uppercase tracking-wide"
-        >
+        <label :for="inputId" class="text-sm font-bold text-black uppercase tracking-wide">
             {{ label }}
             <span v-if="required" class="text-red-500" aria-hidden="true">*</span>
         </label>
@@ -60,12 +55,7 @@ function onInput(event: Event) {
             ]"
             @input="onInput"
         />
-        <p
-            v-if="error"
-            :id="errorId"
-            class="text-sm font-bold text-red-600"
-            role="alert"
-        >
+        <p v-if="error" :id="errorId" class="text-sm font-bold text-red-600" role="alert">
             {{ error }}
         </p>
     </div>
