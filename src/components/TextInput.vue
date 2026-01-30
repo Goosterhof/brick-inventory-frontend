@@ -21,6 +21,16 @@ const model = defineModel<string>({required: true});
 
 const inputId = useId();
 const errorId = computed(() => (error ? `${inputId}-error` : undefined));
+
+const inputStateClass = computed(() => {
+    if (disabled) {
+        return "bg-gray-200 cursor-not-allowed opacity-70 shadow-none";
+    }
+    if (error) {
+        return "bg-red-100 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] focus:shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]";
+    }
+    return "bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:bg-yellow-100";
+});
 </script>
 
 <template>
@@ -44,13 +54,7 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
             font="medium"
             transition="all duration-150"
             outline="none"
-            :class="[
-                disabled
-                    ? 'bg-gray-200 cursor-not-allowed opacity-70 shadow-none'
-                    : error
-                      ? 'bg-red-100 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] focus:shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]'
-                      : 'bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:bg-yellow-100',
-            ]"
+            :class="inputStateClass"
         />
         <p v-if="error" :id="errorId" text="sm red-600" font="bold" role="alert">
             {{ error }}
