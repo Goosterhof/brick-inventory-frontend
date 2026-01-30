@@ -1,7 +1,7 @@
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
-import TextInput from "../../../components/TextInput.vue";
+import TextInput from "@/components/TextInput.vue";
 
 describe("TextInput", () => {
     it("should render label and input", () => {
@@ -11,6 +11,7 @@ describe("TextInput", () => {
         // Assert
         expect(wrapper.find("label").text()).toContain("Username");
         expect(wrapper.find("input").exists()).toBe(true);
+        expect(wrapper.find("input").element.value).toBe("");
     });
 
     it("should associate label with input via id", () => {
