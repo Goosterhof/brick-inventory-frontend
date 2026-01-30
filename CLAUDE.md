@@ -67,7 +67,7 @@ src/
 
 - Use Composition API with `<script setup>` syntax
 - Use TypeScript for all `.ts` and `.vue` files
-- Use UnoCSS utility classes for styling
+- Use UnoCSS attributify syntax for styling (see UnoCSS section)
 - Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
 - Use `shallowMount` for unit testing Vue components (isolates component from children)
 - Use PascalCase for component names
@@ -114,6 +114,30 @@ This project uses UnoCSS with the following presets:
 - `presetIcons`: Icon support
 
 Configuration is in `uno.config.ts`.
+
+### Attributify Mode
+
+Prefer attributify syntax over `class` for static utilities:
+
+```vue
+<!-- Preferred: attributify -->
+<div flex="~ col" gap="2" p="x-4 y-3">
+<label text="sm black" font="bold" uppercase tracking="wide">
+
+<!-- Avoid: class strings -->
+<div class="flex flex-col gap-2 px-4 py-3">
+<label class="text-sm text-black font-bold uppercase tracking-wide">
+```
+
+Common patterns:
+
+- `flex="~ col"` - `~` enables base utility, additional values modify it
+- `text="sm black"` - groups related utilities (size + color)
+- `p="x-4 y-3"` - padding shorthand
+- `border="3 black"` - border width + color
+- Single values work as boolean attributes: `uppercase`, `outline="none"`
+
+Use `:class` for dynamic/conditional styles only.
 
 ## Design System
 
