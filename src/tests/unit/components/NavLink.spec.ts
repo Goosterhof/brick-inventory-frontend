@@ -6,10 +6,7 @@ import NavLink from "@/components/NavLink.vue";
 describe("NavLink", () => {
     it("should render slot content in RouterLink", () => {
         // Arrange
-        const wrapper = shallowMount(NavLink, {
-            props: {to: "/"},
-            slots: {default: "Home"},
-        });
+        const wrapper = shallowMount(NavLink, {props: {to: "/"}, slots: {default: "Home"}});
         const routerLink = wrapper.findComponent({name: "RouterLink"});
 
         // Assert
@@ -18,10 +15,7 @@ describe("NavLink", () => {
 
     it("should pass to prop to RouterLink", () => {
         // Arrange
-        const wrapper = shallowMount(NavLink, {
-            props: {to: "/about"},
-            slots: {default: "About"},
-        });
+        const wrapper = shallowMount(NavLink, {props: {to: "/about"}, slots: {default: "About"}});
         const routerLink = wrapper.findComponent({name: "RouterLink"});
 
         // Assert
@@ -30,10 +24,7 @@ describe("NavLink", () => {
 
     it("should have neo-brutalist styling", () => {
         // Arrange
-        const wrapper = shallowMount(NavLink, {
-            props: {to: "/"},
-            slots: {default: "Home"},
-        });
+        const wrapper = shallowMount(NavLink, {props: {to: "/"}, slots: {default: "Home"}});
         const routerLink = wrapper.findComponent({name: "RouterLink"});
 
         // Assert
