@@ -116,7 +116,7 @@
 
     // Glob patterns to ignore
     // Default: []
-    "ignorePatterns": ["dist/**", "coverage/**"],
+    "ignorePatterns": ["dist/**", "coverage/**", "CLAUDE.md"],
 
     // ═══════════════════════════════════════════════════════════════════════════
     // EXPERIMENTAL: IMPORT SORTING
