@@ -1,4 +1,4 @@
-import {mount, shallowMount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 import FormError from "@/components/forms/FormError.vue";
@@ -124,8 +124,8 @@ describe("TextInput", () => {
     });
 
     it("should apply normal styling when not disabled and no error", () => {
-        // Arrange - use mount for coverage
-        const wrapper = mount(TextInput, {props: {label: "Email", modelValue: ""}});
+        // Arrange
+        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
         const input = wrapper.find("input");
 
         // Assert
@@ -133,22 +133,22 @@ describe("TextInput", () => {
     });
 
     it("should apply error styling when error is present", () => {
-        // Arrange - use mount to fully render FormError for coverage
-        const wrapper = mount(TextInput, {props: {label: "Email", modelValue: "", error: "Invalid"}});
+        // Arrange
+        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: "", error: "Invalid"}});
         const input = wrapper.find("input");
 
         // Assert
         expect(input.classes()).toContain("bg-red-100");
-        expect(wrapper.find("[role='alert']").text()).toBe("Invalid");
+        expect(wrapper.findComponent(FormError).props("message")).toBe("Invalid");
     });
 
     it("should not render FormError when no error", () => {
-        // Arrange - use mount to fully exercise v-if branch for coverage
-        const wrapper = mount(TextInput, {props: {label: "Email", modelValue: ""}});
+        // Arrange
+        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
         const input = wrapper.find("input");
 
         // Assert
-        expect(wrapper.find("[role='alert']").exists()).toBe(false);
+        expect(wrapper.findComponent(FormError).exists()).toBe(false);
         expect(input.attributes("aria-invalid")).toBeUndefined();
         expect(input.attributes("aria-describedby")).toBeUndefined();
     });
