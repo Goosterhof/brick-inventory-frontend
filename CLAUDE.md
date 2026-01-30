@@ -81,3 +81,15 @@ This project uses UnoCSS with the following presets:
 - `presetIcons`: Icon support
 
 Configuration is in `uno.config.ts`.
+
+## Design System
+
+This project uses a **neo-brutalism** style with the following characteristics:
+
+- **Borders**: Bold 3px black borders (`border-3 border-black`)
+- **Shadows**: Solid offset box shadows, no blur (`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`)
+- **Focus states**: Shadow grows on focus (`focus:shadow-[6px_6px_0px_0px_...]`), yellow background highlight (`focus:bg-yellow-100`)
+- **Error states**: Red-tinted background (`bg-red-100`) with red offset shadow
+- **Labels**: Uppercase, bold, wide tracking (`uppercase font-bold tracking-wide`)
+- **Corners**: Sharp corners (no border-radius)
+- **Colors**: High contrast - black on white with bright accents (yellow, red)
