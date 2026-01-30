@@ -10,9 +10,10 @@ export default mergeConfig(
             environment: "jsdom",
             exclude: [...configDefaults.exclude, "e2e/**"],
             root: fileURLToPath(new URL("./", import.meta.url)),
+            setupFiles: ["./src/tests/unit/setup.ts"],
             coverage: {
                 provider: "v8",
-                include: ["src/**/*.ts"],
+                include: ["src/**/*.ts", "src/**/*.vue"],
                 exclude: ["src/main.ts", "src/**/*.d.ts", "src/router/**", "src/views/**"],
                 thresholds: {lines: 100, functions: 100, branches: 100, statements: 100},
             },
