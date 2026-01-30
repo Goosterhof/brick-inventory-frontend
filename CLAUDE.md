@@ -73,6 +73,38 @@ src/
 - Use PascalCase for component names
 - Use camelCase for variables and functions
 
+## Vue Component Patterns
+
+### Props with Destructuring
+
+Use prop destructuring with inline defaults (no `withDefaults` needed):
+
+```vue
+const {
+    label,
+    type = "text",
+    disabled = false,
+} = defineProps<{
+    label: string;
+    type?: "text" | "email" | "password";
+    disabled?: boolean;
+}>();
+```
+
+### v-model with defineModel
+
+Use `defineModel` for two-way binding instead of manual prop + emit:
+
+```vue
+const model = defineModel<string>({default: ""});
+```
+
+Then bind directly in template:
+
+```vue
+<input v-model="model" />
+```
+
 ## UnoCSS
 
 This project uses UnoCSS with the following presets:
