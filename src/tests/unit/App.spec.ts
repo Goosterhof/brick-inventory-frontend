@@ -22,7 +22,8 @@ describe("App", () => {
         // Assert
         const links = wrapper.findAllComponents({name: "RouterLink"});
         expect(links).toHaveLength(2);
-        expect(links[0].text()).toBe("Home");
-        expect(links[1].text()).toBe("About");
+        const [homeLink, aboutLink] = links;
+        expect(homeLink?.text()).toBe("Home");
+        expect(aboutLink?.text()).toBe("About");
     });
 });
