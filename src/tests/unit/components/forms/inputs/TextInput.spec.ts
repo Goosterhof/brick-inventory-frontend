@@ -1,7 +1,7 @@
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
-import TextInput from "@/components/TextInput.vue";
+import TextInput from "@/components/forms/inputs/TextInput.vue";
 
 describe("TextInput", () => {
     it("should render label and input", () => {

@@ -1,7 +1,7 @@
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
-import NumberInput from "@/components/NumberInput.vue";
+import NumberInput from "@/components/forms/inputs/NumberInput.vue";
 
 describe("NumberInput", () => {
     it("should render label and input", () => {
