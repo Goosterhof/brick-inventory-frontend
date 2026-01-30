@@ -40,16 +40,16 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
             :aria-describedby="errorId"
             p="x-4 y-3"
             border="3 black"
-            bg="white"
             text="black"
             font="medium"
             transition="all duration-150"
             outline="none"
             :class="[
-                error
-                    ? 'bg-red-100 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] focus:shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]'
-                    : 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:bg-yellow-100',
-                disabled ? 'bg-gray-200 cursor-not-allowed opacity-70 shadow-none' : '',
+                disabled
+                    ? 'bg-gray-200 cursor-not-allowed opacity-70 shadow-none'
+                    : error
+                      ? 'bg-red-100 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] focus:shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]'
+                      : 'bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:bg-yellow-100',
             ]"
         />
         <p v-if="error" :id="errorId" text="sm red-600" font="bold" role="alert">
