@@ -47,6 +47,15 @@ describe("TextInput", () => {
         expect(wrapper.find("input").attributes("required")).toBeDefined();
     });
 
+    it("should not show required indicator when not required", () => {
+        // Arrange
+        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
+
+        // Assert
+        expect(wrapper.find("label").text()).not.toContain("*");
+        expect(wrapper.find("input").attributes("required")).toBeUndefined();
+    });
+
     it("should display error message and set aria-invalid", () => {
         // Arrange
         const wrapper = shallowMount(TextInput, {
