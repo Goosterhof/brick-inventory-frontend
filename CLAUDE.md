@@ -80,6 +80,7 @@ src/
 - When testing components that use child components, use `findComponent()` to check props passed to stubs
 - Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink)
 - Use camelCase for variables and functions
+- Use arrow functions (`const fn = () => {}`) instead of function declarations (only use `function` for overloading)
 - Avoid nested ternaries - use computed properties with if/else instead
 
 ## Vue Component Patterns
