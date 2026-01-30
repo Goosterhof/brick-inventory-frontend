@@ -34,10 +34,10 @@ function onInput(event: Event) {
 </script>
 
 <template>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-2">
         <label
             :for="inputId"
-            class="text-sm font-medium text-gray-700"
+            class="text-sm font-bold text-black uppercase tracking-wide"
         >
             {{ label }}
             <span v-if="required" class="text-red-500" aria-hidden="true">*</span>
@@ -51,19 +51,19 @@ function onInput(event: Event) {
             :required="required"
             :aria-invalid="error ? true : undefined"
             :aria-describedby="errorId"
-            class="px-3 py-2 border rounded-md text-gray-900 bg-white transition-colors duration-150 outline-none"
+            class="px-4 py-3 border-3 border-black bg-white text-black font-medium transition-all duration-150 outline-none"
             :class="[
                 error
-                    ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200'
-                    : 'border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200',
-                disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : '',
+                    ? 'bg-red-100 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] focus:shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]'
+                    : 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:bg-yellow-100',
+                disabled ? 'bg-gray-200 cursor-not-allowed opacity-70 shadow-none' : '',
             ]"
             @input="onInput"
         />
         <p
             v-if="error"
             :id="errorId"
-            class="text-sm text-red-600"
+            class="text-sm font-bold text-red-600"
             role="alert"
         >
             {{ error }}
