@@ -24,10 +24,10 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
 </script>
 
 <template>
-    <div class="flex flex-col gap-2">
-        <label :for="inputId" class="text-sm font-bold text-black uppercase tracking-wide">
+    <div flex="~ col" gap="2">
+        <label :for="inputId" text="sm black" font="bold" uppercase tracking="wide">
             {{ label }}
-            <span v-if="required" class="text-red-500" aria-hidden="true">*</span>
+            <span v-if="required" text="red-500" aria-hidden="true">*</span>
         </label>
         <input
             :id="inputId"
@@ -38,7 +38,13 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
             :required="required"
             :aria-invalid="error ? true : undefined"
             :aria-describedby="errorId"
-            class="px-4 py-3 border-3 border-black bg-white text-black font-medium transition-all duration-150 outline-none"
+            p="x-4 y-3"
+            border="3 black"
+            bg="white"
+            text="black"
+            font="medium"
+            transition="all duration-150"
+            outline="none"
             :class="[
                 error
                     ? 'bg-red-100 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] focus:shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]'
@@ -46,7 +52,7 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
                 disabled ? 'bg-gray-200 cursor-not-allowed opacity-70 shadow-none' : '',
             ]"
         />
-        <p v-if="error" :id="errorId" class="text-sm font-bold text-red-600" role="alert">
+        <p v-if="error" :id="errorId" text="sm red-600" font="bold" role="alert">
             {{ error }}
         </p>
     </div>
