@@ -1,13 +1,11 @@
+import type {AxiosResponseError, HttpService, ResponseErrorMiddlewareFunc} from "@shared/services/http";
 import type {AxiosError} from "axios";
 import type {Mock} from "vitest";
 
+import {useValidationErrors} from "@shared/composables/useValidationErrors";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 import {defineComponent} from "vue";
-
-import type {AxiosResponseError, HttpService, ResponseErrorMiddlewareFunc} from "@/services/http";
-
-import {useValidationErrors} from "@/composables/useValidationErrors";
 
 const createMockHttpService = () => {
     const unregister = vi.fn();

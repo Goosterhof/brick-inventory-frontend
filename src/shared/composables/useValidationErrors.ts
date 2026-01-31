@@ -1,10 +1,9 @@
+import type {HttpService} from "@shared/services/http";
 import type {AxiosError} from "axios";
 import type {Ref} from "vue";
 
 import {deepCamelKeys} from "string-ts";
 import {onUnmounted, ref} from "vue";
-
-import type {HttpService} from "@/services/http";
 
 export type ValidationErrors<T extends string = string> = Partial<Record<T, string>>;
 
