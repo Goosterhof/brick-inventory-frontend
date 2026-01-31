@@ -72,6 +72,7 @@ src/
 
 ## Coding Conventions
 
+- Always run `npm run format` before committing changes
 - Use Composition API with `<script setup>` syntax
 - Use TypeScript for all `.ts` and `.vue` files
 - Use UnoCSS attributify syntax for styling (see UnoCSS section)

@@ -4,24 +4,12 @@ import {createTranslationService} from "@/services/translation";
 
 const translations = {
     en: {
-        common: {
-            save: "Save",
-            cancel: "Cancel",
-        },
-        errors: {
-            required: "{field} is required",
-            minLength: "{field} must be at least {min} characters",
-        },
+        common: {save: "Save", cancel: "Cancel"},
+        errors: {required: "{field} is required", minLength: "{field} must be at least {min} characters"},
     },
     nl: {
-        common: {
-            save: "Opslaan",
-            cancel: "Annuleren",
-        },
-        errors: {
-            required: "{field} is verplicht",
-            minLength: "{field} moet minimaal {min} tekens bevatten",
-        },
+        common: {save: "Opslaan", cancel: "Annuleren"},
+        errors: {required: "{field} is verplicht", minLength: "{field} moet minimaal {min} tekens bevatten"},
     },
 } as const;
 
