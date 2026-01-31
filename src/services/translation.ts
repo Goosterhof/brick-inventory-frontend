@@ -27,10 +27,21 @@ export const createTranslationService = <
 
     const t = (key: NestedKeys<TTranslations[TLocale]>, params?: Record<string, string>): ComputedRef<string> => {
         return computed(() => {
-            const [section, name] = (key as string).split(".") as [string, string];
-            // Safe cast: key is constrained to valid NestedKeys, guaranteeing the path exists
-            const localeData = translations[locale.value] as Record<string, Record<string, string>>;
-            let text = (localeData[section] as Record<string, string>)[name] as string;
+            const keyString = key as string;
+            const parts = keyString.split(".");
+
+            if (parts.length !== 2) {
+                return keyString;
+            }
+
+            const [section, name] = parts as [string, string];
+            const localeData = translations[locale.value] as Record<string, Record<string, string>> | undefined;
+            const sectionData = localeData?.[section];
+            let text = sectionData?.[name];
+
+            if (text === undefined) {
+                return keyString;
+            }
 
             if (params) {
                 for (const [param, value] of Object.entries(params)) {

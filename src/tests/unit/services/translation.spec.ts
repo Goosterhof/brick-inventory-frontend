@@ -96,6 +96,50 @@ describe("translation service", () => {
             // Assert updated value
             expect(required.value).toBe("Email is verplicht");
         });
+
+        it("should return key when section does not exist", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act - cast to bypass type checking for testing runtime behavior
+            const result = t("nonexistent.key" as "common.save");
+
+            // Assert
+            expect(result.value).toBe("nonexistent.key");
+        });
+
+        it("should return key when translation name does not exist", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act - cast to bypass type checking for testing runtime behavior
+            const result = t("common.nonexistent" as "common.save");
+
+            // Assert
+            expect(result.value).toBe("common.nonexistent");
+        });
+
+        it("should return key when key has no dot separator", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act - cast to bypass type checking for testing runtime behavior
+            const result = t("nodot" as "common.save");
+
+            // Assert
+            expect(result.value).toBe("nodot");
+        });
+
+        it("should return key when key has multiple dots", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act - cast to bypass type checking for testing runtime behavior
+            const result = t("too.many.dots" as "common.save");
+
+            // Assert
+            expect(result.value).toBe("too.many.dots");
+        });
     });
 
     describe("locale", () => {
