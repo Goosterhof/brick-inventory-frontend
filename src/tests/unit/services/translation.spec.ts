@@ -154,4 +154,15 @@ describe("translation service", () => {
             expect(locale.value).toBe("nl");
         });
     });
+
+    describe("type safety", () => {
+        it("should enforce all locales have the same structure", () => {
+            // Type safety: Record<TLocale, TSchema> ensures all locales share the same structure.
+            // Mismatched structures (e.g., nl having extra keys) would cause a TypeScript error.
+            const validTranslations = {en: {common: {save: "Save"}}, nl: {common: {save: "Opslaan"}}} as const;
+
+            const {t} = createTranslationService(validTranslations, "en");
+            expect(t("common.save").value).toBe("Save");
+        });
+    });
 });

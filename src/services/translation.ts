@@ -2,30 +2,26 @@ import type {ComputedRef, Ref} from "vue";
 
 import {computed, ref} from "vue";
 
-type NestedKeys<T, K extends keyof T = keyof T> = K extends string
+type TranslationSchema = Record<string, Record<string, string>>;
+
+type NestedKeys<T extends TranslationSchema, K extends keyof T = keyof T> = K extends string
     ? T[K] extends Record<string, string>
         ? `${K}.${keyof T[K] & string}`
         : never
     : never;
 
-export interface TranslationService<
-    TTranslations extends Record<string, Record<string, Record<string, string>>>,
-    TLocale extends keyof TTranslations = keyof TTranslations,
-> {
-    t: (key: NestedKeys<TTranslations[TLocale]>, params?: Record<string, string>) => ComputedRef<string>;
-    locale: Ref<keyof TTranslations>;
+export interface TranslationService<TSchema extends TranslationSchema, TLocale extends string> {
+    t: (key: NestedKeys<TSchema>, params?: Record<string, string>) => ComputedRef<string>;
+    locale: Ref<TLocale>;
 }
 
-export const createTranslationService = <
-    const TTranslations extends Record<string, Record<string, Record<string, string>>>,
-    TLocale extends keyof TTranslations = keyof TTranslations,
->(
-    translations: TTranslations,
-    defaultLocale: TLocale,
-): TranslationService<TTranslations, TLocale> => {
-    const locale = ref(defaultLocale) as Ref<keyof TTranslations>;
+export const createTranslationService = <const TSchema extends TranslationSchema, const TLocale extends string>(
+    translations: Record<TLocale, TSchema>,
+    defaultLocale: NoInfer<TLocale>,
+): TranslationService<TSchema, TLocale> => {
+    const locale = ref(defaultLocale) as Ref<TLocale>;
 
-    const t = (key: NestedKeys<TTranslations[TLocale]>, params?: Record<string, string>): ComputedRef<string> => {
+    const t = (key: NestedKeys<TSchema>, params?: Record<string, string>): ComputedRef<string> => {
         return computed(() => {
             const keyString = key as string;
             const parts = keyString.split(".");
