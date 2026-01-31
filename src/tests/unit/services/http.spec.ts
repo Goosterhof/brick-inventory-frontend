@@ -189,6 +189,25 @@ describe("http service", () => {
 
             mock.restore();
         });
+
+        it("should handle calling unregister multiple times safely", async () => {
+            // Arrange
+            const mock = new MockAdapter(axios);
+            const service = createHttpService(baseURL);
+            const middleware: RequestMiddlewareFunc = vi.fn();
+            mock.onGet(`${baseURL}/users`).reply(200, {});
+
+            // Act
+            const unregister = service.registerRequestMiddleware(middleware);
+            unregister();
+            unregister(); // Call twice - should not throw
+            await service.getRequest("/users");
+
+            // Assert
+            expect(middleware).not.toHaveBeenCalled();
+
+            mock.restore();
+        });
     });
 
     describe("response middleware", () => {
@@ -235,6 +254,25 @@ describe("http service", () => {
             // Act
             const unregister = service.registerResponseMiddleware(middleware);
             unregister();
+            await service.getRequest("/users");
+
+            // Assert
+            expect(middleware).not.toHaveBeenCalled();
+
+            mock.restore();
+        });
+
+        it("should handle calling unregister multiple times safely", async () => {
+            // Arrange
+            const mock = new MockAdapter(axios);
+            const service = createHttpService(baseURL);
+            const middleware: ResponseMiddlewareFunc = vi.fn();
+            mock.onGet(`${baseURL}/users`).reply(200, {id: 1});
+
+            // Act
+            const unregister = service.registerResponseMiddleware(middleware);
+            unregister();
+            unregister(); // Call twice - should not throw
             await service.getRequest("/users");
 
             // Assert
@@ -300,6 +338,25 @@ describe("http service", () => {
             // Act
             const unregister = service.registerResponseErrorMiddleware(middleware);
             unregister();
+
+            // Assert
+            await expect(service.getRequest("/users")).rejects.toThrow();
+            expect(middleware).not.toHaveBeenCalled();
+
+            mock.restore();
+        });
+
+        it("should handle calling unregister multiple times safely", async () => {
+            // Arrange
+            const mock = new MockAdapter(axios);
+            const service = createHttpService(baseURL);
+            const middleware: ResponseErrorMiddlewareFunc = vi.fn();
+            mock.onGet(`${baseURL}/users`).reply(500);
+
+            // Act
+            const unregister = service.registerResponseErrorMiddleware(middleware);
+            unregister();
+            unregister(); // Call twice - should not throw
 
             // Assert
             await expect(service.getRequest("/users")).rejects.toThrow();
