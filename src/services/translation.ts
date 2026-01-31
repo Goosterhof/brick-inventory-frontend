@@ -1,5 +1,6 @@
 import type {ComputedRef, Ref} from "vue";
 
+import {replaceAll} from "string-ts";
 import {computed, ref} from "vue";
 
 type TranslationSchema = Record<string, Record<string, string>>;
@@ -59,7 +60,7 @@ export const createTranslationService = <const TSchema extends TranslationSchema
 
             if (params) {
                 for (const [param, value] of Object.entries(params)) {
-                    text = text.split(`{${param}}`).join(value);
+                    text = replaceAll(text, `{${param}}`, value);
                 }
             }
 
