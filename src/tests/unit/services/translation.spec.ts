@@ -165,4 +165,69 @@ describe("translation service", () => {
             expect(t("common.save").value).toBe("Save");
         });
     });
+
+    describe("memoization", () => {
+        it("should return the same computed ref for the same key", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act
+            const first = t("common.save");
+            const second = t("common.save");
+
+            // Assert
+            expect(first).toBe(second);
+        });
+
+        it("should return different computed refs for different keys", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act
+            const save = t("common.save");
+            const cancel = t("common.cancel");
+
+            // Assert
+            expect(save).not.toBe(cancel);
+        });
+
+        it("should return the same computed ref for the same key and params", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+            const params = {field: "Name"};
+
+            // Act
+            const first = t("errors.required", params);
+            const second = t("errors.required", params);
+
+            // Assert
+            expect(first).toBe(second);
+        });
+
+        it("should return different computed refs for same key with different params", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act
+            const nameRequired = t("errors.required", {field: "Name"});
+            const emailRequired = t("errors.required", {field: "Email"});
+
+            // Assert
+            expect(nameRequired).not.toBe(emailRequired);
+            expect(nameRequired.value).toBe("Name is required");
+            expect(emailRequired.value).toBe("Email is required");
+        });
+
+        it("should return different computed refs for same key with and without params", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act
+            const withParams = t("errors.required", {field: "Name"});
+            const withoutParams = t("errors.required");
+
+            // Assert
+            expect(withParams).not.toBe(withoutParams);
+        });
+    });
 });

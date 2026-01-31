@@ -20,14 +20,21 @@ export const createTranslationService = <const TSchema extends TranslationSchema
     defaultLocale: NoInfer<TLocale>,
 ): TranslationService<TSchema, TLocale> => {
     const locale = ref(defaultLocale) as Ref<TLocale>;
+    const cache = new Map<string, ComputedRef<string>>();
 
-    const t = (key: NestedKeys<TSchema>, params?: Record<string, string>): ComputedRef<string> => {
+    const getCacheKey = (key: string, params?: Record<string, string>): string => {
+        if (!params) {
+            return key;
+        }
+        return `${key}:${JSON.stringify(params)}`;
+    };
+
+    const createTranslationComputed = (key: string, params?: Record<string, string>): ComputedRef<string> => {
         return computed(() => {
-            const keyString = key as string;
-            const parts = keyString.split(".");
+            const parts = key.split(".");
 
             if (parts.length !== 2) {
-                return keyString;
+                return key;
             }
 
             const [section, name] = parts as [string, string];
@@ -36,7 +43,7 @@ export const createTranslationService = <const TSchema extends TranslationSchema
             let text = sectionData?.[name];
 
             if (text === undefined) {
-                return keyString;
+                return key;
             }
 
             if (params) {
@@ -47,6 +54,20 @@ export const createTranslationService = <const TSchema extends TranslationSchema
 
             return text;
         });
+    };
+
+    const t = (key: NestedKeys<TSchema>, params?: Record<string, string>): ComputedRef<string> => {
+        const keyString = key as string;
+        const cacheKey = getCacheKey(keyString, params);
+
+        const cached = cache.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        const translationComputed = createTranslationComputed(keyString, params);
+        cache.set(cacheKey, translationComputed);
+        return translationComputed;
     };
 
     return {t, locale};
