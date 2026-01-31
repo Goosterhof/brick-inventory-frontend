@@ -12,6 +12,8 @@ export type RequestMiddlewareFunc = (request: InternalAxiosRequestConfig) => voi
 export type ResponseMiddlewareFunc = (response: AxiosResponse) => void;
 export type ResponseErrorMiddlewareFunc = (error: AxiosError<AxiosResponseError>) => void;
 
+export type UnregisterMiddleware = () => void;
+
 export interface HttpService {
     getRequest: <T = unknown>(endpoint: string, options?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
     postRequest: <T = unknown>(
@@ -30,9 +32,9 @@ export interface HttpService {
         options?: AxiosRequestConfig,
     ) => Promise<AxiosResponse<T>>;
     deleteRequest: <T = unknown>(endpoint: string, options?: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
-    registerRequestMiddleware: (middlewareFunc: RequestMiddlewareFunc) => void;
-    registerResponseMiddleware: (middlewareFunc: ResponseMiddlewareFunc) => void;
-    registerResponseErrorMiddleware: (middlewareFunc: ResponseErrorMiddlewareFunc) => void;
+    registerRequestMiddleware: (middlewareFunc: RequestMiddlewareFunc) => UnregisterMiddleware;
+    registerResponseMiddleware: (middlewareFunc: ResponseMiddlewareFunc) => UnregisterMiddleware;
+    registerResponseErrorMiddleware: (middlewareFunc: ResponseErrorMiddlewareFunc) => UnregisterMiddleware;
 }
 
 export const createHttpService = (baseURL: string): HttpService => {
@@ -77,16 +79,31 @@ export const createHttpService = (baseURL: string): HttpService => {
     const deleteRequest = <T = unknown>(endpoint: string, options?: AxiosRequestConfig) =>
         http.delete<T>(endpoint, options);
 
-    const registerRequestMiddleware = (middlewareFunc: RequestMiddlewareFunc) => {
+    const registerRequestMiddleware = (middlewareFunc: RequestMiddlewareFunc): UnregisterMiddleware => {
         requestMiddleware.push(middlewareFunc);
+
+        return () => {
+            const index = requestMiddleware.indexOf(middlewareFunc);
+            if (index > -1) requestMiddleware.splice(index, 1);
+        };
     };
 
-    const registerResponseMiddleware = (middlewareFunc: ResponseMiddlewareFunc) => {
+    const registerResponseMiddleware = (middlewareFunc: ResponseMiddlewareFunc): UnregisterMiddleware => {
         responseMiddleware.push(middlewareFunc);
+
+        return () => {
+            const index = responseMiddleware.indexOf(middlewareFunc);
+            if (index > -1) responseMiddleware.splice(index, 1);
+        };
     };
 
-    const registerResponseErrorMiddleware = (middlewareFunc: ResponseErrorMiddlewareFunc) => {
+    const registerResponseErrorMiddleware = (middlewareFunc: ResponseErrorMiddlewareFunc): UnregisterMiddleware => {
         responseErrorMiddleware.push(middlewareFunc);
+
+        return () => {
+            const index = responseErrorMiddleware.indexOf(middlewareFunc);
+            if (index > -1) responseErrorMiddleware.splice(index, 1);
+        };
     };
 
     return {
