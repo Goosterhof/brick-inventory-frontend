@@ -6,10 +6,12 @@ const translations = {
     en: {
         common: {save: "Save", cancel: "Cancel"},
         errors: {required: "{field} is required", minLength: "{field} must be at least {min} characters"},
+        social: {invited: "{name} invited {name}"},
     },
     nl: {
         common: {save: "Opslaan", cancel: "Annuleren"},
         errors: {required: "{field} is verplicht", minLength: "{field} moet minimaal {min} tekens bevatten"},
+        social: {invited: "{name} heeft {name} uitgenodigd"},
     },
 } as const;
 
@@ -65,6 +67,17 @@ describe("translation service", () => {
 
             // Assert
             expect(result.value).toBe("Password must be at least 8 characters");
+        });
+
+        it("should replace all occurrences of the same parameter", () => {
+            // Arrange
+            const {t} = createTranslationService(translations, "en");
+
+            // Act
+            const result = t("social.invited", {name: "Alice"});
+
+            // Assert
+            expect(result.value).toBe("Alice invited Alice");
         });
 
         it("should update reactively when locale changes", () => {

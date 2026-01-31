@@ -59,7 +59,7 @@ export const createTranslationService = <const TSchema extends TranslationSchema
 
             if (params) {
                 for (const [param, value] of Object.entries(params)) {
-                    text = text.replace(`{${param}}`, value);
+                    text = text.split(`{${param}}`).join(value);
                 }
             }
 
