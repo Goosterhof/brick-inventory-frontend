@@ -5,6 +5,7 @@ import UnoCSS from "unocss/vite";
 import oxlint from "vite-plugin-oxlint";
 import vueDevTools from "vite-plugin-vue-devtools";
 
+// Determines which app is built and served based on the APP_NAME environment variable; defaults to "families" if APP_NAME is not set.
 const appName = process.env.APP_NAME ?? "families";
 
 // https://vite.dev/config/
