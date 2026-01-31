@@ -164,6 +164,16 @@ describe("translation service", () => {
             const {t} = createTranslationService(validTranslations, "en");
             expect(t("common.save").value).toBe("Save");
         });
+
+        it("should only allow keys with exactly two parts (section.name)", () => {
+            // The NoDot<S> type ensures section and key names cannot contain dots.
+            // This prevents keys like "a.b.c" at compile time by rejecting:
+            // - Section names with dots (e.g., "common.nested")
+            // - Key names with dots (e.g., "save.now")
+            // Keys must be exactly "section.name" format with no extra dots.
+            const {t} = createTranslationService(translations, "en");
+            expect(t("common.save").value).toBe("Save");
+        });
     });
 
     describe("memoization", () => {

@@ -4,9 +4,20 @@ import {computed, ref} from "vue";
 
 type TranslationSchema = Record<string, Record<string, string>>;
 
+// Rejects strings that contain a dot (e.g., "a.b" -> never, "ab" -> "ab")
+type NoDot<S extends string> = S extends `${string}.${string}` ? never : S;
+
+// Only generates keys where both section and key names don't contain dots
+// This ensures keys are always exactly "section.name" with no extra dots
 type NestedKeys<T extends TranslationSchema, K extends keyof T = keyof T> = K extends string
-    ? T[K] extends Record<string, string>
-        ? `${K}.${keyof T[K] & string}`
+    ? K extends NoDot<K>
+        ? T[K] extends Record<string, string>
+            ? keyof T[K] extends infer Name extends string
+                ? Name extends NoDot<Name>
+                    ? `${K}.${Name}`
+                    : never
+                : never
+            : never
         : never
     : never;
 
