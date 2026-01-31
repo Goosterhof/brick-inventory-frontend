@@ -1,11 +1,15 @@
+import type {New} from "@shared/types/generics";
+import type {Item} from "@shared/types/item";
+
+import {MissingResponseDataError} from "@shared/errors/missing-response-data";
+import {
+    type Adapted,
+    type AdapterStoreModule,
+    type NewAdapted,
+    resourceAdapter,
+} from "@shared/services/resource-adapter";
 import {describe, expect, it, vi} from "vitest";
 import {isRef} from "vue";
-
-import type {New} from "@/types/generics";
-import type {Item} from "@/types/item";
-
-import {MissingResponseDataError} from "@/errors/missing-response-data";
-import {type Adapted, type AdapterStoreModule, type NewAdapted, resourceAdapter} from "@/services/resource-adapter";
 
 interface TestItem extends Item {
     id: number;

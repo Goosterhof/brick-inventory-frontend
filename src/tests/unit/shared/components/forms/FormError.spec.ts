@@ -1,7 +1,6 @@
+import FormError from "@shared/components/forms/FormError.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
-
-import FormError from "@/components/forms/FormError.vue";
 
 describe("FormError", () => {
     it("should render error message from prop", () => {

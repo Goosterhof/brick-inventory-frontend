@@ -1,4 +1,4 @@
-import type {Item} from "@/types/item";
+import type {Item} from "@shared/types/item";
 
 /**
  * Omits id, createdAt, and updatedAt from item

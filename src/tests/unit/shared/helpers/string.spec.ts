@@ -1,8 +1,7 @@
+import type {Item} from "@shared/types/item";
+
+import {toCamelCaseTyped} from "@shared/helpers/string";
 import {describe, expect, it} from "vitest";
-
-import type {Item} from "@/types/item";
-
-import {toCamelCaseTyped} from "@/helpers/string";
 
 interface TestItem extends Item {
     id: number;

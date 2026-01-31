@@ -1,6 +1,5 @@
+import {createTranslationService} from "@shared/services/translation";
 import {describe, expect, it} from "vitest";
-
-import {createTranslationService} from "@/services/translation";
 
 const translations = {
     en: {

@@ -1,7 +1,6 @@
+import NavLink from "@shared/components/NavLink.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
-
-import NavLink from "@/components/NavLink.vue";
 
 describe("NavLink", () => {
     it("should render slot content in RouterLink", () => {

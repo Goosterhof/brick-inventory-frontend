@@ -1,9 +1,8 @@
+import type {New} from "@shared/types/generics";
+import type {Item} from "@shared/types/item";
+
+import {isExisting} from "@shared/helpers/type-check";
 import {describe, expect, it} from "vitest";
-
-import type {New} from "@/types/generics";
-import type {Item} from "@/types/item";
-
-import {isExisting} from "@/helpers/type-check";
 
 interface TestItem extends Item {
     id: number;

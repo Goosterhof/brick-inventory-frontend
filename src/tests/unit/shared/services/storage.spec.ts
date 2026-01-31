@@ -1,6 +1,5 @@
+import {createStorageService} from "@shared/services/storage";
 import {beforeEach, describe, expect, it, vi} from "vitest";
-
-import {createStorageService} from "@/services/storage";
 
 describe("storage service", () => {
     beforeEach(() => {

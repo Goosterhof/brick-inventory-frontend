@@ -1,7 +1,6 @@
+import FormField from "@shared/components/forms/FormField.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
-
-import FormField from "@/components/forms/FormField.vue";
 
 describe("FormField", () => {
     it("should render slot content", () => {

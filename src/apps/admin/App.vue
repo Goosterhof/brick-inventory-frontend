@@ -5,10 +5,10 @@ import NavLink from "@shared/components/NavLink.vue";
 </script>
 
 <template>
-    <header p="4" border="b-3 black">
-        <nav flex gap="4">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/about">About</NavLink>
+    <header p="4" border="b-3 black" bg="gray-100">
+        <nav flex gap="4" items="center">
+            <span font="bold" text="lg">Admin</span>
+            <NavLink to="/">Dashboard</NavLink>
         </nav>
     </header>
 

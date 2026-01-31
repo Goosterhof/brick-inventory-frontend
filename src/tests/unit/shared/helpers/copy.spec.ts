@@ -1,6 +1,5 @@
+import {deepCopy} from "@shared/helpers/copy";
 import {describe, expect, it} from "vitest";
-
-import {deepCopy} from "@/helpers/copy";
 
 describe("deepCopy", () => {
     describe("primitives", () => {

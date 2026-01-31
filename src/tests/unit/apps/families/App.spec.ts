@@ -1,8 +1,7 @@
+import App from "@app/App.vue";
 import {mount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 import {createMemoryHistory, createRouter} from "vue-router";
-
-import App from "@/App.vue";
 
 describe("App", () => {
     it("should render navigation links", async () => {

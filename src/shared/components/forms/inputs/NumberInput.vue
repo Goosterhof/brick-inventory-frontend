@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {computed, useId} from "vue";
 
-import FormError from "@/components/forms/FormError.vue";
-import FormField from "@/components/forms/FormField.vue";
-import FormLabel from "@/components/forms/FormLabel.vue";
+import FormError from "@shared/components/forms/FormError.vue";
+import FormField from "@shared/components/forms/FormField.vue";
+import FormLabel from "@shared/components/forms/FormLabel.vue";
 
 const {
     label,

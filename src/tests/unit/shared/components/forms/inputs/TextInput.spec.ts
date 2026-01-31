@@ -1,10 +1,9 @@
+import FormError from "@shared/components/forms/FormError.vue";
+import FormField from "@shared/components/forms/FormField.vue";
+import FormLabel from "@shared/components/forms/FormLabel.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
-
-import FormError from "@/components/forms/FormError.vue";
-import FormField from "@/components/forms/FormField.vue";
-import FormLabel from "@/components/forms/FormLabel.vue";
-import TextInput from "@/components/forms/inputs/TextInput.vue";
 
 describe("TextInput", () => {
     it("should render label and input", () => {

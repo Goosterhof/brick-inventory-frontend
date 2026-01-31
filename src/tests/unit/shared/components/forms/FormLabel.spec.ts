@@ -1,7 +1,6 @@
+import FormLabel from "@shared/components/forms/FormLabel.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
-
-import FormLabel from "@/components/forms/FormLabel.vue";
 
 describe("FormLabel", () => {
     it("should render label with slot content", () => {

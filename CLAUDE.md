@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a Vue 3 Single Page Application (SPA) for the Lego Storage API. Built with modern tooling and TypeScript.
+This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern tooling and TypeScript. The architecture supports multiple independent apps sharing common code.
 
 ## Tech Stack
 
@@ -21,11 +21,15 @@ This is a Vue 3 Single Page Application (SPA) for the Lego Storage API. Built wi
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (families app)
 npm run dev
+npm run dev:families
 
-# Build for production
+# Build for production (all apps)
 npm run build
+
+# Build specific app
+npm run build:families
 
 # Preview production build
 npm run preview
@@ -53,22 +57,91 @@ npm run format:check
 
 ```
 src/
-├── assets/          # Static assets (images, fonts, etc.)
-├── components/      # Reusable Vue components
-│   └── forms/       # Form-related components
-│       ├── FormError.vue    # Error message with alert role
-│       ├── FormField.vue    # Flex column wrapper for form fields
-│       ├── FormLabel.vue    # Label with optional required indicator
-│       └── inputs/          # Input components
-│           ├── NumberInput.vue
-│           └── TextInput.vue
-├── router/          # Vue Router configuration
-├── tests/           # All tests
-│   └── unit/        # Unit tests (mirrors src/ structure)
-├── views/           # Page-level components (routed views)
-├── App.vue          # Root component
-└── main.ts          # Application entry point
+├── apps/                    # Application entry points
+│   └── families/            # Families app
+│       ├── App.vue          # Root component
+│       ├── main.ts          # Application entry point
+│       ├── index.html       # App-specific HTML
+│       ├── router/          # Vue Router configuration
+│       │   └── index.ts
+│       └── views/           # Page-level components (routed views)
+│           ├── HomeView.vue
+│           └── AboutView.vue
+├── shared/                  # Shared code across all apps
+│   ├── assets/              # Static assets (images, fonts, etc.)
+│   ├── components/          # Reusable Vue components
+│   │   ├── NavLink.vue
+│   │   └── forms/           # Form-related components
+│   │       ├── FormError.vue
+│   │       ├── FormField.vue
+│   │       ├── FormLabel.vue
+│   │       └── inputs/
+│   │           ├── NumberInput.vue
+│   │           └── TextInput.vue
+│   ├── errors/              # Custom error classes
+│   ├── helpers/             # Utility functions
+│   ├── services/            # Service modules (HTTP, storage, etc.)
+│   └── types/               # TypeScript type definitions
+└── tests/
+    └── unit/
+        ├── setup.ts
+        ├── apps/            # App-specific tests
+        │   └── families/
+        └── shared/          # Shared code tests
+            ├── components/
+            ├── helpers/
+            └── services/
 ```
+
+## Path Aliases
+
+The project uses path aliases for clean imports:
+
+- `@/*` → `./src/*` (general access to src)
+- `@shared/*` → `./src/shared/*` (shared code)
+- `@app/*` → `./src/apps/{currentApp}/*` (current app, resolved at build time)
+
+Use `@shared/` for imports in shared code and app code:
+
+```ts
+import NavLink from "@shared/components/NavLink.vue";
+import {createHttpService} from "@shared/services/http";
+```
+
+Use `@app/` for app-specific imports within the same app:
+
+```ts
+import App from "@app/App.vue";
+```
+
+## Adding a New App
+
+1. Create the app directory structure:
+   ```bash
+   mkdir -p src/apps/newapp/router src/apps/newapp/views
+   ```
+
+2. Create required files:
+   - `src/apps/newapp/index.html` - App HTML entry
+   - `src/apps/newapp/main.ts` - Vue app initialization
+   - `src/apps/newapp/App.vue` - Root component
+   - `src/apps/newapp/router/index.ts` - Router config
+
+3. Add npm scripts to `package.json`:
+   ```json
+   "dev:newapp": "cross-env APP_NAME=newapp vite",
+   "build:newapp": "cross-env APP_NAME=newapp vite build"
+   ```
+
+4. Update the build script to include the new app:
+   ```json
+   "build": "run-p type-check \"build:families {@}\" \"build:newapp {@}\" --"
+   ```
+
+5. Create test directory:
+   ```bash
+   mkdir -p src/tests/unit/apps/newapp
+   ```
 
 ## Coding Conventions
 

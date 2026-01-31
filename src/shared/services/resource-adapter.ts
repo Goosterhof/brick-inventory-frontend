@@ -1,18 +1,16 @@
+import type {Writable} from "@shared/helpers/copy";
+import type {HttpService} from "@shared/services/http";
+import type {New, Updatable} from "@shared/types/generics";
+import type {Item} from "@shared/types/item";
 import type {DeepSnakeKeys} from "string-ts";
 import type {Ref} from "vue";
 
+import {MissingResponseDataError} from "@shared/errors/missing-response-data";
+import {deepCopy} from "@shared/helpers/copy";
+import {toCamelCaseTyped} from "@shared/helpers/string";
+import {isExisting} from "@shared/helpers/type-check";
 import {deepSnakeKeys} from "string-ts";
 import {ref} from "vue";
-
-import type {Writable} from "@/helpers/copy";
-import type {HttpService} from "@/services/http";
-import type {New, Updatable} from "@/types/generics";
-import type {Item} from "@/types/item";
-
-import {MissingResponseDataError} from "@/errors/missing-response-data";
-import {deepCopy} from "@/helpers/copy";
-import {toCamelCaseTyped} from "@/helpers/string";
-import {isExisting} from "@/helpers/type-check";
 
 type ResourceHttpService = Pick<HttpService, "postRequest" | "putRequest" | "deleteRequest">;
 

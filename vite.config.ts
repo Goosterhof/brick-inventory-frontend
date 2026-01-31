@@ -5,8 +5,20 @@ import UnoCSS from "unocss/vite";
 import oxlint from "vite-plugin-oxlint";
 import vueDevTools from "vite-plugin-vue-devtools";
 
+const appName = process.env.APP_NAME ?? "families";
+
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [vue(), vueDevTools(), UnoCSS(), oxlint({configFile: "oxlint.config.json"})],
-    resolve: {alias: {"@": fileURLToPath(new URL("./src", import.meta.url))}},
+    resolve: {
+        alias: {
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
+            "@shared": fileURLToPath(new URL("./src/shared", import.meta.url)),
+            "@app": fileURLToPath(new URL(`./src/apps/${appName}`, import.meta.url)),
+        },
+    },
+    build: {
+        outDir: `dist/${appName}`,
+        rollupOptions: {input: fileURLToPath(new URL(`./src/apps/${appName}/index.html`, import.meta.url))},
+    },
 });

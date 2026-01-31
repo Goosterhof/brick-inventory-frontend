@@ -1,13 +1,12 @@
-import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
-import {describe, expect, it, vi} from "vitest";
-
 import {
     createHttpService,
     type RequestMiddlewareFunc,
     type ResponseErrorMiddlewareFunc,
     type ResponseMiddlewareFunc,
-} from "@/services/http";
+} from "@shared/services/http";
+import axios from "axios";
+import MockAdapter from "axios-mock-adapter";
+import {describe, expect, it, vi} from "vitest";
 
 describe("http service", () => {
     const baseURL = "https://api.example.com";
