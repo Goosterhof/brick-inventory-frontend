@@ -4,6 +4,103 @@
 
 This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern tooling and TypeScript. The architecture supports multiple independent apps sharing common code.
 
+## API
+
+- **Base URL**: `https://lego-storage-production.up.railway.app/api`
+- **Authentication**: Credentials-based (cookies with `withCredentials: true`)
+- **Data Format**: JSON with snake_case keys (automatically converted to/from camelCase in frontend)
+- **OpenAPI Spec**: Available at `/docs/api.json`
+
+### Endpoints
+
+#### General
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Welcome message |
+| GET | `/health` | Health check (returns status + timestamp) |
+
+#### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/register` | Register new user (requires: family_name, name, email, password, password_confirmation) |
+
+#### Family
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| PUT | `/family/rebrickable-token` | Set Rebrickable user token |
+
+#### Family Sets
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/family-sets` | List all family sets |
+| POST | `/family-sets` | Create family set (requires: set_num; optional: quantity, status, purchase_date, notes) |
+| GET | `/family-sets/{id}` | Get family set by ID |
+| PUT | `/family-sets/{id}` | Update family set (requires: quantity, status) |
+| DELETE | `/family-sets/{id}` | Delete family set |
+| POST | `/family-sets/import-from-rebrickable` | Import sets from Rebrickable |
+
+#### Sets
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/sets/{setNum}/parts` | Get parts for a set by set number |
+
+#### Storage Options
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/storage-options` | List all storage options |
+| POST | `/storage-options` | Create storage option (requires: name; optional: description, parent_id, row, column) |
+| GET | `/storage-options/{id}` | Get storage option by ID |
+| PUT | `/storage-options/{id}` | Update storage option |
+| DELETE | `/storage-options/{id}` | Delete storage option |
+| GET | `/storage-options/{id}/parts` | List parts in storage option |
+| POST | `/storage-options/{id}/parts` | Assign part to storage (requires: part_id, quantity; optional: color_id) |
+| DELETE | `/storage-options/{id}/parts/{partId}` | Remove part from storage |
+
+### Enums
+
+**FamilySet Status**: `sealed` | `built` | `in_progress` | `incomplete`
+
+### HTTP Service Usage
+
+```ts
+import {createHttpService} from "@shared/services/http";
+
+const http = createHttpService("https://lego-storage-production.up.railway.app/api");
+
+// Available methods
+http.getRequest<T>(endpoint, options);
+http.postRequest<T>(endpoint, data, options);
+http.putRequest<T>(endpoint, data, options);
+http.patchRequest<T>(endpoint, data, options);
+http.deleteRequest<T>(endpoint, options);
+```
+
+### Resource Adapter Pattern
+
+The `resourceAdapter` provides CRUD operations for domain resources:
+
+```ts
+import {resourceAdapter} from "@shared/services/resource-adapter";
+
+// For existing resources (with id)
+const adapted = resourceAdapter(resource, "family-sets", storeModule, httpService);
+adapted.update();  // PUT /family-sets/{id}
+adapted.patch({status: "built"});  // PATCH /family-sets/{id}
+adapted.delete();  // DELETE /family-sets/{id}
+
+// For new resources (without id)
+const newAdapted = resourceAdapter(newResource, "family-sets", storeModule, httpService);
+newAdapted.create();  // POST /family-sets
+```
+
+### API Conventions
+
+- All resources have `id`, `createdAt`, and `updatedAt` fields
+- API uses snake_case (`created_at`), frontend uses camelCase (`createdAt`)
+- Conversion is handled automatically by `deepSnakeKeys` and `toCamelCaseTyped` helpers
+- 401 responses indicate authentication required
+- 404 responses indicate resource not found
+
 ## Tech Stack
 
 - **Framework**: Vue 3 with Composition API (`<script setup>`)
