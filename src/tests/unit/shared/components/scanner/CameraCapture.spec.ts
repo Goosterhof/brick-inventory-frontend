@@ -253,7 +253,7 @@ describe("CameraCapture", () => {
         expect(emitted?.[0]?.[0]).toBeInstanceOf(Blob);
     });
 
-    it("should not emit capture when camera is not active", async () => {
+    it("should emit error when capturing with camera not active", async () => {
         // Arrange
         const error = new Error("Permission denied");
         error.name = "NotAllowedError";
@@ -267,6 +267,9 @@ describe("CameraCapture", () => {
 
         // Assert
         expect(wrapper.emitted("capture")).toBeUndefined();
+        const errorEmitted = wrapper.emitted("error");
+        expect(errorEmitted).toBeTruthy();
+        expect(errorEmitted?.[0]?.[0]).toBe("Camera is not active. Please wait for the camera to start.");
     });
 
     it("should expose startCamera, stopCamera, and captureImage methods", () => {
@@ -342,6 +345,62 @@ describe("CameraCapture", () => {
 
         // Assert - first stream should have been stopped
         expect(firstStream.mockTrack.stop).toHaveBeenCalled();
+    });
+
+    it("should have proper accessibility attributes on video element", () => {
+        // Arrange
+        const wrapper = shallowMount(CameraCapture);
+
+        // Assert
+        const video = wrapper.find("video");
+        expect(video.attributes("aria-label")).toBe("Live camera feed for capturing Lego bricks");
+    });
+
+    it("should have aria-live region for loading state", () => {
+        // Arrange
+        const wrapper = shallowMount(CameraCapture);
+
+        // Assert
+        const loadingDiv = wrapper.find("[role='status']");
+        expect(loadingDiv.exists()).toBe(true);
+        expect(loadingDiv.attributes("aria-live")).toBe("polite");
+    });
+
+    it("should have aria-live region for error state", async () => {
+        // Arrange
+        const error = new Error("Permission denied");
+        error.name = "NotAllowedError";
+        mockGetUserMedia.mockRejectedValue(error);
+
+        const wrapper = shallowMount(CameraCapture);
+        await flushPromises();
+
+        // Assert
+        const errorDiv = wrapper.find("[role='alert']");
+        expect(errorDiv.exists()).toBe(true);
+        expect(errorDiv.attributes("aria-live")).toBe("assertive");
+    });
+
+    it("should have dynamic aria-label on capture button based on camera state", async () => {
+        // Arrange
+        const wrapper = shallowMount(CameraCapture);
+
+        // Assert - camera not active
+        const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture Photo");
+        expect(captureButton?.attributes("aria-label")).toBe("Capture photo (camera not ready)");
+
+        // Arrange - activate camera
+        const videoElement = wrapper.find("video").element as HTMLVideoElement;
+        Object.defineProperty(videoElement, "play", {
+            value: vi.fn().mockResolvedValue(undefined),
+            writable: true,
+        });
+
+        await (wrapper.vm as unknown as {startCamera: () => Promise<void>}).startCamera();
+        await flushPromises();
+
+        // Assert - camera active
+        expect(captureButton?.attributes("aria-label")).toBe("Capture photo of Lego brick");
     });
 
     it("should emit error event when toBlob returns null", async () => {

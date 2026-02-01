@@ -77,7 +77,13 @@ const startCamera = async () => {
 };
 
 const captureImage = () => {
-    if (!videoRef.value || !canvasRef.value || !isCameraActive.value) {
+    if (!isCameraActive.value) {
+        emit("error", "Camera is not active. Please wait for the camera to start.");
+        return;
+    }
+
+    if (!videoRef.value || !canvasRef.value) {
+        emit("error", "Unable to capture image. Camera elements not available.");
         return;
     }
 
@@ -86,6 +92,7 @@ const captureImage = () => {
     const context = canvas.getContext("2d");
 
     if (!context) {
+        emit("error", "Unable to capture image. Canvas context not available.");
         return;
     }
 
@@ -136,17 +143,45 @@ defineExpose({startCamera, stopCamera, captureImage});
 
 <template>
     <div flex="~ col" gap="4">
-        <div relative overflow="hidden" border="3 black" bg="gray-900" class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <video ref="videoRef" autoplay playsinline muted w="full" block :class="{'opacity-0': !isCameraActive}" />
+        <div
+            relative
+            overflow="hidden"
+            border="3 black"
+            bg="gray-900"
+            role="region"
+            aria-label="Camera viewfinder"
+            class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        >
+            <video
+                ref="videoRef"
+                autoplay
+                playsinline
+                muted
+                w="full"
+                block
+                aria-label="Live camera feed for capturing Lego bricks"
+                :class="{'opacity-0': !isCameraActive}"
+            />
 
-            <canvas ref="canvasRef" hidden />
+            <canvas ref="canvasRef" hidden aria-hidden="true" />
 
-            <div v-if="isLoading" absolute inset="0" flex items="center" justify="center" bg="gray-900" text="white">
+            <div
+                v-if="isLoading"
+                absolute
+                inset="0"
+                flex
+                items="center"
+                justify="center"
+                bg="gray-900"
+                text="white"
+                role="status"
+                aria-live="polite"
+            >
                 <span font="bold">Starting camera...</span>
             </div>
 
             <div
-                v-if="cameraError"
+                v-else-if="cameraError"
                 absolute
                 inset="0"
                 flex="~ col"
@@ -155,6 +190,8 @@ defineExpose({startCamera, stopCamera, captureImage});
                 gap="4"
                 bg="gray-900"
                 p="4"
+                role="alert"
+                aria-live="assertive"
             >
                 <span text="white center" font="bold">{{ cameraError }}</span>
                 <button
@@ -167,6 +204,7 @@ defineExpose({startCamera, stopCamera, captureImage});
                     uppercase
                     tracking="wide"
                     cursor="pointer"
+                    aria-label="Retry camera access"
                     class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]"
                     @click="startCamera"
                 >
@@ -185,8 +223,9 @@ defineExpose({startCamera, stopCamera, captureImage});
             uppercase
             tracking="wide"
             cursor="pointer disabled:not-allowed"
-            class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]"
+            :aria-label="isCameraActive ? 'Capture photo of Lego brick' : 'Capture photo (camera not ready)'"
             :disabled="!isCameraActive"
+            class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]"
             @click="captureImage"
         >
             Capture Photo
