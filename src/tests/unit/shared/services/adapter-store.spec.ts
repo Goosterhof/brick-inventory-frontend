@@ -25,6 +25,82 @@ interface TestItem extends Item {
 type TestAdapted = Adapted<TestItem> & {testMethod: () => string};
 type TestNewAdapted = NewAdapted<TestItem> & {testMethod: () => string};
 
+/**
+ * Mock adapter function for tests.
+ *
+ * Exception to test encapsulation rule: This adapter is defined globally because
+ * inlining it in each test (~25 lines) severely impacts readability. The adapter
+ * is stateless and does not affect test isolation.
+ */
+function createTestAdapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
+function createTestAdapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
+function createTestAdapter(
+    storeModule: AdapterStoreModule<TestItem>,
+    resource?: TestItem,
+): TestAdapted | TestNewAdapted {
+    if (resource) {
+        return {
+            ...resource,
+            mutable: ref({...resource}) as Ref<New<TestItem>>,
+            reset: vi.fn(),
+            update: vi.fn(),
+            patch: vi.fn(),
+            delete: vi.fn(),
+            testMethod: () => `adapted-${resource.id}`,
+        } as unknown as TestAdapted;
+    }
+    return {
+        name: "",
+        mutable: ref({name: ""}) as Ref<New<TestItem>>,
+        reset: vi.fn(),
+        create: vi.fn(),
+        testMethod: () => "new-adapted",
+    } as unknown as TestNewAdapted;
+}
+
+/**
+ * Creates a capturing adapter that stores the storeModule for later access.
+ *
+ * Exception to test encapsulation rule: This factory is defined globally for the same
+ * readability reasons as createTestAdapter. Each call creates a fresh capture context,
+ * maintaining test isolation.
+ */
+function createCapturingAdapter(): {
+    adapter: Adapter<TestItem, TestAdapted, TestNewAdapted>;
+    getCapturedStoreModule: () => AdapterStoreModule<TestItem> | null;
+} {
+    let capturedStoreModule: AdapterStoreModule<TestItem> | null = null;
+
+    function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
+    function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
+    function adapter(storeModule: AdapterStoreModule<TestItem>, resource?: TestItem): TestAdapted | TestNewAdapted {
+        capturedStoreModule = storeModule;
+        if (resource) {
+            return {
+                ...resource,
+                mutable: ref({...resource}) as Ref<New<TestItem>>,
+                reset: vi.fn(),
+                update: vi.fn(),
+                patch: vi.fn(),
+                delete: vi.fn(),
+                testMethod: () => `adapted-${resource.id}`,
+            } as unknown as TestAdapted;
+        }
+        return {
+            name: "",
+            mutable: ref({name: ""}) as Ref<New<TestItem>>,
+            reset: vi.fn(),
+            create: vi.fn(),
+            testMethod: () => "new-adapted",
+        } as unknown as TestNewAdapted;
+    }
+
+    return {
+        adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+        getCapturedStoreModule: () => capturedStoreModule,
+    };
+}
+
 describe("createAdapterStoreModule", () => {
     describe("getAll", () => {
         it("should return computed with empty array when no items", () => {
@@ -32,34 +108,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -77,34 +128,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -130,34 +156,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -183,34 +184,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -228,34 +204,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -280,34 +231,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -337,34 +263,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -387,34 +288,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -438,34 +314,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -484,34 +335,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -532,34 +358,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -579,34 +380,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -631,34 +407,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -682,34 +433,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -737,34 +463,9 @@ describe("createAdapterStoreModule", () => {
             };
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue(storedItems)};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -783,34 +484,9 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter: createTestAdapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -838,36 +514,10 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            let capturedStoreModule: AdapterStoreModule<TestItem> | null = null;
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                capturedStoreModule = storeModule;
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
+            const {adapter, getCapturedStoreModule} = createCapturingAdapter();
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -882,6 +532,7 @@ describe("createAdapterStoreModule", () => {
             };
 
             // Act
+            const capturedStoreModule = getCapturedStoreModule();
             expect(capturedStoreModule).not.toBeNull();
             const storeModule = capturedStoreModule as unknown as AdapterStoreModule<TestItem>;
             storeModule.setById(newItem);
@@ -896,36 +547,10 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            let capturedStoreModule: AdapterStoreModule<TestItem> | null = null;
-            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-            function adapter(
-                storeModule: AdapterStoreModule<TestItem>,
-                resource?: TestItem,
-            ): TestAdapted | TestNewAdapted {
-                capturedStoreModule = storeModule;
-                if (resource) {
-                    return {
-                        ...resource,
-                        mutable: ref({...resource}) as Ref<New<TestItem>>,
-                        reset: vi.fn(),
-                        update: vi.fn(),
-                        patch: vi.fn(),
-                        delete: vi.fn(),
-                        testMethod: () => `adapted-${resource.id}`,
-                    } as unknown as TestAdapted;
-                }
-                return {
-                    name: "",
-                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
-                    reset: vi.fn(),
-                    create: vi.fn(),
-                    testMethod: () => "new-adapted",
-                } as unknown as TestNewAdapted;
-            }
+            const {adapter, getCapturedStoreModule} = createCapturingAdapter();
             const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
                 domainName: "test-items",
-                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                adapter,
                 httpService,
                 storageService,
                 loadingService,
@@ -940,6 +565,7 @@ describe("createAdapterStoreModule", () => {
             vi.mocked(storageService.put).mockClear();
 
             // Act
+            const capturedStoreModule = getCapturedStoreModule();
             expect(capturedStoreModule).not.toBeNull();
             const storeModule = capturedStoreModule as unknown as AdapterStoreModule<TestItem>;
             storeModule.deleteById(1);
