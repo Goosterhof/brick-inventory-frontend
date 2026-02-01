@@ -255,13 +255,18 @@ describe("CameraCapture", () => {
             // Arrange
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
-            let resolveGetUserMedia: (value: unknown) => void;
-            mockGetUserMedia.mockImplementation(
+            let resolveGetUserMedia: ((value: unknown) => void) | undefined;
+            mockGetUserMedia = vi.fn(
                 () =>
                     new Promise((resolve) => {
                         resolveGetUserMedia = resolve;
                     }),
             );
+            Object.defineProperty(navigator, "mediaDevices", {
+                value: {getUserMedia: mockGetUserMedia},
+                writable: true,
+                configurable: true,
+            });
             const wrapper = shallowMount(CameraCapture);
             const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
 
