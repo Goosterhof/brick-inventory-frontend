@@ -831,4 +831,122 @@ describe("createAdapterStoreModule", () => {
             );
         });
     });
+
+    describe("storeModule methods", () => {
+        it("should update state and persist when setById is called via adapter", () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            let capturedStoreModule: AdapterStoreModule<TestItem> | null = null;
+            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
+            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
+            function adapter(
+                storeModule: AdapterStoreModule<TestItem>,
+                resource?: TestItem,
+            ): TestAdapted | TestNewAdapted {
+                capturedStoreModule = storeModule;
+                if (resource) {
+                    return {
+                        ...resource,
+                        mutable: ref({...resource}) as Ref<New<TestItem>>,
+                        reset: vi.fn(),
+                        update: vi.fn(),
+                        patch: vi.fn(),
+                        delete: vi.fn(),
+                        testMethod: () => `adapted-${resource.id}`,
+                    } as unknown as TestAdapted;
+                }
+                return {
+                    name: "",
+                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
+                    reset: vi.fn(),
+                    create: vi.fn(),
+                    testMethod: () => "new-adapted",
+                } as unknown as TestNewAdapted;
+            }
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const store = createAdapterStoreModule(config);
+            store.generateNew();
+            const newItem: TestItem = {
+                id: 1,
+                name: "New Item",
+                createdAt: "2024-01-01T00:00:00Z",
+                updatedAt: "2024-01-01T00:00:00Z",
+            };
+
+            // Act
+            expect(capturedStoreModule).not.toBeNull();
+            const storeModule = capturedStoreModule as unknown as AdapterStoreModule<TestItem>;
+            storeModule.setById(newItem);
+
+            // Assert
+            expect(store.getById(1).value).toBeDefined();
+            expect(storageService.put).toHaveBeenCalledWith("test-items", expect.any(Object));
+        });
+
+        it("should remove from state and persist when deleteById is called via adapter", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            let capturedStoreModule: AdapterStoreModule<TestItem> | null = null;
+            function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
+            function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
+            function adapter(
+                storeModule: AdapterStoreModule<TestItem>,
+                resource?: TestItem,
+            ): TestAdapted | TestNewAdapted {
+                capturedStoreModule = storeModule;
+                if (resource) {
+                    return {
+                        ...resource,
+                        mutable: ref({...resource}) as Ref<New<TestItem>>,
+                        reset: vi.fn(),
+                        update: vi.fn(),
+                        patch: vi.fn(),
+                        delete: vi.fn(),
+                        testMethod: () => `adapted-${resource.id}`,
+                    } as unknown as TestAdapted;
+                }
+                return {
+                    name: "",
+                    mutable: ref({name: ""}) as Ref<New<TestItem>>,
+                    reset: vi.fn(),
+                    create: vi.fn(),
+                    testMethod: () => "new-adapted",
+                } as unknown as TestNewAdapted;
+            }
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: adapter as Adapter<TestItem, TestAdapted, TestNewAdapted>,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+            expect(store.getById(1).value).toBeDefined();
+            vi.mocked(storageService.put).mockClear();
+
+            // Act
+            expect(capturedStoreModule).not.toBeNull();
+            const storeModule = capturedStoreModule as unknown as AdapterStoreModule<TestItem>;
+            storeModule.deleteById(1);
+
+            // Assert
+            expect(store.getById(1).value).toBeUndefined();
+            expect(storageService.put).toHaveBeenCalledWith("test-items", expect.any(Object));
+        });
+    });
 });

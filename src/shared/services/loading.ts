@@ -23,11 +23,9 @@ export const createLoadingService = (): LoadingService => {
         ensureLoadingFinished: () => {
             if (!isLoading.value) return Promise.resolve();
             return new Promise((resolve) => {
-                const unwatch = watch(isLoading, (loading) => {
-                    if (!loading) {
-                        unwatch();
-                        resolve();
-                    }
+                const unwatch = watch(isLoading, () => {
+                    unwatch();
+                    resolve();
                 });
             });
         },
