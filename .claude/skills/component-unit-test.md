@@ -77,45 +77,34 @@ describe("MyComponent", () => {
 });
 ```
 
-## Helper Functions
+## Self-Contained Tests
 
-### Create Reusable Helpers
-
-Extract common setup patterns into helper functions with JSDoc comments:
+Each test must be fully self-contained. **Do not use helper functions** - they can unintentionally change other tests when modified. Inline all setup logic directly in each test.
 
 ```typescript
-/**
- * Helper to find a button by its text content.
- */
-const findButtonByText = (wrapper: VueWrapper, text: string) => {
-    return wrapper.findAll("button").find((btn) => btn.text() === text);
-};
+// Good - self-contained test
+it("should show error when camera access is denied", async () => {
+    const error = new Error("Permission denied");
+    error.name = "NotAllowedError";
+    mockGetUserMedia.mockRejectedValue(error);
 
-/**
- * Helper to create a named Error with specific error type.
- */
+    const wrapper = shallowMount(CameraCapture);
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("Camera access denied");
+});
+
+// Bad - using helper functions
 const createNamedError = (name: string, message: string) => {
     const error = new Error(message);
     error.name = name;
     return error;
 };
-```
 
-### Mock Factory Functions
-
-Create factory functions for complex mocks:
-
-```typescript
-/**
- * Creates a mock MediaStream with a single track.
- */
-const createMockMediaStream = () => {
-    const mockTrack = {stop: vi.fn()};
-    return {
-        getTracks: vi.fn(() => [mockTrack]),
-        mockTrack,
-    };
-};
+it("should show error when camera access is denied", async () => {
+    mockGetUserMedia.mockRejectedValue(createNamedError("NotAllowedError", "Permission denied"));
+    // ...
+});
 ```
 
 ## Testing Patterns
@@ -244,8 +233,11 @@ afterEach(() => {
 
 ### Element Properties
 
+Mock element properties directly in each test:
+
 ```typescript
-const mockVideoElement = (wrapper: VueWrapper) => {
+it("should capture image when button is clicked", async () => {
+    const wrapper = shallowMount(CameraCapture);
     const videoElement = wrapper.find("video").element as HTMLVideoElement;
 
     Object.defineProperty(videoElement, "play", {
@@ -253,9 +245,11 @@ const mockVideoElement = (wrapper: VueWrapper) => {
         writable: true,
     });
     Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
+    Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
 
-    return videoElement;
-};
+    await flushPromises();
+    // ... rest of test
+});
 ```
 
 ## Styling Assertions
@@ -336,15 +330,8 @@ npm run test:coverage
 
 ```typescript
 import MyComponent from "@shared/components/MyComponent.vue";
-import {flushPromises, shallowMount, VueWrapper} from "@vue/test-utils";
+import {flushPromises, shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
-
-/**
- * Helper to find a button by its text content.
- */
-const findButtonByText = (wrapper: VueWrapper, text: string) => {
-    return wrapper.findAll("button").find((btn) => btn.text() === text);
-};
 
 describe("MyComponent", () => {
     describe("rendering", () => {
@@ -367,7 +354,7 @@ describe("MyComponent", () => {
         it("should emit submit event when button is clicked", async () => {
             const wrapper = shallowMount(MyComponent);
 
-            const submitButton = findButtonByText(wrapper, "Submit");
+            const submitButton = wrapper.findAll("button").find((btn) => btn.text() === "Submit");
             await submitButton?.trigger("click");
 
             expect(wrapper.emitted("submit")).toBeTruthy();
