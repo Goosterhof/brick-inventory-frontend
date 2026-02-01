@@ -50,7 +50,7 @@ export const createAdapterStoreModule = <
     const state: Ref<{[id: number]: Readonly<T>}> = ref(frozenStoredItems);
 
     const setById = (item: T) => {
-        state.value[item.id] = Object.freeze(item);
+        state.value = {...state.value, [item.id]: Object.freeze(item)};
         storageService.put(domainName, state.value);
     };
 
