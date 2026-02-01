@@ -1,9 +1,9 @@
-import type {Ref} from "vue";
+import type {DeepReadonly, Ref} from "vue";
 
-import {ref, watch} from "vue";
+import {readonly, ref, watch} from "vue";
 
 export interface LoadingService {
-    isLoading: Ref<boolean>;
+    isLoading: DeepReadonly<Ref<boolean>>;
     startLoading: () => void;
     stopLoading: () => void;
     ensureLoadingFinished: () => Promise<void>;
@@ -13,7 +13,7 @@ export const createLoadingService = (): LoadingService => {
     const isLoading = ref(false);
 
     return {
-        isLoading,
+        isLoading: readonly(isLoading),
         startLoading: () => {
             isLoading.value = true;
         },
