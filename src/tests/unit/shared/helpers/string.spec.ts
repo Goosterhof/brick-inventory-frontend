@@ -1,6 +1,6 @@
 import type {Item} from "@shared/types/item";
 
-import {removeDiacritics, toCamelCaseTyped} from "@shared/helpers/string";
+import {normalizeForPath, toCamelCaseTyped} from "@shared/helpers/string";
 import {describe, expect, it} from "vitest";
 
 interface TestItem extends Item {
@@ -80,13 +80,13 @@ describe("toCamelCaseTyped", () => {
     });
 });
 
-describe("removeDiacritics", () => {
+describe("normalizeForPath", () => {
     it("should remove accents from characters", () => {
         // Arrange
         const input = "café";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("cafe");
@@ -97,7 +97,7 @@ describe("removeDiacritics", () => {
         const input = "München";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("Munchen");
@@ -108,7 +108,7 @@ describe("removeDiacritics", () => {
         const input = "España";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("Espana");
@@ -119,7 +119,7 @@ describe("removeDiacritics", () => {
         const input = "français";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("francais");
@@ -130,7 +130,7 @@ describe("removeDiacritics", () => {
         const input = "it's a test";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("its a test");
@@ -141,7 +141,7 @@ describe("removeDiacritics", () => {
         const input = "hello world";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("hello world");
@@ -152,7 +152,7 @@ describe("removeDiacritics", () => {
         const input = "";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("");
@@ -163,7 +163,7 @@ describe("removeDiacritics", () => {
         const input = "crème brûlée";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("creme brulee");
@@ -174,7 +174,7 @@ describe("removeDiacritics", () => {
         const input = "café-123!";
 
         // Act
-        const result = removeDiacritics(input);
+        const result = normalizeForPath(input);
 
         // Assert
         expect(result).toBe("cafe-123!");

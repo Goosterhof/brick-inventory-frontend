@@ -366,7 +366,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
-            expect(() => service.currentParentId.value).toThrow("This route has no parent id");
+            expect(() => service.currentParentId.value).toThrow("This route has no route parentId");
         });
     });
 

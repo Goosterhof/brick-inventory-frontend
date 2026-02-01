@@ -102,7 +102,7 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
         }
     };
 
-    const fullPath = replace(location.pathname, base ?? "") + location.search;
+    const fullPath = replace(location.pathname, base ?? "", "") + location.search;
 
     return {
         dashboardRouteName,
@@ -143,7 +143,7 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
         }),
         currentParentId: computed(() => {
             const currentParentId = currentRouteRef.value.params.parentId;
-            if (!currentParentId) throw new Error("This route has no parent id");
+            if (!currentParentId) throw new Error("This route has no route parentId");
 
             return Number.parseInt(currentParentId.toString(), 10);
         }),

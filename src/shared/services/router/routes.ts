@@ -43,7 +43,7 @@ export const createCrudRoutes = <
         createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, createComponent),
         createStandardRouteConfig(":id/edit", `${baseRouteName}${EDIT_PAGE_NAME}`, editComponent),
         createStandardRouteConfig(":id", `${baseRouteName}${SHOW_PAGE_NAME}`, showComponent),
-    ].filter(Boolean);
+    ].filter((route) => route !== undefined);
 
     return {path: `/${basePath}`, component: baseComponent, children};
 };
@@ -67,7 +67,7 @@ export const createNestedCrudRoutes = <
         createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, createComponent),
         createStandardRouteConfig(":id/edit", `${baseRouteName}${EDIT_PAGE_NAME}`, editComponent),
         createStandardRouteConfig(":id", `${baseRouteName}${SHOW_PAGE_NAME}`, showComponent),
-    ].filter(Boolean);
+    ].filter((route) => route !== undefined);
 
     return {path: `/${parentPath}/:parentId/${childPath}`, component: baseComponent, children};
 };
