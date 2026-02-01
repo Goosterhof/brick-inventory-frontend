@@ -11,3 +11,14 @@ export type New<T extends Item> = Omit<T, "id" | "createdAt" | "updatedAt">;
  * Used for forms that can handle both creation and updates.
  */
 export type Updatable<T extends Item> = New<T> | T;
+
+/**
+ * Removes undefined from tuples
+ */
+export type FilterUndefined<T extends unknown[]> = T extends []
+    ? []
+    : T extends [infer H, ...infer R]
+      ? H extends undefined
+          ? FilterUndefined<R>
+          : [H, ...FilterUndefined<R>]
+      : T;
