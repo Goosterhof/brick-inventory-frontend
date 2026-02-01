@@ -7,7 +7,7 @@ import type {Item} from "@shared/types/item";
 import type {AxiosResponse} from "axios";
 import type {Ref} from "vue";
 
-import {EntryNotFoundError, type TranslationServiceForError} from "@shared/errors/entry-not-found";
+import {EntryNotFoundError} from "@shared/errors/entry-not-found";
 import {createAdapterStoreModule, type Adapter, type AdapterStoreConfig} from "@shared/services/adapter-store";
 import {describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
@@ -32,9 +32,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -66,7 +63,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
 
             // Act
@@ -81,9 +77,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -115,7 +108,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const items: TestItem[] = [
                 {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
@@ -138,9 +130,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -172,7 +161,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const store = createAdapterStoreModule(config);
             expect(store.getAll.value).toHaveLength(0);
@@ -195,9 +183,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -229,7 +214,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
 
             // Act
@@ -244,9 +228,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -278,7 +259,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const items: TestItem[] = [
                 {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
@@ -300,9 +280,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -334,7 +311,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const store = createAdapterStoreModule(config);
             vi.mocked(httpService.getRequest).mockResolvedValue({
@@ -361,9 +337,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -395,7 +368,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const store = createAdapterStoreModule(config);
 
@@ -415,9 +387,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -449,7 +418,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const items: TestItem[] = [
                 {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
@@ -470,9 +438,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -504,13 +469,12 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const store = createAdapterStoreModule(config);
 
             // Act & Assert
             await expect(store.getOrFailById(999)).rejects.toThrow(EntryNotFoundError);
-            await expect(store.getOrFailById(999)).rejects.toThrow("Test Item with id 999 not found");
+            await expect(store.getOrFailById(999)).rejects.toThrow("test-items with id 999 not found");
         });
     });
 
@@ -520,9 +484,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -554,7 +515,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const store = createAdapterStoreModule(config);
 
@@ -572,9 +532,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -606,7 +563,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             vi.mocked(httpService.getRequest).mockResolvedValue({data: [] as TestItem[]} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
@@ -623,9 +579,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -657,7 +610,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const snakeCaseItems = [
                 {id: 1, name: "Item 1", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z"},
@@ -679,9 +631,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -713,7 +662,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const items: TestItem[] = [
                 {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
@@ -734,9 +682,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -768,7 +713,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const items: TestItem[] = [
                 {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
@@ -793,9 +737,6 @@ describe("createAdapterStoreModule", () => {
             };
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue(storedItems)};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -827,7 +768,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
 
             // Act
@@ -843,9 +783,6 @@ describe("createAdapterStoreModule", () => {
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
             const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
-            const translationService: TranslationServiceForError = {
-                getCapitalizedSingularTranslation: () => "Test Item",
-            };
             function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
             function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
             function adapter(
@@ -877,7 +814,6 @@ describe("createAdapterStoreModule", () => {
                 httpService,
                 storageService,
                 loadingService,
-                translationService,
             };
             const items: TestItem[] = [
                 {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},

@@ -1,4 +1,3 @@
-import type {TranslationServiceForError} from "@shared/errors/entry-not-found";
 import type {Item} from "@shared/types/item";
 import type {ComputedRef, Ref} from "vue";
 
@@ -24,7 +23,6 @@ export interface AdapterStoreConfig<T extends Item, E extends Adapted<T>, N exte
     httpService: Pick<HttpService, "getRequest">;
     storageService: Pick<StorageService, "get" | "put">;
     loadingService: Pick<LoadingService, "ensureLoadingFinished">;
-    translationService: TranslationServiceForError;
 }
 
 export interface StoreModuleForAdapter<T extends Item, E extends Adapted<T>, N extends NewAdapted<T>> {
@@ -42,7 +40,7 @@ export const createAdapterStoreModule = <
 >(
     config: AdapterStoreConfig<T, E, N>,
 ): StoreModuleForAdapter<T, E, N> => {
-    const {domainName, adapter, httpService, storageService, loadingService, translationService} = config;
+    const {domainName, adapter, httpService, storageService, loadingService} = config;
 
     const state: Ref<{[id: number]: Readonly<T>}> = ref(
         storageService.get<{[id: number]: Readonly<T>}>(domainName, {}),
@@ -69,7 +67,7 @@ export const createAdapterStoreModule = <
         getOrFailById: async (id: number) => {
             await loadingService.ensureLoadingFinished();
             const item = getById(id).value;
-            if (!item) throw new EntryNotFoundError(domainName, id, translationService);
+            if (!item) throw new EntryNotFoundError(domainName, id);
             return item;
         },
         generateNew: () => adapter(storeModule),

@@ -1,40 +1,30 @@
-import {EntryNotFoundError, type TranslationServiceForError} from "@shared/errors/entry-not-found";
+import {EntryNotFoundError} from "@shared/errors/entry-not-found";
 import {describe, expect, it} from "vitest";
 
 describe("EntryNotFoundError", () => {
-    const createMockTranslationService = (singularName: string): TranslationServiceForError => ({
-        getCapitalizedSingularTranslation: () => singularName,
-    });
-
-    it("should create error with formatted message using translation service", () => {
+    it("should create error with formatted message using domain name", () => {
         // Arrange
-        const translationService = createMockTranslationService("Family Set");
+        const domainName = "family-sets";
         const id = 5;
 
         // Act
-        const error = new EntryNotFoundError("family-sets", id, translationService);
+        const error = new EntryNotFoundError(domainName, id);
 
         // Assert
-        expect(error.message).toBe("Family Set with id 5 not found");
+        expect(error.message).toBe("family-sets with id 5 not found");
     });
 
     it("should have name 'EntryNotFoundError'", () => {
-        // Arrange
-        const translationService = createMockTranslationService("Storage Option");
-
         // Act
-        const error = new EntryNotFoundError("storage-options", 10, translationService);
+        const error = new EntryNotFoundError("storage-options", 10);
 
         // Assert
         expect(error.name).toBe("EntryNotFoundError");
     });
 
     it("should be an instance of Error", () => {
-        // Arrange
-        const translationService = createMockTranslationService("Item");
-
         // Act
-        const error = new EntryNotFoundError("items", 1, translationService);
+        const error = new EntryNotFoundError("items", 1);
 
         // Assert
         expect(error).toBeInstanceOf(Error);
