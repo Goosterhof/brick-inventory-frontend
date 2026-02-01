@@ -77,6 +77,6 @@
     },
     "overrides": [
         {"files": ["*.vue"], "rules": {"no-undef": "off"}},
-        {"files": ["src/services/storage.ts"], "rules": {"no-console": "off"}}
+        {"files": ["src/shared/services/storage.ts"], "rules": {"no-console": "off"}}
     ]
 }
