@@ -249,6 +249,10 @@ import App from "@app/App.vue";
 - Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
 - Use `shallowMount` for unit testing Vue components (isolates component from children)
 - When testing components that use child components, use `findComponent()` to check props passed to stubs
+- Tests must be self-contained - do not use helper functions (they can unintentionally affect other tests)
+- Use AAA pattern with comments: `// Arrange`, `// Act`, `// Assert` (or `// Arrange & Act` for simple tests)
+- Test components through UI interactions (button clicks, events), not by exposing internal methods via `defineExpose`
+- See `.claude/skills/component-unit-test.md` for detailed testing patterns
 - Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink)
 - Use camelCase for variables and functions
 - Use arrow functions (`const fn = () => {}`) instead of function declarations (only use `function` for overloading)
