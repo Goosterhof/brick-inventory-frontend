@@ -42,9 +42,12 @@ export const createAdapterStoreModule = <
 ): StoreModuleForAdapter<T, E, N> => {
     const {domainName, adapter, httpService, storageService, loadingService} = config;
 
-    const state: Ref<{[id: number]: Readonly<T>}> = ref(
-        storageService.get<{[id: number]: Readonly<T>}>(domainName, {}),
-    );
+    const storedItems = storageService.get<{[id: number]: T}>(domainName, {});
+    const frozenStoredItems = Object.fromEntries(
+        Object.entries(storedItems).map(([id, item]) => [id, Object.freeze(item)]),
+    ) as {[id: number]: Readonly<T>};
+
+    const state: Ref<{[id: number]: Readonly<T>}> = ref(frozenStoredItems);
 
     const setById = (item: T) => {
         state.value[item.id] = Object.freeze(item);
