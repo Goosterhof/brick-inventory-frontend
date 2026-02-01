@@ -12,6 +12,9 @@ import {createAdapterStoreModule, type Adapter, type AdapterStoreConfig} from "@
 import {describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
+type TestStorageService = Pick<StorageService, "get" | "put">;
+type TestLoadingService = Pick<LoadingService, "ensureLoadingFinished">;
+
 interface TestItem extends Item {
     id: number;
     name: string;
@@ -27,18 +30,8 @@ describe("createAdapterStoreModule", () => {
         it("should return computed with empty array when no items", () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -86,18 +79,8 @@ describe("createAdapterStoreModule", () => {
         it("should return computed with all adapted items", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -153,18 +136,8 @@ describe("createAdapterStoreModule", () => {
         it("should update when items are added to state", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -220,18 +193,8 @@ describe("createAdapterStoreModule", () => {
         it("should return computed with undefined for non-existent id", () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -279,18 +242,8 @@ describe("createAdapterStoreModule", () => {
         it("should return computed with adapted item for existing id", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -345,18 +298,8 @@ describe("createAdapterStoreModule", () => {
         it("should update when item is modified", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -416,18 +359,8 @@ describe("createAdapterStoreModule", () => {
         it("should wait for loading to finish before checking", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -480,18 +413,8 @@ describe("createAdapterStoreModule", () => {
         it("should return adapted item when found", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -545,18 +468,8 @@ describe("createAdapterStoreModule", () => {
         it("should throw EntryNotFoundError when item not found", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -605,18 +518,8 @@ describe("createAdapterStoreModule", () => {
         it("should return new adapted resource from adapter", () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -667,18 +570,8 @@ describe("createAdapterStoreModule", () => {
         it("should call httpService.getRequest with domainName", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -728,18 +621,8 @@ describe("createAdapterStoreModule", () => {
         it("should convert snake_case response to camelCase", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -794,18 +677,8 @@ describe("createAdapterStoreModule", () => {
         it("should store items in state", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -859,18 +732,8 @@ describe("createAdapterStoreModule", () => {
         it("should persist to storage service", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -928,18 +791,8 @@ describe("createAdapterStoreModule", () => {
             const storedItems = {
                 1: {id: 1, name: "Stored Item", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
             };
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue(storedItems),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue(storedItems)};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };
@@ -988,18 +841,8 @@ describe("createAdapterStoreModule", () => {
         it("should persist state changes to storage on retrieveAll", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
-            const storageService: StorageService = {
-                put: vi.fn(),
-                get: vi.fn().mockReturnValue({}),
-                remove: vi.fn(),
-                clear: vi.fn(),
-            };
-            const loadingService: LoadingService = {
-                isLoading: ref(false),
-                startLoading: vi.fn(),
-                stopLoading: vi.fn(),
-                ensureLoadingFinished: vi.fn().mockResolvedValue(undefined),
-            };
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
             const translationService: TranslationServiceForError = {
                 getCapitalizedSingularTranslation: () => "Test Item",
             };

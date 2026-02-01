@@ -22,8 +22,8 @@ export interface AdapterStoreConfig<T extends Item, E extends Adapted<T>, N exte
     domainName: string;
     adapter: Adapter<T, E, N>;
     httpService: Pick<HttpService, "getRequest">;
-    storageService: StorageService;
-    loadingService: LoadingService;
+    storageService: Pick<StorageService, "get" | "put">;
+    loadingService: Pick<LoadingService, "ensureLoadingFinished">;
     translationService: TranslationServiceForError;
 }
 
