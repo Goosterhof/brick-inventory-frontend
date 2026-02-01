@@ -10,14 +10,14 @@ const createMockMediaStream = () => {
     };
 };
 
-const createMockCanvas = () => {
+const createMockCanvas = (returnNullBlob = false) => {
     const mockContext = {
         drawImage: vi.fn(),
     };
     return {
         getContext: vi.fn(() => mockContext),
         toBlob: vi.fn((callback: (blob: Blob | null) => void) => {
-            callback(new Blob(["test"], {type: "image/jpeg"}));
+            callback(returnNullBlob ? null : new Blob(["test"], {type: "image/jpeg"}));
         }),
         width: 0,
         height: 0,
@@ -342,5 +342,35 @@ describe("CameraCapture", () => {
 
         // Assert - first stream should have been stopped
         expect(firstStream.mockTrack.stop).toHaveBeenCalled();
+    });
+
+    it("should emit error event when toBlob returns null", async () => {
+        // Arrange
+        const wrapper = shallowMount(CameraCapture);
+        const mockCanvas = createMockCanvas(true); // Returns null blob
+
+        const videoElement = wrapper.find("video").element as HTMLVideoElement;
+        Object.defineProperty(videoElement, "play", {
+            value: vi.fn().mockResolvedValue(undefined),
+            writable: true,
+        });
+        Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
+        Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
+
+        const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
+        Object.defineProperty(canvasElement, "getContext", {value: mockCanvas.getContext, writable: true});
+        Object.defineProperty(canvasElement, "toBlob", {value: mockCanvas.toBlob, writable: true});
+
+        await (wrapper.vm as unknown as {startCamera: () => Promise<void>}).startCamera();
+        await flushPromises();
+
+        // Act
+        (wrapper.vm as unknown as {captureImage: () => void}).captureImage();
+
+        // Assert
+        expect(wrapper.emitted("capture")).toBeUndefined();
+        const errorEmitted = wrapper.emitted("error");
+        expect(errorEmitted).toBeTruthy();
+        expect(errorEmitted?.[0]?.[0]).toBe("Failed to capture image. Please try again.");
     });
 });

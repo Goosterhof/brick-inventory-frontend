@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted} from "vue";
 
-const emit = defineEmits<{capture: [imageData: Blob]}>();
+const emit = defineEmits<{
+    capture: [imageData: Blob];
+    error: [message: string];
+}>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -111,6 +114,8 @@ const captureImage = () => {
         (blob) => {
             if (blob) {
                 emit("capture", blob);
+            } else {
+                emit("error", "Failed to capture image. Please try again.");
             }
         },
         "image/jpeg",
