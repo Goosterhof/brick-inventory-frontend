@@ -1,3 +1,5 @@
+import type {RouterService} from "@shared/services/router/types";
+import type {Mock} from "vitest";
 import type {RouteLocationNormalizedLoaded, RouteRecordNormalized} from "vue-router";
 
 import {createRouterLink, createRouterView} from "@shared/services/router/components";
@@ -190,12 +192,16 @@ describe("router components", () => {
     });
 
     describe("createRouterLink", () => {
-        let mockGetUrlForRouteName: ReturnType<typeof vi.fn>;
-        let mockGoToRoute: ReturnType<typeof vi.fn>;
+        type TestRouterService = RouterService<[]>;
+        type GetUrlFn = TestRouterService["getUrlForRouteName"];
+        type GoToRouteFn = TestRouterService["goToRoute"];
+
+        let mockGetUrlForRouteName: Mock & GetUrlFn;
+        let mockGoToRoute: Mock & GoToRouteFn;
 
         beforeEach(() => {
-            mockGetUrlForRouteName = vi.fn().mockReturnValue("/test-url");
-            mockGoToRoute = vi.fn().mockResolvedValue(undefined);
+            mockGetUrlForRouteName = vi.fn().mockReturnValue("/test-url") as Mock & GetUrlFn;
+            mockGoToRoute = vi.fn().mockResolvedValue(undefined) as Mock & GoToRouteFn;
         });
 
         it("should return a Vue component", () => {

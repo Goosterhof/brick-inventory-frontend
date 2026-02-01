@@ -14,7 +14,6 @@ export const createStandardRouteConfig = <T extends string, P extends string, C 
 ): C extends undefined ? undefined : CrudRoute<P, T, NonNullable<C>> => {
     if (!component) return <C extends undefined ? undefined : CrudRoute<P, T, NonNullable<C>>>undefined;
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return <C extends undefined ? undefined : CrudRoute<P, T, NonNullable<C>>>{
         path,
         name,

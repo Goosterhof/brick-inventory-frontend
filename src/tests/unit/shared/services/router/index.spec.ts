@@ -1,3 +1,5 @@
+import type {RouteRecordRaw} from "vue-router";
+
 import {createRouterService} from "@shared/services/router";
 import {flushPromises} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
@@ -9,21 +11,20 @@ const CreateComponent = defineComponent({name: "Create", render: () => h("div", 
 const EditComponent = defineComponent({name: "Edit", render: () => h("div", "Edit")});
 const ShowComponent = defineComponent({name: "Show", render: () => h("div", "Show")});
 
-const createTestRoutes = () =>
-    [
-        {path: "/", name: "home", component: HomeComponent},
-        {path: "/about", name: "about", component: AboutComponent},
-        {
-            path: "/items",
-            component: HomeComponent,
-            children: [
-                {path: "", name: "items.overview", component: HomeComponent},
-                {path: "create", name: "items.create", component: CreateComponent},
-                {path: ":id/edit", name: "items.edit", component: EditComponent},
-                {path: ":id", name: "items.show", component: ShowComponent},
-            ],
-        },
-    ] as const;
+const createTestRoutes = (): RouteRecordRaw[] => [
+    {path: "/", name: "home", component: HomeComponent},
+    {path: "/about", name: "about", component: AboutComponent},
+    {
+        path: "/items",
+        component: HomeComponent,
+        children: [
+            {path: "", name: "items.overview", component: HomeComponent},
+            {path: "create", name: "items.create", component: CreateComponent},
+            {path: ":id/edit", name: "items.edit", component: EditComponent},
+            {path: ":id", name: "items.show", component: ShowComponent},
+        ],
+    },
+];
 
 describe("router service", () => {
     beforeEach(() => {
@@ -109,7 +110,7 @@ describe("router service", () => {
             const routes = [
                 {path: "/", name: "home", component: HomeComponent},
                 {path: "/parent/:parentId/child/:id", name: "nested", component: HomeComponent},
-            ] as const;
+            ];
             const service = createRouterService(routes, "home");
 
             // Act
@@ -129,6 +130,7 @@ describe("router service", () => {
             const service = createRouterService(routes, "home");
 
             // Act
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             await service.goToCreatePage("items");
             await flushPromises();
 
@@ -144,6 +146,7 @@ describe("router service", () => {
             const service = createRouterService(routes, "home");
 
             // Act
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             await service.goToOverviewPage("items");
             await flushPromises();
 
@@ -159,6 +162,7 @@ describe("router service", () => {
             const service = createRouterService(routes, "home");
 
             // Act
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             await service.goToEditPage("items", 123);
             await flushPromises();
 
@@ -175,6 +179,7 @@ describe("router service", () => {
             const service = createRouterService(routes, "home");
 
             // Act
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             await service.goToShowPage("items", 456);
             await flushPromises();
 
@@ -189,6 +194,7 @@ describe("router service", () => {
             const service = createRouterService(routes, "home");
 
             // Act
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             await service.goToShowPage("items", 789, {tab: "details"});
             await flushPromises();
 
@@ -340,7 +346,7 @@ describe("router service", () => {
             const routes = [
                 {path: "/", name: "home", component: HomeComponent},
                 {path: "/parent/:parentId/child/:id", name: "nested", component: HomeComponent},
-            ] as const;
+            ];
             const service = createRouterService(routes, "home");
             await service.goToRoute("nested", 10, undefined, 5);
             await flushPromises();
@@ -425,6 +431,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onCreatePage("items")).toBe(true);
         });
 
@@ -436,6 +443,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onCreatePage("items")).toBe(false);
         });
     });
@@ -449,6 +457,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onEditPage("items")).toBe(true);
         });
 
@@ -460,6 +469,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onEditPage("items")).toBe(false);
         });
     });
@@ -473,6 +483,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onOverviewPage("items")).toBe(true);
         });
 
@@ -484,6 +495,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onOverviewPage("items")).toBe(false);
         });
     });
@@ -497,6 +509,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onShowPage("items")).toBe(true);
         });
 
@@ -508,6 +521,7 @@ describe("router service", () => {
             await flushPromises();
 
             // Act & Assert
+            // @ts-expect-error - testing runtime behavior with generic RouteRecordRaw[]
             expect(service.onShowPage("items")).toBe(false);
         });
     });
@@ -583,7 +597,7 @@ describe("router service", () => {
             const routes = [
                 {path: "/", name: "home", component: HomeComponent},
                 {path: "/about", name: "about", component: AboutComponent},
-            ] as const;
+            ];
             const service = createRouterService(routes, "home");
 
             // Act
@@ -672,7 +686,7 @@ describe("router service", () => {
             const routes = [
                 {path: "/", name: "home", component: HomeComponent},
                 {path: "/about", name: "about", component: AboutComponent, meta: {ignoreFrom: true}},
-            ] as const;
+            ];
             const service = createRouterService(routes, "home");
 
             // Act - navigate to a page that has ignoreFrom meta
@@ -813,7 +827,7 @@ describe("router service", () => {
             const routes = [
                 {path: "/", name: "home", component: HomeComponent},
                 {path: "/about", name: "about", component: AboutComponent},
-            ] as const;
+            ];
 
             // Act
             const service = createRouterService(routes, "home");

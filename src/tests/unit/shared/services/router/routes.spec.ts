@@ -208,6 +208,7 @@ describe("router routes", () => {
 
             // Assert
             expect(result.children).toHaveLength(3);
+            // @ts-expect-error - testing that excluded route is not in children
             expect(result.children.find((r) => r.name === "items.overview")).toBeUndefined();
         });
 
@@ -225,6 +226,7 @@ describe("router routes", () => {
 
             // Assert
             expect(result.children).toHaveLength(3);
+            // @ts-expect-error - testing that excluded route is not in children
             expect(result.children.find((r) => r.name === "items.create")).toBeUndefined();
         });
 
@@ -242,6 +244,7 @@ describe("router routes", () => {
 
             // Assert
             expect(result.children).toHaveLength(3);
+            // @ts-expect-error - testing that excluded route is not in children
             expect(result.children.find((r) => r.name === "items.edit")).toBeUndefined();
         });
 
@@ -259,6 +262,7 @@ describe("router routes", () => {
 
             // Assert
             expect(result.children).toHaveLength(3);
+            // @ts-expect-error - testing that excluded route is not in children
             expect(result.children.find((r) => r.name === "items.show")).toBeUndefined();
         });
 
@@ -449,6 +453,7 @@ describe("router routes", () => {
 
             // Assert
             expect(result.children).toHaveLength(2);
+            // @ts-expect-error - testing that excluded route is not in children
             expect(result.children.find((r) => r.name === "category-items.create")).toBeUndefined();
         });
 
@@ -466,6 +471,7 @@ describe("router routes", () => {
 
             // Assert
             expect(result.children).toHaveLength(2);
+            // @ts-expect-error - testing that excluded route is not in children
             expect(result.children.find((r) => r.name === "category-items.edit")).toBeUndefined();
         });
 
@@ -483,6 +489,7 @@ describe("router routes", () => {
 
             // Assert
             expect(result.children).toHaveLength(2);
+            // @ts-expect-error - testing that excluded route is not in children
             expect(result.children.find((r) => r.name === "category-items.show")).toBeUndefined();
         });
 

@@ -9,7 +9,6 @@ import type {BeforeRouteMiddleware, RouteName, RouterService} from "./types";
 import {createRouterLink, createRouterView} from "./components";
 import {CREATE_PAGE_NAME, EDIT_PAGE_NAME, OVERVIEW_PAGE_NAME, SHOW_PAGE_NAME} from "./routes";
 
-// eslint-disable-next-line max-lines-per-function
 export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
     routes: Routes,
     dashboardRouteName: RouteName<Routes>,
@@ -143,9 +142,7 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
         onShowPage: (baseRouteName) => onPage(baseRouteName + SHOW_PAGE_NAME),
         routeExists,
 
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         RouterView: createRouterView(currentRouteRef),
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         RouterLink: createRouterLink(getUrlForRouteName, goToRoute),
     };
 };
