@@ -55,7 +55,9 @@ export const createAdapterStoreModule = <
     };
 
     const deleteById = (id: number) => {
-        delete state.value[id];
+        state.value = Object.fromEntries(Object.entries(state.value).filter(([key]) => Number(key) !== id)) as {
+            [id: number]: Readonly<T>;
+        };
         storageService.put(domainName, state.value);
     };
 
