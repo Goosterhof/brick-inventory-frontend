@@ -9,7 +9,7 @@ import type {Ref} from "vue";
 
 import {EntryNotFoundError, type TranslationServiceForError} from "@shared/errors/entry-not-found";
 import {createAdapterStoreModule, type Adapter, type AdapterStoreConfig} from "@shared/services/adapter-store";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
 interface TestItem extends Item {
@@ -75,29 +75,36 @@ const createMockTranslationService = (): TranslationServiceForError => ({
     getCapitalizedSingularTranslation: () => "Test Item",
 });
 
+interface TestConfig {
+    config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted>;
+    httpService: Pick<HttpService, "getRequest">;
+    storageService: StorageService;
+    loadingService: LoadingService;
+}
+
+const createTestConfig = (): TestConfig => {
+    const httpService = createMockHttpService();
+    const storageService = createMockStorageService();
+    const loadingService = createMockLoadingService();
+
+    const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+        domainName: "test-items",
+        adapter: createMockAdapter(),
+        httpService,
+        storageService,
+        loadingService,
+        translationService: createMockTranslationService(),
+    };
+
+    return {config, httpService, storageService, loadingService};
+};
+
 describe("createAdapterStoreModule", () => {
-    let config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted>;
-    let httpService: Pick<HttpService, "getRequest">;
-    let storageService: StorageService;
-    let loadingService: LoadingService;
-
-    beforeEach(() => {
-        httpService = createMockHttpService();
-        storageService = createMockStorageService();
-        loadingService = createMockLoadingService();
-
-        config = {
-            domainName: "test-items",
-            adapter: createMockAdapter(),
-            httpService,
-            storageService,
-            loadingService,
-            translationService: createMockTranslationService(),
-        };
-    });
-
     describe("getAll", () => {
         it("should return computed with empty array when no items", () => {
+            // Arrange
+            const {config} = createTestConfig();
+
             // Act
             const store = createAdapterStoreModule(config);
 
@@ -107,6 +114,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should return computed with all adapted items", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             const items = [createTestItem(1, "Item 1"), createTestItem(2, "Item 2")];
             vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
@@ -122,13 +130,14 @@ describe("createAdapterStoreModule", () => {
 
         it("should update when items are added to state", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             const store = createAdapterStoreModule(config);
             expect(store.getAll.value).toHaveLength(0);
-
-            // Act
             vi.mocked(httpService.getRequest).mockResolvedValue({data: [createTestItem(1, "Item 1")]} as AxiosResponse<
                 TestItem[]
             >);
+
+            // Act
             await store.retrieveAll();
 
             // Assert
@@ -138,6 +147,9 @@ describe("createAdapterStoreModule", () => {
 
     describe("getById", () => {
         it("should return computed with undefined for non-existent id", () => {
+            // Arrange
+            const {config} = createTestConfig();
+
             // Act
             const store = createAdapterStoreModule(config);
 
@@ -147,6 +159,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should return computed with adapted item for existing id", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             const items = [createTestItem(1, "Item 1")];
             vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
@@ -162,19 +175,19 @@ describe("createAdapterStoreModule", () => {
 
         it("should update when item is modified", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             const store = createAdapterStoreModule(config);
             vi.mocked(httpService.getRequest).mockResolvedValue({
                 data: [createTestItem(1, "Original")],
             } as AxiosResponse<TestItem[]>);
             await store.retrieveAll();
-
             const computed = store.getById(1);
             expect(computed.value?.name).toBe("Original");
-
-            // Act - update with new data
             vi.mocked(httpService.getRequest).mockResolvedValue({data: [createTestItem(1, "Updated")]} as AxiosResponse<
                 TestItem[]
             >);
+
+            // Act
             await store.retrieveAll();
 
             // Assert
@@ -185,6 +198,7 @@ describe("createAdapterStoreModule", () => {
     describe("getOrFailById", () => {
         it("should wait for loading to finish before checking", async () => {
             // Arrange
+            const {config, loadingService} = createTestConfig();
             const store = createAdapterStoreModule(config);
 
             // Act
@@ -200,6 +214,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should return adapted item when found", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             const items = [createTestItem(1, "Item 1")];
             vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
@@ -214,6 +229,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should throw EntryNotFoundError when item not found", async () => {
             // Arrange
+            const {config} = createTestConfig();
             const store = createAdapterStoreModule(config);
 
             // Act & Assert
@@ -225,6 +241,7 @@ describe("createAdapterStoreModule", () => {
     describe("generateNew", () => {
         it("should return new adapted resource from adapter", () => {
             // Arrange
+            const {config} = createTestConfig();
             const store = createAdapterStoreModule(config);
 
             // Act
@@ -238,6 +255,7 @@ describe("createAdapterStoreModule", () => {
     describe("retrieveAll", () => {
         it("should call httpService.getRequest with domainName", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             vi.mocked(httpService.getRequest).mockResolvedValue({data: [] as TestItem[]} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
 
@@ -250,6 +268,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should convert snake_case response to camelCase", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             const snakeCaseItems = [
                 {id: 1, name: "Item 1", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z"},
             ];
@@ -267,6 +286,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should store items in state", async () => {
             // Arrange
+            const {config, httpService} = createTestConfig();
             const items = [createTestItem(1, "Item 1"), createTestItem(2, "Item 2")];
             vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
@@ -280,6 +300,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should persist to storage service", async () => {
             // Arrange
+            const {config, httpService, storageService} = createTestConfig();
             const items = [createTestItem(1, "Item 1")];
             vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
@@ -295,6 +316,7 @@ describe("createAdapterStoreModule", () => {
     describe("localStorage persistence", () => {
         it("should initialize state from storage", () => {
             // Arrange
+            const {config, storageService} = createTestConfig();
             const storedItems = {1: createTestItem(1, "Stored Item")};
             vi.mocked(storageService.get).mockReturnValue(storedItems);
 
@@ -308,6 +330,7 @@ describe("createAdapterStoreModule", () => {
 
         it("should persist state changes to storage on retrieveAll", async () => {
             // Arrange
+            const {config, httpService, storageService} = createTestConfig();
             const items = [createTestItem(1, "Item 1")];
             vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
             const store = createAdapterStoreModule(config);
