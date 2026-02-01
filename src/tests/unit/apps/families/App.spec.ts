@@ -10,6 +10,7 @@ describe("App", () => {
             history: createMemoryHistory(),
             routes: [
                 {path: "/", component: {template: "<div>Home</div>"}},
+                {path: "/scanner", component: {template: "<div>Scanner</div>"}},
                 {path: "/about", component: {template: "<div>About</div>"}},
             ],
         });
@@ -20,9 +21,10 @@ describe("App", () => {
 
         // Assert
         const links = wrapper.findAllComponents({name: "RouterLink"});
-        expect(links).toHaveLength(2);
-        const [homeLink, aboutLink] = links;
+        expect(links).toHaveLength(3);
+        const [homeLink, scannerLink, aboutLink] = links;
         expect(homeLink?.text()).toBe("Home");
+        expect(scannerLink?.text()).toBe("Scanner");
         expect(aboutLink?.text()).toBe("About");
     });
 });
