@@ -4,6 +4,51 @@
 
 This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern tooling and TypeScript. The architecture supports multiple independent apps sharing common code.
 
+## API
+
+- **Base URL**: `https://lego-storage-production.up.railway.app`
+- **Authentication**: Credentials-based (cookies with `withCredentials: true`)
+- **Data Format**: JSON with snake_case keys (automatically converted to/from camelCase in frontend)
+
+### HTTP Service Usage
+
+```ts
+import {createHttpService} from "@shared/services/http";
+
+const http = createHttpService("https://lego-storage-production.up.railway.app");
+
+// Available methods
+http.getRequest<T>(endpoint, options);
+http.postRequest<T>(endpoint, data, options);
+http.putRequest<T>(endpoint, data, options);
+http.patchRequest<T>(endpoint, data, options);
+http.deleteRequest<T>(endpoint, options);
+```
+
+### Resource Adapter Pattern
+
+The `resourceAdapter` provides CRUD operations for domain resources:
+
+```ts
+import {resourceAdapter} from "@shared/services/resource-adapter";
+
+// For existing resources (with id)
+const adapted = resourceAdapter(resource, "families", storeModule, httpService);
+adapted.update();  // PUT /families/{id}
+adapted.patch({name: "New Name"});  // PATCH /families/{id}
+adapted.delete();  // DELETE /families/{id}
+
+// For new resources (without id)
+const newAdapted = resourceAdapter(newResource, "families", storeModule, httpService);
+newAdapted.create();  // POST /families
+```
+
+### API Conventions
+
+- All resources have `id`, `createdAt`, and `updatedAt` fields
+- API uses snake_case (`created_at`), frontend uses camelCase (`createdAt`)
+- Conversion is handled automatically by `deepSnakeKeys` and `toCamelCaseTyped` helpers
+
 ## Tech Stack
 
 - **Framework**: Vue 3 with Composition API (`<script setup>`)
