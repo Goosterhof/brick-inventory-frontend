@@ -84,13 +84,16 @@ Each test must be fully self-contained. **Do not use helper functions** - they c
 ```typescript
 // Good - self-contained test
 it("should show error when camera access is denied", async () => {
+    // Arrange
     const error = new Error("Permission denied");
     error.name = "NotAllowedError";
     mockGetUserMedia.mockRejectedValue(error);
 
+    // Act
     const wrapper = shallowMount(CameraCapture);
     await flushPromises();
 
+    // Assert
     expect(wrapper.text()).toContain("Camera access denied");
 });
 
@@ -107,14 +110,56 @@ it("should show error when camera access is denied", async () => {
 });
 ```
 
+## AAA Pattern
+
+Structure every test using the **Arrange-Act-Assert** pattern with comments:
+
+- **Arrange**: Set up test data, mocks, and preconditions
+- **Act**: Execute the code being tested
+- **Assert**: Verify the expected outcome
+
+```typescript
+it("should emit capture event with image blob", async () => {
+    // Arrange
+    const mockTrack = {stop: vi.fn()};
+    const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+    mockGetUserMedia.mockResolvedValue(mockStream);
+    const wrapper = shallowMount(CameraCapture);
+    await flushPromises();
+
+    // Act
+    const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture");
+    await captureButton?.trigger("click");
+
+    // Assert
+    const emitted = wrapper.emitted("capture");
+    expect(emitted).toBeTruthy();
+    expect(emitted?.[0]?.[0]).toBeInstanceOf(Blob);
+});
+```
+
+For simple tests, sections may be combined but comments should still be present:
+
+```typescript
+it("should render video element", () => {
+    // Arrange & Act
+    const wrapper = shallowMount(CameraCapture);
+
+    // Assert
+    expect(wrapper.find("video").exists()).toBe(true);
+});
+```
+
 ## Testing Patterns
 
 ### Props Testing
 
 ```typescript
 it("should pass props to child component", () => {
+    // Arrange & Act
     const wrapper = shallowMount(MyComponent, {props: {label: "Test"}});
 
+    // Assert
     const child = wrapper.findComponent(ChildComponent);
     expect(child.props("label")).toBe("Test");
 });
@@ -124,12 +169,15 @@ it("should pass props to child component", () => {
 
 ```typescript
 it("should emit update:modelValue on input", async () => {
+    // Arrange
     const wrapper = shallowMount(TextInput, {
         props: {label: "Name", modelValue: ""},
     });
 
+    // Act
     await wrapper.find("input").setValue("John");
 
+    // Assert
     const emitted = wrapper.emitted("update:modelValue");
     expect(emitted).toBeTruthy();
     expect(emitted?.[0]).toEqual(["John"]);
@@ -140,10 +188,13 @@ it("should emit update:modelValue on input", async () => {
 
 ```typescript
 it("should emit custom event", async () => {
+    // Arrange
     const wrapper = shallowMount(MyComponent);
 
+    // Act
     await wrapper.find("button").trigger("click");
 
+    // Assert
     const emitted = wrapper.emitted("custom-event");
     expect(emitted).toBeTruthy();
     expect(emitted?.[0]?.[0]).toBe("payload");
@@ -158,9 +209,11 @@ Use `flushPromises()` to wait for all pending promises:
 import {flushPromises} from "@vue/test-utils";
 
 it("should load data on mount", async () => {
+    // Arrange & Act
     const wrapper = shallowMount(MyComponent);
     await flushPromises();
 
+    // Assert
     expect(wrapper.text()).toContain("Loaded data");
 });
 ```
@@ -169,11 +222,14 @@ it("should load data on mount", async () => {
 
 ```typescript
 it("should clean up on unmount", async () => {
+    // Arrange
     const wrapper = shallowMount(MyComponent);
     await flushPromises();
 
+    // Act
     wrapper.unmount();
 
+    // Assert
     expect(cleanupMock).toHaveBeenCalled();
 });
 ```
@@ -185,27 +241,35 @@ it("should clean up on unmount", async () => {
 ```typescript
 describe("accessibility", () => {
     it("should have aria-label on interactive elements", () => {
+        // Arrange & Act
         const wrapper = shallowMount(MyComponent);
 
+        // Assert
         expect(wrapper.find("button").attributes("aria-label")).toBe("Submit form");
     });
 
     it("should have role attribute for semantic regions", () => {
+        // Arrange & Act
         const wrapper = shallowMount(MyComponent);
 
+        // Assert
         expect(wrapper.find("[role='status']").exists()).toBe(true);
     });
 
     it("should have aria-live for dynamic content", () => {
+        // Arrange & Act
         const wrapper = shallowMount(MyComponent);
 
+        // Assert
         const alert = wrapper.find("[role='alert']");
         expect(alert.attributes("aria-live")).toBe("assertive");
     });
 
     it("should associate label with input via for/id", () => {
+        // Arrange & Act
         const wrapper = shallowMount(TextInput, {props: {label: "Email"}});
 
+        // Assert
         const input = wrapper.find("input");
         const label = wrapper.findComponent(FormLabel);
         expect(label.props("for")).toBe(input.attributes("id"));
@@ -237,18 +301,23 @@ Mock element properties directly in each test:
 
 ```typescript
 it("should capture image when button is clicked", async () => {
+    // Arrange
     const wrapper = shallowMount(CameraCapture);
     const videoElement = wrapper.find("video").element as HTMLVideoElement;
-
     Object.defineProperty(videoElement, "play", {
         value: vi.fn().mockResolvedValue(undefined),
         writable: true,
     });
     Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
     Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
-
     await flushPromises();
-    // ... rest of test
+
+    // Act
+    const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture");
+    await captureButton?.trigger("click");
+
+    // Assert
+    expect(wrapper.emitted("capture")).toBeTruthy();
 });
 ```
 
@@ -258,9 +327,11 @@ it("should capture image when button is clicked", async () => {
 
 ```typescript
 it("should have neo-brutalist styling", () => {
+    // Arrange & Act
     const wrapper = shallowMount(MyComponent);
-    const element = wrapper.find("button");
 
+    // Assert
+    const element = wrapper.find("button");
     expect(element.attributes("border")).toBe("3 black");
     expect(element.attributes("bg")).toBe("yellow-400");
     expect(element.attributes("uppercase")).toBeDefined();
@@ -271,16 +342,20 @@ it("should have neo-brutalist styling", () => {
 
 ```typescript
 it("should apply error styling when error is present", () => {
+    // Arrange & Act
     const wrapper = shallowMount(TextInput, {
         props: {label: "Email", modelValue: "", error: "Invalid"},
     });
 
+    // Assert
     expect(wrapper.find("input").classes()).toContain("bg-red-100");
 });
 
 it("should apply conditional classes", () => {
+    // Arrange & Act
     const wrapper = shallowMount(MyComponent, {props: {isActive: false}});
 
+    // Assert
     expect(wrapper.find("div").classes()).toContain("opacity-0");
 });
 ```
@@ -336,35 +411,44 @@ import {describe, expect, it} from "vitest";
 describe("MyComponent", () => {
     describe("rendering", () => {
         it("should render with default props", () => {
+            // Arrange & Act
             const wrapper = shallowMount(MyComponent);
 
+            // Assert
             expect(wrapper.find("h1").text()).toBe("Default Title");
         });
 
         it("should render custom title from props", () => {
+            // Arrange & Act
             const wrapper = shallowMount(MyComponent, {
                 props: {title: "Custom Title"},
             });
 
+            // Assert
             expect(wrapper.find("h1").text()).toBe("Custom Title");
         });
     });
 
     describe("interactions", () => {
         it("should emit submit event when button is clicked", async () => {
+            // Arrange
             const wrapper = shallowMount(MyComponent);
 
+            // Act
             const submitButton = wrapper.findAll("button").find((btn) => btn.text() === "Submit");
             await submitButton?.trigger("click");
 
+            // Assert
             expect(wrapper.emitted("submit")).toBeTruthy();
         });
     });
 
     describe("accessibility", () => {
         it("should have proper aria attributes", () => {
+            // Arrange & Act
             const wrapper = shallowMount(MyComponent);
 
+            // Assert
             expect(wrapper.find("button").attributes("aria-label")).toBeDefined();
         });
     });
