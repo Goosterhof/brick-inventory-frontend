@@ -497,12 +497,14 @@ describe("CameraCapture", () => {
             Object.defineProperty(videoElement, "videoWidth", {get: () => videoWidth, configurable: true});
             Object.defineProperty(videoElement, "videoHeight", {get: () => videoHeight, configurable: true});
             Object.defineProperty(videoElement, "readyState", {value: 0, writable: true});
-            let metadataCallback: (() => void) | null = null;
-            vi.spyOn(videoElement, "addEventListener").mockImplementation((event, callback) => {
-                if (event === "loadedmetadata") {
-                    metadataCallback = callback as () => void;
-                }
-            });
+            const callbacks: {metadata: EventListener | null} = {metadata: null};
+            vi.spyOn(videoElement, "addEventListener").mockImplementation(
+                (event: string, callback: EventListenerOrEventListenerObject) => {
+                    if (event === "loadedmetadata") {
+                        callbacks.metadata = callback as EventListener;
+                    }
+                },
+            );
             const mockContext = {drawImage: vi.fn()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
             Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
@@ -522,7 +524,7 @@ describe("CameraCapture", () => {
             // Act - simulate metadata loaded with valid dimensions
             videoWidth = 1280;
             videoHeight = 720;
-            metadataCallback?.();
+            callbacks.metadata?.(new Event("loadedmetadata"));
 
             // Assert
             const emitted = wrapper.emitted("capture");
