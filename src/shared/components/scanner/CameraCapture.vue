@@ -21,11 +21,19 @@ const startCamera = async () => {
 
         stream.value = mediaStream;
 
-        if (videoRef.value) {
-            videoRef.value.srcObject = mediaStream;
-            await videoRef.value.play();
-            isCameraActive.value = true;
+        if (!videoRef.value) {
+            // No video element available; clean up the acquired stream to avoid leaking resources.
+            for (const track of mediaStream.getTracks()) {
+                track.stop();
+            }
+            stream.value = null;
+            cameraError.value = "Unable to access camera video element.";
+            return;
         }
+
+        videoRef.value.srcObject = mediaStream;
+        await videoRef.value.play();
+        isCameraActive.value = true;
     } catch (err) {
         if (err instanceof Error) {
             if (err.name === "NotAllowedError") {
@@ -69,8 +77,25 @@ const captureImage = () => {
         return;
     }
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    const videoWidth = video.videoWidth;
+    const videoHeight = video.videoHeight;
+
+    if (!videoWidth || !videoHeight) {
+        // Ensure metadata is loaded before attempting to capture to avoid a 0x0 canvas.
+        if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
+            video.addEventListener(
+                "loadedmetadata",
+                () => {
+                    captureImage();
+                },
+                {once: true},
+            );
+        }
+        return;
+    }
+
+    canvas.width = videoWidth;
+    canvas.height = videoHeight;
     context.drawImage(video, 0, 0);
 
     canvas.toBlob(
