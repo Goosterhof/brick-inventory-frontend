@@ -1,6 +1,6 @@
 import type {Item} from "@shared/types/item";
 
-import {toCamelCaseTyped} from "@shared/helpers/string";
+import {removeDiacritics, toCamelCaseTyped} from "@shared/helpers/string";
 import {describe, expect, it} from "vitest";
 
 interface TestItem extends Item {
@@ -77,5 +77,106 @@ describe("toCamelCaseTyped", () => {
 
         // Assert
         expect(result).toEqual({id: 1, isActive: true, score: 42, description: null});
+    });
+});
+
+describe("removeDiacritics", () => {
+    it("should remove accents from characters", () => {
+        // Arrange
+        const input = "café";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("cafe");
+    });
+
+    it("should remove umlauts", () => {
+        // Arrange
+        const input = "München";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("Munchen");
+    });
+
+    it("should remove tildes", () => {
+        // Arrange
+        const input = "España";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("Espana");
+    });
+
+    it("should remove cedillas", () => {
+        // Arrange
+        const input = "français";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("francais");
+    });
+
+    it("should remove apostrophes", () => {
+        // Arrange
+        const input = "it's a test";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("its a test");
+    });
+
+    it("should handle strings without diacritics", () => {
+        // Arrange
+        const input = "hello world";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("hello world");
+    });
+
+    it("should handle empty string", () => {
+        // Arrange
+        const input = "";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("");
+    });
+
+    it("should handle multiple diacritics", () => {
+        // Arrange
+        const input = "crème brûlée";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("creme brulee");
+    });
+
+    it("should preserve numbers and special characters", () => {
+        // Arrange
+        const input = "café-123!";
+
+        // Act
+        const result = removeDiacritics(input);
+
+        // Assert
+        expect(result).toBe("cafe-123!");
     });
 });
