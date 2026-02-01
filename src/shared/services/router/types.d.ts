@@ -48,6 +48,8 @@ export type BeforeRouteMiddleware<Routes extends RouteRecordRaw[]> = (
     from: ActualRoute<Routes>,
 ) => boolean | Promise<boolean>;
 
+export type UnregisterMiddleware = () => void;
+
 export interface RouterService<Routes extends RouteRecordRaw[]> {
     dashboardRouteName: RouteName<Routes>;
     normalizedRouteToSpecificRoute: (route: Pick<RouteLocationNormalized, "name" | "path">) => ActualRoute<Routes>;
@@ -60,8 +62,8 @@ export interface RouterService<Routes extends RouteRecordRaw[]> {
 
     getUrlForRouteName: (name: RouteName<Routes>, id?: number, query?: LocationQueryRaw) => string;
     goBack: () => void;
-    registerBeforeRouteMiddleware: (middleware: BeforeRouteMiddleware<Routes>) => number;
-    registerAfterRouteMiddleware: (middleware: NavigationHookAfter) => number;
+    registerBeforeRouteMiddleware: (middleware: BeforeRouteMiddleware<Routes>) => UnregisterMiddleware;
+    registerAfterRouteMiddleware: (middleware: NavigationHookAfter) => UnregisterMiddleware;
     currentRouteRef: Ref<RouteLocationNormalizedLoaded>;
     currentRouteQuery: ComputedRef<LocationQuery>;
     currentRouteId: ComputedRef<number>;

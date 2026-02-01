@@ -116,8 +116,22 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
         goToDashboard: () => goToRoute(dashboardRouteName),
 
         getUrlForRouteName,
-        registerBeforeRouteMiddleware: (middleware) => beforeRouteMiddleware.push(middleware),
-        registerAfterRouteMiddleware: (middleware) => afterRouteMiddleware.push(middleware),
+        registerBeforeRouteMiddleware: (middleware) => {
+            beforeRouteMiddleware.push(middleware);
+
+            return () => {
+                const index = beforeRouteMiddleware.indexOf(middleware);
+                if (index > -1) beforeRouteMiddleware.splice(index, 1);
+            };
+        },
+        registerAfterRouteMiddleware: (middleware) => {
+            afterRouteMiddleware.push(middleware);
+
+            return () => {
+                const index = afterRouteMiddleware.indexOf(middleware);
+                if (index > -1) afterRouteMiddleware.splice(index, 1);
+            };
+        },
         goBack,
         currentRouteRef,
         currentRouteQuery: computed(() => currentRouteRef.value.query),

@@ -632,17 +632,17 @@ describe("router service", () => {
     });
 
     describe("registerBeforeRouteMiddleware", () => {
-        it("should register middleware and return array length", () => {
+        it("should register middleware and return unregister function", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
             const middleware = vi.fn().mockReturnValue(false);
 
             // Act
-            const result = service.registerBeforeRouteMiddleware(middleware);
+            const unregister = service.registerBeforeRouteMiddleware(middleware);
 
             // Assert
-            expect(result).toBeGreaterThan(0);
+            expect(typeof unregister).toBe("function");
         });
 
         it("should execute registered middleware on navigation", async () => {
@@ -677,6 +677,36 @@ describe("router service", () => {
 
             // Assert - navigation should be blocked
             expect(service.currentRouteRef.value.name).not.toBe("about");
+        });
+
+        it("should not execute middleware after unregistering", async () => {
+            // Arrange
+            const routes = createTestRoutes();
+            const service = createRouterService(routes, "home");
+            const middleware = vi.fn().mockReturnValue(false);
+            const unregister = service.registerBeforeRouteMiddleware(middleware);
+
+            // Act - unregister then navigate
+            unregister();
+            await service.goToRoute("about");
+            await flushPromises();
+
+            // Assert - middleware should not have been called
+            expect(middleware).not.toHaveBeenCalled();
+        });
+
+        it("should handle unregistering middleware that was already removed", () => {
+            // Arrange
+            const routes = createTestRoutes();
+            const service = createRouterService(routes, "home");
+            const middleware = vi.fn().mockReturnValue(false);
+            const unregister = service.registerBeforeRouteMiddleware(middleware);
+
+            // Act - unregister twice
+            unregister();
+
+            // Assert - second unregister should not throw
+            expect(() => unregister()).not.toThrow();
         });
     });
 
@@ -735,17 +765,17 @@ describe("router service", () => {
     });
 
     describe("registerAfterRouteMiddleware", () => {
-        it("should register middleware and return array length", () => {
+        it("should register middleware and return unregister function", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
             const middleware = vi.fn();
 
             // Act
-            const result = service.registerAfterRouteMiddleware(middleware);
+            const unregister = service.registerAfterRouteMiddleware(middleware);
 
             // Assert
-            expect(result).toBeGreaterThan(0);
+            expect(typeof unregister).toBe("function");
         });
 
         it("should execute registered middleware after navigation", async () => {
@@ -761,6 +791,36 @@ describe("router service", () => {
 
             // Assert
             expect(middleware).toHaveBeenCalled();
+        });
+
+        it("should not execute middleware after unregistering", async () => {
+            // Arrange
+            const routes = createTestRoutes();
+            const service = createRouterService(routes, "home");
+            const middleware = vi.fn();
+            const unregister = service.registerAfterRouteMiddleware(middleware);
+
+            // Act - unregister then navigate
+            unregister();
+            await service.goToRoute("about");
+            await flushPromises();
+
+            // Assert - middleware should not have been called
+            expect(middleware).not.toHaveBeenCalled();
+        });
+
+        it("should handle unregistering middleware that was already removed", () => {
+            // Arrange
+            const routes = createTestRoutes();
+            const service = createRouterService(routes, "home");
+            const middleware = vi.fn();
+            const unregister = service.registerAfterRouteMiddleware(middleware);
+
+            // Act - unregister twice
+            unregister();
+
+            // Assert - second unregister should not throw
+            expect(() => unregister()).not.toThrow();
         });
     });
 
