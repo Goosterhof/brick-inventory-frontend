@@ -249,29 +249,36 @@ describe("CameraCapture", () => {
             // Arrange
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const error = new Error("Permission denied");
+            error.name = "NotAllowedError";
             let resolveGetUserMedia: ((value: unknown) => void) | undefined;
-            mockGetUserMedia = vi.fn(
-                () =>
-                    new Promise((resolve) => {
-                        resolveGetUserMedia = resolve;
-                    }),
-            );
+            let callCount = 0;
+            mockGetUserMedia = vi.fn(() => {
+                callCount++;
+                if (callCount === 1) {
+                    return Promise.reject(error);
+                }
+                return new Promise((resolve) => {
+                    resolveGetUserMedia = resolve;
+                });
+            });
             Object.defineProperty(navigator, "mediaDevices", {
                 value: {getUserMedia: mockGetUserMedia},
                 writable: true,
                 configurable: true,
             });
             const wrapper = shallowMount(CameraCapture);
+            await flushPromises();
             const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
 
-            // Act
+            // Act - click retry to start pending request, then click again while pending
             await retryButton?.trigger("click");
             await retryButton?.trigger("click");
             resolveGetUserMedia?.(mockStream);
             await flushPromises();
 
-            // Assert
-            expect(mockGetUserMedia).toHaveBeenCalledTimes(1);
+            // Assert - first call from mount (rejected), second from first retry click, third blocked by guard
+            expect(mockGetUserMedia).toHaveBeenCalledTimes(2);
         });
 
         it("should stop existing stream before starting new one on retry", async () => {
@@ -391,6 +398,136 @@ describe("CameraCapture", () => {
             const errorEmitted = wrapper.emitted("error");
             expect(errorEmitted).toBeTruthy();
             expect(errorEmitted?.[0]?.[0]).toBe("Failed to capture image. Please try again.");
+        });
+
+        it("should emit error when canvas context is not available", async () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+            const wrapper = shallowMount(CameraCapture);
+            const videoElement = wrapper.find("video").element as HTMLVideoElement;
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
+            Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
+            const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
+            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => null), writable: true});
+            await flushPromises();
+            const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+
+            // Act
+            const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture Photo");
+            await captureButton?.trigger("click");
+
+            // Assert
+            const errorEmitted = wrapper.emitted("error");
+            expect(errorEmitted).toBeTruthy();
+            expect(errorEmitted?.[0]?.[0]).toBe("Unable to capture image. Canvas context not available.");
+        });
+
+        it("should return early when video dimensions are zero and metadata is loaded", async () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+            const wrapper = shallowMount(CameraCapture);
+            const videoElement = wrapper.find("video").element as HTMLVideoElement;
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "videoWidth", {value: 0, writable: true});
+            Object.defineProperty(videoElement, "videoHeight", {value: 0, writable: true});
+            Object.defineProperty(videoElement, "readyState", {value: HTMLMediaElement.HAVE_METADATA, writable: true});
+            const mockContext = {drawImage: vi.fn()};
+            const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
+            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            await flushPromises();
+            const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+
+            // Act
+            const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture Photo");
+            await captureButton?.trigger("click");
+
+            // Assert - should return early without emitting anything
+            expect(wrapper.emitted("capture")).toBeUndefined();
+            expect(wrapper.emitted("error")).toBeUndefined();
+        });
+
+        it("should wait for metadata when video dimensions are not available", async () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+            const wrapper = shallowMount(CameraCapture);
+            const videoElement = wrapper.find("video").element as HTMLVideoElement;
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "videoWidth", {value: 0, writable: true});
+            Object.defineProperty(videoElement, "videoHeight", {value: 0, writable: true});
+            Object.defineProperty(videoElement, "readyState", {value: 0, writable: true});
+            const addEventListenerSpy = vi.spyOn(videoElement, "addEventListener");
+            const mockContext = {drawImage: vi.fn()};
+            const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
+            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            await flushPromises();
+            const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+
+            // Act
+            const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture Photo");
+            await captureButton?.trigger("click");
+
+            // Assert
+            expect(addEventListenerSpy).toHaveBeenCalledWith("loadedmetadata", expect.any(Function), {once: true});
+            expect(wrapper.emitted("capture")).toBeUndefined();
+        });
+
+        it("should capture image after loadedmetadata event fires", async () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+            const wrapper = shallowMount(CameraCapture);
+            const videoElement = wrapper.find("video").element as HTMLVideoElement;
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            let videoWidth = 0;
+            let videoHeight = 0;
+            Object.defineProperty(videoElement, "videoWidth", {get: () => videoWidth, configurable: true});
+            Object.defineProperty(videoElement, "videoHeight", {get: () => videoHeight, configurable: true});
+            Object.defineProperty(videoElement, "readyState", {value: 0, writable: true});
+            let metadataCallback: (() => void) | null = null;
+            vi.spyOn(videoElement, "addEventListener").mockImplementation((event, callback) => {
+                if (event === "loadedmetadata") {
+                    metadataCallback = callback as () => void;
+                }
+            });
+            const mockContext = {drawImage: vi.fn()};
+            const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
+            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            Object.defineProperty(canvasElement, "toBlob", {
+                value: vi.fn((callback: (blob: Blob | null) => void) => {
+                    callback(new Blob(["test"], {type: "image/jpeg"}));
+                }),
+                writable: true,
+            });
+            await flushPromises();
+            const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+            const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture Photo");
+            await captureButton?.trigger("click");
+
+            // Act - simulate metadata loaded with valid dimensions
+            videoWidth = 1280;
+            videoHeight = 720;
+            metadataCallback?.();
+
+            // Assert
+            const emitted = wrapper.emitted("capture");
+            expect(emitted).toBeTruthy();
+            expect(emitted?.[0]?.[0]).toBeInstanceOf(Blob);
         });
     });
 
