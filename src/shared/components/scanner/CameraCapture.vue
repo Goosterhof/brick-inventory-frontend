@@ -137,8 +137,6 @@ onMounted(() => {
 onUnmounted(() => {
     stopCamera();
 });
-
-defineExpose({startCamera, stopCamera, captureImage});
 </script>
 
 <template>

@@ -35,26 +35,7 @@ const wrapper = shallowMount(MyComponent, {
 
 The project configures `renderStubDefaultSlot: true` in `src/tests/unit/setup.ts`, allowing slot content to render in stubbed components.
 
-## Type-Safe Component Access
-
-### Define Interface for Exposed Methods
-
-When testing components with `defineExpose`, create a typed interface:
-
-```typescript
-interface MyComponentExposed {
-    doSomething: () => void;
-    getValue: () => string;
-}
-
-const getExposedMethods = (wrapper: VueWrapper): MyComponentExposed => {
-    return wrapper.vm as unknown as MyComponentExposed;
-};
-
-// Usage
-const vm = getExposedMethods(wrapper);
-vm.doSomething();
-```
+## Type-Safe Element Access
 
 ### Accessing Native Elements
 
@@ -356,16 +337,11 @@ npm run test:coverage
 ```typescript
 import MyComponent from "@shared/components/MyComponent.vue";
 import {flushPromises, shallowMount, VueWrapper} from "@vue/test-utils";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import {describe, expect, it} from "vitest";
 
-interface MyComponentExposed {
-    doAction: () => void;
-}
-
-const getExposedMethods = (wrapper: VueWrapper): MyComponentExposed => {
-    return wrapper.vm as unknown as MyComponentExposed;
-};
-
+/**
+ * Helper to find a button by its text content.
+ */
 const findButtonByText = (wrapper: VueWrapper, text: string) => {
     return wrapper.findAll("button").find((btn) => btn.text() === text);
 };

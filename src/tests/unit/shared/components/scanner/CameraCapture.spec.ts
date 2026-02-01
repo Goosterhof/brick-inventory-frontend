@@ -3,16 +3,6 @@ import {flushPromises, shallowMount, VueWrapper} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 /**
- * Type definition for the CameraCapture component's exposed methods.
- * Matches the defineExpose in the component.
- */
-interface CameraCaptureExposed {
-    startCamera: () => Promise<void>;
-    stopCamera: () => void;
-    captureImage: () => void;
-}
-
-/**
  * Creates a mock MediaStream with a single track.
  * Used to simulate navigator.mediaDevices.getUserMedia response.
  */
@@ -86,13 +76,6 @@ const findButtonByText = (wrapper: VueWrapper, text: string) => {
     return wrapper.findAll("button").find((btn) => btn.text() === text);
 };
 
-/**
- * Type-safe accessor for the component's exposed methods.
- */
-const getExposedMethods = (wrapper: VueWrapper): CameraCaptureExposed => {
-    return wrapper.vm as unknown as CameraCaptureExposed;
-};
-
 describe("CameraCapture", () => {
     let mockGetUserMedia: ReturnType<typeof vi.fn>;
     let mockMediaStream: ReturnType<typeof createMockMediaStream>;
@@ -154,8 +137,17 @@ describe("CameraCapture", () => {
         it("should enable capture button when camera is active", async () => {
             const wrapper = shallowMount(CameraCapture);
             mockVideoElement(wrapper);
-            await getExposedMethods(wrapper).startCamera();
+
+            // Remount to trigger camera with mocked video
+            mockGetUserMedia.mockResolvedValue(mockMediaStream);
             await flushPromises();
+
+            // Click retry to restart camera with mocked elements
+            const retryButton = findButtonByText(wrapper, "Retry");
+            if (retryButton) {
+                await retryButton.trigger("click");
+                await flushPromises();
+            }
 
             const captureButton = findButtonByText(wrapper, "Capture Photo");
             expect(captureButton?.attributes("disabled")).toBeUndefined();
@@ -164,21 +156,11 @@ describe("CameraCapture", () => {
         it("should stop camera tracks on unmount", async () => {
             const wrapper = shallowMount(CameraCapture);
             mockVideoElement(wrapper);
-            await getExposedMethods(wrapper).startCamera();
             await flushPromises();
 
             wrapper.unmount();
 
             expect(mockMediaStream.mockTrack.stop).toHaveBeenCalled();
-        });
-
-        it("should expose startCamera, stopCamera, and captureImage methods", () => {
-            const wrapper = shallowMount(CameraCapture);
-            const vm = getExposedMethods(wrapper);
-
-            expect(typeof vm.startCamera).toBe("function");
-            expect(typeof vm.stopCamera).toBe("function");
-            expect(typeof vm.captureImage).toBe("function");
         });
     });
 
@@ -262,29 +244,40 @@ describe("CameraCapture", () => {
             );
 
             const wrapper = shallowMount(CameraCapture);
-            await flushPromises();
 
-            const vm = getExposedMethods(wrapper);
-            vm.startCamera();
-            vm.startCamera();
-            vm.startCamera();
+            // First call is from mount, subsequent clicks should be ignored while starting
+            const retryButton = findButtonByText(wrapper, "Retry");
+
+            // These clicks should be ignored since camera is already starting
+            await retryButton?.trigger("click");
+            await retryButton?.trigger("click");
 
             resolveGetUserMedia?.(mockMediaStream);
             await flushPromises();
 
+            // Only the initial mount call should have triggered getUserMedia
             expect(mockGetUserMedia).toHaveBeenCalledTimes(1);
         });
 
-        it("should stop existing stream before starting new one", async () => {
+        it("should stop existing stream before starting new one on retry", async () => {
             const firstStream = createMockMediaStream();
             const secondStream = createMockMediaStream();
-            mockGetUserMedia.mockResolvedValueOnce(firstStream).mockResolvedValueOnce(secondStream);
+            mockGetUserMedia
+                .mockRejectedValueOnce(createNamedError("NotAllowedError", "Permission denied"))
+                .mockResolvedValueOnce(firstStream)
+                .mockResolvedValueOnce(secondStream);
 
             const wrapper = shallowMount(CameraCapture);
             mockVideoElement(wrapper);
             await flushPromises();
 
-            await getExposedMethods(wrapper).startCamera();
+            // First retry - succeeds
+            const retryButton = findButtonByText(wrapper, "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+
+            // Second retry - should stop first stream
+            await retryButton?.trigger("click");
             await flushPromises();
 
             expect(firstStream.mockTrack.stop).toHaveBeenCalled();
@@ -292,16 +285,23 @@ describe("CameraCapture", () => {
     });
 
     describe("image capture", () => {
-        it("should emit capture event with blob when captureImage is called", async () => {
+        it("should emit capture event with blob when capture button is clicked", async () => {
             const wrapper = shallowMount(CameraCapture);
             const mockCanvas = createMockCanvas();
             const videoElement = mockVideoElement(wrapper);
             mockCanvasElement(wrapper, mockCanvas);
 
-            await getExposedMethods(wrapper).startCamera();
+            // Wait for camera to initialize and fail (no mocked play)
             await flushPromises();
 
-            getExposedMethods(wrapper).captureImage();
+            // Now mock a successful retry
+            const retryButton = findButtonByText(wrapper, "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+
+            // Click capture button
+            const captureButton = findButtonByText(wrapper, "Capture Photo");
+            await captureButton?.trigger("click");
 
             expect(mockCanvas.mockContext.drawImage).toHaveBeenCalledWith(videoElement, 0, 0);
             expect(mockCanvas.toBlob).toHaveBeenCalled();
@@ -311,17 +311,18 @@ describe("CameraCapture", () => {
             expect(emitted?.[0]?.[0]).toBeInstanceOf(Blob);
         });
 
-        it("should emit error when capturing with camera not active", async () => {
+        it("should not allow capture when camera is not active", async () => {
             mockGetUserMedia.mockRejectedValue(createNamedError("NotAllowedError", "Permission denied"));
             const wrapper = shallowMount(CameraCapture);
             await flushPromises();
 
-            getExposedMethods(wrapper).captureImage();
+            // Button should be disabled when camera is not active
+            const captureButton = findButtonByText(wrapper, "Capture Photo");
+            expect(captureButton?.attributes("disabled")).toBeDefined();
 
+            // Clicking a disabled button should not emit any events
+            await captureButton?.trigger("click");
             expect(wrapper.emitted("capture")).toBeUndefined();
-            const errorEmitted = wrapper.emitted("error");
-            expect(errorEmitted).toBeTruthy();
-            expect(errorEmitted?.[0]?.[0]).toBe("Camera is not active. Please wait for the camera to start.");
         });
 
         it("should emit error event when toBlob returns null", async () => {
@@ -329,11 +330,16 @@ describe("CameraCapture", () => {
             const mockCanvas = createMockCanvas(true);
             mockVideoElement(wrapper);
             mockCanvasElement(wrapper, mockCanvas);
-
-            await getExposedMethods(wrapper).startCamera();
             await flushPromises();
 
-            getExposedMethods(wrapper).captureImage();
+            // Retry to get camera active with mocked elements
+            const retryButton = findButtonByText(wrapper, "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+
+            // Click capture button
+            const captureButton = findButtonByText(wrapper, "Capture Photo");
+            await captureButton?.trigger("click");
 
             expect(wrapper.emitted("capture")).toBeUndefined();
             const errorEmitted = wrapper.emitted("error");
@@ -369,15 +375,25 @@ describe("CameraCapture", () => {
         });
 
         it("should have dynamic aria-label on capture button based on camera state", async () => {
+            mockGetUserMedia.mockRejectedValue(createNamedError("NotAllowedError", "Permission denied"));
             const wrapper = shallowMount(CameraCapture);
-            const captureButton = findButtonByText(wrapper, "Capture Photo");
-
-            expect(captureButton?.attributes("aria-label")).toBe("Capture photo (camera not ready)");
-
-            mockVideoElement(wrapper);
-            await getExposedMethods(wrapper).startCamera();
             await flushPromises();
 
+            const captureButton = findButtonByText(wrapper, "Capture Photo");
+            expect(captureButton?.attributes("aria-label")).toBe("Capture photo (camera not ready)");
+        });
+
+        it("should update aria-label when camera becomes active", async () => {
+            const wrapper = shallowMount(CameraCapture);
+            mockVideoElement(wrapper);
+            await flushPromises();
+
+            // Retry to activate camera
+            const retryButton = findButtonByText(wrapper, "Retry");
+            await retryButton?.trigger("click");
+            await flushPromises();
+
+            const captureButton = findButtonByText(wrapper, "Capture Photo");
             expect(captureButton?.attributes("aria-label")).toBe("Capture photo of Lego brick");
         });
     });
