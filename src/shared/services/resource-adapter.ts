@@ -12,11 +12,12 @@ import {isExisting} from "@shared/helpers/type-check";
 import {deepSnakeKeys} from "string-ts";
 import {ref} from "vue";
 
-type ResourceHttpService = Pick<HttpService, "postRequest" | "putRequest" | "deleteRequest">;
+type ResourceHttpService = Pick<HttpService, "postRequest" | "putRequest" | "patchRequest" | "deleteRequest">;
 
 interface AdapterRepository<T extends Item> {
     create: (newItem: New<T>) => Promise<T>;
     update: (id: number, updatedItem: Updatable<T>) => Promise<T>;
+    patch: (id: number, partialItem: Partial<New<T>>) => Promise<T>;
     delete: (id: number) => Promise<void>;
 }
 
@@ -40,11 +41,13 @@ type BaseResourceAdapter<T extends Updatable<Item>> = Readonly<T> & {
 
 /**
  * Adapter for an existing resource (with an id).
- * Provides update and delete methods from the repository.
+ * Provides update, patch, and delete methods from the repository.
  */
 export type Adapted<T extends Item> = BaseResourceAdapter<T> & {
-    /** Update the resource in the repository */
+    /** Update the resource in the repository (full replacement) */
     update(): ReturnType<AdapterRepository<T>["update"]>;
+    /** Patch the resource in the repository (partial update) */
+    patch(partialItem: Partial<New<T>>): ReturnType<AdapterRepository<T>["patch"]>;
     /** Delete the resource from the repository */
     delete(): ReturnType<AdapterRepository<T>["delete"]>;
 };
@@ -63,7 +66,7 @@ const adapterRepositoryFactory = <T extends Item>(
     {setById, deleteById}: AdapterStoreModule<T>,
     httpService: ResourceHttpService,
 ): AdapterRepository<T> => {
-    const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: "create" | "update"): T => {
+    const dataHandler = (data: DeepSnakeKeys<T> | undefined, actionType: "create" | "update" | "patch"): T => {
         if (!data) {
             throw new MissingResponseDataError(
                 `${actionType} route for ${domainName} returned no model in response to put in store.`,
@@ -90,6 +93,14 @@ const adapterRepositoryFactory = <T extends Item>(
             );
 
             return dataHandler(data, "update");
+        },
+        patch: async (id: number, partialItem: Partial<New<T>>) => {
+            const {data} = await httpService.patchRequest<DeepSnakeKeys<T>>(
+                `${domainName}/${id}`,
+                deepSnakeKeys(partialItem),
+            );
+
+            return dataHandler(data, "patch");
         },
         delete: async (id: number) => {
             await httpService.deleteRequest<void>(`${domainName}/${id}`);
@@ -140,6 +151,7 @@ export function resourceAdapter<T extends Item>(
             mutable,
             reset: () => (mutable.value = deepCopy(resource)),
             update: () => repository.update(resource.id, mutable.value as Updatable<T>),
+            patch: (partialItem: Partial<New<T>>) => repository.patch(resource.id, partialItem),
             delete: () => repository.delete(resource.id),
         };
     }
