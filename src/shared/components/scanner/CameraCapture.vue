@@ -9,8 +9,29 @@ const stream = ref<MediaStream | null>(null);
 const cameraError = ref<string>("");
 const isLoading = ref(true);
 const isCameraActive = ref(false);
+const isStarting = ref(false);
+
+const stopCamera = () => {
+    if (stream.value) {
+        for (const track of stream.value.getTracks()) {
+            track.stop();
+        }
+        stream.value = null;
+    }
+    if (videoRef.value) {
+        videoRef.value.srcObject = null;
+    }
+    isCameraActive.value = false;
+};
 
 const startCamera = async () => {
+    if (isStarting.value) {
+        return;
+    }
+
+    isStarting.value = true;
+    stopCamera();
+
     isLoading.value = true;
     cameraError.value = "";
 
@@ -48,20 +69,8 @@ const startCamera = async () => {
         }
     } finally {
         isLoading.value = false;
+        isStarting.value = false;
     }
-};
-
-const stopCamera = () => {
-    if (stream.value) {
-        for (const track of stream.value.getTracks()) {
-            track.stop();
-        }
-        stream.value = null;
-    }
-    if (videoRef.value) {
-        videoRef.value.srcObject = null;
-    }
-    isCameraActive.value = false;
 };
 
 const captureImage = () => {

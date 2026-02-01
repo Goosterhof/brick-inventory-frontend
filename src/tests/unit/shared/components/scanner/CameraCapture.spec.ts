@@ -291,4 +291,56 @@ describe("CameraCapture", () => {
         // Assert - camera not yet active during initial load
         expect(wrapper.find("video").classes()).toContain("opacity-0");
     });
+
+    it("should prevent concurrent camera starts (race condition)", async () => {
+        // Arrange
+        let resolveGetUserMedia: (value: unknown) => void;
+        mockGetUserMedia.mockImplementation(
+            () =>
+                new Promise((resolve) => {
+                    resolveGetUserMedia = resolve;
+                }),
+        );
+
+        const wrapper = shallowMount(CameraCapture);
+        await flushPromises();
+
+        // Act - call startCamera multiple times rapidly
+        const vm = wrapper.vm as unknown as {startCamera: () => Promise<void>};
+        vm.startCamera();
+        vm.startCamera();
+        vm.startCamera();
+
+        // Resolve the pending request
+        resolveGetUserMedia?.(mockMediaStream);
+        await flushPromises();
+
+        // Assert - only initial mount call should have triggered getUserMedia
+        // subsequent calls should be ignored while isStarting is true
+        expect(mockGetUserMedia).toHaveBeenCalledTimes(1);
+    });
+
+    it("should stop existing stream before starting new one", async () => {
+        // Arrange
+        const firstStream = createMockMediaStream();
+        const secondStream = createMockMediaStream();
+        mockGetUserMedia.mockResolvedValueOnce(firstStream).mockResolvedValueOnce(secondStream);
+
+        const wrapper = shallowMount(CameraCapture);
+
+        const videoElement = wrapper.find("video").element as HTMLVideoElement;
+        Object.defineProperty(videoElement, "play", {
+            value: vi.fn().mockResolvedValue(undefined),
+            writable: true,
+        });
+
+        await flushPromises();
+
+        // Act - start camera again (simulating retry)
+        await (wrapper.vm as unknown as {startCamera: () => Promise<void>}).startCamera();
+        await flushPromises();
+
+        // Assert - first stream should have been stopped
+        expect(firstStream.mockTrack.stop).toHaveBeenCalled();
+    });
 });
