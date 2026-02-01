@@ -100,10 +100,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture);
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {
-                value: vi.fn().mockResolvedValue(undefined),
-                writable: true,
-            });
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();
@@ -127,10 +124,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture);
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {
-                value: vi.fn().mockResolvedValue(undefined),
-                writable: true,
-            });
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();
@@ -294,10 +288,7 @@ describe("CameraCapture", () => {
                 .mockResolvedValueOnce(secondStream);
             const wrapper = shallowMount(CameraCapture);
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {
-                value: vi.fn().mockResolvedValue(undefined),
-                writable: true,
-            });
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();
@@ -322,18 +313,12 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture);
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {
-                value: vi.fn().mockResolvedValue(undefined),
-                writable: true,
-            });
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             const mockContext = {drawImage: vi.fn()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {
-                value: vi.fn(() => mockContext),
-                writable: true,
-            });
+            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
             Object.defineProperty(canvasElement, "toBlob", {
                 value: vi.fn((callback: (blob: Blob | null) => void) => {
                     callback(new Blob(["test"], {type: "image/jpeg"}));
@@ -380,18 +365,12 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture);
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {
-                value: vi.fn().mockResolvedValue(undefined),
-                writable: true,
-            });
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             const mockContext = {drawImage: vi.fn()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {
-                value: vi.fn(() => mockContext),
-                writable: true,
-            });
+            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
             Object.defineProperty(canvasElement, "toBlob", {
                 value: vi.fn((callback: (blob: Blob | null) => void) => {
                     callback(null);
@@ -483,10 +462,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture);
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {
-                value: vi.fn().mockResolvedValue(undefined),
-                writable: true,
-            });
+            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();

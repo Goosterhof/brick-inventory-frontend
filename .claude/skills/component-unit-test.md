@@ -25,10 +25,7 @@ Use `shallowMount` for unit tests to isolate the component from its children:
 import {shallowMount} from "@vue/test-utils";
 import MyComponent from "@shared/components/MyComponent.vue";
 
-const wrapper = shallowMount(MyComponent, {
-    props: {label: "Test"},
-    slots: {default: "Slot content"},
-});
+const wrapper = shallowMount(MyComponent, {props: {label: "Test"}, slots: {default: "Slot content"}});
 ```
 
 ### Test Setup Configuration
@@ -170,9 +167,7 @@ it("should pass props to child component", () => {
 ```typescript
 it("should emit update:modelValue on input", async () => {
     // Arrange
-    const wrapper = shallowMount(TextInput, {
-        props: {label: "Name", modelValue: ""},
-    });
+    const wrapper = shallowMount(TextInput, {props: {label: "Name", modelValue: ""}});
 
     // Act
     await wrapper.find("input").setValue("John");
@@ -304,10 +299,7 @@ it("should capture image when button is clicked", async () => {
     // Arrange
     const wrapper = shallowMount(CameraCapture);
     const videoElement = wrapper.find("video").element as HTMLVideoElement;
-    Object.defineProperty(videoElement, "play", {
-        value: vi.fn().mockResolvedValue(undefined),
-        writable: true,
-    });
+    Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
     Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
     Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
     await flushPromises();
@@ -343,9 +335,7 @@ it("should have neo-brutalist styling", () => {
 ```typescript
 it("should apply error styling when error is present", () => {
     // Arrange & Act
-    const wrapper = shallowMount(TextInput, {
-        props: {label: "Email", modelValue: "", error: "Invalid"},
-    });
+    const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: "", error: "Invalid"}});
 
     // Assert
     expect(wrapper.find("input").classes()).toContain("bg-red-100");
@@ -363,6 +353,7 @@ it("should apply conditional classes", () => {
 ## When to Use beforeEach/afterEach
 
 Use setup/teardown hooks ONLY for:
+
 - Mocking global browser APIs (navigator, window)
 - Restoring mocks between tests
 
@@ -420,9 +411,7 @@ describe("MyComponent", () => {
 
         it("should render custom title from props", () => {
             // Arrange & Act
-            const wrapper = shallowMount(MyComponent, {
-                props: {title: "Custom Title"},
-            });
+            const wrapper = shallowMount(MyComponent, {props: {title: "Custom Title"}});
 
             // Assert
             expect(wrapper.find("h1").text()).toBe("Custom Title");
