@@ -24,7 +24,12 @@ describe("resource adapter", () => {
         it("should return the original resource properties", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
@@ -38,7 +43,12 @@ describe("resource adapter", () => {
         it("should provide a mutable ref with a deep copy of the resource", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
@@ -52,7 +62,12 @@ describe("resource adapter", () => {
         it("should allow modifying the mutable ref without affecting original", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
@@ -67,7 +82,12 @@ describe("resource adapter", () => {
         it("should reset mutable state to original with reset()", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
             adapted.mutable.value.userName = "modifiedUser";
 
@@ -84,7 +104,7 @@ describe("resource adapter", () => {
             const putRequest = vi
                 .fn()
                 .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
-            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest, patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
             adapted.mutable.value.userName = "updatedUser";
 
@@ -106,7 +126,7 @@ describe("resource adapter", () => {
             const putRequest = vi
                 .fn()
                 .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
-            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest, patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
@@ -122,7 +142,7 @@ describe("resource adapter", () => {
             const putRequest = vi
                 .fn()
                 .mockResolvedValue({data: {id: 1, user_name: "updatedUser", created_at: "2024-01-01"}});
-            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest, patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
@@ -136,7 +156,7 @@ describe("resource adapter", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
             const putRequest = vi.fn().mockResolvedValue({data: undefined});
-            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest, patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act & Assert
@@ -146,11 +166,87 @@ describe("resource adapter", () => {
             );
         });
 
+        it("should call httpService.patchRequest with snake_case data on patch()", async () => {
+            // Arrange
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const patchRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "patchedUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
+
+            // Act
+            await adapted.patch({userName: "patchedUser"});
+
+            // Assert
+            expect(patchRequest).toHaveBeenCalledWith("users/1", {user_name: "patchedUser"});
+        });
+
+        it("should call setById with camelCase data after patch()", async () => {
+            // Arrange
+            const setById = vi.fn();
+            const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
+            const patchRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "patchedUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
+
+            // Act
+            await adapted.patch({userName: "patchedUser"});
+
+            // Assert
+            expect(setById).toHaveBeenCalledWith({id: 1, userName: "patchedUser", createdAt: "2024-01-01"});
+        });
+
+        it("should return the patched item from patch()", async () => {
+            // Arrange
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const patchRequest = vi
+                .fn()
+                .mockResolvedValue({data: {id: 1, user_name: "patchedUser", created_at: "2024-01-01"}});
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
+
+            // Act
+            const result = await adapted.patch({userName: "patchedUser"});
+
+            // Assert
+            expect(result).toEqual({id: 1, userName: "patchedUser", createdAt: "2024-01-01"});
+        });
+
+        it("should throw MissingResponseDataError when patch response has no data", async () => {
+            // Arrange
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const patchRequest = vi.fn().mockResolvedValue({data: undefined});
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
+
+            // Act & Assert
+            await expect(adapted.patch({userName: "patchedUser"})).rejects.toThrow(MissingResponseDataError);
+            await expect(adapted.patch({userName: "patchedUser"})).rejects.toThrow(
+                "patch route for users returned no model in response to put in store.",
+            );
+        });
+
+        it("should propagate HTTP errors from patch()", async () => {
+            // Arrange
+            const setById = vi.fn();
+            const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
+            const patchRequest = vi.fn().mockRejectedValue(new Error("Network error"));
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest, deleteRequest: vi.fn()};
+            const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
+
+            // Act & Assert
+            await expect(adapted.patch({userName: "patchedUser"})).rejects.toThrow("Network error");
+            expect(setById).not.toHaveBeenCalled();
+        });
+
         it("should call httpService.deleteRequest on delete()", async () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
             const deleteRequest = vi.fn().mockResolvedValue({});
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
@@ -165,7 +261,7 @@ describe("resource adapter", () => {
             const deleteById = vi.fn();
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById};
             const deleteRequest = vi.fn().mockResolvedValue({});
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act
@@ -180,7 +276,7 @@ describe("resource adapter", () => {
             const setById = vi.fn();
             const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
             const putRequest = vi.fn().mockRejectedValue(new Error("Network error"));
-            const httpService = {postRequest: vi.fn(), putRequest, deleteRequest: vi.fn()};
+            const httpService = {postRequest: vi.fn(), putRequest, patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act & Assert
@@ -193,7 +289,7 @@ describe("resource adapter", () => {
             const deleteById = vi.fn();
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById};
             const deleteRequest = vi.fn().mockRejectedValue(new Error("Network error"));
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest};
+            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest};
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Act & Assert
@@ -201,25 +297,37 @@ describe("resource adapter", () => {
             expect(deleteById).not.toHaveBeenCalled();
         });
 
-        it("should have update and delete methods", () => {
+        it("should have update, patch, and delete methods", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
 
             // Assert
             expect(adapted).toHaveProperty("update");
+            expect(adapted).toHaveProperty("patch");
             expect(adapted).toHaveProperty("delete");
             expect(typeof adapted.update).toBe("function");
+            expect(typeof adapted.patch).toBe("function");
             expect(typeof adapted.delete).toBe("function");
         });
 
         it("should not have create method", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: Adapted<TestItem> = resourceAdapter(existingResource, "users", storeModule, httpService);
@@ -235,7 +343,12 @@ describe("resource adapter", () => {
         it("should return the original resource properties", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
@@ -247,7 +360,12 @@ describe("resource adapter", () => {
         it("should provide a mutable ref with a deep copy of the resource", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
@@ -261,7 +379,12 @@ describe("resource adapter", () => {
         it("should allow modifying the mutable ref without affecting original", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
@@ -275,7 +398,12 @@ describe("resource adapter", () => {
         it("should reset mutable state to original with reset()", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
             adapted.mutable.value.userName = "modifiedUser";
 
@@ -292,7 +420,7 @@ describe("resource adapter", () => {
             const postRequest = vi
                 .fn()
                 .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
-            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {postRequest, putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
@@ -309,7 +437,7 @@ describe("resource adapter", () => {
             const postRequest = vi
                 .fn()
                 .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
-            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {postRequest, putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
@@ -325,7 +453,7 @@ describe("resource adapter", () => {
             const postRequest = vi
                 .fn()
                 .mockResolvedValue({data: {id: 1, user_name: "newUser", created_at: "2024-01-01"}});
-            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {postRequest, putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act
@@ -339,7 +467,7 @@ describe("resource adapter", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
             const postRequest = vi.fn().mockResolvedValue({data: undefined});
-            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {postRequest, putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act & Assert
@@ -354,7 +482,7 @@ describe("resource adapter", () => {
             const setById = vi.fn();
             const storeModule: AdapterStoreModule<TestItem> = {setById, deleteById: vi.fn()};
             const postRequest = vi.fn().mockRejectedValue(new Error("Network error"));
-            const httpService = {postRequest, putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {postRequest, putRequest: vi.fn(), patchRequest: vi.fn(), deleteRequest: vi.fn()};
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Act & Assert
@@ -365,7 +493,12 @@ describe("resource adapter", () => {
         it("should have create method", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
@@ -375,16 +508,22 @@ describe("resource adapter", () => {
             expect(typeof adapted.create).toBe("function");
         });
 
-        it("should not have update and delete methods", () => {
+        it("should not have update, patch, and delete methods", () => {
             // Arrange
             const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted: NewAdapted<TestItem> = resourceAdapter(newResource, "users", storeModule, httpService);
 
             // Assert
             expect(adapted).not.toHaveProperty("update");
+            expect(adapted).not.toHaveProperty("patch");
             expect(adapted).not.toHaveProperty("delete");
         });
     });
@@ -398,7 +537,12 @@ describe("resource adapter", () => {
             }
             const nestedResource: NestedItem = {id: 1, nested: {value: "original"}};
             const storeModule: AdapterStoreModule<NestedItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted = resourceAdapter(nestedResource, "nested", storeModule, httpService);
@@ -417,7 +561,12 @@ describe("resource adapter", () => {
             }
             const arrayResource: ArrayItem = {id: 1, items: ["a", "b"]};
             const storeModule: AdapterStoreModule<ArrayItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted = resourceAdapter(arrayResource, "arrays", storeModule, httpService);
@@ -437,7 +586,12 @@ describe("resource adapter", () => {
             const originalDate = new Date("2024-01-01");
             const dateResource: DateItem = {id: 1, createdAt: originalDate};
             const storeModule: AdapterStoreModule<DateItem> = {setById: vi.fn(), deleteById: vi.fn()};
-            const httpService = {postRequest: vi.fn(), putRequest: vi.fn(), deleteRequest: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
 
             // Act
             const adapted = resourceAdapter(dateResource, "dates", storeModule, httpService);
