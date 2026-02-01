@@ -61,20 +61,22 @@ it("test error case", () => {});
 
 ### Self-Contained Tests
 
-- Each test should be fully self-contained
+Each test must be fully self-contained. **Do not use helper functions** - they can unintentionally change other tests when modified. Inline all setup logic directly in each test.
+
 - Avoid `beforeEach`/`afterEach` for shared mutable state
-- Set up and tear down within each test
+- Do not create helper functions like `createTestConfig()` or `setupMocks()`
+- Duplicate setup code is acceptable and preferred for test isolation
 
 ```typescript
-// Good - self-contained
+// Good - fully inlined setup
 it("should make a GET request", async () => {
     // Arrange
     const mock = new MockAdapter(axios);
-    const service = createService();
-    mock.onGet("/users").reply(200, {id: 1});
+    const service = createHttpService("https://api.example.com");
+    mock.onGet("https://api.example.com/users").reply(200, {id: 1});
 
     // Act
-    const result = await service.getUsers();
+    const result = await service.getRequest("/users");
 
     // Assert
     expect(result.data).toEqual({id: 1});
@@ -82,10 +84,18 @@ it("should make a GET request", async () => {
     mock.restore();
 });
 
-// Avoid - shared state
+// Avoid - shared state with beforeEach
 let mock: MockAdapter;
 beforeEach(() => {
     mock = new MockAdapter(axios);
+});
+
+// Avoid - helper functions
+const createTestConfig = () => ({
+    /* ... */
+});
+it("should do something", () => {
+    const config = createTestConfig(); // Don't do this
 });
 ```
 
