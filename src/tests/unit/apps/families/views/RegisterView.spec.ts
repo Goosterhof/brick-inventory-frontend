@@ -3,10 +3,7 @@ import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({
-    mockRegister: vi.fn(),
-    mockGoToDashboard: vi.fn(),
-}));
+const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({mockRegister: vi.fn(), mockGoToDashboard: vi.fn()}));
 
 vi.mock("@app/services", () => ({
     familyHttpService: {
@@ -30,10 +27,7 @@ vi.mock("@app/services", () => ({
         sendEmailResetPassword: vi.fn(),
         resetPassword: vi.fn(),
     },
-    familyRouterService: {
-        goToDashboard: mockGoToDashboard,
-        goToRoute: vi.fn(),
-    },
+    familyRouterService: {goToDashboard: mockGoToDashboard, goToRoute: vi.fn()},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));

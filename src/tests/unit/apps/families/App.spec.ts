@@ -3,15 +3,8 @@ import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 
 vi.mock("@app/services", () => ({
-    FamilyRouterLink: {
-        name: "FamilyRouterLink",
-        props: ["to"],
-        template: "<a><slot /></a>",
-    },
-    FamilyRouterView: {
-        name: "FamilyRouterView",
-        template: "<div><slot /></div>",
-    },
+    FamilyRouterLink: {name: "FamilyRouterLink", props: ["to"], template: "<a><slot /></a>"},
+    FamilyRouterView: {name: "FamilyRouterView", template: "<div><slot /></div>"},
 }));
 
 describe("App", () => {

@@ -36,12 +36,7 @@ const translations = {
             notFound: "Not found",
             unauthorized: "Unauthorized",
         },
-        navigation: {
-            home: "Home",
-            about: "About",
-            dashboard: "Dashboard",
-            settings: "Settings",
-        },
+        navigation: {home: "Home", about: "About", dashboard: "Dashboard", settings: "Settings"},
     },
     nl: {
         common: {
@@ -78,12 +73,7 @@ const translations = {
             notFound: "Niet gevonden",
             unauthorized: "Niet geautoriseerd",
         },
-        navigation: {
-            home: "Home",
-            about: "Over",
-            dashboard: "Dashboard",
-            settings: "Instellingen",
-        },
+        navigation: {home: "Home", about: "Over", dashboard: "Dashboard", settings: "Instellingen"},
     },
 } as const;
 
