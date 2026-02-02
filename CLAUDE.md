@@ -6,7 +6,7 @@ This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern t
 
 ## API
 
-- **Base URL**: `https://lego-storage-production.up.railway.app/api`
+- **Base URL**: `https://api.brick-inventory.com/api`
 - **Authentication**: Credentials-based (cookies with `withCredentials: true`)
 - **Data Format**: JSON with snake_case keys (automatically converted to/from camelCase in frontend)
 - **OpenAPI Spec**: Available at `/docs/api.json`
@@ -65,7 +65,7 @@ This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern t
 ```ts
 import {createHttpService} from "@shared/services/http";
 
-const http = createHttpService("https://lego-storage-production.up.railway.app/api");
+const http = createHttpService("https://api.brick-inventory.com/api");
 
 // Available methods
 http.getRequest<T>(endpoint, options);
