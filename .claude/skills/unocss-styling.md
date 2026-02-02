@@ -5,6 +5,7 @@ Styling patterns using UnoCSS in this project.
 ## Presets
 
 This project uses UnoCSS with:
+
 - `presetUno`: Default preset (Tailwind-compatible utilities)
 - `presetAttributify`: Attributify mode for cleaner templates
 - `presetIcons`: Icon support
