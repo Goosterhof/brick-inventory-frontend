@@ -25,6 +25,7 @@ const createMockAuthService = (isLoggedInValue: boolean) => {
         isLoggedIn: computed(() => isLoggedInRef.value),
         user: computed(() => (isLoggedInRef.value ? {id: 1} : null)),
         userId: vi.fn(),
+        register: vi.fn(),
         login: vi.fn(),
         logout: vi.fn(),
         checkIfLoggedIn: vi.fn(),

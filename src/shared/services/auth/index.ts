@@ -8,7 +8,7 @@ import {isAxiosError} from "axios";
 import {deepSnakeKeys} from "string-ts";
 import {computed, shallowRef} from "vue";
 
-import type {AuthService, Credentials, ResetPassword} from "./types";
+import type {AuthService, Credentials, RegistrationData, ResetPassword} from "./types";
 
 export const createAuthService = <Profile extends {id: number}>(httpService: HttpService): AuthService<Profile> => {
     const userRef: ShallowRef<Profile | null> = shallowRef(null);
@@ -21,6 +21,14 @@ export const createAuthService = <Profile extends {id: number}>(httpService: Htt
         if (!currentUser) throw new NotLoggedInError();
 
         return currentUser.id;
+    };
+
+    const register = async (registrationData: RegistrationData): Promise<void> => {
+        const {data} = await httpService.postRequest<DeepSnakeKeys<Profile>>(
+            "/register",
+            deepSnakeKeys(registrationData),
+        );
+        userRef.value = toCamelCaseTyped<Profile>(data);
     };
 
     const login = async (loginData: Credentials): Promise<void> => {
@@ -56,5 +64,5 @@ export const createAuthService = <Profile extends {id: number}>(httpService: Htt
         await httpService.postRequest("/password/reset", deepSnakeKeys(data));
     };
 
-    return {isLoggedIn, user, userId, login, logout, checkIfLoggedIn, sendEmailResetPassword, resetPassword};
+    return {isLoggedIn, user, userId, register, login, logout, checkIfLoggedIn, sendEmailResetPassword, resetPassword};
 };
