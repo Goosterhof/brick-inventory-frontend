@@ -1,54 +1,122 @@
-# temp-vue-project
+# Lego Storage Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+A Vue 3 multi-app monorepo for managing LEGO brick inventory. Built with TypeScript, Vite, and modern tooling.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Multi-App Architecture**: Supports multiple independent apps sharing common code
+- **Families App**: Main application for family-based LEGO inventory management
+- **Shared Components**: Reusable UI components across all apps
+- **Type-Safe**: Full TypeScript support with strict type checking
+- **Modern Tooling**: Fast builds with Vite, instant HMR, and Rust-based linting
 
-## Recommended Browser Setup
+## Tech Stack
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-    - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-    - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-    - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-    - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+| Category | Technology |
+|----------|------------|
+| Framework | Vue 3 (Composition API) |
+| Language | TypeScript |
+| Build Tool | Vite |
+| Styling | UnoCSS |
+| Testing | Vitest |
+| Linting | oxlint |
+| Formatting | oxfmt |
 
-## Type Support for `.vue` Imports in TS
+## Prerequisites
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Node.js 24 or higher
+- npm
 
-## Customize configuration
+## Getting Started
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+1. **Clone the repository**
 
-## Project Setup
+   ```bash
+   git clone https://github.com/Goosterhof/lego-storage-frontend.git
+   cd lego-storage-frontend
+   ```
 
-```sh
-npm install
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+   The app will be available at `http://localhost:5173`
+
+## Project Structure
+
+```
+src/
+├── apps/
+│   ├── families/          # Main family inventory app
+│   │   ├── services/      # App-specific service instances
+│   │   ├── views/         # Page components
+│   │   └── types/         # App-specific types
+│   └── admin/             # Admin dashboard (in development)
+├── shared/
+│   ├── components/        # Reusable UI components
+│   ├── composables/       # Vue composables
+│   ├── services/          # Service factories
+│   ├── helpers/           # Utility functions
+│   ├── errors/            # Custom error classes
+│   └── types/             # Shared type definitions
+└── tests/
+    └── unit/              # Unit tests
 ```
 
-### Compile and Hot-Reload for Development
+## Available Scripts
 
-```sh
-npm run dev
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server (families app) |
+| `npm run dev:admin` | Start development server (admin app) |
+| `npm run build` | Build all apps for production |
+| `npm run test:unit` | Run unit tests |
+| `npm run test:coverage` | Run tests with coverage report |
+| `npm run lint` | Run linter |
+| `npm run format` | Format code |
+| `npm run format:check` | Check code formatting |
+| `npm run type-check` | Run TypeScript type checking |
+
+## Environment Variables
+
+Create a `.env` file in the project root (optional):
+
+```env
+VITE_API_BASE_URL=https://api.brick-inventory.com/api
 ```
 
-### Type-Check, Compile and Minify for Production
+If not set, the app defaults to the production API URL.
 
-```sh
-npm run build
+## Path Aliases
+
+The project uses path aliases for clean imports:
+
+- `@/*` → `./src/*`
+- `@shared/*` → `./src/shared/*`
+- `@app/*` → `./src/apps/{currentApp}/*` (resolved at build time)
+
+```ts
+import NavLink from "@shared/components/NavLink.vue";
+import { familyAuthService } from "@app/services";
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## Contributing
 
-```sh
-npm run test:unit
-```
+Contributions are welcome! Please ensure your code:
 
-### Lint with [ESLint](https://eslint.org/)
+1. Passes all tests: `npm run test:unit`
+2. Passes type checking: `npm run type-check`
+3. Is properly formatted: `npm run format`
+4. Passes linting: `npm run lint`
 
-```sh
-npm run lint
-```
+## License
+
+[MIT](LICENSE)
