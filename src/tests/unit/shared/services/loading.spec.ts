@@ -98,26 +98,26 @@ describe("createLoadingService", () => {
         expect(resolved2).toBe(true);
     });
 
-    it("should track activeRequests count", () => {
+    it("should track activeCount count", () => {
         // Arrange
         const service = createLoadingService();
 
         // Assert initial state
-        expect(service.activeRequests.value).toBe(0);
+        expect(service.activeCount.value).toBe(0);
 
         // Act & Assert - increment
         service.startLoading();
-        expect(service.activeRequests.value).toBe(1);
+        expect(service.activeCount.value).toBe(1);
 
         service.startLoading();
-        expect(service.activeRequests.value).toBe(2);
+        expect(service.activeCount.value).toBe(2);
 
         // Act & Assert - decrement
         service.stopLoading();
-        expect(service.activeRequests.value).toBe(1);
+        expect(service.activeCount.value).toBe(1);
 
         service.stopLoading();
-        expect(service.activeRequests.value).toBe(0);
+        expect(service.activeCount.value).toBe(0);
     });
 
     it("should stay loading while any request is active", () => {
@@ -130,24 +130,24 @@ describe("createLoadingService", () => {
 
         // Assert - both active
         expect(service.isLoading.value).toBe(true);
-        expect(service.activeRequests.value).toBe(2);
+        expect(service.activeCount.value).toBe(2);
 
         // Act - finish first request
         service.stopLoading();
 
         // Assert - still loading because one request remains
         expect(service.isLoading.value).toBe(true);
-        expect(service.activeRequests.value).toBe(1);
+        expect(service.activeCount.value).toBe(1);
 
         // Act - finish second request
         service.stopLoading();
 
         // Assert - now finished
         expect(service.isLoading.value).toBe(false);
-        expect(service.activeRequests.value).toBe(0);
+        expect(service.activeCount.value).toBe(0);
     });
 
-    it("should not allow activeRequests to go below zero", () => {
+    it("should not allow activeCount to go below zero", () => {
         // Arrange
         const service = createLoadingService();
 
@@ -156,7 +156,7 @@ describe("createLoadingService", () => {
         service.stopLoading();
 
         // Assert
-        expect(service.activeRequests.value).toBe(0);
+        expect(service.activeCount.value).toBe(0);
         expect(service.isLoading.value).toBe(false);
     });
 

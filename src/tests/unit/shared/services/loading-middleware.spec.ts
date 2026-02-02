@@ -98,13 +98,13 @@ describe("registerLoadingMiddleware", () => {
         registerLoadingMiddleware(httpService, loadingService);
 
         // Assert initial state
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
 
         // Act
         triggerRequest();
 
         // Assert - loading started
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
         expect(loadingService.isLoading.value).toBe(true);
     });
 
@@ -119,7 +119,7 @@ describe("registerLoadingMiddleware", () => {
         triggerResponse(config);
 
         // Assert
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
         expect(loadingService.isLoading.value).toBe(false);
     });
 
@@ -134,7 +134,7 @@ describe("registerLoadingMiddleware", () => {
         triggerError(config);
 
         // Assert
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
         expect(loadingService.isLoading.value).toBe(false);
     });
 
@@ -149,16 +149,16 @@ describe("registerLoadingMiddleware", () => {
         const config2 = triggerRequest({url: "/posts"});
 
         // Assert - both tracked
-        expect(loadingService.activeRequests.value).toBe(2);
+        expect(loadingService.activeCount.value).toBe(2);
 
         // Complete first request
         triggerResponse(config1);
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
         expect(loadingService.isLoading.value).toBe(true);
 
         // Complete second request
         triggerResponse(config2);
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
         expect(loadingService.isLoading.value).toBe(false);
     });
 
@@ -172,13 +172,13 @@ describe("registerLoadingMiddleware", () => {
         triggerRequest();
 
         // Assert - loading started
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
 
         // Fast forward past timeout
         vi.advanceTimersByTime(5000);
 
         // Assert - loading auto-decremented
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
         expect(loadingService.isLoading.value).toBe(false);
     });
 
@@ -196,7 +196,7 @@ describe("registerLoadingMiddleware", () => {
         vi.advanceTimersByTime(5000);
 
         // Assert - should still be 0 (not negative)
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
     });
 
     it("should not double-decrement if timeout fires after response", () => {
@@ -208,17 +208,17 @@ describe("registerLoadingMiddleware", () => {
         // Start two requests
         const config1 = triggerRequest({url: "/users"});
         triggerRequest({url: "/posts"});
-        expect(loadingService.activeRequests.value).toBe(2);
+        expect(loadingService.activeCount.value).toBe(2);
 
         // Complete first request before timeout
         triggerResponse(config1);
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
 
         // Timeout fires for first request - should not decrement again
         vi.advanceTimersByTime(5000);
 
         // Assert - only second request timed out
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
     });
 
     it("should disable timeout when timeoutMs is 0", () => {
@@ -231,13 +231,13 @@ describe("registerLoadingMiddleware", () => {
         triggerRequest();
 
         // Assert - loading started
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
 
         // Fast forward a long time
         vi.advanceTimersByTime(60000);
 
         // Assert - still loading (no auto-timeout)
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
     });
 
     it("should use default 30 second timeout", () => {
@@ -251,11 +251,11 @@ describe("registerLoadingMiddleware", () => {
 
         // Assert - still loading before timeout
         vi.advanceTimersByTime(29999);
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
 
         // Assert - auto-decremented after 30 seconds
         vi.advanceTimersByTime(1);
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
     });
 
     it("should stop tracking after unregister is called", () => {
@@ -269,7 +269,7 @@ describe("registerLoadingMiddleware", () => {
         triggerRequest();
 
         // Assert - should not have tracked the request (middleware unregistered)
-        expect(loadingService.activeRequests.value).toBe(0);
+        expect(loadingService.activeCount.value).toBe(0);
     });
 
     it("should clear pending timeouts on unregister", () => {
@@ -280,7 +280,7 @@ describe("registerLoadingMiddleware", () => {
 
         // Start a request
         triggerRequest();
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
 
         // Unregister before timeout
         unregister();
@@ -289,7 +289,7 @@ describe("registerLoadingMiddleware", () => {
         vi.advanceTimersByTime(5000);
 
         // Assert - timeout was cleared, count stays at 1 (not decremented by timeout)
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
     });
 
     it("should handle error without config gracefully", () => {
@@ -300,7 +300,7 @@ describe("registerLoadingMiddleware", () => {
 
         // Start a request
         triggerRequest();
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
 
         // Trigger error without config (edge case)
         const errorMiddleware = (httpService.registerResponseErrorMiddleware as ReturnType<typeof vi.fn>).mock
@@ -308,6 +308,6 @@ describe("registerLoadingMiddleware", () => {
         errorMiddleware({message: "Network error", isAxiosError: true} as AxiosError);
 
         // Assert - should not crash, count unchanged
-        expect(loadingService.activeRequests.value).toBe(1);
+        expect(loadingService.activeCount.value).toBe(1);
     });
 });
