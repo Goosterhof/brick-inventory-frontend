@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import type {AuthService} from "@shared/services/auth/types";
-import type {HttpService} from "@shared/services/http";
-
+import {familyAuthService, familyHttpService, familyRouterService} from "@app/services";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
 import {isAxiosError} from "axios";
 import {ref} from "vue";
-import {useRouter} from "vue-router";
-
-const {httpService, authService} = defineProps<{httpService: HttpService; authService: AuthService<{id: number}>}>();
-
-const router = useRouter();
 
 const familyName = ref("");
 const name = ref("");
@@ -19,13 +12,13 @@ const password = ref("");
 const passwordConfirmation = ref("");
 
 type RegistrationField = "familyName" | "name" | "email" | "password" | "passwordConfirmation";
-const {errors, clearErrors} = useValidationErrors<RegistrationField>(httpService);
+const {errors, clearErrors} = useValidationErrors<RegistrationField>(familyHttpService);
 
 const handleSubmit = async () => {
     clearErrors();
 
     try {
-        await authService.register({
+        await familyAuthService.register({
             familyName: familyName.value,
             name: name.value,
             email: email.value,
@@ -33,7 +26,7 @@ const handleSubmit = async () => {
             passwordConfirmation: passwordConfirmation.value,
         });
 
-        router.push({name: "home"});
+        await familyRouterService.goToDashboard();
     } catch (error) {
         if (isAxiosError(error) && error.response?.status === 422) {
             return;

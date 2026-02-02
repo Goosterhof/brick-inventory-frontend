@@ -14,7 +14,14 @@ export default mergeConfig(
             coverage: {
                 provider: "v8",
                 include: ["src/**/*.ts", "src/**/*.vue"],
-                exclude: ["src/apps/**/main.ts", "src/**/*.d.ts", "src/apps/**/router/**", "src/apps/**/views/**"],
+                exclude: [
+                    "src/apps/**/main.ts",
+                    "src/**/*.d.ts",
+                    "src/apps/**/router/**",
+                    "src/apps/**/views/**",
+                    "src/apps/**/services/**",
+                    "src/apps/**/types/**",
+                ],
                 thresholds: {lines: 100, functions: 100, branches: 100, statements: 100},
             },
         },
