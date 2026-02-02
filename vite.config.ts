@@ -10,6 +10,8 @@ const appName = process.env.APP_NAME ?? "families";
 
 // https://vite.dev/config/
 export default defineConfig({
+    root: `src/apps/${appName}`,
+    publicDir: fileURLToPath(new URL("./public", import.meta.url)),
     plugins: [vue(), vueDevTools(), UnoCSS(), oxlint({configFile: "oxlint.config.json"})],
     resolve: {
         alias: {
@@ -19,7 +21,6 @@ export default defineConfig({
         },
     },
     build: {
-        outDir: `dist/${appName}`,
-        rollupOptions: {input: fileURLToPath(new URL(`./src/apps/${appName}/index.html`, import.meta.url))},
+        outDir: fileURLToPath(new URL(`./dist/${appName}`, import.meta.url)),
     },
 });
