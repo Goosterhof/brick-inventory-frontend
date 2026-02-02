@@ -101,6 +101,65 @@ newAdapted.create();  // POST /family-sets
 - 401 responses indicate authentication required
 - 404 responses indicate resource not found
 
+## App Services
+
+Each app has its own `services/` folder with instantiated services that can be imported directly (no provide/inject). Services are prefixed with the app name to avoid conflicts.
+
+### Available Services (families app)
+
+| Service | Description |
+|---------|-------------|
+| `familyHttpService` | Axios-based HTTP client configured with API base URL |
+| `familyAuthService` | Authentication (login, logout, register, checkIfLoggedIn) |
+| `familyRouterService` | Navigation methods (goToRoute, goToDashboard, etc.) |
+| `FamilyRouterView` | Router view component for rendering routes |
+| `FamilyRouterLink` | Router link component for navigation |
+| `familyStorageService` | localStorage wrapper with app-specific prefix |
+| `familyLoadingService` | Loading state management |
+| `familyTranslationService` | i18n with locale support |
+
+### Usage
+
+```ts
+import {
+    familyAuthService,
+    familyHttpService,
+    familyRouterService,
+    FamilyRouterView,
+    FamilyRouterLink,
+} from "@app/services";
+
+// Authentication
+await familyAuthService.login({email, password});
+await familyAuthService.register({familyName, name, email, password, passwordConfirmation});
+const {isLoggedIn, user} = familyAuthService;
+
+// Navigation
+await familyRouterService.goToDashboard();
+await familyRouterService.goToRoute("about");
+
+// In templates, use the extracted router components
+// <FamilyRouterView />
+// <FamilyRouterLink :to="{name: 'home'}">Home</FamilyRouterLink>
+```
+
+### Creating Services for a New App
+
+1. Create service files in `src/apps/{appname}/services/`:
+   - `http.ts` - Instantiate HTTP service with API URL
+   - `auth.ts` - Instantiate auth service with profile type
+   - `router.ts` - Define routes and create router service, extract RouterView/RouterLink
+   - `storage.ts` - Instantiate storage service with app prefix
+   - `loading.ts` - Instantiate loading service
+   - `translation.ts` - Define translations and instantiate translation service
+   - `index.ts` - Re-export all services
+
+2. Prefix all exports with the app name (e.g., `newappHttpService`, `NewappRouterView`)
+
+3. In `main.ts`, call `{appname}RouterService.install()` instead of `app.use(router)`
+
+4. In `App.vue`, import and use the extracted `{Appname}RouterView` and `{Appname}RouterLink` components
+
 ## Tech Stack
 
 - **Framework**: Vue 3 with Composition API (`<script setup>`)
@@ -159,8 +218,16 @@ src/
 │       ├── App.vue          # Root component
 │       ├── main.ts          # Application entry point
 │       ├── index.html       # App-specific HTML
-│       ├── router/          # Vue Router configuration
-│       │   └── index.ts
+│       ├── services/        # App-specific service instances
+│       │   ├── index.ts     # Re-exports all services
+│       │   ├── http.ts      # familyHttpService
+│       │   ├── auth.ts      # familyAuthService
+│       │   ├── router.ts    # familyRouterService, FamilyRouterView, FamilyRouterLink
+│       │   ├── storage.ts   # familyStorageService
+│       │   ├── loading.ts   # familyLoadingService
+│       │   └── translation.ts # familyTranslationService
+│       ├── types/           # App-specific types
+│       │   └── profile.ts   # User profile type
 │       └── views/           # Page-level components (routed views)
 │           ├── HomeView.vue
 │           └── AboutView.vue
@@ -177,7 +244,7 @@ src/
 │   │           └── TextInput.vue
 │   ├── errors/              # Custom error classes
 │   ├── helpers/             # Utility functions
-│   ├── services/            # Service modules (HTTP, storage, etc.)
+│   ├── services/            # Service factory functions
 │   └── types/               # TypeScript type definitions
 └── tests/
     └── unit/
@@ -215,14 +282,15 @@ import App from "@app/App.vue";
 
 1. Create the app directory structure:
    ```bash
-   mkdir -p src/apps/newapp/router src/apps/newapp/views
+   mkdir -p src/apps/newapp/services src/apps/newapp/types src/apps/newapp/views
    ```
 
 2. Create required files:
    - `src/apps/newapp/index.html` - App HTML entry
    - `src/apps/newapp/main.ts` - Vue app initialization
    - `src/apps/newapp/App.vue` - Root component
-   - `src/apps/newapp/router/index.ts` - Router config
+   - `src/apps/newapp/services/` - App-specific service instances (see App Services section)
+   - `src/apps/newapp/types/` - App-specific types
 
 3. Add npm scripts to `package.json`:
    ```json
