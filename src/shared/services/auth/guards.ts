@@ -1,5 +1,4 @@
-import type {UnregisterMiddleware} from "@shared/services/router/types";
-import type {RouterService} from "@shared/services/router/types";
+import type {RouterService, UnregisterMiddleware} from "@shared/services/router/types";
 import type {RouteRecordRaw} from "vue-router";
 
 import type {AuthService} from "./types";

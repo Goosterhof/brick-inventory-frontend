@@ -10,8 +10,6 @@ import {computed, shallowRef} from "vue";
 
 import type {AuthService, Credentials, ResetPassword} from "./types";
 
-export type {AuthService, Credentials, ResetPassword} from "./types";
-
 export const createAuthService = <Profile extends {id: number}>(httpService: HttpService): AuthService<Profile> => {
     const userRef: ShallowRef<Profile | null> = shallowRef(null);
 
