@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import {RouterView} from "vue-router";
+import {routerService} from "@app/services";
 
-import NavLink from "@shared/components/NavLink.vue";
+const {RouterView, RouterLink} = routerService;
 </script>
 
 <template>
     <header p="4" border="b-3 black">
         <nav flex gap="4">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/about">About</NavLink>
+            <RouterLink :to="{name: 'home'}">Home</RouterLink>
+            <RouterLink :to="{name: 'about'}">About</RouterLink>
         </nav>
     </header>
 

@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import type {AuthService} from "@shared/services/auth/types";
-import type {HttpService} from "@shared/services/http";
-
+import {authService, httpService, routerService} from "@app/services";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
 import {isAxiosError} from "axios";
 import {ref} from "vue";
-import {useRouter} from "vue-router";
-
-const {httpService, authService} = defineProps<{httpService: HttpService; authService: AuthService<{id: number}>}>();
-
-const router = useRouter();
 
 const familyName = ref("");
 const name = ref("");
@@ -33,7 +26,7 @@ const handleSubmit = async () => {
             passwordConfirmation: passwordConfirmation.value,
         });
 
-        router.push({name: "home"});
+        await routerService.goToDashboard();
     } catch (error) {
         if (isAxiosError(error) && error.response?.status === 422) {
             return;
