@@ -1,4 +1,4 @@
-import type {UnregisterMiddleware} from "@shared/services/http";
+import type {UnregisterMiddleware} from "@shared/services/router/types";
 import type {RouterService} from "@shared/services/router/types";
 import type {RouteRecordRaw} from "vue-router";
 
