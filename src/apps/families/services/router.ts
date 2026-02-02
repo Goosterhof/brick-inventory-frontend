@@ -19,6 +19,10 @@ const routes = [
     },
 ] as const satisfies readonly RouteRecordRaw[];
 
-export type AppRoutes = typeof routes;
+export type FamilyAppRoutes = typeof routes;
 
-export const routerService = createRouterService([...routes], "home", import.meta.env.BASE_URL);
+const routerService = createRouterService([...routes], "home", import.meta.env.BASE_URL);
+
+export const familyRouterService = routerService;
+export const FamilyRouterView = routerService.RouterView;
+export const FamilyRouterLink = routerService.RouterLink;

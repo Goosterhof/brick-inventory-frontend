@@ -2,6 +2,6 @@ import type {Profile} from "@app/types/profile";
 
 import {createAuthService} from "@shared/services/auth";
 
-import {httpService} from "./http";
+import {familyHttpService} from "./http";
 
-export const authService = createAuthService<Profile>(httpService);
+export const familyAuthService = createAuthService<Profile>(familyHttpService);

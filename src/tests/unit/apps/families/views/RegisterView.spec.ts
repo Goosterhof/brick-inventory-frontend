@@ -9,7 +9,7 @@ const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({
 }));
 
 vi.mock("@app/services", () => ({
-    httpService: {
+    familyHttpService: {
         getRequest: vi.fn(),
         postRequest: vi.fn(),
         putRequest: vi.fn(),
@@ -19,7 +19,7 @@ vi.mock("@app/services", () => ({
         registerResponseMiddleware: vi.fn(() => vi.fn()),
         registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
     },
-    authService: {
+    familyAuthService: {
         isLoggedIn: {value: false},
         user: {value: null},
         userId: vi.fn(),
@@ -30,12 +30,12 @@ vi.mock("@app/services", () => ({
         sendEmailResetPassword: vi.fn(),
         resetPassword: vi.fn(),
     },
-    routerService: {
+    familyRouterService: {
         goToDashboard: mockGoToDashboard,
         goToRoute: vi.fn(),
-        RouterView: {template: "<div><slot /></div>"},
-        RouterLink: {template: "<a><slot /></a>"},
     },
+    FamilyRouterView: {template: "<div><slot /></div>"},
+    FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
 describe("RegisterView", () => {

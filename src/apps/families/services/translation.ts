@@ -90,4 +90,4 @@ const translations = {
 export type Locale = keyof typeof translations;
 export type TranslationSchema = (typeof translations)["en"];
 
-export const translationService = createTranslationService(translations, "en");
+export const familyTranslationService = createTranslationService(translations, "en");
