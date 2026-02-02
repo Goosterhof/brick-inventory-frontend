@@ -11,11 +11,7 @@ const {
     label,
     type = "text",
     disabled = false,
-} = defineProps<{
-    label: string;
-    type?: "text" | "email" | "password";
-    disabled?: boolean;
-}>();
+} = defineProps<{label: string; type?: "text" | "email" | "password"; disabled?: boolean}>();
 ```
 
 ## v-model with defineModel

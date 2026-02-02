@@ -28,13 +28,13 @@ import {resourceAdapter} from "@shared/services/resource-adapter";
 
 // For existing resources (with id)
 const adapted = resourceAdapter(resource, "family-sets", storeModule, httpService);
-adapted.update();  // PUT /family-sets/{id}
-adapted.patch({status: "built"});  // PATCH /family-sets/{id}
-adapted.delete();  // DELETE /family-sets/{id}
+adapted.update(); // PUT /family-sets/{id}
+adapted.patch({status: "built"}); // PATCH /family-sets/{id}
+adapted.delete(); // DELETE /family-sets/{id}
 
 // For new resources (without id)
 const newAdapted = resourceAdapter(newResource, "family-sets", storeModule, httpService);
-newAdapted.create();  // POST /family-sets
+newAdapted.create(); // POST /family-sets
 ```
 
 ## API Conventions

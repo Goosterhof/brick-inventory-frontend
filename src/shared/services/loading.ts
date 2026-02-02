@@ -1,24 +1,27 @@
-import type {DeepReadonly, Ref} from "vue";
+import type {ComputedRef, DeepReadonly, Ref} from "vue";
 
-import {readonly, ref, watch} from "vue";
+import {computed, readonly, ref, watch} from "vue";
 
 export interface LoadingService {
-    isLoading: DeepReadonly<Ref<boolean>>;
+    isLoading: ComputedRef<boolean>;
+    activeCount: DeepReadonly<Ref<number>>;
     startLoading: () => void;
     stopLoading: () => void;
     ensureLoadingFinished: () => Promise<void>;
 }
 
 export const createLoadingService = (): LoadingService => {
-    const isLoading = ref(false);
+    const activeCount = ref(0);
+    const isLoading = computed(() => activeCount.value > 0);
 
     return {
-        isLoading: readonly(isLoading),
+        isLoading,
+        activeCount: readonly(activeCount),
         startLoading: () => {
-            isLoading.value = true;
+            activeCount.value++;
         },
         stopLoading: () => {
-            isLoading.value = false;
+            activeCount.value = Math.max(0, activeCount.value - 1);
         },
         ensureLoadingFinished: () => {
             if (!isLoading.value) return Promise.resolve();
