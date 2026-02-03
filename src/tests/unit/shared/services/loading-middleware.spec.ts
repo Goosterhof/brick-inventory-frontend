@@ -1,4 +1,4 @@
-import type {HttpService} from "@shared/services/http";
+import type {AxiosResponseError, HttpService} from "@shared/services/http";
 import type {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from "axios";
 
 import {createLoadingService} from "@shared/services/loading";
@@ -7,7 +7,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 type RequestMiddleware = (config: InternalAxiosRequestConfig) => void;
 type ResponseMiddleware = (response: AxiosResponse) => void;
-type ErrorMiddleware = (error: AxiosError) => void;
+type ErrorMiddleware = (error: AxiosError<AxiosResponseError>) => void;
 
 const createMockHttpService = () => {
     const requestMiddlewares: RequestMiddleware[] = [];
@@ -30,7 +30,7 @@ const createMockHttpService = () => {
     };
 
     const triggerError = (config: InternalAxiosRequestConfig) => {
-        const error = {config, message: "Error", isAxiosError: true} as AxiosError;
+        const error = {config, message: "Error", isAxiosError: true} as AxiosError<AxiosResponseError>;
         for (const middleware of errorMiddlewares) {
             middleware(error);
         }
@@ -240,6 +240,42 @@ describe("registerLoadingMiddleware", () => {
         expect(loadingService.activeCount.value).toBe(1);
     });
 
+    it("should handle response when timeout is disabled", () => {
+        // Arrange
+        const {httpService, triggerRequest, triggerResponse} = createMockHttpService();
+        const loadingService = createLoadingService();
+        registerLoadingMiddleware(httpService, loadingService, {timeoutMs: 0});
+
+        // Act
+        const config = triggerRequest();
+        expect(loadingService.activeCount.value).toBe(1);
+
+        triggerResponse(config);
+
+        // Assert - loading stopped without timeout cleanup needed
+        expect(loadingService.activeCount.value).toBe(0);
+    });
+
+    it("should ignore duplicate response for same request", () => {
+        // Arrange
+        const {httpService, triggerRequest, triggerResponse} = createMockHttpService();
+        const loadingService = createLoadingService();
+        registerLoadingMiddleware(httpService, loadingService);
+
+        // Act - start request
+        const config = triggerRequest();
+        expect(loadingService.activeCount.value).toBe(1);
+
+        // Complete request twice with same config
+        triggerResponse(config);
+        expect(loadingService.activeCount.value).toBe(0);
+
+        triggerResponse(config);
+
+        // Assert - count should still be 0, not negative
+        expect(loadingService.activeCount.value).toBe(0);
+    });
+
     it("should use default 30 second timeout", () => {
         // Arrange
         const {httpService, triggerRequest} = createMockHttpService();
@@ -304,8 +340,8 @@ describe("registerLoadingMiddleware", () => {
 
         // Trigger error without config (edge case)
         const errorMiddleware = (httpService.registerResponseErrorMiddleware as ReturnType<typeof vi.fn>).mock
-            .calls[0][0] as ErrorMiddleware;
-        errorMiddleware({message: "Network error", isAxiosError: true} as AxiosError);
+            .calls[0]?.[0] as ErrorMiddleware;
+        errorMiddleware({message: "Network error", isAxiosError: true} as AxiosError<AxiosResponseError>);
 
         // Assert - should not crash, count unchanged
         expect(loadingService.activeCount.value).toBe(1);

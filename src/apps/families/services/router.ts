@@ -12,6 +12,12 @@ const routes = [
         component: () => import("@app/views/RegisterView.vue"),
         meta: {canSeeWhenLoggedIn: false},
     },
+    {
+        path: "/login",
+        name: "login",
+        component: () => import("@app/views/LoginView.vue"),
+        meta: {canSeeWhenLoggedIn: false},
+    },
 ] as const satisfies readonly RouteRecordRaw[];
 
 export type FamilyAppRoutes = typeof routes;

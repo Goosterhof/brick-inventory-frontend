@@ -6,22 +6,22 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 1. **Fork and clone the repository**
 
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/lego-storage-frontend.git
-   cd lego-storage-frontend
-   ```
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/lego-storage-frontend.git
+    cd lego-storage-frontend
+    ```
 
 2. **Install dependencies**
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 3. **Start the development server**
 
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```
 
 ## Code Quality
 
@@ -59,7 +59,7 @@ Use path aliases for clean imports:
 
 ```ts
 import NavLink from "@shared/components/NavLink.vue";
-import { familyAuthService } from "@app/services";
+import {familyAuthService} from "@app/services";
 ```
 
 ## Project Structure

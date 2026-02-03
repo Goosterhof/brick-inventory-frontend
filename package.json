@@ -1,23 +1,23 @@
 {
     "name": "lego-storage-frontend",
     "version": "1.0.0",
+    "private": false,
     "description": "Vue 3 multi-app monorepo for managing LEGO brick inventory",
-    "author": "Gerard Oosterhof",
+    "keywords": [
+        "inventory",
+        "lego",
+        "typescript",
+        "vite",
+        "vue",
+        "vue3"
+    ],
+    "homepage": "https://github.com/Goosterhof/lego-storage-frontend#readme",
     "license": "MIT",
+    "author": "Gerard Oosterhof",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Goosterhof/lego-storage-frontend.git"
     },
-    "homepage": "https://github.com/Goosterhof/lego-storage-frontend#readme",
-    "keywords": [
-        "lego",
-        "inventory",
-        "vue",
-        "vue3",
-        "typescript",
-        "vite"
-    ],
-    "private": false,
     "type": "module",
     "scripts": {
         "build": "run-p type-check \"build:families {@}\" \"build:admin {@}\" --",
