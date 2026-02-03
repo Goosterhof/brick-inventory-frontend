@@ -12,15 +12,15 @@ A Vue 3 multi-app monorepo for managing LEGO brick inventory. Built with TypeScr
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Vue 3 (Composition API) |
-| Language | TypeScript |
-| Build Tool | Vite |
-| Styling | UnoCSS |
-| Testing | Vitest |
-| Linting | oxlint |
-| Formatting | oxfmt |
+| Category   | Technology              |
+| ---------- | ----------------------- |
+| Framework  | Vue 3 (Composition API) |
+| Language   | TypeScript              |
+| Build Tool | Vite                    |
+| Styling    | UnoCSS                  |
+| Testing    | Vitest                  |
+| Linting    | oxlint                  |
+| Formatting | oxfmt                   |
 
 ## Prerequisites
 
@@ -31,24 +31,24 @@ A Vue 3 multi-app monorepo for managing LEGO brick inventory. Built with TypeScr
 
 1. **Clone the repository**
 
-   ```bash
-   git clone https://github.com/Goosterhof/lego-storage-frontend.git
-   cd lego-storage-frontend
-   ```
+    ```bash
+    git clone https://github.com/Goosterhof/lego-storage-frontend.git
+    cd lego-storage-frontend
+    ```
 
 2. **Install dependencies**
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 3. **Start the development server**
 
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```
 
-   The app will be available at `http://localhost:5173`
+    The app will be available at `http://localhost:5173`
 
 ## Project Structure
 
@@ -73,17 +73,17 @@ src/
 
 ## Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server (families app) |
-| `npm run dev:admin` | Start development server (admin app) |
-| `npm run build` | Build all apps for production |
-| `npm run test:unit` | Run unit tests |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run lint` | Run linter |
-| `npm run format` | Format code |
-| `npm run format:check` | Check code formatting |
-| `npm run type-check` | Run TypeScript type checking |
+| Script                  | Description                             |
+| ----------------------- | --------------------------------------- |
+| `npm run dev`           | Start development server (families app) |
+| `npm run dev:admin`     | Start development server (admin app)    |
+| `npm run build`         | Build all apps for production           |
+| `npm run test:unit`     | Run unit tests                          |
+| `npm run test:coverage` | Run tests with coverage report          |
+| `npm run lint`          | Run linter                              |
+| `npm run format`        | Format code                             |
+| `npm run format:check`  | Check code formatting                   |
+| `npm run type-check`    | Run TypeScript type checking            |
 
 ## Environment Variables
 
@@ -105,7 +105,7 @@ The project uses path aliases for clean imports:
 
 ```ts
 import NavLink from "@shared/components/NavLink.vue";
-import { familyAuthService } from "@app/services";
+import {familyAuthService} from "@app/services";
 ```
 
 ## Contributing
