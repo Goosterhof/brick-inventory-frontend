@@ -1,4 +1,4 @@
-import type {HttpService} from "@shared/services/http";
+import type {AxiosResponseError, HttpService} from "@shared/services/http";
 import type {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from "axios";
 
 import {createLoadingService} from "@shared/services/loading";
@@ -7,7 +7,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 type RequestMiddleware = (config: InternalAxiosRequestConfig) => void;
 type ResponseMiddleware = (response: AxiosResponse) => void;
-type ErrorMiddleware = (error: AxiosError) => void;
+type ErrorMiddleware = (error: AxiosError<AxiosResponseError>) => void;
 
 const createMockHttpService = () => {
     const requestMiddlewares: RequestMiddleware[] = [];
@@ -30,7 +30,7 @@ const createMockHttpService = () => {
     };
 
     const triggerError = (config: InternalAxiosRequestConfig) => {
-        const error = {config, message: "Error", isAxiosError: true} as AxiosError;
+        const error = {config, message: "Error", isAxiosError: true} as AxiosError<AxiosResponseError>;
         for (const middleware of errorMiddlewares) {
             middleware(error);
         }
@@ -304,8 +304,8 @@ describe("registerLoadingMiddleware", () => {
 
         // Trigger error without config (edge case)
         const errorMiddleware = (httpService.registerResponseErrorMiddleware as ReturnType<typeof vi.fn>).mock
-            .calls[0][0] as ErrorMiddleware;
-        errorMiddleware({message: "Network error", isAxiosError: true} as AxiosError);
+            .calls[0]?.[0] as ErrorMiddleware;
+        errorMiddleware({message: "Network error", isAxiosError: true} as AxiosError<AxiosResponseError>);
 
         // Assert - should not crash, count unchanged
         expect(loadingService.activeCount.value).toBe(1);
