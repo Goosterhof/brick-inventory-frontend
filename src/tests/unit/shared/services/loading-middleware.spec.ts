@@ -240,6 +240,42 @@ describe("registerLoadingMiddleware", () => {
         expect(loadingService.activeCount.value).toBe(1);
     });
 
+    it("should handle response when timeout is disabled", () => {
+        // Arrange
+        const {httpService, triggerRequest, triggerResponse} = createMockHttpService();
+        const loadingService = createLoadingService();
+        registerLoadingMiddleware(httpService, loadingService, {timeoutMs: 0});
+
+        // Act
+        const config = triggerRequest();
+        expect(loadingService.activeCount.value).toBe(1);
+
+        triggerResponse(config);
+
+        // Assert - loading stopped without timeout cleanup needed
+        expect(loadingService.activeCount.value).toBe(0);
+    });
+
+    it("should ignore duplicate response for same request", () => {
+        // Arrange
+        const {httpService, triggerRequest, triggerResponse} = createMockHttpService();
+        const loadingService = createLoadingService();
+        registerLoadingMiddleware(httpService, loadingService);
+
+        // Act - start request
+        const config = triggerRequest();
+        expect(loadingService.activeCount.value).toBe(1);
+
+        // Complete request twice with same config
+        triggerResponse(config);
+        expect(loadingService.activeCount.value).toBe(0);
+
+        triggerResponse(config);
+
+        // Assert - count should still be 0, not negative
+        expect(loadingService.activeCount.value).toBe(0);
+    });
+
     it("should use default 30 second timeout", () => {
         // Arrange
         const {httpService, triggerRequest} = createMockHttpService();
