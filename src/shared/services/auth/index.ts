@@ -37,12 +37,8 @@ export const createAuthService = <Profile extends {id: number}>(httpService: Htt
     };
 
     const logout = async (): Promise<void> => {
-        try {
-            await httpService.postRequest("/logout", {});
-        } finally {
-            // Always clear local state, even if API call fails
-            userRef.value = null;
-        }
+        await httpService.postRequest("/logout", {});
+        userRef.value = null;
     };
 
     const checkIfLoggedIn = async (): Promise<void> => {
