@@ -2,11 +2,7 @@
 import {FamilyRouterLink, FamilyRouterView, familyAuthService, familyRouterService} from "@app/services";
 
 const handleLogout = async () => {
-    try {
-        await familyAuthService.logout();
-    } catch {
-        // Logout errors can be ignored - the local state is already cleared
-    }
+    await familyAuthService.logout();
     await familyRouterService.goToRoute("login");
 };
 </script>

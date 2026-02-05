@@ -68,18 +68,4 @@ describe("App", () => {
         expect(mockLogout).toHaveBeenCalled();
         expect(mockGoToRoute).toHaveBeenCalledWith("login");
     });
-
-    it("should navigate to login even if logout fails", async () => {
-        // Arrange
-        mockIsLoggedIn.value = true;
-        mockLogout.mockRejectedValue(new Error("Network error"));
-        const wrapper = shallowMount(App);
-
-        // Act
-        await wrapper.find("button").trigger("click");
-        await flushPromises();
-
-        // Assert
-        expect(mockGoToRoute).toHaveBeenCalledWith("login");
-    });
 });
