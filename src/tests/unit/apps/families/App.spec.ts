@@ -1,15 +1,26 @@
 import App from "@app/App.vue";
-import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it, vi} from "vitest";
+import {flushPromises, shallowMount} from "@vue/test-utils";
+import {beforeEach, describe, expect, it, vi} from "vitest";
+
+const {mockLogout, mockGoToRoute, mockIsLoggedIn} = vi.hoisted(() => ({
+    mockLogout: vi.fn(),
+    mockGoToRoute: vi.fn(),
+    mockIsLoggedIn: {value: false},
+}));
 
 vi.mock("@app/services", () => ({
     FamilyRouterLink: {name: "FamilyRouterLink", props: ["to"], template: "<a><slot /></a>"},
     FamilyRouterView: {name: "FamilyRouterView", template: "<div><slot /></div>"},
-    familyAuthService: {isLoggedIn: {value: false}, logout: vi.fn()},
-    familyRouterService: {goToRoute: vi.fn()},
+    familyAuthService: {isLoggedIn: mockIsLoggedIn, logout: mockLogout},
+    familyRouterService: {goToRoute: mockGoToRoute},
 }));
 
 describe("App", () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        mockIsLoggedIn.value = false;
+    });
+
     it("should render navigation links", () => {
         // Arrange & Act
         const wrapper = shallowMount(App);
@@ -20,5 +31,55 @@ describe("App", () => {
         const [homeLink, aboutLink] = links;
         expect(homeLink?.text()).toBe("Home");
         expect(aboutLink?.text()).toBe("About");
+    });
+
+    it("should not show logout button when not logged in", () => {
+        // Arrange & Act
+        const wrapper = shallowMount(App);
+
+        // Assert
+        expect(wrapper.find("button").exists()).toBe(false);
+    });
+
+    it("should show logout button when logged in", () => {
+        // Arrange
+        mockIsLoggedIn.value = true;
+
+        // Act
+        const wrapper = shallowMount(App);
+
+        // Assert
+        const button = wrapper.find("button");
+        expect(button.exists()).toBe(true);
+        expect(button.text()).toBe("Logout");
+    });
+
+    it("should call logout and navigate to login on click", async () => {
+        // Arrange
+        mockIsLoggedIn.value = true;
+        mockLogout.mockResolvedValue(undefined);
+        const wrapper = shallowMount(App);
+
+        // Act
+        await wrapper.find("button").trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(mockLogout).toHaveBeenCalled();
+        expect(mockGoToRoute).toHaveBeenCalledWith("login");
+    });
+
+    it("should navigate to login even if logout fails", async () => {
+        // Arrange
+        mockIsLoggedIn.value = true;
+        mockLogout.mockRejectedValue(new Error("Network error"));
+        const wrapper = shallowMount(App);
+
+        // Act
+        await wrapper.find("button").trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(mockGoToRoute).toHaveBeenCalledWith("login");
     });
 });
