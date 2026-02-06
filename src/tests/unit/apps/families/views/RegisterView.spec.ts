@@ -1,5 +1,6 @@
 import RegisterView from "@app/views/RegisterView.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
@@ -86,8 +87,9 @@ describe("RegisterView", () => {
         const wrapper = shallowMount(RegisterView);
 
         // Assert
-        const button = wrapper.find("button[type='submit']");
+        const button = wrapper.findComponent(PrimaryButton);
         expect(button.exists()).toBe(true);
+        expect(button.props("type")).toBe("submit");
         expect(button.text()).toBe("Register");
     });
 
