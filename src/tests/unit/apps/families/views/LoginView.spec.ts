@@ -1,6 +1,6 @@
 import LoginView from "@app/views/LoginView.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
