@@ -29,6 +29,7 @@
         "format": "oxfmt --write .",
         "format:check": "oxfmt --check .",
         "lint": "oxlint --type-aware",
+        "prepare": "husky",
         "preview": "cross-env APP_NAME=families vite preview",
         "test:coverage": "vitest run --coverage",
         "test:unit": "vitest",
@@ -52,8 +53,10 @@
         "@vue/tsconfig": "^0.8.1",
         "axios-mock-adapter": "^2.1.0",
         "cross-env": "^10.1.0",
+        "husky": "^9.1.7",
         "jiti": "^2.6.1",
         "jsdom": "^27.4.0",
+        "lint-staged": "^16.2.7",
         "npm-run-all2": "^8.0.4",
         "oxfmt": "^0.27.0",
         "oxlint": "^1.42.0",
@@ -67,6 +70,15 @@
         "vitest": "^4.0.17",
         "vue-component-type-helpers": "^3.2.4",
         "vue-tsc": "^3.2.2"
+    },
+    "lint-staged": {
+        "*.{ts,vue}": [
+            "oxfmt --write",
+            "oxlint --type-aware"
+        ],
+        "*.{json,html,css}": [
+            "oxfmt --write"
+        ]
     },
     "engines": {
         "node": ">=24"
