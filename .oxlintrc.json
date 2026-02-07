@@ -24,7 +24,7 @@
 
         // TypeScript rules
         "@typescript-eslint/no-non-null-assertion": "error",
-        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/prefer-as-const": "warn",
@@ -45,6 +45,7 @@
         "typescript/prefer-optional-chain": "warn",
         "typescript/prefer-nullish-coalescing": "warn",
         "typescript/switch-exhaustiveness-check": "warn",
+        "typescript/consistent-type-imports": "warn",
         // Use the type-aware version of require-await; the core rule was removed from the general rules to avoid duplicate configuration.
         "typescript/require-await": "warn",
 
@@ -52,11 +53,13 @@
         "import/no-duplicates": "error",
         "import/first": "error",
         "import/no-self-import": "error",
-        "import/no-cycle": "warn",
+        "import/no-cycle": "error",
+        "import/no-mutable-exports": "error",
+        "import/no-named-default": "error",
         "import/no-default-export": "off", // Vue components use default exports
 
         // Unicorn rules - modern JS best practices
-        "unicorn/no-array-for-each": "warn",
+        "unicorn/no-array-for-each": "error",
         "unicorn/prefer-array-some": "warn",
         "unicorn/prefer-includes": "warn",
         "unicorn/prefer-string-starts-ends-with": "warn",
