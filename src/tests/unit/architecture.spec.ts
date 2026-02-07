@@ -17,16 +17,22 @@ const getSourceFiles = (dir: string): string[] => {
 const getImportPaths = (filePath: string): string[] => {
     const content = readFileSync(filePath, "utf-8");
     const paths: string[] = [];
-    let match;
 
     const fromRegex = /\bfrom\s+["']([^"']+)["']/g;
+    let match: RegExpExecArray | null = null;
     while ((match = fromRegex.exec(content)) !== null) {
-        paths.push(match[1]);
+        const importPath = match[1];
+        if (importPath !== undefined) {
+            paths.push(importPath);
+        }
     }
 
     const sideEffectRegex = /^\s*import\s+["']([^"']+)["']\s*;?\s*$/gm;
     while ((match = sideEffectRegex.exec(content)) !== null) {
-        paths.push(match[1]);
+        const importPath = match[1];
+        if (importPath !== undefined) {
+            paths.push(importPath);
+        }
     }
 
     return paths;
