@@ -1,6 +1,6 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
-    "plugins": ["typescript", "import", "unicorn", "promise"],
+    "plugins": ["typescript", "import", "unicorn", "promise", "vue", "vitest"],
     "env": {"browser": true, "es2024": true},
     "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "node_modules/**"],
     "rules": {
@@ -21,6 +21,21 @@
         "no-return-await": "warn",
         "no-throw-literal": "error",
         "radix": "warn",
+        "no-restricted-imports": [
+            "error",
+            {
+                "patterns": [
+                    {
+                        "regex": "\\.\\./apps/|\\.\\./(\\.\\./)*(apps/)",
+                        "message": "Use @app/ or @shared/ aliases instead of relative paths crossing module boundaries."
+                    },
+                    {
+                        "regex": "\\.\\./shared/|\\.\\./(\\.\\./)*(shared/)",
+                        "message": "Use @shared/ alias instead of relative paths crossing module boundaries."
+                    }
+                ]
+            }
+        ],
 
         // TypeScript rules
         "@typescript-eslint/no-non-null-assertion": "error",
@@ -76,10 +91,26 @@
         "promise/no-return-wrap": "error",
         "promise/catch-or-return": "warn",
         "promise/no-nesting": "warn",
-        "promise/param-names": "warn"
+        "promise/param-names": "warn",
+
+        // Vue rules
+        "vue/no-arrow-functions-in-watch": "error",
+        "vue/no-deprecated-destroyed-lifecycle": "error",
+        "vue/no-export-in-script-setup": "error",
+        "vue/no-lifecycle-after-await": "error",
+        "vue/prefer-import-from-vue": "warn",
+        "vue/no-required-prop-with-default": "warn",
+        "vue/require-typed-ref": "warn",
+
+        // Vitest rules
+        "vitest/no-conditional-tests": "error",
+        "vitest/no-import-node-test": "error",
+        "vitest/consistent-test-filename": ["warn", {"pattern": ".*\\.spec\\.ts$"}],
+        "vitest/prefer-to-be-object": "warn"
     },
     "overrides": [
         {"files": ["*.vue"], "rules": {"no-undef": "off"}},
-        {"files": ["src/shared/services/storage.ts"], "rules": {"no-console": "off"}}
+        {"files": ["src/shared/services/storage.ts"], "rules": {"no-console": "off"}},
+        {"files": ["src/tests/**"], "rules": {"no-restricted-imports": "off"}}
     ]
 }
