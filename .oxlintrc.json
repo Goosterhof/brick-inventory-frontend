@@ -43,7 +43,7 @@
 
         // Complexity limits
         "complexity": ["warn", 15],
-        "max-params": ["warn", 4],
+        "max-params": ["error", 4],
         "max-depth": ["warn", 4],
         "max-nested-callbacks": ["warn", 3],
         "max-lines-per-function": ["warn", {"max": 80, "skipBlankLines": true, "skipComments": true}],
