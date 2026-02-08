@@ -26,6 +26,9 @@ jobs:
             - name: Lint (oxlint)
               run: npm run lint
 
+            - name: Lint Vue conventions
+              run: npm run lint:vue
+
             - name: Check unused exports (knip)
               run: npm run knip
 
@@ -40,3 +43,10 @@ jobs:
 
             - name: Build
               run: npm run build
+
+            - name: Check bundle size
+              run: npm run size
+
+            - name: Lint commit messages
+              if: github.event_name == 'pull_request'
+              run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to HEAD --verbose

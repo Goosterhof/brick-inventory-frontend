@@ -1,8 +1,8 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
-    "plugins": ["typescript", "import", "unicorn", "promise", "vue", "vitest"],
+    "plugins": ["typescript", "import", "unicorn", "promise", "vue", "vitest", "jsx-a11y"],
     "env": {"browser": true, "es2024": true},
-    "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "node_modules/**"],
+    "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "node_modules/**", "scripts/**"],
     "rules": {
         // Core rules
         "no-console": "error",
@@ -38,6 +38,26 @@
                         "message": "Use @app/ alias instead of @/apps/. Direct app references bypass the multi-app build boundary."
                     }
                 ]
+            }
+        ],
+
+        // Complexity limits
+        "complexity": ["warn", 15],
+        "max-params": ["warn", 4],
+        "max-depth": ["warn", 4],
+        "max-nested-callbacks": ["warn", 3],
+        "max-lines-per-function": ["warn", {"max": 80, "skipBlankLines": true, "skipComments": true}],
+
+        // Restricted globals — force usage of app storage services
+        "no-restricted-globals": [
+            "error",
+            {
+                "name": "localStorage",
+                "message": "Use the app storage service (e.g., familyStorageService) instead of direct localStorage access."
+            },
+            {
+                "name": "sessionStorage",
+                "message": "Use the app storage service instead of direct sessionStorage access."
             }
         ],
 
@@ -79,6 +99,7 @@
         "import/no-mutable-exports": "error",
         "import/no-named-default": "error",
         "import/no-default-export": "off", // Vue components use default exports
+        "import/no-named-as-default": "warn",
 
         // Unicorn rules - modern JS best practices
         "unicorn/no-array-for-each": "error",
@@ -98,6 +119,8 @@
         "unicorn/no-array-push-splice": "warn",
         "unicorn/prefer-spread": "warn",
         "unicorn/no-lonely-if": "warn",
+        "unicorn/no-abusive-eslint-disable": "error",
+        "unicorn/prefer-event-target": "warn",
 
         // Promise rules
         "promise/no-return-wrap": "error",
@@ -116,6 +139,22 @@
         "vue/no-ref-as-operand": "error",
         "vue/no-dupe-keys": "error",
         "vue/no-template-shadow": "warn",
+        "vue/define-emits-declaration": "error",
+        "vue/define-props-declaration": "error",
+        "vue/no-import-compiler-macros": "error",
+
+        // Accessibility (a11y) rules
+        "jsx-a11y/alt-text": "error",
+        "jsx-a11y/anchor-has-content": "error",
+        "jsx-a11y/anchor-is-valid": "warn",
+        "jsx-a11y/click-events-have-key-events": "warn",
+        "jsx-a11y/heading-has-content": "error",
+        "jsx-a11y/html-has-lang": "error",
+        "jsx-a11y/img-redundant-alt": "warn",
+        "jsx-a11y/no-autofocus": "warn",
+        "jsx-a11y/no-distracting-elements": "error",
+        "jsx-a11y/scope": "error",
+        "jsx-a11y/tabindex-no-positive": "warn",
 
         // Vitest rules
         "vitest/no-conditional-tests": "error",
@@ -125,8 +164,17 @@
     },
     "overrides": [
         {"files": ["*.vue"], "rules": {"no-undef": "off"}},
-        {"files": ["src/shared/services/storage.ts"], "rules": {"no-console": "off"}},
-        {"files": ["src/tests/**"], "rules": {"no-restricted-imports": "off"}},
+        {"files": ["src/shared/services/storage.ts"], "rules": {"no-console": "off", "no-restricted-globals": "off"}},
+        {
+            "files": ["src/tests/**"],
+            "rules": {
+                "no-restricted-imports": "off",
+                "no-restricted-globals": "off",
+                "max-lines-per-function": "off",
+                "max-nested-callbacks": "off",
+                "complexity": "off"
+            }
+        },
         {
             "files": ["src/shared/**"],
             "rules": {
@@ -149,6 +197,62 @@
                             {
                                 "regex": "^@app/",
                                 "message": "Shared code must not import from @app/. Shared modules must remain app-agnostic."
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["src/apps/families/**"],
+            "rules": {
+                "no-restricted-imports": [
+                    "error",
+                    {
+                        "patterns": [
+                            {
+                                "regex": "\\.\\./apps/|\\.\\./(\\.\\./)*(apps/)",
+                                "message": "Use @app/ or @shared/ aliases instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "\\.\\./shared/|\\.\\./(\\.\\./)*(shared/)",
+                                "message": "Use @shared/ alias instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "^@/apps/",
+                                "message": "Use @app/ alias instead of @/apps/. Direct app references bypass the multi-app build boundary."
+                            },
+                            {
+                                "regex": "(\\.\\./)+admin(/|$)",
+                                "message": "Cannot import from the admin app. Apps must remain independent; use @shared/ for shared code."
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["src/apps/admin/**"],
+            "rules": {
+                "no-restricted-imports": [
+                    "error",
+                    {
+                        "patterns": [
+                            {
+                                "regex": "\\.\\./apps/|\\.\\./(\\.\\./)*(apps/)",
+                                "message": "Use @app/ or @shared/ aliases instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "\\.\\./shared/|\\.\\./(\\.\\./)*(shared/)",
+                                "message": "Use @shared/ alias instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "^@/apps/",
+                                "message": "Use @app/ alias instead of @/apps/. Direct app references bypass the multi-app build boundary."
+                            },
+                            {
+                                "regex": "(\\.\\./)+families(/|$)",
+                                "message": "Cannot import from the families app. Apps must remain independent; use @shared/ for shared code."
                             }
                         ]
                     }
