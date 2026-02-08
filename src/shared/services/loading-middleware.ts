@@ -3,6 +3,7 @@ import type {InternalAxiosRequestConfig} from "axios";
 import type {HttpService} from "./http";
 import type {LoadingService} from "./loading";
 
+/** @public */
 export interface LoadingMiddlewareOptions {
     /**
      * Timeout in milliseconds after which a request is considered stuck
@@ -12,6 +13,7 @@ export interface LoadingMiddlewareOptions {
     timeoutMs?: number;
 }
 
+/** @public */
 export interface LoadingMiddlewareResult {
     unregister: () => void;
 }

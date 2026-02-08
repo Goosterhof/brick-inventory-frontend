@@ -22,6 +22,7 @@ type NestedKeys<T extends TranslationSchema, K extends keyof T = keyof T> = K ex
         : never
     : never;
 
+/** @public */
 export interface TranslationService<TSchema extends TranslationSchema, TLocale extends string> {
     t: (key: NestedKeys<TSchema>, params?: Record<string, string>) => ComputedRef<string>;
     locale: Ref<TLocale>;

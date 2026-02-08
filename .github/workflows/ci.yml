@@ -26,6 +26,9 @@ jobs:
             - name: Lint (oxlint)
               run: npm run lint
 
+            - name: Check unused exports (knip)
+              run: npm run knip
+
             - name: Format check (oxfmt)
               run: npm run format:check
 

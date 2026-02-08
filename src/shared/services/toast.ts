@@ -3,6 +3,7 @@ import type {ComponentProps} from "vue-component-type-helpers";
 
 import {defineComponent, h, ref} from "vue";
 
+/** @public */
 export interface ToastService<C extends Component> {
     show: (props: Omit<ComponentProps<C>, "onClose">) => string;
     hide: (id: string) => void;
