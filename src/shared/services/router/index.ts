@@ -1,4 +1,4 @@
-import type {NavigationHookAfter, RouteLocationRaw, RouteRecordRaw} from "vue-router";
+import type {NavigationHookAfter, RouteLocationRaw, RouteRecordRaw, Router} from "vue-router";
 
 import {replace} from "string-ts";
 import {computed} from "vue";
@@ -9,6 +9,68 @@ import type {BeforeRouteMiddleware, RouteName, RouterService} from "./types";
 import {createRouterLink, createRouterView} from "./components";
 import {CREATE_PAGE_NAME, EDIT_PAGE_NAME, OVERVIEW_PAGE_NAME, SHOW_PAGE_NAME} from "./routes";
 
+const createRouteMiddleware = <Routes extends RouteRecordRaw[]>(
+    router: Router,
+    normalizedRouteToSpecificRoute: RouterService<Routes>["normalizedRouteToSpecificRoute"],
+): Pick<RouterService<Routes>, "registerBeforeRouteMiddleware" | "registerAfterRouteMiddleware"> => {
+    const beforeRouteMiddleware: BeforeRouteMiddleware<Routes>[] = [
+        (to) => {
+            if (to.meta?.ignoreFrom) return false;
+
+            const fromQuery = router.currentRoute.value.query.from;
+            if (fromQuery) {
+                if (fromQuery.toString() === to.name) return false;
+                void router.push({name: fromQuery.toString(), query: {}});
+
+                return true;
+            }
+
+            return false;
+        },
+    ];
+    router.beforeEach(async (to, from, next) => {
+        const toNormalized = normalizedRouteToSpecificRoute(to);
+        const fromNormalized = normalizedRouteToSpecificRoute(from);
+
+        for (const middleware of beforeRouteMiddleware)
+            if (await middleware(toNormalized, fromNormalized)) return next(false);
+
+        next();
+    });
+
+    const afterRouteMiddleware: NavigationHookAfter[] = [];
+    router.afterEach((to, from, failure) => {
+        for (const middleware of afterRouteMiddleware) middleware(to, from, failure);
+    });
+
+    return {
+        registerBeforeRouteMiddleware: (middleware) => {
+            beforeRouteMiddleware.push(middleware);
+
+            return () => {
+                const index = beforeRouteMiddleware.indexOf(middleware);
+                if (index > -1) beforeRouteMiddleware.splice(index, 1);
+            };
+        },
+        registerAfterRouteMiddleware: (middleware) => {
+            afterRouteMiddleware.push(middleware);
+
+            return () => {
+                const index = afterRouteMiddleware.indexOf(middleware);
+                if (index > -1) afterRouteMiddleware.splice(index, 1);
+            };
+        },
+    };
+};
+
+const checkRouteExists = (router: Router, to: RouteLocationRaw): boolean => {
+    try {
+        return !!router.resolve(to).name;
+    } catch {
+        return false;
+    }
+};
+
 export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
     routes: Routes,
     dashboardRouteName: RouteName<Routes>,
@@ -18,11 +80,7 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
     const router = createRouter({history: createWebHistory(base), routes});
 
     const flattenedRoutes = routes
-        .flatMap((route) => {
-            if ("children" in route) return route.children;
-
-            return route;
-        })
+        .flatMap((route) => ("children" in route ? route.children : route))
         .filter((route): route is RouteRecordRaw => Boolean(route));
 
     const goToRoute: RouterService<Routes>["goToRoute"] = async (name, id, query, parentId) => {
@@ -51,39 +109,10 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
     const getUrlForRouteName: RouterService<Routes>["getUrlForRouteName"] = (name, id, query) =>
         router.resolve({name, params: {id}, query}).fullPath;
 
-    const beforeRouteMiddleware: BeforeRouteMiddleware<Routes>[] = [
-        (to) => {
-            if (to.meta?.ignoreFrom) return false;
-
-            const fromQuery = currentRouteRef.value.query.from;
-            if (fromQuery) {
-                if (fromQuery.toString() === to.name) return false;
-                void router.push({name: fromQuery.toString(), query: {}});
-
-                return true;
-            }
-
-            return false;
-        },
-    ];
-    router.beforeEach(async (to, from, next) => {
-        const toNormalized = normalizedRouteToSpecificRoute(to);
-        const fromNormalized = normalizedRouteToSpecificRoute(from);
-
-        for (const middleware of beforeRouteMiddleware)
-            if (await middleware(toNormalized, fromNormalized)) return next(false);
-
-        next();
-    });
-
-    const afterRouteMiddleware: NavigationHookAfter[] = [];
-    router.afterEach((to, from, failure) => {
-        for (const middleware of afterRouteMiddleware) middleware(to, from, failure);
-    });
-
-    const goBack: RouterService<Routes>["goBack"] = () => {
-        router.back();
-    };
+    const {registerBeforeRouteMiddleware, registerAfterRouteMiddleware} = createRouteMiddleware(
+        router,
+        normalizedRouteToSpecificRoute,
+    );
 
     const currentRouteRef = router.currentRoute;
 
@@ -92,14 +121,6 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
         if (!currentName) return false;
 
         return currentName.toString() === pageName;
-    };
-
-    const routeExists = (to: RouteLocationRaw): boolean => {
-        try {
-            return !!router.resolve(to).name;
-        } catch {
-            return false;
-        }
     };
 
     const fullPath = replace(location.pathname, base ?? "", "") + location.search;
@@ -116,23 +137,9 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
         goToDashboard: () => goToRoute(dashboardRouteName),
 
         getUrlForRouteName,
-        registerBeforeRouteMiddleware: (middleware) => {
-            beforeRouteMiddleware.push(middleware);
-
-            return () => {
-                const index = beforeRouteMiddleware.indexOf(middleware);
-                if (index > -1) beforeRouteMiddleware.splice(index, 1);
-            };
-        },
-        registerAfterRouteMiddleware: (middleware) => {
-            afterRouteMiddleware.push(middleware);
-
-            return () => {
-                const index = afterRouteMiddleware.indexOf(middleware);
-                if (index > -1) afterRouteMiddleware.splice(index, 1);
-            };
-        },
-        goBack,
+        registerBeforeRouteMiddleware,
+        registerAfterRouteMiddleware,
+        goBack: () => router.back(),
         currentRouteRef,
         currentRouteQuery: computed(() => currentRouteRef.value.query),
         currentRouteId: computed(() => {
@@ -154,7 +161,7 @@ export const createRouterService = <Routes extends RouteRecordRaw[] = []>(
         onEditPage: (baseRouteName) => onPage(baseRouteName + EDIT_PAGE_NAME),
         onOverviewPage: (baseRouteName) => onPage(baseRouteName + OVERVIEW_PAGE_NAME),
         onShowPage: (baseRouteName) => onPage(baseRouteName + SHOW_PAGE_NAME),
-        routeExists,
+        routeExists: (to) => checkRouteExists(router, to),
 
         RouterView: createRouterView(currentRouteRef),
         RouterLink: createRouterLink(getUrlForRouteName, goToRoute),
