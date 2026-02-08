@@ -42,7 +42,7 @@
         ],
 
         // Complexity limits
-        "complexity": ["warn", 15],
+        "complexity": ["error", 15],
         "max-params": ["error", 4],
         "max-depth": ["warn", 4],
         "max-nested-callbacks": ["warn", 3],
