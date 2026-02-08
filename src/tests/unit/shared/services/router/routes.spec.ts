@@ -76,15 +76,12 @@ describe("router routes", () => {
     describe("createCrudRoutes", () => {
         it("should create a parent route with correct path", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             expect(result.path).toBe("/items");
@@ -92,15 +89,12 @@ describe("router routes", () => {
 
         it("should set the base component", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             expect(result.component).toBe(MockComponent);
@@ -108,15 +102,12 @@ describe("router routes", () => {
 
         it("should create all four child routes when all components provided", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             expect(result.children).toHaveLength(4);
@@ -124,15 +115,12 @@ describe("router routes", () => {
 
         it("should create overview route with correct name and empty path", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             const overviewRoute = result.children.find((r) => r.name === "items.overview");
@@ -142,15 +130,12 @@ describe("router routes", () => {
 
         it("should create create route with correct name and path", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             const createRoute = result.children.find((r) => r.name === "items.create");
@@ -160,15 +145,12 @@ describe("router routes", () => {
 
         it("should create edit route with correct name and path", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             const editRoute = result.children.find((r) => r.name === "items.edit");
@@ -178,15 +160,12 @@ describe("router routes", () => {
 
         it("should create show route with correct name and path", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             const showRoute = result.children.find((r) => r.name === "items.show");
@@ -196,15 +175,12 @@ describe("router routes", () => {
 
         it("should exclude overview route when overview component is undefined", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                undefined,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: undefined,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             expect(result.children).toHaveLength(3);
@@ -214,15 +190,12 @@ describe("router routes", () => {
 
         it("should exclude create route when create component is undefined", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                undefined,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: undefined,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             expect(result.children).toHaveLength(3);
@@ -232,15 +205,12 @@ describe("router routes", () => {
 
         it("should exclude edit route when edit component is undefined", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                undefined,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: undefined,
+                show: lazyComponent,
+            });
 
             // Assert
             expect(result.children).toHaveLength(3);
@@ -250,15 +220,12 @@ describe("router routes", () => {
 
         it("should exclude show route when show component is undefined", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                undefined,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: undefined,
+            });
 
             // Assert
             expect(result.children).toHaveLength(3);
@@ -268,15 +235,12 @@ describe("router routes", () => {
 
         it("should handle all undefined components", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: undefined,
+                create: undefined,
+                edit: undefined,
+                show: undefined,
+            });
 
             // Assert
             expect(result.children).toHaveLength(0);
@@ -284,15 +248,12 @@ describe("router routes", () => {
 
         it("should use different basePath and baseRouteName", () => {
             // Act
-            const result = createCrudRoutes(
-                "family-sets",
-                "familySets",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("family-sets", "familySets", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             expect(result.path).toBe("/family-sets");
@@ -302,15 +263,12 @@ describe("router routes", () => {
 
         it("should set meta properties on all child routes", () => {
             // Act
-            const result = createCrudRoutes(
-                "items",
-                "items",
-                MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
-            );
+            const result = createCrudRoutes("items", "items", MockComponent as RouteComponent, {
+                overview: lazyComponent,
+                create: lazyComponent,
+                edit: lazyComponent,
+                show: lazyComponent,
+            });
 
             // Assert
             for (const child of result.children) {
@@ -323,13 +281,10 @@ describe("router routes", () => {
         it("should create a parent route with nested path including parentId param", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -339,13 +294,10 @@ describe("router routes", () => {
         it("should set the base component", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -355,13 +307,10 @@ describe("router routes", () => {
         it("should create three child routes when all components provided", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -371,13 +320,10 @@ describe("router routes", () => {
         it("should not include overview route in nested routes", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -388,13 +334,10 @@ describe("router routes", () => {
         it("should create create route with correct name and path", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -406,13 +349,10 @@ describe("router routes", () => {
         it("should create edit route with correct name and path", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -424,13 +364,10 @@ describe("router routes", () => {
         it("should create show route with correct name and path", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -442,13 +379,10 @@ describe("router routes", () => {
         it("should exclude create route when create component is undefined", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                undefined,
-                lazyComponent,
-                lazyComponent,
+                {create: undefined, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert
@@ -460,13 +394,10 @@ describe("router routes", () => {
         it("should exclude edit route when edit component is undefined", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                undefined,
-                lazyComponent,
+                {create: lazyComponent, edit: undefined, show: lazyComponent},
             );
 
             // Assert
@@ -478,13 +409,10 @@ describe("router routes", () => {
         it("should exclude show route when show component is undefined", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                undefined,
+                {create: lazyComponent, edit: lazyComponent, show: undefined},
             );
 
             // Assert
@@ -496,13 +424,10 @@ describe("router routes", () => {
         it("should handle all undefined components", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                undefined,
-                undefined,
-                undefined,
+                {create: undefined, edit: undefined, show: undefined},
             );
 
             // Assert
@@ -512,13 +437,10 @@ describe("router routes", () => {
         it("should set meta properties on all child routes", () => {
             // Act
             const result = createNestedCrudRoutes(
-                "categories",
-                "items",
+                {parent: "categories", child: "items"},
                 "category-items",
                 MockComponent as RouteComponent,
-                lazyComponent,
-                lazyComponent,
-                lazyComponent,
+                {create: lazyComponent, edit: lazyComponent, show: lazyComponent},
             );
 
             // Assert

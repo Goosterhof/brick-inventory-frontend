@@ -32,17 +32,14 @@ export const createCrudRoutes = <
     basePath: string,
     baseRouteName: N,
     baseComponent: LazyRouteComponent | RouteComponent,
-    overviewComponent: OverviewComponent,
-    createComponent: CreateComponent,
-    editComponent: EditComponent,
-    showComponent: ShowComponent,
+    components: {overview: OverviewComponent; create: CreateComponent; edit: EditComponent; show: ShowComponent},
 ): ParentCrudRoute<N, OverviewComponent, CreateComponent, EditComponent, ShowComponent> => {
     // @ts-expect-error it does what we want, but the type is somehow not the same
     const children: ParentCrudRoute<N, OverviewComponent, CreateComponent, EditComponent, ShowComponent>["children"] = [
-        createStandardRouteConfig("", `${baseRouteName}${OVERVIEW_PAGE_NAME}`, overviewComponent),
-        createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, createComponent),
-        createStandardRouteConfig(":id/edit", `${baseRouteName}${EDIT_PAGE_NAME}`, editComponent),
-        createStandardRouteConfig(":id", `${baseRouteName}${SHOW_PAGE_NAME}`, showComponent),
+        createStandardRouteConfig("", `${baseRouteName}${OVERVIEW_PAGE_NAME}`, components.overview),
+        createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, components.create),
+        createStandardRouteConfig(":id/edit", `${baseRouteName}${EDIT_PAGE_NAME}`, components.edit),
+        createStandardRouteConfig(":id", `${baseRouteName}${SHOW_PAGE_NAME}`, components.show),
     ].filter((route) => route !== undefined);
 
     return {path: `/${basePath}`, component: baseComponent, children};
@@ -54,20 +51,17 @@ export const createNestedCrudRoutes = <
     EditComponent extends OptionalComponent,
     ShowComponent extends OptionalComponent,
 >(
-    parentPath: string,
-    childPath: string,
+    path: {parent: string; child: string},
     baseRouteName: N,
     baseComponent: RouteComponent,
-    createComponent: CreateComponent,
-    editComponent: EditComponent,
-    showComponent: ShowComponent,
+    components: {create: CreateComponent; edit: EditComponent; show: ShowComponent},
 ): NestedParentCrudRoute<N, CreateComponent, EditComponent, ShowComponent> => {
     // @ts-expect-error it does what we want, but the type is somehow not the same
     const children: NestedParentCrudRoute<N, CreateComponent, EditComponent, ShowComponent>["children"] = [
-        createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, createComponent),
-        createStandardRouteConfig(":id/edit", `${baseRouteName}${EDIT_PAGE_NAME}`, editComponent),
-        createStandardRouteConfig(":id", `${baseRouteName}${SHOW_PAGE_NAME}`, showComponent),
+        createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, components.create),
+        createStandardRouteConfig(":id/edit", `${baseRouteName}${EDIT_PAGE_NAME}`, components.edit),
+        createStandardRouteConfig(":id", `${baseRouteName}${SHOW_PAGE_NAME}`, components.show),
     ].filter((route) => route !== undefined);
 
-    return {path: `/${parentPath}/:parentId/${childPath}`, component: baseComponent, children};
+    return {path: `/${path.parent}/:parentId/${path.child}`, component: baseComponent, children};
 };
