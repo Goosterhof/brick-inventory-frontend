@@ -61,8 +61,10 @@ await familyRouterService.goToRoute("about");
 - **Routing**: Vue Router
 - **Styling**: UnoCSS (utility-first CSS, similar to Tailwind)
 - **Testing**: Vitest
-- **Linting**: oxlint (fast Rust-based linter)
+- **Linting**: oxlint (fast Rust-based linter) + custom Vue conventions script
 - **Formatting**: oxfmt (fast Rust-based formatter)
+- **Commit Conventions**: commitlint with Conventional Commits
+- **Bundle Budgets**: size-limit (150 kB per app)
 
 ## Path Aliases
 
@@ -75,6 +77,37 @@ import NavLink from "@shared/components/NavLink.vue";
 import {createHttpService} from "@shared/services/http";
 ```
 
+## Architecture Rules
+
+### Import Boundaries (enforced by oxlint)
+
+- **Shared code** (`src/shared/`) must not import from any app (`@app/` is forbidden)
+- **Apps** must not import from sibling apps (e.g., `families` cannot import from `admin`)
+- **All code** must use path aliases (`@shared/`, `@app/`) instead of relative paths crossing module boundaries
+- **Tests** (`src/tests/`) are exempt from import restrictions
+
+### Storage Access (enforced by oxlint)
+
+- Direct `localStorage` and `sessionStorage` access is forbidden globally
+- Use the app storage service instead (e.g., `familyStorageService`)
+- Only `src/shared/services/storage.ts` is exempt (it wraps `localStorage`)
+
+### Complexity Limits (enforced by oxlint, warn level)
+
+- Max cyclomatic complexity: 15
+- Max function parameters: 4
+- Max nesting depth: 4
+- Max nested callbacks: 3
+- Max lines per function: 80 (excluding blank lines and comments)
+
+### Accessibility (enforced by oxlint via jsx-a11y)
+
+- Images must have alt text
+- Anchors must have content and valid href
+- Headings must have content
+- Interactive elements need keyboard event handlers
+- No positive tabindex values
+
 ## Coding Conventions
 
 - Always run `npm run format` before committing changes
@@ -83,7 +116,34 @@ import {createHttpService} from "@shared/services/http";
 - Use UnoCSS attributify syntax for styling (see `.claude/skills/unocss-styling.md`)
 - Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
 - See `.claude/skills/component-unit-test.md` for testing patterns
-- Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink)
+- Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink) — enforced by `npm run lint:vue`
 - Use camelCase for variables and functions
 - Use arrow functions (`const fn = () => {}`) instead of function declarations
 - Avoid nested ternaries - use computed properties with if/else instead
+- Vue SFC block order: `<script>` → `<template>` → `<style>` — enforced by `npm run lint:vue`
+- Define-macros order: `defineProps` → `defineEmits` → `defineSlots` — enforced by `npm run lint:vue`
+- Use type-based props/emits declarations (enforced by oxlint `vue/define-props-declaration`, `vue/define-emits-declaration`)
+- Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/) (enforced by commitlint on commit)
+
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start families app dev server |
+| `npm run dev:admin` | Start admin app dev server |
+| `npm run build` | Build all apps (with type-check) |
+| `npm run lint` | Run oxlint with type-aware rules |
+| `npm run lint:vue` | Check Vue conventions (naming, block order, macros order) |
+| `npm run format` | Format all files with oxfmt |
+| `npm run format:check` | Check formatting without writing |
+| `npm run knip` | Check for unused exports |
+| `npm run type-check` | Run TypeScript type checking |
+| `npm run test:unit` | Run unit tests (watch mode) |
+| `npm run test:coverage` | Run tests with 100% coverage threshold |
+| `npm run size` | Check bundle sizes against budgets |
+
+## Git Hooks
+
+- **pre-commit** (lint-staged): formats and lints staged `.ts`/`.vue` files, runs Vue conventions on `.vue` files
+- **pre-push**: runs type-check, knip, test coverage, and build
+- **commit-msg**: validates commit message format via commitlint
