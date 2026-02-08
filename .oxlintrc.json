@@ -12,15 +12,15 @@
         "no-undef": "off", // handled by TypeScript
         "no-unused-vars": "off", // handled by @typescript-eslint/no-unused-vars
         "no-debugger": "error",
-        "no-empty": "warn",
+        "no-empty": "error",
         "no-duplicate-imports": "off", // import/no-duplicates handles this better with type imports
         "no-self-compare": "error",
-        "no-template-curly-in-string": "warn",
+        "no-template-curly-in-string": "error",
         "no-unreachable": "error",
         "no-unsafe-negation": "error",
-        "no-return-await": "warn",
+        "no-return-await": "error",
         "no-throw-literal": "error",
-        "radix": "warn",
+        "radix": "error",
         "no-restricted-imports": [
             "error",
             {
@@ -32,6 +32,10 @@
                     {
                         "regex": "\\.\\./shared/|\\.\\./(\\.\\./)*(shared/)",
                         "message": "Use @shared/ alias instead of relative paths crossing module boundaries."
+                    },
+                    {
+                        "regex": "^@/apps/",
+                        "message": "Use @app/ alias instead of @/apps/. Direct app references bypass the multi-app build boundary."
                     }
                 ]
             }
@@ -40,10 +44,10 @@
         // TypeScript rules
         "@typescript-eslint/no-non-null-assertion": "error",
         "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/no-unused-vars": "warn",
-        "@typescript-eslint/no-empty-interface": "warn",
-        "@typescript-eslint/prefer-as-const": "warn",
-        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-empty-interface": "error",
+        "@typescript-eslint/prefer-as-const": "error",
+        "@typescript-eslint/ban-ts-comment": "error",
         "@typescript-eslint/no-duplicate-enum-values": "error",
 
         // Type-aware rules (require --type-aware flag)
@@ -57,12 +61,13 @@
         "typescript/no-unsafe-call": "error",
         "typescript/no-unsafe-member-access": "error",
         "typescript/no-unsafe-return": "error",
-        "typescript/no-unnecessary-type-assertion": "warn",
-        "typescript/no-redundant-type-constituents": "warn",
+        "typescript/no-unnecessary-type-assertion": "error",
+        "typescript/no-redundant-type-constituents": "error",
         "typescript/prefer-optional-chain": "warn",
         "typescript/prefer-nullish-coalescing": "warn",
-        "typescript/switch-exhaustiveness-check": "warn",
-        "typescript/consistent-type-imports": "warn",
+        "typescript/switch-exhaustiveness-check": "error",
+        "typescript/consistent-type-imports": "error",
+        "typescript/no-import-type-side-effects": "error",
         // Use the type-aware version of require-await; the core rule was removed from the general rules to avoid duplicate configuration.
         "typescript/require-await": "warn",
 
@@ -86,25 +91,31 @@
         "unicorn/prefer-number-properties": "warn",
         "unicorn/prefer-optional-catch-binding": "warn",
         "unicorn/throw-new-error": "error",
-        "unicorn/no-useless-spread": "warn",
+        "unicorn/no-useless-spread": "error",
         "unicorn/no-nested-ternary": "error",
         "unicorn/prefer-node-protocol": "warn",
         "unicorn/prefer-ternary": "off", // can reduce readability
+        "unicorn/no-array-push-splice": "warn",
+        "unicorn/prefer-spread": "warn",
+        "unicorn/no-lonely-if": "warn",
 
         // Promise rules
         "promise/no-return-wrap": "error",
-        "promise/catch-or-return": "warn",
-        "promise/no-nesting": "warn",
-        "promise/param-names": "warn",
+        "promise/catch-or-return": "error",
+        "promise/no-nesting": "error",
+        "promise/param-names": "error",
 
         // Vue rules
         "vue/no-arrow-functions-in-watch": "error",
         "vue/no-deprecated-destroyed-lifecycle": "error",
         "vue/no-export-in-script-setup": "error",
         "vue/no-lifecycle-after-await": "error",
-        "vue/prefer-import-from-vue": "warn",
-        "vue/no-required-prop-with-default": "warn",
-        "vue/require-typed-ref": "warn",
+        "vue/prefer-import-from-vue": "error",
+        "vue/no-required-prop-with-default": "error",
+        "vue/require-typed-ref": "error",
+        "vue/no-ref-as-operand": "error",
+        "vue/no-dupe-keys": "error",
+        "vue/no-template-shadow": "warn",
 
         // Vitest rules
         "vitest/no-conditional-tests": "error",
@@ -115,6 +126,35 @@
     "overrides": [
         {"files": ["*.vue"], "rules": {"no-undef": "off"}},
         {"files": ["src/shared/services/storage.ts"], "rules": {"no-console": "off"}},
-        {"files": ["src/tests/**"], "rules": {"no-restricted-imports": "off"}}
+        {"files": ["src/tests/**"], "rules": {"no-restricted-imports": "off"}},
+        {
+            "files": ["src/shared/**"],
+            "rules": {
+                "no-restricted-imports": [
+                    "error",
+                    {
+                        "patterns": [
+                            {
+                                "regex": "\\.\\./apps/|\\.\\./(\\.\\./)*(apps/)",
+                                "message": "Use @app/ or @shared/ aliases instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "\\.\\./shared/|\\.\\./(\\.\\./)*(shared/)",
+                                "message": "Use @shared/ alias instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "^@/apps/",
+                                "message": "Use @app/ alias instead of @/apps/. Direct app references bypass the multi-app build boundary."
+                            },
+                            {
+                                "regex": "^@app/",
+                                "message": "Shared code must not import from @app/. Shared modules must remain app-agnostic."
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {"files": ["src/**/*.ts"], "rules": {"import/no-default-export": "error"}}
     ]
 }
