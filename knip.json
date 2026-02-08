@@ -1,0 +1,13 @@
+{
+    "$schema": "https://unpkg.com/knip@latest/schema.json",
+    "entry": [
+        "src/apps/*/main.ts",
+        "src/apps/*/services/index.ts",
+        "src/tests/**/*.spec.ts",
+        "src/tests/unit/setup.ts"
+    ],
+    "project": ["src/**/*.ts", "src/**/*.vue"],
+    "paths": {"@/*": ["src/*"], "@shared/*": ["src/shared/*"], "@app/*": ["src/apps/families/*", "src/apps/admin/*"]},
+    "ignore": ["src/**/*.d.ts", "vitest.config.ts"],
+    "ignoreDependencies": ["@typescript/native-preview"]
+}

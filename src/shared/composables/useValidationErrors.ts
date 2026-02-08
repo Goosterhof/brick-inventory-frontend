@@ -5,6 +5,7 @@ import type {Ref} from "vue";
 import {deepCamelKeys} from "string-ts";
 import {onUnmounted, ref} from "vue";
 
+/** @public */
 export type ValidationErrors<T extends string = string> = Partial<Record<T, string>>;
 
 type BackendValidationResponse = {message?: string; errors?: Record<string, string[]>};
@@ -22,6 +23,7 @@ const parseValidationErrors = <T extends string>(data: BackendValidationResponse
     ) as ValidationErrors<T>;
 };
 
+/** @public */
 export interface UseValidationErrors<T extends string> {
     errors: Ref<ValidationErrors<T>>;
     clearErrors: () => void;

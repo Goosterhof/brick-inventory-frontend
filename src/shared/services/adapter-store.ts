@@ -25,6 +25,7 @@ export interface AdapterStoreConfig<T extends Item, E extends Adapted<T>, N exte
     loadingService: Pick<LoadingService, "ensureLoadingFinished">;
 }
 
+/** @public */
 export interface StoreModuleForAdapter<T extends Item, E extends Adapted<T>, N extends NewAdapted<T>> {
     getAll: ComputedRef<E[]>;
     getById: (id: number) => ComputedRef<E | undefined>;

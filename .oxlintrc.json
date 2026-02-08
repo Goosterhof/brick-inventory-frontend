@@ -52,11 +52,13 @@
         "typescript/await-thenable": "error",
         "typescript/no-for-in-array": "error",
         "typescript/only-throw-error": "error",
-        "typescript/no-unsafe-argument": "warn",
-        "typescript/no-unsafe-assignment": "warn",
-        "typescript/no-unsafe-call": "warn",
-        "typescript/no-unsafe-return": "warn",
+        "typescript/no-unsafe-argument": "error",
+        "typescript/no-unsafe-assignment": "error",
+        "typescript/no-unsafe-call": "error",
+        "typescript/no-unsafe-member-access": "error",
+        "typescript/no-unsafe-return": "error",
         "typescript/no-unnecessary-type-assertion": "warn",
+        "typescript/no-redundant-type-constituents": "warn",
         "typescript/prefer-optional-chain": "warn",
         "typescript/prefer-nullish-coalescing": "warn",
         "typescript/switch-exhaustiveness-check": "warn",
@@ -85,6 +87,8 @@
         "unicorn/prefer-optional-catch-binding": "warn",
         "unicorn/throw-new-error": "error",
         "unicorn/no-useless-spread": "warn",
+        "unicorn/no-nested-ternary": "error",
+        "unicorn/prefer-node-protocol": "warn",
         "unicorn/prefer-ternary": "off", // can reduce readability
 
         // Promise rules
