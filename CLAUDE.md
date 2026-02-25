@@ -9,7 +9,6 @@ This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern t
 - **Base URL**: `https://api.brick-inventory.com/api`
 - **Authentication**: Credentials-based (cookies with `withCredentials: true`)
 - **Data Format**: JSON with snake_case keys (automatically converted to/from camelCase in frontend)
-- **OpenAPI Spec**: Available at `/docs/api.json` - use this for endpoint details
 
 ## App Services
 

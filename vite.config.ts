@@ -12,7 +12,7 @@ const appName = process.env.APP_NAME ?? "families";
 export default defineConfig({
     root: `src/apps/${appName}`,
     publicDir: fileURLToPath(new URL("./public", import.meta.url)),
-    plugins: [vue(), vueDevTools(), UnoCSS(), oxlint({configFile: "oxlint.config.json"})],
+    plugins: [vue(), vueDevTools(), UnoCSS(), oxlint({configFile: ".oxlintrc.json"})],
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),
