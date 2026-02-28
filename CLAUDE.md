@@ -90,6 +90,10 @@ src/apps/{appName}/
       pages/
         SomeView.vue
         AnotherView.vue
+      components/
+        SomeComponent.vue
+      modals/
+        SomeModal.vue
     {domain}/
       index.ts
       pages/
@@ -102,6 +106,7 @@ src/apps/{appName}/
 - The **only export** from a domain's `index.ts` is `routes`
 - **Cross-domain imports are forbidden** — a domain cannot import from another domain
 - Within a domain, use relative imports (e.g., `./pages/HomeView.vue`)
+- Domain-specific components go in `components/`, modals in `modals/`
 - The router service imports routes from each domain via `@app/domains/{domain}`
 
 ### Example: Adding a New Domain
