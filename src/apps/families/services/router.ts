@@ -1,24 +1,11 @@
 import type {RouteRecordRaw} from "vue-router";
 
-import HomeView from "@app/views/HomeView.vue";
+import {routes as aboutRoutes} from "@app/domains/about";
+import {routes as authRoutes} from "@app/domains/auth";
+import {routes as homeRoutes} from "@app/domains/home";
 import {createRouterService} from "@shared/services/router";
 
-const routes = [
-    {path: "/", name: "home", component: HomeView},
-    {path: "/about", name: "about", component: () => import("@app/views/AboutView.vue")},
-    {
-        path: "/register",
-        name: "register",
-        component: () => import("@app/views/RegisterView.vue"),
-        meta: {canSeeWhenLoggedIn: false},
-    },
-    {
-        path: "/login",
-        name: "login",
-        component: () => import("@app/views/LoginView.vue"),
-        meta: {canSeeWhenLoggedIn: false},
-    },
-] as const satisfies readonly RouteRecordRaw[];
+const routes = [...homeRoutes, ...aboutRoutes, ...authRoutes] as const satisfies readonly RouteRecordRaw[];
 
 export type FamilyAppRoutes = typeof routes;
 

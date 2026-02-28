@@ -259,6 +259,34 @@
                 ]
             }
         },
+        {
+            "files": ["src/apps/*/domains/**"],
+            "rules": {
+                "no-restricted-imports": [
+                    "error",
+                    {
+                        "patterns": [
+                            {
+                                "regex": "\\.\\./apps/|\\.\\./(\\.\\./)*(apps/)",
+                                "message": "Use @app/ or @shared/ aliases instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "\\.\\./shared/|\\.\\./(\\.\\./)*(shared/)",
+                                "message": "Use @shared/ alias instead of relative paths crossing module boundaries."
+                            },
+                            {
+                                "regex": "^@/apps/",
+                                "message": "Use @app/ alias instead of @/apps/. Direct app references bypass the multi-app build boundary."
+                            },
+                            {
+                                "regex": "^@app/domains/",
+                                "message": "Cross-domain imports are forbidden. Domains must not import from other domains via @app/domains/."
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
         {"files": ["src/**/*.ts"], "rules": {"import/no-default-export": "error"}}
     ]
 }
