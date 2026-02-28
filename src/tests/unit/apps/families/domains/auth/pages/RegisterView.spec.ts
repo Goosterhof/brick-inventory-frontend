@@ -1,4 +1,4 @@
-import RegisterView from "@app/pages/auth/RegisterView.vue";
+import RegisterView from "@app/domains/auth/pages/RegisterView.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";

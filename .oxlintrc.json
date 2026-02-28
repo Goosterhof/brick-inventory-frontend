@@ -260,7 +260,7 @@
             }
         },
         {
-            "files": ["src/apps/*/pages/**"],
+            "files": ["src/apps/*/domains/**"],
             "rules": {
                 "no-restricted-imports": [
                     "error",
@@ -279,8 +279,8 @@
                                 "message": "Use @app/ alias instead of @/apps/. Direct app references bypass the multi-app build boundary."
                             },
                             {
-                                "regex": "^@app/pages/",
-                                "message": "Cross-domain imports are forbidden. Pages must not import from other domains via @app/pages/."
+                                "regex": "^@app/domains/",
+                                "message": "Cross-domain imports are forbidden. Domains must not import from other domains via @app/domains/."
                             }
                         ]
                     }

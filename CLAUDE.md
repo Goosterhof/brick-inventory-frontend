@@ -78,20 +78,22 @@ import {createHttpService} from "@shared/services/http";
 
 ## Domain-Based Page Structure
 
-Pages are organized into **domains** within each app's `pages/` directory. Each domain is a self-contained folder that groups related pages together.
+Pages are organized into **domains** within each app's `domains/` directory. Each domain is a self-contained folder that groups related pages together.
 
 ### Structure
 
 ```
 src/apps/{appName}/
-  pages/
+  domains/
     {domain}/
       index.ts           # Only export: routes
-      SomeView.vue
-      AnotherView.vue
+      pages/
+        SomeView.vue
+        AnotherView.vue
     {domain}/
       index.ts
-      ...
+      pages/
+        ...
 ```
 
 ### Rules (enforced by oxlint + architecture tests)
@@ -99,21 +101,21 @@ src/apps/{appName}/
 - Each domain has an `index.ts` that serves as its public API
 - The **only export** from a domain's `index.ts` is `routes`
 - **Cross-domain imports are forbidden** — a domain cannot import from another domain
-- Within a domain, use relative imports (e.g., `./HomeView.vue`)
-- The router service imports routes from each domain via `@app/pages/{domain}`
+- Within a domain, use relative imports (e.g., `./pages/HomeView.vue`)
+- The router service imports routes from each domain via `@app/domains/{domain}`
 
 ### Example: Adding a New Domain
 
 ```ts
-// src/apps/families/pages/items/index.ts
+// src/apps/families/domains/items/index.ts
 import type {RouteRecordRaw} from "vue-router";
 
 export const routes = [
-    {path: "/items", name: "items", component: () => import("./ItemsView.vue")},
+    {path: "/items", name: "items", component: () => import("./pages/ItemsView.vue")},
 ] as const satisfies readonly RouteRecordRaw[];
 
 // Then register in src/apps/families/services/router.ts
-import {routes as itemRoutes} from "@app/pages/items";
+import {routes as itemRoutes} from "@app/domains/items";
 const routes = [...homeRoutes, ...itemRoutes, ...otherRoutes] as const satisfies readonly RouteRecordRaw[];
 ```
 
@@ -123,7 +125,7 @@ const routes = [...homeRoutes, ...itemRoutes, ...otherRoutes] as const satisfies
 
 - **Shared code** (`src/shared/`) must not import from any app (`@app/` is forbidden)
 - **Apps** must not import from sibling apps (e.g., `families` cannot import from `admin`)
-- **Domains** (`pages/{domain}/`) must not import from other domains (`@app/pages/` is forbidden within page files)
+- **Domains** (`domains/{domain}/`) must not import from other domains (`@app/domains/` is forbidden within domain files)
 - **All code** must use path aliases (`@shared/`, `@app/`) instead of relative paths crossing module boundaries
 - **Tests** (`src/tests/`) are exempt from import restrictions
 

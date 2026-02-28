@@ -3,7 +3,7 @@
     "entry": [
         "src/apps/*/main.ts",
         "src/apps/*/services/index.ts",
-        "src/apps/*/pages/*/index.ts",
+        "src/apps/*/domains/*/index.ts",
         "src/tests/**/*.spec.ts",
         "src/tests/unit/setup.ts"
     ],

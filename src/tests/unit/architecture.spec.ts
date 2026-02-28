@@ -140,15 +140,15 @@ describe("Architecture", () => {
             ).toEqual([]);
         });
 
-        it("should use PascalCase names ending with View for app pages", () => {
+        it("should use PascalCase names ending with View for domain pages", () => {
             const appNames = getAppNames();
             const violations: string[] = [];
 
             for (const appName of appNames) {
-                const pagesDir = join(APPS_DIR, appName, "pages");
-                if (!dirExists(pagesDir)) continue;
+                const domainsDir = join(APPS_DIR, appName, "domains");
+                if (!dirExists(domainsDir)) continue;
 
-                const vueFiles = getVueFiles(pagesDir);
+                const vueFiles = getVueFiles(domainsDir);
                 for (const file of vueFiles) {
                     const name = basename(file, ".vue");
                     const isValidView = /^[A-Z][a-zA-Z]+View$/.test(name);
@@ -228,18 +228,18 @@ describe("Architecture", () => {
         }
     });
 
-    describe("pages must not import from deep app service paths", () => {
+    describe("domains must not import from deep app service paths", () => {
         const appNames = getAppNames();
 
         for (const appName of appNames) {
-            it(`${appName} pages should import from @app/services, not @app/services/*`, () => {
-                const pagesDir = join(APPS_DIR, appName, "pages");
-                if (!dirExists(pagesDir)) return;
+            it(`${appName} domains should import from @app/services, not @app/services/*`, () => {
+                const domainsDir = join(APPS_DIR, appName, "domains");
+                if (!dirExists(domainsDir)) return;
 
-                const pageFiles = getSourceFiles(pagesDir);
+                const domainFiles = getSourceFiles(domainsDir);
                 const violations: string[] = [];
 
-                for (const file of pageFiles) {
+                for (const file of domainFiles) {
                     const imports = getImportPaths(file);
 
                     for (const imp of imports) {
@@ -261,28 +261,28 @@ describe("Architecture", () => {
 
                 expect(
                     violations,
-                    `Pages in ${appName} must import from @app/services (barrel), not individual service files`,
+                    `Domains in ${appName} must import from @app/services (barrel), not individual service files`,
                 ).toEqual([]);
             });
         }
     });
 
-    describe("domain isolation — pages must not import from other domains", () => {
+    describe("domain isolation — domains must not import from other domains", () => {
         const appNames = getAppNames();
 
         for (const appName of appNames) {
             it(`${appName} domains should not import from other domains`, () => {
-                const pagesDir = join(APPS_DIR, appName, "pages");
-                if (!dirExists(pagesDir)) return;
+                const domainsDir = join(APPS_DIR, appName, "domains");
+                if (!dirExists(domainsDir)) return;
 
-                const domainNames = readdirSync(pagesDir, {withFileTypes: true})
+                const domainNames = readdirSync(domainsDir, {withFileTypes: true})
                     .filter((entry) => entry.isDirectory())
                     .map((entry) => entry.name);
 
                 const violations: string[] = [];
 
                 for (const domainName of domainNames) {
-                    const domainDir = join(pagesDir, domainName);
+                    const domainDir = join(domainsDir, domainName);
                     const domainFiles = getSourceFiles(domainDir);
                     const otherDomains = domainNames.filter((name) => name !== domainName);
 
@@ -292,7 +292,7 @@ describe("Architecture", () => {
 
                         for (const imp of imports) {
                             const importsOtherDomain = otherDomains.some(
-                                (other) => imp.startsWith(`@app/pages/${other}`) || imp.includes(`/pages/${other}`),
+                                (other) => imp.startsWith(`@app/domains/${other}`) || imp.includes(`/domains/${other}`),
                             );
 
                             if (importsOtherDomain) {
@@ -304,7 +304,7 @@ describe("Architecture", () => {
 
                             const resolved = resolve(dirname(file), imp);
                             const crossesDomain = otherDomains.some((other) =>
-                                resolved.startsWith(join(pagesDir, other)),
+                                resolved.startsWith(join(domainsDir, other)),
                             );
                             if (crossesDomain) {
                                 violations.push(`${rel} imports: ${imp}`);
@@ -326,17 +326,17 @@ describe("Architecture", () => {
 
         for (const appName of appNames) {
             it(`${appName} domain index files should only export routes`, () => {
-                const pagesDir = join(APPS_DIR, appName, "pages");
-                if (!dirExists(pagesDir)) return;
+                const domainsDir = join(APPS_DIR, appName, "domains");
+                if (!dirExists(domainsDir)) return;
 
-                const domainNames = readdirSync(pagesDir, {withFileTypes: true})
+                const domainNames = readdirSync(domainsDir, {withFileTypes: true})
                     .filter((entry) => entry.isDirectory())
                     .map((entry) => entry.name);
 
                 const violations: string[] = [];
 
                 for (const domainName of domainNames) {
-                    const indexFile = join(pagesDir, domainName, "index.ts");
+                    const indexFile = join(domainsDir, domainName, "index.ts");
                     try {
                         const content = readFileSync(indexFile, "utf-8");
                         const lines = content.split("\n");
@@ -347,12 +347,12 @@ describe("Architecture", () => {
 
                             if (isNonTypeExport && !trimmed.startsWith("export const routes")) {
                                 violations.push(
-                                    `${appName}/pages/${domainName}/index.ts has non-routes export: ${trimmed}`,
+                                    `${appName}/domains/${domainName}/index.ts has non-routes export: ${trimmed}`,
                                 );
                             }
                         }
                     } catch {
-                        violations.push(`${appName}/pages/${domainName}/ is missing index.ts`);
+                        violations.push(`${appName}/domains/${domainName}/ is missing index.ts`);
                     }
                 }
 
@@ -366,20 +366,20 @@ describe("Architecture", () => {
 
         for (const appName of appNames) {
             it(`${appName} domain directories should each have an index.ts`, () => {
-                const pagesDir = join(APPS_DIR, appName, "pages");
-                if (!dirExists(pagesDir)) return;
+                const domainsDir = join(APPS_DIR, appName, "domains");
+                if (!dirExists(domainsDir)) return;
 
-                const domainNames = readdirSync(pagesDir, {withFileTypes: true})
+                const domainNames = readdirSync(domainsDir, {withFileTypes: true})
                     .filter((entry) => entry.isDirectory())
                     .map((entry) => entry.name);
 
                 const violations: string[] = [];
 
                 for (const domainName of domainNames) {
-                    const domainDir = join(pagesDir, domainName);
+                    const domainDir = join(domainsDir, domainName);
                     const files = readdirSync(domainDir, {encoding: "utf-8"});
                     if (!files.includes("index.ts")) {
-                        violations.push(`${appName}/pages/${domainName}/ is missing index.ts`);
+                        violations.push(`${appName}/domains/${domainName}/ is missing index.ts`);
                     }
                 }
 

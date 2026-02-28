@@ -18,7 +18,7 @@ export default mergeConfig(
                     "src/apps/**/main.ts",
                     "src/**/*.d.ts",
                     "src/apps/**/router/**",
-                    "src/apps/**/pages/**",
+                    "src/apps/**/domains/**",
                     "src/apps/**/services/**",
                     "src/apps/**/types/**",
                 ],
