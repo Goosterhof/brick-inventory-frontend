@@ -1,4 +1,4 @@
-import LoginView from "@app/views/LoginView.vue";
+import LoginView from "@app/pages/auth/LoginView.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";

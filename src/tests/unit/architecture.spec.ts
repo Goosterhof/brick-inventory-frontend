@@ -140,24 +140,22 @@ describe("Architecture", () => {
             ).toEqual([]);
         });
 
-        it("should use PascalCase names ending with View for app views", () => {
+        it("should use PascalCase names ending with View for app pages", () => {
             const appNames = getAppNames();
             const violations: string[] = [];
 
             for (const appName of appNames) {
-                const viewsDir = join(APPS_DIR, appName, "views");
-                try {
-                    const vueFiles = getVueFiles(viewsDir);
-                    for (const file of vueFiles) {
-                        const name = basename(file, ".vue");
-                        const isValidView = /^[A-Z][a-zA-Z]+View$/.test(name);
+                const pagesDir = join(APPS_DIR, appName, "pages");
+                if (!dirExists(pagesDir)) continue;
 
-                        if (!isValidView) {
-                            violations.push(`${appName}/${basename(file)}`);
-                        }
+                const vueFiles = getVueFiles(pagesDir);
+                for (const file of vueFiles) {
+                    const name = basename(file, ".vue");
+                    const isValidView = /^[A-Z][a-zA-Z]+View$/.test(name);
+
+                    if (!isValidView) {
+                        violations.push(`${appName}/${basename(file)}`);
                     }
-                } catch {
-                    // App may not have a views directory
                 }
             }
 
@@ -230,28 +228,26 @@ describe("Architecture", () => {
         }
     });
 
-    describe("views must not import from deep app service paths", () => {
+    describe("pages must not import from deep app service paths", () => {
         const appNames = getAppNames();
 
         for (const appName of appNames) {
-            it(`${appName} views should import from @app/services, not @app/services/*`, () => {
-                const viewsDir = join(APPS_DIR, appName, "views");
-                if (!dirExists(viewsDir)) return;
+            it(`${appName} pages should import from @app/services, not @app/services/*`, () => {
+                const pagesDir = join(APPS_DIR, appName, "pages");
+                if (!dirExists(pagesDir)) return;
 
-                const viewFiles = getSourceFiles(viewsDir);
+                const pageFiles = getSourceFiles(pagesDir);
                 const violations: string[] = [];
 
-                for (const file of viewFiles) {
+                for (const file of pageFiles) {
                     const imports = getImportPaths(file);
 
                     for (const imp of imports) {
-                        // Allow @app/services but not @app/services/http, @app/services/auth, etc.
                         if (/^@app\/services\/.+/.test(imp)) {
                             const rel = relative(SRC_DIR, file);
                             violations.push(`${rel} imports: ${imp} (use @app/services barrel instead)`);
                         }
 
-                        // Also catch relative deep service imports from views
                         if (imp.startsWith(".") && imp.includes("/services/") && !imp.endsWith("/services")) {
                             const resolved = resolve(dirname(file), imp);
                             const servicesDir = join(APPS_DIR, appName, "services");
@@ -265,45 +261,129 @@ describe("Architecture", () => {
 
                 expect(
                     violations,
-                    `Views in ${appName} must import from @app/services (barrel), not individual service files`,
+                    `Pages in ${appName} must import from @app/services (barrel), not individual service files`,
                 ).toEqual([]);
             });
         }
     });
 
-    describe("views must not import other views", () => {
+    describe("domain isolation — pages must not import from other domains", () => {
         const appNames = getAppNames();
 
         for (const appName of appNames) {
-            it(`${appName} views should not import from other view files`, () => {
-                const viewsDir = join(APPS_DIR, appName, "views");
-                if (!dirExists(viewsDir)) return;
+            it(`${appName} domains should not import from other domains`, () => {
+                const pagesDir = join(APPS_DIR, appName, "pages");
+                if (!dirExists(pagesDir)) return;
 
-                const viewFiles = getSourceFiles(viewsDir);
+                const domainNames = readdirSync(pagesDir, {withFileTypes: true})
+                    .filter((entry) => entry.isDirectory())
+                    .map((entry) => entry.name);
+
                 const violations: string[] = [];
 
-                for (const file of viewFiles) {
-                    const imports = getImportPaths(file);
+                for (const domainName of domainNames) {
+                    const domainDir = join(pagesDir, domainName);
+                    const domainFiles = getSourceFiles(domainDir);
+                    const otherDomains = domainNames.filter((name) => name !== domainName);
 
-                    for (const imp of imports) {
-                        // Check for @app/views/* imports
-                        if (imp.startsWith("@app/views/")) {
-                            const rel = relative(SRC_DIR, file);
-                            violations.push(`${rel} imports: ${imp}`);
-                        }
+                    for (const file of domainFiles) {
+                        const imports = getImportPaths(file);
+                        const rel = relative(SRC_DIR, file);
 
-                        // Check relative imports to other views
-                        if (imp.startsWith(".") && imp.includes("View")) {
+                        for (const imp of imports) {
+                            const importsOtherDomain = otherDomains.some(
+                                (other) => imp.startsWith(`@app/pages/${other}`) || imp.includes(`/pages/${other}`),
+                            );
+
+                            if (importsOtherDomain) {
+                                violations.push(`${rel} imports: ${imp}`);
+                                continue;
+                            }
+
+                            if (!imp.startsWith(".")) continue;
+
                             const resolved = resolve(dirname(file), imp);
-                            if (resolved.startsWith(viewsDir) && resolved !== file.replace(/\.\w+$/, "")) {
-                                const rel = relative(SRC_DIR, file);
+                            const crossesDomain = otherDomains.some((other) =>
+                                resolved.startsWith(join(pagesDir, other)),
+                            );
+                            if (crossesDomain) {
                                 violations.push(`${rel} imports: ${imp}`);
                             }
                         }
                     }
                 }
 
-                expect(violations, `Views in ${appName} must not import other views directly`).toEqual([]);
+                expect(
+                    violations,
+                    `Domains in ${appName} must not import from other domains. Use @shared/ for shared code.`,
+                ).toEqual([]);
+            });
+        }
+    });
+
+    describe("domain index files must only export routes", () => {
+        const appNames = getAppNames();
+
+        for (const appName of appNames) {
+            it(`${appName} domain index files should only export routes`, () => {
+                const pagesDir = join(APPS_DIR, appName, "pages");
+                if (!dirExists(pagesDir)) return;
+
+                const domainNames = readdirSync(pagesDir, {withFileTypes: true})
+                    .filter((entry) => entry.isDirectory())
+                    .map((entry) => entry.name);
+
+                const violations: string[] = [];
+
+                for (const domainName of domainNames) {
+                    const indexFile = join(pagesDir, domainName, "index.ts");
+                    try {
+                        const content = readFileSync(indexFile, "utf-8");
+                        const lines = content.split("\n");
+
+                        for (const line of lines) {
+                            const trimmed = line.trim();
+                            const isNonTypeExport = trimmed.startsWith("export") && !trimmed.startsWith("export type");
+
+                            if (isNonTypeExport && !trimmed.startsWith("export const routes")) {
+                                violations.push(
+                                    `${appName}/pages/${domainName}/index.ts has non-routes export: ${trimmed}`,
+                                );
+                            }
+                        }
+                    } catch {
+                        violations.push(`${appName}/pages/${domainName}/ is missing index.ts`);
+                    }
+                }
+
+                expect(violations, `Domain index files in ${appName} must only export routes`).toEqual([]);
+            });
+        }
+    });
+
+    describe("each domain must have an index.ts file", () => {
+        const appNames = getAppNames();
+
+        for (const appName of appNames) {
+            it(`${appName} domain directories should each have an index.ts`, () => {
+                const pagesDir = join(APPS_DIR, appName, "pages");
+                if (!dirExists(pagesDir)) return;
+
+                const domainNames = readdirSync(pagesDir, {withFileTypes: true})
+                    .filter((entry) => entry.isDirectory())
+                    .map((entry) => entry.name);
+
+                const violations: string[] = [];
+
+                for (const domainName of domainNames) {
+                    const domainDir = join(pagesDir, domainName);
+                    const files = readdirSync(domainDir, {encoding: "utf-8"});
+                    if (!files.includes("index.ts")) {
+                        violations.push(`${appName}/pages/${domainName}/ is missing index.ts`);
+                    }
+                }
+
+                expect(violations, `Every domain in ${appName} must have an index.ts barrel file`).toEqual([]);
             });
         }
     });
