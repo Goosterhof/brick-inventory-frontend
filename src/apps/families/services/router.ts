@@ -3,9 +3,15 @@ import type {RouteRecordRaw} from "vue-router";
 import {routes as aboutRoutes} from "@app/domains/about";
 import {routes as authRoutes} from "@app/domains/auth";
 import {routes as homeRoutes} from "@app/domains/home";
+import {routes as setsRoutes} from "@app/domains/sets";
 import {createRouterService} from "@shared/services/router";
 
-const routes = [...homeRoutes, ...aboutRoutes, ...authRoutes] as const satisfies readonly RouteRecordRaw[];
+const routes = [
+    ...homeRoutes,
+    ...aboutRoutes,
+    ...authRoutes,
+    ...setsRoutes,
+] as const satisfies readonly RouteRecordRaw[];
 
 export type FamilyAppRoutes = typeof routes;
 

@@ -54,6 +54,30 @@ describe("App", () => {
         expect(button.text()).toBe("Logout");
     });
 
+    it("should show Mijn Sets link when logged in", () => {
+        // Arrange
+        mockIsLoggedIn.value = true;
+
+        // Act
+        const wrapper = shallowMount(App);
+
+        // Assert
+        const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
+        const setsLink = links.find((link) => link.text() === "Mijn Sets");
+        expect(setsLink?.exists()).toBe(true);
+        expect(setsLink?.props("to")).toEqual({name: "sets"});
+    });
+
+    it("should not show Mijn Sets link when not logged in", () => {
+        // Arrange & Act
+        const wrapper = shallowMount(App);
+
+        // Assert
+        const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
+        const setsLink = links.find((link) => link.text() === "Mijn Sets");
+        expect(setsLink).toBeUndefined();
+    });
+
     it("should call logout and navigate to login on click", async () => {
         // Arrange
         mockIsLoggedIn.value = true;

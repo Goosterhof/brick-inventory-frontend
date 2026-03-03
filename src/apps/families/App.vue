@@ -13,6 +13,9 @@ const handleLogout = async () => {
             <div flex gap="4">
                 <FamilyRouterLink :to="{name: 'home'}">Home</FamilyRouterLink>
                 <FamilyRouterLink :to="{name: 'about'}">About</FamilyRouterLink>
+                <FamilyRouterLink v-if="familyAuthService.isLoggedIn.value" :to="{name: 'sets'}"
+                    >Mijn Sets</FamilyRouterLink
+                >
             </div>
             <button
                 v-if="familyAuthService.isLoggedIn.value"
