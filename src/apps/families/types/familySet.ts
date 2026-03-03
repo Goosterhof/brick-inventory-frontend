@@ -19,18 +19,3 @@ export interface FamilySet {
     notes: string | null;
     set: SetSummary;
 }
-
-export interface CreateFamilySetPayload {
-    setNum: string;
-    quantity?: number;
-    status?: FamilySetStatus;
-    purchaseDate?: string | null;
-    notes?: string | null;
-}
-
-export interface UpdateFamilySetPayload {
-    quantity: number;
-    status: FamilySetStatus;
-    purchaseDate?: string | null;
-    notes?: string | null;
-}
