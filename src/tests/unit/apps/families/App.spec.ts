@@ -27,10 +27,11 @@ describe("App", () => {
 
         // Assert
         const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
-        expect(links).toHaveLength(2);
-        const [homeLink, aboutLink] = links;
+        expect(links).toHaveLength(3);
+        const [homeLink, aboutLink, setsLink] = links;
         expect(homeLink?.text()).toBe("Home");
         expect(aboutLink?.text()).toBe("About");
+        expect(setsLink?.text()).toBe("Mijn Sets");
     });
 
     it("should not show logout button when not logged in", () => {
@@ -62,20 +63,21 @@ describe("App", () => {
         const wrapper = shallowMount(App);
 
         // Assert
-        const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
-        const setsLink = links.find((link) => link.text() === "Mijn Sets");
+        const setsLink = wrapper
+            .findAllComponents({name: "FamilyRouterLink"})
+            .find((link) => link.text() === "Mijn Sets");
         expect(setsLink?.exists()).toBe(true);
         expect(setsLink?.props("to")).toEqual({name: "sets"});
+        expect(wrapper.find("span").attributes("style")).toBeUndefined();
     });
 
-    it("should not show Mijn Sets link when not logged in", () => {
+    it("should hide Mijn Sets link when not logged in", () => {
         // Arrange & Act
         const wrapper = shallowMount(App);
 
         // Assert
-        const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
-        const setsLink = links.find((link) => link.text() === "Mijn Sets");
-        expect(setsLink).toBeUndefined();
+        const setsSpan = wrapper.find("span");
+        expect(setsSpan.attributes("style")).toContain("display: none");
     });
 
     it("should call logout and navigate to login on click", async () => {
