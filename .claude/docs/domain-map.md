@@ -4,12 +4,12 @@ Living document of all domains across apps. Update this when adding or modifying
 
 ## Families App
 
-| Domain | Description | Routes | Auth Required |
-|--------|-------------|--------|---------------|
-| **auth** | User authentication | `/login`, `/register` | No (hidden when logged in) |
-| **home** | Landing/dashboard | `/` | No |
-| **sets** | Lego set management | `/sets`, `/sets/add`, `/sets/:id`, `/sets/:id/edit` | Yes |
-| **about** | About page | `/about` | No |
+| Domain    | Description         | Routes                                              | Auth Required              |
+| --------- | ------------------- | --------------------------------------------------- | -------------------------- |
+| **auth**  | User authentication | `/login`, `/register`                               | No (hidden when logged in) |
+| **home**  | Landing/dashboard   | `/`                                                 | No                         |
+| **sets**  | Lego set management | `/sets`, `/sets/add`, `/sets/:id`, `/sets/:id/edit` | Yes                        |
+| **about** | About page          | `/about`                                            | No                         |
 
 ### Domain Details
 
@@ -43,9 +43,9 @@ Living document of all domains across apps. Update this when adding or modifying
 
 ## Admin App
 
-| Domain | Description | Routes | Auth Required |
-|--------|-------------|--------|---------------|
-| **home** | Admin dashboard | `/` | TBD |
+| Domain   | Description     | Routes | Auth Required |
+| -------- | --------------- | ------ | ------------- |
+| **home** | Admin dashboard | `/`    | TBD           |
 
 ### Domain Details
 
@@ -60,16 +60,16 @@ Living document of all domains across apps. Update this when adding or modifying
 
 Components available to all apps via `@shared/components/`:
 
-| Component | Description |
-|-----------|-------------|
-| PrimaryButton | Neo-brutalist styled button |
-| NavLink | Navigation link component |
-| CameraCapture | Camera/scanner component |
-| FormField | Form field wrapper |
-| FormLabel | Accessible form label |
-| FormError | Form error message |
-| TextInput | Text input with label and error |
-| NumberInput | Number input with label and error |
+| Component     | Description                       |
+| ------------- | --------------------------------- |
+| PrimaryButton | Neo-brutalist styled button       |
+| NavLink       | Navigation link component         |
+| CameraCapture | Camera/scanner component          |
+| FormField     | Form field wrapper                |
+| FormLabel     | Accessible form label             |
+| FormError     | Form error message                |
+| TextInput     | Text input with label and error   |
+| NumberInput   | Number input with label and error |
 
 ## Adding a New Domain
 

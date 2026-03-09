@@ -3,7 +3,7 @@ const {for: forId, required = false} = defineProps<{for?: string; required?: boo
 </script>
 
 <template>
-    <label :for="forId" text="sm black" font="bold" uppercase tracking="wide">
+    <label :for="forId" class="brick-label">
         <slot />
         <span v-if="required" text="red-500" aria-hidden="true">*</span>
     </label>

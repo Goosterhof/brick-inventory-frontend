@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {computed, useId} from "vue";
-
 import FormError from "@shared/components/forms/FormError.vue";
 import FormField from "@shared/components/forms/FormField.vue";
 import FormLabel from "@shared/components/forms/FormLabel.vue";
+import {computed, useId} from "vue";
 
 const {
     label,
@@ -28,12 +27,12 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
 
 const inputStateClass = computed(() => {
     if (disabled) {
-        return "bg-gray-200 cursor-not-allowed opacity-70 shadow-none";
+        return "brick-disabled opacity-70";
     }
     if (error) {
-        return "bg-red-100 shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] focus:shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]";
+        return "bg-red-100 brick-shadow-error focus:brick-shadow-error-hover";
     }
-    return "bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:bg-yellow-100";
+    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-yellow-100";
 });
 </script>
 
@@ -50,10 +49,10 @@ const inputStateClass = computed(() => {
             :aria-invalid="error ? true : undefined"
             :aria-describedby="errorId"
             p="x-4 y-3"
-            border="3 black"
             text="black"
             font="medium"
-            transition="all duration-150"
+            transition="shadow duration-150"
+            class="brick-border"
             outline="none"
             :class="inputStateClass"
         />

@@ -130,22 +130,15 @@ import {describe, expect, it, vi} from "vitest";
 import PageView from "@app/domains/{domain}/pages/{Page}View.vue";
 
 vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: vi.fn(),
-    },
-    familyLoadingService: {
-        start: vi.fn(),
-        stop: vi.fn(),
-    },
+    familyHttpService: {getRequest: vi.fn()},
+    familyLoadingService: {start: vi.fn(), stop: vi.fn()},
 }));
 
 describe("PageView", () => {
     it("should load and display items", async () => {
         // Arrange
         const {familyHttpService} = await import("@app/services");
-        vi.mocked(familyHttpService.getRequest).mockResolvedValue({
-            data: [{id: 1, name: "Test Item"}],
-        });
+        vi.mocked(familyHttpService.getRequest).mockResolvedValue({data: [{id: 1, name: "Test Item"}]});
 
         // Act
         const wrapper = shallowMount(PageView);

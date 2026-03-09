@@ -33,20 +33,20 @@ The palette is intentionally constrained. Like a monochrome Lego set with a few 
 
 ### Primary
 
-| Role | Color | Value | Usage |
-|------|-------|-------|-------|
-| **Ink** | Black | `black` / `#000000` | Text, borders, shadows, primary buttons |
-| **Surface** | White | `white` / `#FFFFFF` | Backgrounds, cards, input fields |
+| Role        | Color | Value               | Usage                                   |
+| ----------- | ----- | ------------------- | --------------------------------------- |
+| **Ink**     | Black | `black` / `#000000` | Text, borders, shadows, primary buttons |
+| **Surface** | White | `white` / `#FFFFFF` | Backgrounds, cards, input fields        |
 
 ### Accents
 
-| Role | Color | Value | Usage |
-|------|-------|-------|-------|
-| **Highlight** | Yellow | `yellow-300` / `#FDE047` | Focus states, hover feedback, active indicators |
-| **Highlight Subtle** | Yellow | `yellow-100` / `#FEF9C3` | Large highlighted areas where full yellow is too loud |
-| **Danger Background** | Red | `red-200` / `#FECACA` | Error backgrounds, destructive action hints |
-| **Danger Border** | Red | `red-500` / `#EF4444` | Error borders, error shadows |
-| **Danger Text** | Red | `red-600` / `#DC2626` | Error messages, validation text |
+| Role                 | Color  | Value                     | Usage                                                        |
+| -------------------- | ------ | ------------------------- | ------------------------------------------------------------ |
+| **Highlight**        | Yellow | `yellow-300` / `#FDE047`  | Focus states, hover feedback, active indicators              |
+| **Highlight Subtle** | Yellow | `yellow-100` / `#FEF9C3`  | Large highlighted areas where full yellow is too loud        |
+| **Danger Background**| Red    | `red-200` / `#FECACA`     | Error backgrounds, destructive action hints                  |
+| **Danger Border**    | Red    | `red-500` / `#EF4444`     | Error borders, error shadows                                 |
+| **Danger Text**      | Red    | `red-600` / `#DC2626`     | Error messages, validation text                              |
 
 ### Error Color Hierarchy
 
@@ -58,10 +58,10 @@ Error states use three tiers of red, each with a clear role:
 
 ### Neutrals
 
-| Role | Color | Value | Usage |
-|------|-------|-------|-------|
-| **Muted** | Gray 200 | `gray-200` / `#E5E7EB` | Disabled backgrounds |
-| **Disabled** | Gray 300 | `gray-300` / `#D1D5DB` | Disabled borders |
+| Role               | Color    | Value                  | Usage                           |
+| ------------------ | -------- | ---------------------- | ------------------------------- |
+| **Muted**          | Gray 200 | `gray-200` / `#E5E7EB` | Disabled backgrounds            |
+| **Disabled**       | Gray 300 | `gray-300` / `#D1D5DB` | Disabled borders                |
 | **Secondary Text** | Gray 600 | `gray-600` / `#4B5563` | Placeholder text, subtle labels |
 
 ### Color Rules
@@ -94,12 +94,12 @@ Borders are the most defining feature of Brick Brutalism. They are the studs on 
 
 ### Specifications
 
-| Property | Value | UnoCSS |
-|----------|-------|--------|
-| **Width** | 3px | `border="3 black"` |
-| **Color** | Black | (included above) |
-| **Radius** | 0 | None — never add `rounded` |
-| **Style** | Solid | Default |
+| Property   | Value | UnoCSS                     |
+| ---------- | ----- | -------------------------- |
+| **Width**  | 3px   | `border="3 black"`         |
+| **Color**  | Black | (included above)           |
+| **Radius** | 0     | None — never add `rounded` |
+| **Style**  | Solid | Default                    |
 
 ### Rules
 
@@ -113,12 +113,12 @@ Shadows in Brick Brutalism are not about realism — they're about physicality. 
 
 ### Specifications
 
-| State | Shadow | CSS |
-|-------|--------|-----|
-| **Default** | 4px offset | `shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]` |
-| **Hover / Focus** | 6px offset | `shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]` |
-| **Active / Pressed** | 2px offset | `shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]` |
-| **Error** | 4px red offset | `shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]` |
+| State                | Shadow         | CSS                                          |
+| -------------------- | -------------- | -------------------------------------------- |
+| **Default**          | 4px offset     | `shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`     |
+| **Hover / Focus**    | 6px offset     | `shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]`     |
+| **Active / Pressed** | 2px offset     | `shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]`     |
+| **Error**            | 4px red offset | `shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]` |
 
 ### Rules
 
@@ -132,18 +132,19 @@ Shadows in Brick Brutalism are not about realism — they're about physicality. 
 
 Every interactive element must communicate its state clearly. No ambiguity.
 
-| State | Visual Treatment |
-|-------|-----------------|
-| **Default** | 3px black border, 4px offset shadow |
-| **Hover** | Shadow grows to 6px, background may shift (e.g., yellow highlight) |
-| **Focus** | Shadow grows to 6px, `bg-yellow-300` highlight, `outline="none"` |
-| **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place) |
-| **Disabled** | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed` |
-| **Error** | `bg-red-200`, red shadow (`red-500`), `border-red-500` |
+| State                | Visual Treatment                                                                    |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| **Default**          | 3px black border, 4px offset shadow                                                 |
+| **Hover**            | Shadow grows to 6px, background may shift (e.g., yellow highlight)                  |
+| **Focus**            | Shadow grows to 6px, `bg-yellow-300` highlight, `outline="none"`                    |
+| **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place)                                      |
+| **Disabled**         | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed`  |
+| **Error**            | `bg-red-200`, red shadow (`red-500`), `border-red-500`                              |
 
 ### The Snap Principle
 
 Interactions should feel like connecting Lego bricks:
+
 - **Hover** = picking up the brick (it lifts — shadow grows)
 - **Press** = pushing it down (it snaps — shadow shrinks)
 - **Focus** = highlighting the stud you're about to connect (yellow glow)
@@ -235,17 +236,17 @@ Brick Brutalism is inherently accessible by design — high contrast and bold vi
 
 Things that violate the Brick Brutalism identity. If you see these in a PR, flag them.
 
-| Don't | Why | Do Instead |
-|-------|-----|------------|
-| `rounded`, `rounded-lg`, etc. | Bricks have sharp edges | Remove border-radius entirely |
-| `shadow-md`, `shadow-lg` (blurred) | Fake depth, not physical | Use hard offset shadows |
-| Gradients | Bricks are solid-colored | Use flat color fills |
-| Opacity for emphasis | Muddy and ambiguous | Use a different color |
-| 1px borders | Too subtle, not confident | Use 3px borders |
-| Decorative color | Color must have meaning | Reserve accent colors for states |
-| Centered paragraph text | Hard to read | Left-align body text |
-| Custom fonts | Performance cost outweighs typographic consistency | Use system font stack; rely on weight, case, and spacing for identity |
-| `transition-all` | Overreaching, can cause jank | Transition specific properties: `transition-shadow`, `transition-background-color`, `transition-transform` |
+| Don't                              | Why                                              | Do Instead                                                                                              |
+| ---------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `rounded`, `rounded-lg`, etc.      | Bricks have sharp edges                          | Remove border-radius entirely                                                                           |
+| `shadow-md`, `shadow-lg` (blurred) | Fake depth, not physical                         | Use hard offset shadows                                                                                 |
+| Gradients                          | Bricks are solid-colored                         | Use flat color fills                                                                                    |
+| Opacity for emphasis               | Muddy and ambiguous                              | Use a different color                                                                                   |
+| 1px borders                        | Too subtle, not confident                        | Use 3px borders                                                                                         |
+| Decorative color                   | Color must have meaning                          | Reserve accent colors for states                                                                        |
+| Centered paragraph text            | Hard to read                                     | Left-align body text                                                                                    |
+| Custom fonts                       | Performance cost outweighs typographic consistency | Use system font stack; rely on weight, case, and spacing for identity                                 |
+| `transition-all`                   | Overreaching, can cause jank                     | Transition specific properties: `transition-shadow`, `transition-background-color`, `transition-transform` |
 
 ## Brand Voice in UI
 

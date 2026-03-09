@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {familyAuthService, familyHttpService, familyRouterService} from "@app/services";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
 import {isAxiosError} from "axios";
 import {ref} from "vue";

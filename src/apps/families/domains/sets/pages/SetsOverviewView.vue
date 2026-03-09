@@ -51,12 +51,11 @@ const goToDetail = async (id: number) => {
                 gap="4"
                 items="center"
                 p="4"
-                border="3 black"
                 bg="white hover:yellow-50"
                 cursor="pointer"
                 text="left"
-                class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-                transition="all duration-150"
+                transition="shadow duration-150"
+                class="brick-border brick-shadow"
             >
                 <img
                     v-if="familySet.set.imageUrl"

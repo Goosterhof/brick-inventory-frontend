@@ -27,10 +27,10 @@ describe("NavLink", () => {
         const routerLink = wrapper.findComponent({name: "RouterLink"});
 
         // Assert
-        expect(routerLink.attributes("border")).toBe("3 black");
+        expect(routerLink.attributes("class")).toContain("brick-border");
+        expect(routerLink.attributes("class")).toContain("brick-shadow");
         expect(routerLink.attributes("bg")).toBe("white hover:yellow-100 focus:yellow-100");
         expect(routerLink.attributes("font")).toBe("bold");
         expect(routerLink.attributes("uppercase")).toBeDefined();
-        expect(routerLink.attributes("class")).toContain("shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]");
     });
 });

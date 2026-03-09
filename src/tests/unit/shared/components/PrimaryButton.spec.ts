@@ -48,11 +48,11 @@ describe("PrimaryButton", () => {
         const wrapper = shallowMount(PrimaryButton, {slots: {default: "Click"}});
 
         // Assert
-        expect(wrapper.attributes("border")).toBe("3 black");
+        expect(wrapper.attributes("class")).toContain("brick-border");
+        expect(wrapper.attributes("class")).toContain("brick-shadow");
         expect(wrapper.attributes("bg")).toBe("black hover:yellow-100 disabled:gray-300");
         expect(wrapper.attributes("text")).toBe("white hover:black disabled:gray-600");
         expect(wrapper.attributes("font")).toBe("bold");
         expect(wrapper.attributes("uppercase")).toBeDefined();
-        expect(wrapper.attributes("class")).toContain("shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]");
     });
 });
