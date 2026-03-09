@@ -84,12 +84,7 @@ Step-by-step guide for adding a modal within a domain.
 
     <template>
         <button @click="showModal = true">Open Modal</button>
-        <ConfirmModal
-            v-if="showModal"
-            title="Are you sure?"
-            @close="showModal = false"
-            @confirm="handleConfirm"
-        >
+        <ConfirmModal v-if="showModal" title="Are you sure?" @close="showModal = false" @confirm="handleConfirm">
             <p>This action cannot be undone.</p>
         </ConfirmModal>
     </template>

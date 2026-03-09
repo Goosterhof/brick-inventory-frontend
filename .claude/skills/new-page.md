@@ -8,8 +8,7 @@ Step-by-step guide for adding a new page to an existing domain.
 
     ```vue
     <!-- src/apps/{appName}/domains/{domain}/pages/{PageName}View.vue -->
-    <script setup lang="ts">
-    </script>
+    <script setup lang="ts"></script>
 
     <template>
         <div>
@@ -48,9 +47,9 @@ Step-by-step guide for adding a new page to an existing domain.
 
 ## Route Meta Options
 
-| Meta Key | Type | Description |
-|----------|------|-------------|
-| `authOnly` | `boolean` | Route requires authentication |
+| Meta Key             | Type      | Description                                 |
+| -------------------- | --------- | ------------------------------------------- |
+| `authOnly`           | `boolean` | Route requires authentication               |
 | `canSeeWhenLoggedIn` | `boolean` | Set to `false` to hide from logged-in users |
 
 ## Reference

@@ -7,15 +7,14 @@ const {type = "button", disabled = false} = defineProps<{type?: "button" | "subm
         :type="type"
         :disabled="disabled"
         p="x-4 y-3"
-        border="3 black"
         bg="black hover:yellow-100 disabled:gray-300"
         text="white hover:black disabled:gray-600"
         font="bold"
         uppercase
         tracking="wide"
         cursor="pointer disabled:not-allowed"
-        class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] disabled:shadow-none"
-        transition="all duration-150"
+        transition="shadow duration-150"
+        class="brick-border brick-shadow hover:brick-shadow-hover disabled:brick-disabled"
     >
         <slot />
     </button>

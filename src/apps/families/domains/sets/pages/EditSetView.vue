@@ -2,8 +2,8 @@
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService} from "@app/services";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {isAxiosError} from "axios";
@@ -77,16 +77,15 @@ const handleDelete = async () => {
                 <NumberInput v-model="quantity" label="Aantal" :error="errors.quantity" :min="1" required />
 
                 <div flex="~ col" gap="2">
-                    <label text="sm black" font="bold" uppercase tracking="wide" for="status-select">Status</label>
+                    <label class="brick-label" for="status-select">Status</label>
                     <select
                         id="status-select"
                         v-model="status"
                         p="x-4 y-3"
-                        border="3 black"
                         bg="white"
                         text="black"
                         font="medium"
-                        class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        class="brick-border brick-shadow"
                     >
                         <option value="sealed">Verzegeld</option>
                         <option value="built">Gebouwd</option>
@@ -96,34 +95,30 @@ const handleDelete = async () => {
                 </div>
 
                 <div flex="~ col" gap="2">
-                    <label text="sm black" font="bold" uppercase tracking="wide" for="purchase-date-input"
-                        >Aankoopdatum</label
-                    >
+                    <label class="brick-label" for="purchase-date-input">Aankoopdatum</label>
                     <input
                         id="purchase-date-input"
                         v-model="purchaseDate"
                         type="date"
                         p="x-4 y-3"
-                        border="3 black"
                         bg="white"
                         text="black"
                         font="medium"
-                        class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        class="brick-border brick-shadow"
                     />
                 </div>
 
                 <div flex="~ col" gap="2">
-                    <label text="sm black" font="bold" uppercase tracking="wide" for="notes-input">Notities</label>
+                    <label class="brick-label" for="notes-input">Notities</label>
                     <textarea
                         id="notes-input"
                         v-model="notes"
                         rows="3"
                         p="x-4 y-3"
-                        border="3 black"
                         bg="white"
                         text="black"
                         font="medium"
-                        class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        class="brick-border brick-shadow"
                     />
                 </div>
 
@@ -140,8 +135,8 @@ const handleDelete = async () => {
                         uppercase
                         tracking="wide"
                         cursor="pointer"
-                        class="shadow-[4px_4px_0px_0px_rgba(220,38,38,1)]"
-                        transition="all duration-150"
+                        transition="shadow duration-150"
+                        class="brick-shadow-danger"
                     >
                         Verwijderen
                     </button>

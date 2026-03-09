@@ -90,13 +90,13 @@ npm run size
 
 ## Quick Reference
 
-| Phase | Lego Analogy | Key Question | Key Output |
-|-------|-------------|--------------|------------|
-| Unbox | Open the box | What are we building? | Feature brief |
-| Sort | Sort the bricks | Where does it go? | Architecture map |
-| Build | Follow instructions | How do we build it? | Code + tests |
-| Inspect | Check the model | Is it sturdy & beautiful? | All checks pass |
-| Display | Put it on the shelf | Is it ready to show? | Merged PR |
+| Phase   | Lego Analogy        | Key Question              | Key Output       |
+| ------- | ------------------- | ------------------------- | ---------------- |
+| Unbox   | Open the box        | What are we building?     | Feature brief    |
+| Sort    | Sort the bricks     | Where does it go?         | Architecture map |
+| Build   | Follow instructions | How do we build it?       | Code + tests     |
+| Inspect | Check the model     | Is it sturdy & beautiful? | All checks pass  |
+| Display | Put it on the shelf | Is it ready to show?      | Merged PR        |
 
 ## When to Skip Phases
 
@@ -106,16 +106,16 @@ npm run size
 
 ## Skills Reference
 
-| Skill | Used In |
-|-------|---------|
-| `new-app` | Sort (new app needed) |
-| `new-domain` | Sort (new domain needed) |
-| `new-page` | Sort/Build (adding pages) |
-| `new-modal` | Sort/Build (adding modals) |
-| `vue-component` | Build (component patterns) |
-| `unocss-styling` | Build (styling) |
-| `api-usage` | Build (HTTP requests) |
-| `api-integration` | Build (end-to-end API) |
-| `component-unit-test` | Build (testing components) |
-| `typescript-unit-test` | Build (testing logic) |
-| `design-review` | Inspect (quality checklist) |
+| Skill                  | Used In                     |
+| ---------------------- | --------------------------- |
+| `new-app`              | Sort (new app needed)       |
+| `new-domain`           | Sort (new domain needed)    |
+| `new-page`             | Sort/Build (adding pages)   |
+| `new-modal`            | Sort/Build (adding modals)  |
+| `vue-component`        | Build (component patterns)  |
+| `unocss-styling`       | Build (styling)             |
+| `api-usage`            | Build (HTTP requests)       |
+| `api-integration`      | Build (end-to-end API)      |
+| `component-unit-test`  | Build (testing components)  |
+| `typescript-unit-test` | Build (testing logic)       |
+| `design-review`        | Inspect (quality checklist) |

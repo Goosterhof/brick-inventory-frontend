@@ -100,7 +100,7 @@ describe("TextInput", () => {
         const input = wrapper.find("input");
 
         // Assert
-        expect(input.classes()).toContain("bg-gray-200");
+        expect(input.classes()).toContain("brick-disabled");
         expect(input.classes()).not.toContain("bg-red-100");
     });
 

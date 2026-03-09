@@ -144,11 +144,10 @@ onUnmounted(() => {
         <div
             relative
             overflow="hidden"
-            border="3 black"
             bg="gray-900"
             role="region"
             aria-label="Camera viewfinder"
-            class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+            class="brick-border brick-shadow"
         >
             <video
                 ref="videoRef"
@@ -195,7 +194,6 @@ onUnmounted(() => {
                 <button
                     type="button"
                     p="x-4 y-2"
-                    border="3 black"
                     bg="yellow-400 hover:yellow-300"
                     text="black"
                     font="bold"
@@ -203,7 +201,7 @@ onUnmounted(() => {
                     tracking="wide"
                     cursor="pointer"
                     aria-label="Retry camera access"
-                    class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]"
+                    class="brick-border brick-shadow active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     @click="startCamera"
                 >
                     Retry
@@ -214,7 +212,6 @@ onUnmounted(() => {
         <button
             type="button"
             p="x-6 y-3"
-            border="3 black"
             bg="yellow-400 hover:yellow-300 disabled:gray-300"
             text="black"
             font="bold"
@@ -223,7 +220,7 @@ onUnmounted(() => {
             cursor="pointer disabled:not-allowed"
             :aria-label="isCameraActive ? 'Capture photo of Lego brick' : 'Capture photo (camera not ready)'"
             :disabled="!isCameraActive"
-            class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]"
+            class="brick-border brick-shadow active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             @click="captureImage"
         >
             Capture Photo
