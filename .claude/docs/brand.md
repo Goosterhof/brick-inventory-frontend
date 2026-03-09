@@ -10,6 +10,8 @@
 
 Brick Brutalism takes the raw honesty of brutalist architecture and the tactile joy of Lego bricks, and smashes them together. The result is an interface that feels like snapping real bricks into place: chunky, satisfying, impossible to misunderstand.
 
+> **Implementation note**: This design system is built with **UnoCSS** (utility-first CSS, similar to Tailwind but with attributify syntax). All class examples in this document use UnoCSS conventions. See UnoCSS docs for syntax differences from Tailwind.
+
 ### Core Principles
 
 1. **Weight** — Every element has physical presence. Borders are thick. Shadows are solid. Nothing floats in ambiguous whitespace. If you can see it, you can almost feel it.
@@ -18,7 +20,12 @@ Brick Brutalism takes the raw honesty of brutalist architecture and the tactile 
 
 3. **Honesty** — No fake depth, no decorative blur, no rounded-corner softness pretending things are gentler than they are. Shadows are hard offsets — they show exactly where the light is and where it isn't. Corners are sharp because bricks have edges.
 
-4. **Playfulness** — Brutalism doesn't mean joyless. Bright yellow highlights, snappy interactions, uppercase labels that shout with enthusiasm. The interface is bold because it's excited to be used, not because it's trying to intimidate.
+4. **Playfulness** — Brutalism doesn't mean joyless. The interface is bold because it's excited to be used, not because it's trying to intimidate. Playfulness shows up in specific, tangible ways:
+   - **Snap transitions** — Shadow changes on hover/press are fast (150ms) and use `transition-timing-function: cubic-bezier(0.2, 0, 0, 1)` for a physical snap feel. Elements don't drift; they click.
+   - **Stud highlights** — Yellow (`yellow-300`) floods the background of focused and hovered elements instantly, like pressing down on a Lego stud and seeing it light up.
+   - **Uppercase labels** — Headings and button text shout in caps with wide tracking. The typography is loud on purpose, like embossed text on a brick.
+   - **Personality in empty states** — When there's nothing to show, the UI doesn't just say "No results." It says something with character (see Brand Voice below).
+   - **Satisfying feedback** — Destructive actions require confirmation with a bold, honest prompt. Successful actions get a brief, encouraging acknowledgment. The app reacts to you.
 
 ## Color Palette
 
@@ -35,9 +42,19 @@ The palette is intentionally constrained. Like a monochrome Lego set with a few 
 
 | Role | Color | Value | Usage |
 |------|-------|-------|-------|
-| **Highlight** | Yellow | `yellow-100` / `#FEF9C3` | Focus states, hover feedback, active indicators |
-| **Danger** | Red | `red-100` / `#FEE2E2` | Error backgrounds, destructive action hints |
+| **Highlight** | Yellow | `yellow-300` / `#FDE047` | Focus states, hover feedback, active indicators |
+| **Highlight Subtle** | Yellow | `yellow-100` / `#FEF9C3` | Large highlighted areas where full yellow is too loud |
+| **Danger Background** | Red | `red-200` / `#FECACA` | Error backgrounds, destructive action hints |
+| **Danger Border** | Red | `red-500` / `#EF4444` | Error borders, error shadows |
 | **Danger Text** | Red | `red-600` / `#DC2626` | Error messages, validation text |
+
+### Error Color Hierarchy
+
+Error states use three tiers of red, each with a clear role:
+
+- **red-200** (`#FECACA`) — Background fill. Visible but not overwhelming. Applied to the container.
+- **red-500** (`#EF4444`) — Border and shadow. The structural indicator that something is wrong.
+- **red-600** (`#DC2626`) — Text. The message itself. Highest contrast for readability.
 
 ### Neutrals
 
@@ -62,9 +79,12 @@ The palette is intentionally constrained. Like a monochrome Lego set with a few 
 - **Body text**: `font-medium text-black` — readable, no-nonsense.
 - **Error text**: `text-sm text-red-600` — small but impossible to ignore.
 
+### Font Choice
+
+This project uses the system font stack (UnoCSS default) rather than a custom typeface. This is a deliberate trade-off: system fonts mean the brand's typographic voice shifts between platforms (San Francisco on Mac, Segoe UI on Windows, Roboto on Android). We accept this inconsistency in exchange for zero font-loading latency and no layout shift — performance matters more in a tool you use daily. The brand's typographic identity comes from weight, case, and spacing (bold, uppercase, wide-tracked) rather than from the typeface itself.
+
 ### Rules
 
-- Use the system font stack (UnoCSS default). No custom fonts — performance over personality.
 - Never center long text. Left-align for readability.
 - Use size to create hierarchy, not color. Black text at different sizes beats colored text at the same size.
 
@@ -116,10 +136,10 @@ Every interactive element must communicate its state clearly. No ambiguity.
 |-------|-----------------|
 | **Default** | 3px black border, 4px offset shadow |
 | **Hover** | Shadow grows to 6px, background may shift (e.g., yellow highlight) |
-| **Focus** | Shadow grows to 6px, `bg-yellow-100` highlight, `outline="none"` |
+| **Focus** | Shadow grows to 6px, `bg-yellow-300` highlight, `outline="none"` |
 | **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place) |
 | **Disabled** | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed` |
-| **Error** | `bg-red-100`, red shadow, `border-red-500` |
+| **Error** | `bg-red-200`, red shadow (`red-500`), `border-red-500` |
 
 ### The Snap Principle
 
@@ -144,6 +164,59 @@ Use a consistent spacing scale. Like the grid on a Lego baseplate, spacing shoul
 - Max content width for readability — don't stretch text edge-to-edge
 - Use `flex="~ col"` for vertical stacking (the default building direction)
 - Cards and panels get the full treatment: 3px border, offset shadow, sharp corners
+
+### Page Structure
+
+Pages follow a predictable structure: a top navigation bar, then content. The navigation bar is full-width with a 3px bottom border — it's the baseplate everything else sits on.
+
+- **Navigation**: Horizontal top bar. Logo left, nav links center or right. Links use uppercase text with the Snap Principle on hover/focus. Active route gets a `yellow-300` underline (3px thick, hard).
+- **Content area**: Centered with `max-w-6xl mx-auto` for readability. Full-width on mobile.
+- **Sidebars** (if needed): Same 3px border treatment. Separated from main content by a thick border, not whitespace alone.
+
+### Grid
+
+Use CSS Grid for data-heavy views (tables, inventory lists, card grids):
+
+- **Card grids**: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4` — cards are bricks; they tile neatly.
+- **Data tables**: Full-width with 3px outer border. Row borders are 1px `gray-200` for internal division (the one exception to the 3px rule — internal grid lines on a baseplate are thinner than the edges).
+- **Filter bars**: Horizontal row above content. Filters are chunky bordered elements, not floating pills.
+
+### Breakpoints
+
+The brand must hold at all sizes. Brutalism doesn't get soft on small screens.
+
+| Breakpoint | Width | Behavior |
+|------------|-------|----------|
+| **Mobile** | < 640px | Single column. Full-width cards. Stacked navigation (hamburger with bordered menu). Shadows remain but may reduce to 3px offset to save space. |
+| **Tablet** | 640px–1024px | Two-column grids. Side-by-side filters. |
+| **Desktop** | > 1024px | Full layout. Three-column grids. Inline navigation. |
+
+Key rules across breakpoints:
+- Borders stay 3px everywhere. Do not thin them on mobile.
+- Shadows may shrink (4px → 3px) on mobile for space, but never disappear.
+- Touch targets stay 44px minimum. Brutalist buttons are already chunky — this is a strength on mobile.
+
+## Iconography
+
+Icons must match the weight and sharpness of the rest of the system. A thin, rounded icon next to a 3px bordered button looks broken.
+
+### Specifications
+
+| Property | Value |
+|----------|-------|
+| **Stroke width** | 2px — consistent with the system's heavy visual weight |
+| **Line caps** | Square (butt), not rounded — sharp corners apply to icons too |
+| **Line joins** | Miter (sharp), not rounded |
+| **Fill** | None — stroke-only icons. Filled icons look blobby next to open borders |
+| **Size** | 20px (inline with text), 24px (standalone buttons) |
+| **Color** | `currentColor` — icons inherit text color. No decorative icon colors |
+
+### Rules
+
+- **Keep icons simple.** Prefer geometric, recognizable shapes. Avoid detailed illustrations or flourishes.
+- **No rounded endcaps.** If the icon library defaults to `stroke-linecap: round`, override it to `butt` or choose a square-cap icon set.
+- **Icons are not decoration.** Every icon must serve a functional purpose (navigation, action indicator, status). Don't add icons for visual flair.
+- **Pair with text.** Standalone icons should have an `aria-label` or adjacent text. A brick without a label is just a bump.
 
 ## Accessibility
 
@@ -171,8 +244,8 @@ Things that violate the Brick Brutalism identity. If you see these in a PR, flag
 | 1px borders | Too subtle, not confident | Use 3px borders |
 | Decorative color | Color must have meaning | Reserve accent colors for states |
 | Centered paragraph text | Hard to read | Left-align body text |
-| Custom fonts | Performance cost, no brand payoff | Use system font stack |
-| `transition-all` | Overreaching, can cause jank | Transition specific properties only |
+| Custom fonts | Performance cost outweighs typographic consistency | Use system font stack; rely on weight, case, and spacing for identity |
+| `transition-all` | Overreaching, can cause jank | Transition specific properties: `transition-shadow`, `transition-background-color`, `transition-transform` |
 
 ## Brand Voice in UI
 
@@ -183,6 +256,28 @@ Things that violate the Brick Brutalism identity. If you see these in a PR, flag
 - **Be encouraging.** "Almost there!" not "Form incomplete."
 - **Use active voice.** "Save changes" not "Changes will be saved."
 - **Match the visual boldness.** If the UI is loud and confident, the words should be too.
+
+### State-Specific Copy
+
+Every app state is a moment to reinforce the brand. Here's how the voice sounds in each:
+
+| State | Tone | Examples |
+|-------|------|----------|
+| **Empty states** | Inviting, playful | "No bricks here yet. Start building!" / "Your collection is wide open. Add your first set." |
+| **Loading** | Brief, confident | "Loading your bricks..." / "Pulling this together..." |
+| **Success** | Celebratory, short | "Saved." / "Brick placed!" / "You're all set." |
+| **Error** | Honest, helpful | "That didn't work. Try again?" / "We lost the connection. Check your network." |
+| **Destructive confirmation** | Clear, no drama | "Delete this set? This can't be undone." / "Remove all items? Gone means gone." |
+| **Onboarding** | Welcoming, oriented | "Welcome to Brick Inventory. Let's get your collection sorted." / "First, let's add a storage location." |
+
+### Tagline Variants
+
+The primary tagline is **"Every brick has a place."** Here are contextual variations:
+
+- **Login page**: "Every brick has a place. Let's find yours."
+- **Empty collection**: "Every brick has a place. This is where it starts."
+- **Error page**: "This brick doesn't fit here."
+- **About / Footer**: "Every brick has a place. We help you find it."
 
 ## Summary
 
