@@ -39,7 +39,15 @@ const goBack = async () => {
 
         <template v-else-if="familySet">
             <div m="b-6">
-                <button @click="goBack" text="sm gray-600 hover:black" cursor="pointer" bg="transparent" border="none">
+                <button
+                    @click="goBack"
+                    text="black"
+                    cursor="pointer"
+                    bg="white hover:yellow-300 focus:yellow-300"
+                    p="x-4 y-2"
+                    outline="none"
+                    class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
+                >
                     &larr; Terug naar overzicht
                 </button>
             </div>
@@ -54,7 +62,7 @@ const goBack = async () => {
                         h="48"
                         object="contain"
                     />
-                    <div v-else w="48" h="48" bg="gray-200" flex items="center" justify="center" text="gray-500">
+                    <div v-else w="48" h="48" bg="gray-200" flex items="center" justify="center" text="gray-600">
                         Geen afbeelding
                     </div>
                 </div>

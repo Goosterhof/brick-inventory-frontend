@@ -194,14 +194,15 @@ onUnmounted(() => {
                 <button
                     type="button"
                     p="x-4 y-2"
-                    bg="yellow-400 hover:yellow-300"
+                    bg="yellow-300 hover:yellow-300 focus:yellow-300"
                     text="black"
                     font="bold"
                     uppercase
                     tracking="wide"
                     cursor="pointer"
+                    outline="none"
                     aria-label="Retry camera access"
-                    class="brick-border brick-shadow active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
+                    class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     @click="startCamera"
                 >
                     Retry
@@ -212,15 +213,16 @@ onUnmounted(() => {
         <button
             type="button"
             p="x-6 y-3"
-            bg="yellow-400 hover:yellow-300 disabled:gray-300"
-            text="black"
+            bg="yellow-300 hover:yellow-300 focus:yellow-300 disabled:gray-200"
+            text="black disabled:gray-600"
             font="bold"
             uppercase
             tracking="wide"
             cursor="pointer disabled:not-allowed"
+            outline="none"
             :aria-label="isCameraActive ? 'Capture photo of Lego brick' : 'Capture photo (camera not ready)'"
             :disabled="!isCameraActive"
-            class="brick-border brick-shadow active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
+            class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px] disabled:brick-disabled"
             @click="captureImage"
         >
             Capture Photo

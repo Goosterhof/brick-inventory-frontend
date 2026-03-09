@@ -8,7 +8,7 @@ const {
     label,
     placeholder = "",
     disabled = false,
-    required = false,
+    optional = false,
     error = "",
     min,
     max,
@@ -17,7 +17,7 @@ const {
     label: string;
     placeholder?: string;
     disabled?: boolean;
-    required?: boolean;
+    optional?: boolean;
     error?: string;
     min?: number;
     max?: number;
@@ -37,18 +37,18 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
 
 const inputStateClass = computed(() => {
     if (disabled) {
-        return "brick-disabled opacity-70";
+        return "brick-disabled";
     }
     if (error) {
-        return "bg-red-100 brick-shadow-error focus:brick-shadow-error-hover";
+        return "bg-red-200 border-red-500 brick-shadow-error focus:brick-shadow-error-hover";
     }
-    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-yellow-100";
+    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-yellow-300";
 });
 </script>
 
 <template>
     <FormField>
-        <FormLabel :for="inputId" :required="required">{{ label }}</FormLabel>
+        <FormLabel :for="inputId" :optional="optional">{{ label }}</FormLabel>
         <input
             :id="inputId"
             :value="model"
@@ -56,7 +56,7 @@ const inputStateClass = computed(() => {
             @input="handleInput"
             :placeholder="placeholder"
             :disabled="disabled"
-            :required="required"
+            :required="!optional"
             :min="min"
             :max="max"
             :step="step"
@@ -65,8 +65,7 @@ const inputStateClass = computed(() => {
             p="x-4 y-3"
             text="black"
             font="medium"
-            transition="shadow duration-150"
-            class="brick-border"
+            class="brick-border brick-transition"
             outline="none"
             :class="inputStateClass"
         />

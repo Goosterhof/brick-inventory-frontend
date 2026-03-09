@@ -151,12 +151,12 @@ describe("AddSetView", () => {
         expect(mockGoToRoute).not.toHaveBeenCalled();
     });
 
-    it("should mark setnummer as required", () => {
+    it("should have setnummer required by default", () => {
         // Arrange & Act
         const wrapper = shallowMount(AddSetView);
 
         // Assert
         const textInput = wrapper.findComponent(TextInput);
-        expect(textInput.props("required")).toBe(true);
+        expect(textInput.props("optional")).toBe(false);
     });
 });

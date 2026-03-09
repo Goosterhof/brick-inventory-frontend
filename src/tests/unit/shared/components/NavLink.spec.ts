@@ -29,7 +29,7 @@ describe("NavLink", () => {
         // Assert
         expect(routerLink.attributes("class")).toContain("brick-border");
         expect(routerLink.attributes("class")).toContain("brick-shadow");
-        expect(routerLink.attributes("bg")).toBe("white hover:yellow-100 focus:yellow-100");
+        expect(routerLink.attributes("bg")).toBe("white hover:yellow-300 focus:yellow-300");
         expect(routerLink.attributes("font")).toBe("bold");
         expect(routerLink.attributes("uppercase")).toBeDefined();
     });

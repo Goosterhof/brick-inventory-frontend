@@ -51,11 +51,11 @@ const goToDetail = async (id: number) => {
                 gap="4"
                 items="center"
                 p="4"
-                bg="white hover:yellow-50"
+                bg="white hover:yellow-300 focus:yellow-300"
                 cursor="pointer"
                 text="left"
-                transition="shadow duration-150"
-                class="brick-border brick-shadow"
+                outline="none"
+                class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             >
                 <img
                     v-if="familySet.set.imageUrl"
@@ -65,14 +65,14 @@ const goToDetail = async (id: number) => {
                     h="20"
                     object="contain"
                 />
-                <div v-else w="20" h="20" bg="gray-200" flex items="center" justify="center" text="sm gray-500">
+                <div v-else w="20" h="20" bg="gray-200" flex items="center" justify="center" text="sm gray-600">
                     Geen afbeelding
                 </div>
                 <div flex="1">
                     <p font="bold">{{ familySet.set.name }}</p>
                     <p text="sm gray-600">{{ familySet.set.setNum }}</p>
                     <div flex gap="2" m="t-1">
-                        <span text="xs" p="x-2 y-1" bg="gray-100" border="1 gray-300">{{
+                        <span text="xs" p="x-2 y-1" bg="gray-200" font="bold">{{
                             statusLabels[familySet.status]
                         }}</span>
                         <span text="xs gray-600">{{ familySet.quantity }}x</span>

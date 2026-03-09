@@ -42,20 +42,19 @@ const handleSubmit = async () => {
         <h1 text="2xl" font="bold" m="b-6">Create Account</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="handleSubmit">
-            <TextInput v-model="familyName" label="Family Name" :error="errors.familyName" required />
+            <TextInput v-model="familyName" label="Family Name" :error="errors.familyName" />
 
-            <TextInput v-model="name" label="Name" :error="errors.name" required />
+            <TextInput v-model="name" label="Name" :error="errors.name" />
 
-            <TextInput v-model="email" label="Email" type="email" :error="errors.email" required />
+            <TextInput v-model="email" label="Email" type="email" :error="errors.email" />
 
-            <TextInput v-model="password" label="Password" type="password" :error="errors.password" required />
+            <TextInput v-model="password" label="Password" type="password" :error="errors.password" />
 
             <TextInput
                 v-model="passwordConfirmation"
                 label="Password Confirmation"
                 type="password"
                 :error="errors.passwordConfirmation"
-                required
             />
 
             <PrimaryButton type="submit">Register</PrimaryButton>

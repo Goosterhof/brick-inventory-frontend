@@ -21,10 +21,13 @@ const handleLogout = async () => {
                 v-if="familyAuthService.isLoggedIn.value"
                 @click="handleLogout"
                 p="x-4 y-2"
-                class="brick-border"
-                bg="white hover:red-100"
+                bg="white hover:yellow-300 focus:yellow-300"
                 font="bold"
+                uppercase
+                tracking="wide"
                 cursor="pointer"
+                outline="none"
+                class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             >
                 Logout
             </button>

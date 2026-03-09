@@ -42,23 +42,23 @@ describe("TextInput", () => {
         expect(emitted?.[0]).toEqual(["John"]);
     });
 
-    it("should show required indicator when required", () => {
-        // Arrange
-        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: "", required: true}});
-
-        // Assert
-        const label = wrapper.findComponent(FormLabel);
-        expect(label.props("required")).toBe(true);
-        expect(wrapper.find("input").attributes("required")).toBeDefined();
-    });
-
-    it("should not show required indicator when not required", () => {
+    it("should be required by default", () => {
         // Arrange
         const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
 
         // Assert
         const label = wrapper.findComponent(FormLabel);
-        expect(label.props("required")).toBe(false);
+        expect(label.props("optional")).toBe(false);
+        expect(wrapper.find("input").attributes("required")).toBeDefined();
+    });
+
+    it("should show optional indicator and not be required when optional", () => {
+        // Arrange
+        const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: "", optional: true}});
+
+        // Assert
+        const label = wrapper.findComponent(FormLabel);
+        expect(label.props("optional")).toBe(true);
         expect(wrapper.find("input").attributes("required")).toBeUndefined();
     });
 
@@ -101,7 +101,7 @@ describe("TextInput", () => {
 
         // Assert
         expect(input.classes()).toContain("brick-disabled");
-        expect(input.classes()).not.toContain("bg-red-100");
+        expect(input.classes()).not.toContain("bg-red-200");
     });
 
     it("should render placeholder text", () => {
@@ -137,7 +137,7 @@ describe("TextInput", () => {
         const input = wrapper.find("input");
 
         // Assert
-        expect(input.classes()).toContain("bg-red-100");
+        expect(input.classes()).toContain("bg-red-200");
         expect(wrapper.findComponent(FormError).props("message")).toBe("Invalid");
     });
 

@@ -8,12 +8,12 @@ const {to} = defineProps<{to: string}>();
     <RouterLink
         :to="to"
         p="x-4 y-2"
-        bg="white hover:yellow-100 focus:yellow-100"
+        bg="white hover:yellow-300 focus:yellow-300"
         font="bold"
         uppercase
         tracking="wide"
         outline="none"
-        class="brick-border brick-shadow hover:brick-shadow-hover focus:brick-shadow-hover"
+        class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
     >
         <slot />
     </RouterLink>

@@ -74,7 +74,7 @@ const handleDelete = async () => {
             <p text="gray-600" m="b-6">{{ familySet.set.name }} ({{ familySet.set.setNum }})</p>
 
             <form flex="~ col" gap="4" @submit.prevent="handleSubmit">
-                <NumberInput v-model="quantity" label="Aantal" :error="errors.quantity" :min="1" required />
+                <NumberInput v-model="quantity" label="Aantal" :error="errors.quantity" :min="1" />
 
                 <div flex="~ col" gap="2">
                     <label class="brick-label" for="status-select">Status</label>
@@ -82,10 +82,11 @@ const handleDelete = async () => {
                         id="status-select"
                         v-model="status"
                         p="x-4 y-3"
-                        bg="white"
+                        bg="white focus:yellow-300"
                         text="black"
                         font="medium"
-                        class="brick-border brick-shadow"
+                        outline="none"
+                        class="brick-border brick-shadow brick-transition focus:brick-shadow-hover"
                     >
                         <option value="sealed">Verzegeld</option>
                         <option value="built">Gebouwd</option>
@@ -95,30 +96,38 @@ const handleDelete = async () => {
                 </div>
 
                 <div flex="~ col" gap="2">
-                    <label class="brick-label" for="purchase-date-input">Aankoopdatum</label>
+                    <label class="brick-label" for="purchase-date-input">
+                        Aankoopdatum
+                        <span text="gray-600" font="normal"> (optional)</span>
+                    </label>
                     <input
                         id="purchase-date-input"
                         v-model="purchaseDate"
                         type="date"
                         p="x-4 y-3"
-                        bg="white"
+                        bg="white focus:yellow-300"
                         text="black"
                         font="medium"
-                        class="brick-border brick-shadow"
+                        outline="none"
+                        class="brick-border brick-shadow brick-transition focus:brick-shadow-hover"
                     />
                 </div>
 
                 <div flex="~ col" gap="2">
-                    <label class="brick-label" for="notes-input">Notities</label>
+                    <label class="brick-label" for="notes-input">
+                        Notities
+                        <span text="gray-600" font="normal"> (optional)</span>
+                    </label>
                     <textarea
                         id="notes-input"
                         v-model="notes"
                         rows="3"
                         p="x-4 y-3"
-                        bg="white"
+                        bg="white focus:yellow-300"
                         text="black"
                         font="medium"
-                        class="brick-border brick-shadow"
+                        outline="none"
+                        class="brick-border brick-shadow brick-transition focus:brick-shadow-hover"
                     />
                 </div>
 
@@ -128,15 +137,15 @@ const handleDelete = async () => {
                         type="button"
                         @click="handleDelete"
                         p="x-4 y-3"
-                        border="3 red-600"
-                        bg="white hover:red-100"
+                        border="3 red-500"
+                        bg="white hover:red-200 focus:red-200"
                         text="red-600"
                         font="bold"
                         uppercase
                         tracking="wide"
                         cursor="pointer"
-                        transition="shadow duration-150"
-                        class="brick-shadow-danger"
+                        outline="none"
+                        class="brick-shadow-danger brick-transition hover:brick-shadow-error-hover focus:brick-shadow-error-hover active:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)] active:translate-x-[2px] active:translate-y-[2px]"
                     >
                         Verwijderen
                     </button>
