@@ -21,11 +21,11 @@ Brick Brutalism takes the raw honesty of brutalist architecture and the tactile 
 3. **Honesty** — No fake depth, no decorative blur, no rounded-corner softness pretending things are gentler than they are. Shadows are hard offsets — they show exactly where the light is and where it isn't. Corners are sharp because bricks have edges.
 
 4. **Playfulness** — Brutalism doesn't mean joyless. The interface is bold because it's excited to be used, not because it's trying to intimidate. Playfulness shows up in specific, tangible ways:
-   - **Snap transitions** — Shadow changes on hover/press are fast (150ms) and use `transition-timing-function: cubic-bezier(0.2, 0, 0, 1)` for a physical snap feel. Elements don't drift; they click.
-   - **Stud highlights** — Yellow (`yellow-300`) floods the background of focused and hovered elements instantly, like pressing down on a Lego stud and seeing it light up.
-   - **Uppercase labels** — Headings and button text shout in caps with wide tracking. The typography is loud on purpose, like embossed text on a brick.
-   - **Personality in empty states** — When there's nothing to show, the UI doesn't just say "No results." It says something with character (see Brand Voice below).
-   - **Satisfying feedback** — Destructive actions require confirmation with a bold, honest prompt. Successful actions get a brief, encouraging acknowledgment. The app reacts to you.
+    - **Snap transitions** — Shadow changes on hover/press are fast (150ms) and use `transition-timing-function: cubic-bezier(0.2, 0, 0, 1)` for a physical snap feel. Elements don't drift; they click.
+    - **Stud highlights** — Yellow (`yellow-300`) floods the background of focused and hovered elements instantly, like pressing down on a Lego stud and seeing it light up.
+    - **Uppercase labels** — Headings and button text shout in caps with wide tracking. The typography is loud on purpose, like embossed text on a brick.
+    - **Personality in empty states** — When there's nothing to show, the UI doesn't just say "No results." It says something with character (see Brand Voice below).
+    - **Satisfying feedback** — Destructive actions require confirmation with a bold, honest prompt. Successful actions get a brief, encouraging acknowledgment. The app reacts to you.
 
 ## Color Palette
 
@@ -40,13 +40,13 @@ The palette is intentionally constrained. Like a monochrome Lego set with a few 
 
 ### Accents
 
-| Role                 | Color  | Value                     | Usage                                                        |
-| -------------------- | ------ | ------------------------- | ------------------------------------------------------------ |
-| **Highlight**        | Yellow | `yellow-300` / `#FDE047`  | Focus states, hover feedback, active indicators              |
-| **Highlight Subtle** | Yellow | `yellow-100` / `#FEF9C3`  | Active/pressed states on interactive elements where full yellow is too loud (e.g., inline link active state). **Never use on non-interactive elements** — yellow is reserved for interactive feedback. If a callout, annotation, or informational block needs a background tint, use `gray-200`, not yellow. |
-| **Danger Background**| Red    | `red-200` / `#FECACA`     | Error backgrounds, destructive action hints                  |
-| **Danger Border**    | Red    | `red-500` / `#EF4444`     | Error borders, error shadows                                 |
-| **Danger Text**      | Red    | `red-600` / `#DC2626`     | Error messages, validation text                              |
+| Role                  | Color  | Value                    | Usage                                                                                                                                                                                                                                                                                                        |
+| --------------------- | ------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Highlight**         | Yellow | `yellow-300` / `#FDE047` | Focus states, hover feedback, active indicators                                                                                                                                                                                                                                                              |
+| **Highlight Subtle**  | Yellow | `yellow-100` / `#FEF9C3` | Active/pressed states on interactive elements where full yellow is too loud (e.g., inline link active state). **Never use on non-interactive elements** — yellow is reserved for interactive feedback. If a callout, annotation, or informational block needs a background tint, use `gray-200`, not yellow. |
+| **Danger Background** | Red    | `red-200` / `#FECACA`    | Error backgrounds, destructive action hints                                                                                                                                                                                                                                                                  |
+| **Danger Border**     | Red    | `red-500` / `#EF4444`    | Error borders, error shadows                                                                                                                                                                                                                                                                                 |
+| **Danger Text**       | Red    | `red-600` / `#DC2626`    | Error messages, validation text                                                                                                                                                                                                                                                                              |
 
 ### Error Color Hierarchy
 
@@ -135,10 +135,10 @@ All state changes use a single, system-wide timing token. This is the "snap" —
 
 ### Transition Token
 
-| Property | Value | CSS |
-|----------|-------|-----|
-| **Duration** | 150ms | `transition-duration: 150ms` |
-| **Easing** | Snap curve | `transition-timing-function: cubic-bezier(0.2, 0, 0, 1)` |
+| Property     | Value      | CSS                                                      |
+| ------------ | ---------- | -------------------------------------------------------- |
+| **Duration** | 150ms      | `transition-duration: 150ms`                             |
+| **Easing**   | Snap curve | `transition-timing-function: cubic-bezier(0.2, 0, 0, 1)` |
 
 ### UnoCSS Shorthand
 
@@ -157,14 +157,14 @@ transition="shadow 150ms ease-[cubic-bezier(0.2,0,0,1)], background-color 150ms 
 
 Every interactive element must communicate its state clearly. No ambiguity.
 
-| State                | Visual Treatment                                                                    | Transition |
-| -------------------- | ----------------------------------------------------------------------------------- | ---------- |
-| **Default**          | 3px black border, 4px offset shadow                                                 | — |
-| **Hover**            | Shadow grows to 6px, background may shift (e.g., yellow highlight)                  | 150ms snap easing |
+| State                | Visual Treatment                                                                                 | Transition        |
+| -------------------- | ------------------------------------------------------------------------------------------------ | ----------------- |
+| **Default**          | 3px black border, 4px offset shadow                                                              | —                 |
+| **Hover**            | Shadow grows to 6px, background may shift (e.g., yellow highlight)                               | 150ms snap easing |
 | **Focus**            | Shadow grows to 6px, `bg-yellow-300` highlight, `outline="none"` (see Focus Accessibility below) | 150ms snap easing |
-| **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place)                                      | 150ms snap easing |
-| **Disabled**         | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed`  | None (immediate) |
-| **Error**            | `bg-red-200`, red shadow (`red-500`), `border-red-500`                              | 150ms snap easing |
+| **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place)                                                   | 150ms snap easing |
+| **Disabled**         | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed`               | None (immediate)  |
+| **Error**            | `bg-red-200`, red shadow (`red-500`), `border-red-500`                                           | 150ms snap easing |
 
 ### Focus Accessibility (WCAG 2.4.11)
 
@@ -190,12 +190,12 @@ Interactions should feel like connecting Lego bricks:
 
 Inline body links (links within paragraphs or running text) follow different rules from navigation links and buttons:
 
-| State | Treatment |
-|-------|-----------|
-| **Default** | `text-black underline` with 3px `border-b-black` (underline via border-bottom, not text-decoration, for consistent weight) |
-| **Hover** | `bg-yellow-300` highlight floods behind the text. The underline remains. Yellow here is consistent with its role as interactive feedback — the user is hovering on something clickable. |
-| **Focus** | Same as hover: `bg-yellow-300` + underline. Focus and hover are visually identical for inline links. |
-| **Active** | `bg-yellow-100` — the highlight softens momentarily on press, then the navigation fires. |
+| State       | Treatment                                                                                                                                                                               |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Default** | `text-black underline` with 3px `border-b-black` (underline via border-bottom, not text-decoration, for consistent weight)                                                              |
+| **Hover**   | `bg-yellow-300` highlight floods behind the text. The underline remains. Yellow here is consistent with its role as interactive feedback — the user is hovering on something clickable. |
+| **Focus**   | Same as hover: `bg-yellow-300` + underline. Focus and hover are visually identical for inline links.                                                                                    |
+| **Active**  | `bg-yellow-100` — the highlight softens momentarily on press, then the navigation fires.                                                                                                |
 
 **Why yellow works here**: Yellow is reserved for interactive feedback across the system. An inline link turning yellow on hover is consistent — it signals "this is responding to you," not "this is a warning." The 3px underline on the default state already identifies it as a link before any interaction occurs.
 
@@ -210,11 +210,11 @@ Use a consistent spacing scale. Like the grid on a Lego baseplate, spacing shoul
 
 Spacing hierarchy (from tightest to loosest):
 
-| Context | Gap | Example |
-|---------|-----|---------|
-| **Within a component** (label + input, icon + text) | `gap-2` (8px) | Form field with its label |
-| **Between siblings in a grid** (cards, list items) | `gap-4` (16px) | Card grid, inventory list |
-| **Between sections** (form groups, page zones) | `gap-6` (24px) or more | Filter bar above a results grid |
+| Context                                             | Gap                    | Example                         |
+| --------------------------------------------------- | ---------------------- | ------------------------------- |
+| **Within a component** (label + input, icon + text) | `gap-2` (8px)          | Form field with its label       |
+| **Between siblings in a grid** (cards, list items)  | `gap-4` (16px)         | Card grid, inventory list       |
+| **Between sections** (form groups, page zones)      | `gap-6` (24px) or more | Filter bar above a results grid |
 
 The rule: `gap-2` for elements that belong together inside a component, `gap-4` for repeated items that tile alongside each other, `gap-6`+ for separating distinct sections of a page.
 
@@ -237,26 +237,31 @@ Pages follow a predictable structure: a top navigation bar, then content. The na
 Forms are central to a Lego inventory app. They follow the same brutalist principles — heavy borders, clear hierarchy, no ambiguity about what to fill in next.
 
 **Label positioning:**
+
 - Labels go **above** their fields, not inline. `flex="~ col" gap-2` for label + input pairs.
 - Labels are `text-sm uppercase font-bold tracking-wide` — the same loud treatment as headings, scaled down.
 - Required fields get no asterisk. Instead, mark optional fields with `(optional)` in `text-gray-600` after the label. Most fields in an inventory app are required — marking the minority is cleaner.
 
 **Field grouping:**
+
 - Related fields (e.g., "First name" + "Last name") sit side-by-side on desktop: `grid grid-cols-2 gap-4`. They stack to single-column on mobile.
 - Field groups are separated from each other with `gap-6`. A group is 2–4 related fields that answer one question (e.g., "Who are you?" = name + email).
 - Use a `border-b="3 black"` between major form sections (not between individual field groups). This is a structural separator, not a decorative one.
 
 **Inputs:**
+
 - All inputs get the full treatment: 3px black border, 4px offset shadow, `p-3` padding.
 - Inputs follow all interactive states from the states table. Focus = shadow grows + yellow highlight.
 - Placeholder text uses `text-gray-600`. Never use placeholder as a substitute for a label.
 
 **Submit button placement:**
+
 - Submit button sits at the bottom-left of the form, aligned with the fields above it. Not centered, not right-aligned.
 - On mobile, submit buttons are full-width.
 - Use `mt-6` to separate the submit area from the last field group — same spacing as between sections.
 
 **Multi-column forms:**
+
 - Maximum two columns on desktop. Three-column forms are too dense for bordered, shadowed inputs.
 - On tablet (640–1024px), collapse to single column if the form has more than 4 fields.
 
@@ -272,22 +277,24 @@ Use CSS Grid for data-heavy views (tables, inventory lists, card grids):
 
 The brand must hold at all sizes. Brutalism doesn't get soft on small screens.
 
-| Breakpoint | Width | Behavior |
-|------------|-------|----------|
-| **Mobile** | < 640px | Single column. Full-width cards. Stacked navigation (hamburger menu — see Mobile Navigation below). Shadows stay at 4px — they don't affect layout flow, so there's nothing to save. |
-| **Tablet** | 640px–1024px | Two-column grids. Side-by-side filters. |
-| **Desktop** | > 1024px | Full layout. Three-column grids. Inline navigation. |
+| Breakpoint  | Width        | Behavior                                                                                                                                                                             |
+| ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Mobile**  | < 640px      | Single column. Full-width cards. Stacked navigation (hamburger menu — see Mobile Navigation below). Shadows stay at 4px — they don't affect layout flow, so there's nothing to save. |
+| **Tablet**  | 640px–1024px | Two-column grids. Side-by-side filters.                                                                                                                                              |
+| **Desktop** | > 1024px     | Full layout. Three-column grids. Inline navigation.                                                                                                                                  |
 
 ### Mobile Navigation
 
 The hamburger menu is one of the most-used components. It follows the Snap Principle fully.
 
 **Trigger button:**
+
 - 44x44px minimum. 3px black border, 4px offset shadow. Contains a three-line hamburger icon (2px stroke, square caps).
 - Follows all standard interactive states: shadow grows to 6px on hover/focus (with `bg-yellow-300`), shrinks to 2px on press.
 - When menu is open, the trigger shows an X icon. The button stays in its pressed position (2px shadow) while the menu is open.
 
 **Menu panel:**
+
 - Opens as a full-width panel below the nav bar. It **pushes content down** — no overlays, no modals, no backdrop. Brutalism is honest about what it displaces.
 - 3px black border on the bottom edge (the top edge shares the nav bar's bottom border — no doubled borders).
 - `bg-white` background. No shadow on the panel itself — the nav bar's shadow is enough.
@@ -297,6 +304,7 @@ The hamburger menu is one of the most-used components. It follows the Snap Princ
 - Open/close uses the system transition: 150ms, snap easing, transitioning `max-height` or `grid-template-rows` (not `height`, which triggers layout thrash).
 
 Key rules across breakpoints:
+
 - Borders stay 3px everywhere. Do not thin them on mobile.
 - Shadows stay 4px everywhere. Box shadows don't affect layout flow — there's no space to save by shrinking them. Brutalism doesn't get soft on small screens.
 - Touch targets stay 44px minimum. Brutalist buttons are already chunky — this is a strength on mobile.
@@ -307,14 +315,14 @@ Icons must match the weight and sharpness of the rest of the system. A thin, rou
 
 ### Specifications
 
-| Property | Value |
-|----------|-------|
-| **Stroke width** | 2px — consistent with the system's heavy visual weight |
-| **Line caps** | Square (butt), not rounded — sharp corners apply to icons too |
-| **Line joins** | Miter (sharp), not rounded |
-| **Fill** | None — stroke-only icons. Fill creates a solid mass that competes visually with bordered elements, which should be the only "solid" shapes in the system. Stroke-only icons maintain consistent optical weight with the surrounding UI. |
-| **Size** | 20px (inline with text), 24px (standalone buttons) |
-| **Color** | `currentColor` — icons inherit text color. No decorative icon colors |
+| Property         | Value                                                                                                                                                                                                                                   |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Stroke width** | 2px — consistent with the system's heavy visual weight                                                                                                                                                                                  |
+| **Line caps**    | Square (butt), not rounded — sharp corners apply to icons too                                                                                                                                                                           |
+| **Line joins**   | Miter (sharp), not rounded                                                                                                                                                                                                              |
+| **Fill**         | None — stroke-only icons. Fill creates a solid mass that competes visually with bordered elements, which should be the only "solid" shapes in the system. Stroke-only icons maintain consistent optical weight with the surrounding UI. |
+| **Size**         | 20px (inline with text), 24px (standalone buttons)                                                                                                                                                                                      |
+| **Color**        | `currentColor` — icons inherit text color. No decorative icon colors                                                                                                                                                                    |
 
 ### Recommended Library
 
@@ -325,12 +333,13 @@ Icons must match the weight and sharpness of the rest of the system. A thin, rou
    Target the inner SVG via the shared "ph-bold" class. Verify the actual class
    structure against the installed version of @phosphor-icons/vue — it may vary. */
 .ph-bold svg {
-  stroke-linecap: butt;
-  stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
 }
 ```
 
 Why Phosphor over alternatives:
+
 - **Lucide** — rounded caps by default, and its overall aesthetic is lighter/friendlier than what Brick Brutalism needs.
 - **Heroicons** — also rounds by default, and the Outline variant uses thinner strokes.
 - **Material Symbols** — configurable but introduces Google's design language, which clashes with the brand.
@@ -361,17 +370,17 @@ Brick Brutalism is inherently accessible by design — high contrast and bold vi
 
 Things that violate the Brick Brutalism identity. If you see these in a PR, flag them.
 
-| Don't                              | Why                                              | Do Instead                                                                                              |
-| ---------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `rounded`, `rounded-lg`, etc.      | Bricks have sharp edges                          | Remove border-radius entirely                                                                           |
-| `shadow-md`, `shadow-lg` (blurred) | Fake depth, not physical                         | Use hard offset shadows                                                                                 |
-| Gradients                          | Bricks are solid-colored                         | Use flat color fills                                                                                    |
-| Opacity for emphasis               | Muddy and ambiguous                              | Use a different color                                                                                   |
-| 1px borders                        | Too subtle, not confident                        | Use 3px borders (sole exception: `<tr>` separators inside `<table>` elements)                           |
-| Decorative color                   | Color must have meaning                          | Reserve accent colors for states                                                                        |
-| Centered paragraph text            | Hard to read                                     | Left-align body text                                                                                    |
-| Custom fonts                       | Performance cost outweighs typographic consistency | Use system font stack; rely on weight, case, and spacing for identity                                 |
-| `transition-all`                   | Overreaching, can cause jank                     | Transition specific properties: `transition-shadow`, `transition-background-color`, `transition-transform` |
+| Don't                              | Why                                                | Do Instead                                                                                                 |
+| ---------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `rounded`, `rounded-lg`, etc.      | Bricks have sharp edges                            | Remove border-radius entirely                                                                              |
+| `shadow-md`, `shadow-lg` (blurred) | Fake depth, not physical                           | Use hard offset shadows                                                                                    |
+| Gradients                          | Bricks are solid-colored                           | Use flat color fills                                                                                       |
+| Opacity for emphasis               | Muddy and ambiguous                                | Use a different color                                                                                      |
+| 1px borders                        | Too subtle, not confident                          | Use 3px borders (sole exception: `<tr>` separators inside `<table>` elements)                              |
+| Decorative color                   | Color must have meaning                            | Reserve accent colors for states                                                                           |
+| Centered paragraph text            | Hard to read                                       | Left-align body text                                                                                       |
+| Custom fonts                       | Performance cost outweighs typographic consistency | Use system font stack; rely on weight, case, and spacing for identity                                      |
+| `transition-all`                   | Overreaching, can cause jank                       | Transition specific properties: `transition-shadow`, `transition-background-color`, `transition-transform` |
 
 ## Brand Voice in UI
 
@@ -387,14 +396,14 @@ Things that violate the Brick Brutalism identity. If you see these in a PR, flag
 
 Every app state is a moment to reinforce the brand. Here's how the voice sounds in each:
 
-| State | Tone | Examples |
-|-------|------|----------|
-| **Empty states** | Inviting, playful | "No bricks here yet. Start building!" / "Your collection is wide open. Add your first set." |
-| **Loading** | Brief, confident | "Loading your bricks..." / "Pulling this together..." |
-| **Success** | Celebratory, short | "Saved." / "You're all set." — Use Lego metaphors only when the action relates to physical inventory (e.g., "Brick placed!" when adding a piece to a storage location, not when saving a user preference). |
-| **Error** | Honest, helpful | "That didn't work. Try again?" / "We lost the connection. Check your network." |
-| **Destructive confirmation** | Clear, no drama | "Delete this set? This can't be undone." (for single-item deletion) / "Remove all items? Gone means gone." (for bulk/irreversible wipes). Use "This can't be undone" when the user might expect an undo option; use "Gone means gone" when the finality itself is the point. |
-| **Onboarding** | Welcoming, oriented | "Welcome to Brick Inventory. Let's get your collection sorted." / "First, let's add a storage location." |
+| State                        | Tone                | Examples                                                                                                                                                                                                                                                                     |
+| ---------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Empty states**             | Inviting, playful   | "No bricks here yet. Start building!" / "Your collection is wide open. Add your first set."                                                                                                                                                                                  |
+| **Loading**                  | Brief, confident    | "Loading your bricks..." / "Pulling this together..."                                                                                                                                                                                                                        |
+| **Success**                  | Celebratory, short  | "Saved." / "You're all set." — Use Lego metaphors only when the action relates to physical inventory (e.g., "Brick placed!" when adding a piece to a storage location, not when saving a user preference).                                                                   |
+| **Error**                    | Honest, helpful     | "That didn't work. Try again?" / "We lost the connection. Check your network."                                                                                                                                                                                               |
+| **Destructive confirmation** | Clear, no drama     | "Delete this set? This can't be undone." (for single-item deletion) / "Remove all items? Gone means gone." (for bulk/irreversible wipes). Use "This can't be undone" when the user might expect an undo option; use "Gone means gone" when the finality itself is the point. |
+| **Onboarding**               | Welcoming, oriented | "Welcome to Brick Inventory. Let's get your collection sorted." / "First, let's add a storage location."                                                                                                                                                                     |
 
 ### Tagline Variants
 
