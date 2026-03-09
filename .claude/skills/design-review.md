@@ -35,14 +35,16 @@ npm run knip          # No unused exports
 - [ ] No horizontal overflow on small screens
 - [ ] Touch targets are at least 44x44px on mobile
 
-### Neo-Brutalism Consistency
+### Brick Brutalism Consistency (see `.claude/docs/brand.md`)
 
-- [ ] Bold 3px black borders on interactive elements
-- [ ] Solid offset shadows (no blur, no rounded corners)
+- [ ] Bold 3px black borders on interactive elements (never 1px, never rounded)
+- [ ] Solid offset shadows — no blur, no spread (4px default, 6px hover/focus, 2px active)
 - [ ] Focus states: shadow grows + yellow background highlight
 - [ ] Error states: red background + red offset shadow
 - [ ] Labels: uppercase, bold, wide tracking
-- [ ] High contrast colors throughout
+- [ ] High contrast colors throughout — no gradients, no opacity for emphasis
+- [ ] No border-radius anywhere (sharp corners are the brand)
+- [ ] Accent colors used for interaction feedback only, not decoration
 
 ### Code Quality
 

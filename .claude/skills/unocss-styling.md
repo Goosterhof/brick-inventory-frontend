@@ -36,14 +36,16 @@ Prefer attributify syntax over `class` for static utilities:
 
 Use `:class` for dynamic/conditional styles only.
 
-## Design System (Neo-Brutalism)
+## Design System (Brick Brutalism)
 
-This project uses a **neo-brutalism** style:
+This project uses **Brick Brutalism**. See `.claude/docs/brand.md` for the full brand document (color palette, anti-patterns, interactive states, voice guidelines).
 
-- **Borders**: Bold 3px black borders (`border="3 black"`)
-- **Shadows**: Solid offset box shadows, no blur (`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`)
-- **Focus states**: Shadow grows on focus (`focus:shadow-[6px_6px_0px_0px_...]`), yellow background highlight (`focus:bg-yellow-100`)
-- **Error states**: Red-tinted background (`bg-red-100`) with red offset shadow
+Quick reference for styling:
+
+- **Borders**: Bold 3px black borders (`border="3 black"`) — never 1px, never rounded
+- **Shadows**: Solid offset, no blur — default `shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`, hover/focus `6px`, active/pressed `2px`
+- **Focus states**: Shadow grows + yellow highlight (`focus:bg-yellow-100`)
+- **Error states**: Red background (`bg-red-100`) + red offset shadow (`rgba(239,68,68,1)`)
 - **Labels**: Uppercase, bold, wide tracking (`uppercase font-bold tracking-wide`)
-- **Corners**: Sharp corners (no border-radius)
-- **Colors**: High contrast - black on white with bright accents (yellow, red)
+- **Corners**: Sharp corners — **never** use `rounded` or `border-radius`
+- **Colors**: Black/white primary, yellow accent (interaction only), red (errors only). No gradients, no opacity tricks
