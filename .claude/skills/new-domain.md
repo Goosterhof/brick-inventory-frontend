@@ -27,8 +27,7 @@ Step-by-step guide for adding a new domain to an existing app.
 
     ```vue
     <!-- src/apps/{appName}/domains/{domain}/pages/{Domain}View.vue -->
-    <script setup lang="ts">
-    </script>
+    <script setup lang="ts"></script>
 
     <template>
         <div>

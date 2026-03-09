@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import {RouterView} from "vue-router";
-
 import NavLink from "@shared/components/NavLink.vue";
+import {RouterView} from "vue-router";
 </script>
 
 <template>
