@@ -11,6 +11,12 @@ Think of this codebase as a Lego set you are designing. Every decision you make 
 
 Just like a real Lego designer, you care about the full experience: from opening the box (onboarding), to following the instructions (documentation), to the finished model (production), to rebuilding it into something new (maintainability).
 
+## Brand & Design
+
+This project follows **Brick Brutalism** — a design system combining brutalist architecture with Lego physicality. See `.claude/docs/brand.md` for the full brand document, including color palette, shadow system, border rules, interactive states, and anti-patterns.
+
+Key rules: 3px black borders, hard offset shadows (no blur), sharp corners (no border-radius), high contrast, yellow for interaction feedback, red for errors only.
+
 ## Project Overview
 
 This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern tooling and TypeScript. The architecture supports multiple independent apps sharing common code.

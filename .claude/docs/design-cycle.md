@@ -38,7 +38,7 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 - Work domain-by-domain, component-by-component
 - Use the relevant skills as guides:
     - `vue-component` for component patterns
-    - `unocss-styling` for neo-brutalism styling
+    - `unocss-styling` for Brick Brutalism styling (see also `.claude/docs/brand.md`)
     - `api-usage` for HTTP requests and adapters
     - `api-integration` for end-to-end API wiring
 - Write tests alongside code (not after):
