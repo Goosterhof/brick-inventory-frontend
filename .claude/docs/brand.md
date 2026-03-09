@@ -128,18 +128,52 @@ Shadows in Brick Brutalism are not about realism — they're about physicality. 
 - **Shadow grows on hover/focus.** The brick lifts off the surface — it's about to be picked up and placed.
 - **Shadow shrinks on active/press.** The brick is being pushed down into position. Click. Snap.
 
+## Transitions
+
+All state changes use a single, system-wide timing token. This is the "snap" — fast enough to feel physical, eased to feel like a brick clicking into place.
+
+### Transition Token
+
+| Property | Value | CSS |
+|----------|-------|-----|
+| **Duration** | 150ms | `transition-duration: 150ms` |
+| **Easing** | Snap curve | `transition-timing-function: cubic-bezier(0.2, 0, 0, 1)` |
+
+### UnoCSS Shorthand
+
+```
+transition="shadow 150ms ease-[cubic-bezier(0.2,0,0,1)], background-color 150ms ease-[cubic-bezier(0.2,0,0,1)]"
+```
+
+### Rules
+
+- **Always transition specific properties** — never use `transition-all`. Transition `shadow`, `background-color`, and `transform` as needed.
+- **Disabled states don't transition.** The change is immediate — a disabled element isn't playing along.
+- **150ms is the only duration.** Don't slow down transitions for "smoothness" or speed them up for "snappiness." One timing, everywhere.
+- **No transitions on page load.** Elements should appear in their final state, not animate in.
+
 ## Interactive States
 
 Every interactive element must communicate its state clearly. No ambiguity.
 
-| State                | Visual Treatment                                                                    |
-| -------------------- | ----------------------------------------------------------------------------------- |
-| **Default**          | 3px black border, 4px offset shadow                                                 |
-| **Hover**            | Shadow grows to 6px, background may shift (e.g., yellow highlight)                  |
-| **Focus**            | Shadow grows to 6px, `bg-yellow-300` highlight, `outline="none"`                    |
-| **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place)                                      |
-| **Disabled**         | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed`  |
-| **Error**            | `bg-red-200`, red shadow (`red-500`), `border-red-500`                              |
+| State                | Visual Treatment                                                                    | Transition |
+| -------------------- | ----------------------------------------------------------------------------------- | ---------- |
+| **Default**          | 3px black border, 4px offset shadow                                                 | — |
+| **Hover**            | Shadow grows to 6px, background may shift (e.g., yellow highlight)                  | 150ms snap easing |
+| **Focus**            | Shadow grows to 6px, `bg-yellow-300` highlight, `outline="none"` (see Focus Accessibility below) | 150ms snap easing |
+| **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place)                                      | 150ms snap easing |
+| **Disabled**         | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed`  | None (immediate) |
+| **Error**            | `bg-red-200`, red shadow (`red-500`), `border-red-500`                              | 150ms snap easing |
+
+### Focus Accessibility (WCAG 2.4.11)
+
+The `outline: none` in our focus state is only safe because **both** treatments — `bg-yellow-300` and the 6px shadow — are present together. Neither is sufficient alone:
+
+- **Yellow-300 (`#FDE047`) on white has a contrast ratio of ~1.07:1** — it fails as a standalone focus indicator.
+- **The 6px hard shadow provides the structural, high-contrast indicator** (black on white, well above the minimum area requirement).
+- **The yellow background provides the color-fill reinforcement** that makes focus unmistakable at a glance.
+
+**Rule: `outline: none` must never be applied to a focusable element unless both `bg-yellow-300` and the 6px shadow are present.** If either treatment is missing, keep the browser's default outline or provide an equivalent indicator. Violating this fails WCAG 2.2 Focus Appearance (2.4.11).
 
 ### The Snap Principle
 
@@ -149,6 +183,19 @@ Interactions should feel like connecting Lego bricks:
 - **Press** = pushing it down (it snaps — shadow shrinks)
 - **Focus** = highlighting the stud you're about to connect (yellow glow)
 
+### Inline Link States
+
+Inline body links (links within paragraphs or running text) follow different rules from navigation links and buttons:
+
+| State | Treatment |
+|-------|-----------|
+| **Default** | `text-black underline` with 3px `border-b-black` (underline via border-bottom, not text-decoration, for consistent weight) |
+| **Hover** | `bg-yellow-300` highlight floods behind the text. The underline remains. Yellow here is consistent with its role as interactive feedback — the user is hovering on something clickable. |
+| **Focus** | Same as hover: `bg-yellow-300` + underline. Focus and hover are visually identical for inline links. |
+| **Active** | `bg-yellow-100` — the highlight softens momentarily on press, then the navigation fires. |
+
+**Why yellow works here**: Yellow is reserved for interactive feedback across the system. An inline link turning yellow on hover is consistent — it signals "this is responding to you," not "this is a warning." The 3px underline on the default state already identifies it as a link before any interaction occurs.
+
 ## Layout
 
 ### Spacing
@@ -157,8 +204,16 @@ Use a consistent spacing scale. Like the grid on a Lego baseplate, spacing shoul
 
 - Use multiples of `4` for spacing (`gap-2`, `p-4`, `m-6`, etc.)
 - Minimum touch target: 44x44px on mobile
-- Group related elements with `gap-2` (8px)
-- Separate sections with `gap-6` (24px) or more
+
+Spacing hierarchy (from tightest to loosest):
+
+| Context | Gap | Example |
+|---------|-----|---------|
+| **Within a component** (label + input, icon + text) | `gap-2` (8px) | Form field with its label |
+| **Between siblings in a grid** (cards, list items) | `gap-4` (16px) | Card grid, inventory list |
+| **Between sections** (form groups, page zones) | `gap-6` (24px) or more | Filter bar above a results grid |
+
+The rule: `gap-2` for elements that belong together inside a component, `gap-4` for repeated items that tile alongside each other, `gap-6`+ for separating distinct sections of a page.
 
 ### Containers
 
@@ -179,7 +234,7 @@ Pages follow a predictable structure: a top navigation bar, then content. The na
 Use CSS Grid for data-heavy views (tables, inventory lists, card grids):
 
 - **Card grids**: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4` — cards are bricks; they tile neatly.
-- **Data tables**: Full-width with 3px outer border. Row borders are 1px `gray-200` for internal division (the one exception to the 3px rule — internal grid lines on a baseplate are thinner than the edges).
+- **Data tables**: Full-width with 3px outer border. Internal `<tr>` separator borders within a `<table>` element are 1px `gray-200` — this is the **only** exception to the 3px border rule. It applies strictly to horizontal row dividers inside tables, not to any other element or context. If something isn't a `<tr>` inside a `<table>`, it gets 3px or nothing.
 - **Filter bars**: Horizontal row above content. Filters are chunky bordered elements, not floating pills.
 
 ### Breakpoints
@@ -188,13 +243,13 @@ The brand must hold at all sizes. Brutalism doesn't get soft on small screens.
 
 | Breakpoint | Width | Behavior |
 |------------|-------|----------|
-| **Mobile** | < 640px | Single column. Full-width cards. Stacked navigation (hamburger with bordered menu). Shadows remain but may reduce to 3px offset to save space. |
+| **Mobile** | < 640px | Single column. Full-width cards. Stacked navigation (hamburger with bordered menu). Shadows stay at 4px — they don't affect layout flow, so there's nothing to save. |
 | **Tablet** | 640px–1024px | Two-column grids. Side-by-side filters. |
 | **Desktop** | > 1024px | Full layout. Three-column grids. Inline navigation. |
 
 Key rules across breakpoints:
 - Borders stay 3px everywhere. Do not thin them on mobile.
-- Shadows may shrink (4px → 3px) on mobile for space, but never disappear.
+- Shadows stay 4px everywhere. Box shadows don't affect layout flow — there's no space to save by shrinking them. Brutalism doesn't get soft on small screens.
 - Touch targets stay 44px minimum. Brutalist buttons are already chunky — this is a strength on mobile.
 
 ## Iconography
@@ -212,10 +267,28 @@ Icons must match the weight and sharpness of the rest of the system. A thin, rou
 | **Size** | 20px (inline with text), 24px (standalone buttons) |
 | **Color** | `currentColor` — icons inherit text color. No decorative icon colors |
 
+### Recommended Library
+
+**Phosphor Icons** (`@phosphor-icons/vue`) — use the **Bold** weight. Phosphor Bold uses 2px strokes with square-ish geometry that aligns well with the system. However, it defaults to `stroke-linecap: round` and `stroke-linejoin: round`, so apply these overrides globally:
+
+```css
+.ph-icon svg {
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+```
+
+Why Phosphor over alternatives:
+- **Lucide** — rounded caps by default, and its overall aesthetic is lighter/friendlier than what Brick Brutalism needs.
+- **Heroicons** — also rounds by default, and the Outline variant uses thinner strokes.
+- **Material Symbols** — configurable but introduces Google's design language, which clashes with the brand.
+
+If another library is chosen, it must meet the specifications above. The stroke overrides are non-negotiable.
+
 ### Rules
 
 - **Keep icons simple.** Prefer geometric, recognizable shapes. Avoid detailed illustrations or flourishes.
-- **No rounded endcaps.** If the icon library defaults to `stroke-linecap: round`, override it to `butt` or choose a square-cap icon set.
+- **No rounded endcaps.** If the icon library defaults to `stroke-linecap: round`, override it to `butt`. This is not optional.
 - **Icons are not decoration.** Every icon must serve a functional purpose (navigation, action indicator, status). Don't add icons for visual flair.
 - **Pair with text.** Standalone icons should have an `aria-label` or adjacent text. A brick without a label is just a bump.
 
@@ -226,7 +299,7 @@ Brick Brutalism is inherently accessible by design — high contrast and bold vi
 ### Requirements
 
 - **Color contrast**: All text meets WCAG AA (4.5:1 for normal text, 3:1 for large text). Black on white exceeds this.
-- **Focus indicators**: Every focusable element has a visible focus state (yellow highlight + shadow growth). Never remove focus outlines without replacing them.
+- **Focus indicators**: Every focusable element has a visible focus state (yellow highlight + shadow growth). The `outline: none` declaration requires **both** `bg-yellow-300` and the 6px shadow to be present — see Focus Accessibility above. Never remove focus outlines without both replacements active.
 - **Error identification**: Errors use color (red), position (below the field), and text (descriptive message) — never color alone.
 - **Touch targets**: Minimum 44x44px on mobile. Chunky buttons are a feature, not a compromise.
 - **Keyboard navigation**: All interactions work with keyboard. Tab order follows visual order.
@@ -242,7 +315,7 @@ Things that violate the Brick Brutalism identity. If you see these in a PR, flag
 | `shadow-md`, `shadow-lg` (blurred) | Fake depth, not physical                         | Use hard offset shadows                                                                                 |
 | Gradients                          | Bricks are solid-colored                         | Use flat color fills                                                                                    |
 | Opacity for emphasis               | Muddy and ambiguous                              | Use a different color                                                                                   |
-| 1px borders                        | Too subtle, not confident                        | Use 3px borders                                                                                         |
+| 1px borders                        | Too subtle, not confident                        | Use 3px borders (sole exception: `<tr>` separators inside `<table>` elements)                           |
 | Decorative color                   | Color must have meaning                          | Reserve accent colors for states                                                                        |
 | Centered paragraph text            | Hard to read                                     | Left-align body text                                                                                    |
 | Custom fonts                       | Performance cost outweighs typographic consistency | Use system font stack; rely on weight, case, and spacing for identity                                 |
@@ -266,7 +339,7 @@ Every app state is a moment to reinforce the brand. Here's how the voice sounds 
 |-------|------|----------|
 | **Empty states** | Inviting, playful | "No bricks here yet. Start building!" / "Your collection is wide open. Add your first set." |
 | **Loading** | Brief, confident | "Loading your bricks..." / "Pulling this together..." |
-| **Success** | Celebratory, short | "Saved." / "Brick placed!" / "You're all set." |
+| **Success** | Celebratory, short | "Saved." / "You're all set." — Use Lego metaphors only when the action relates to physical inventory (e.g., "Brick placed!" when adding a piece to a storage location, not when saving a user preference). |
 | **Error** | Honest, helpful | "That didn't work. Try again?" / "We lost the connection. Check your network." |
 | **Destructive confirmation** | Clear, no drama | "Delete this set? This can't be undone." / "Remove all items? Gone means gone." |
 | **Onboarding** | Welcoming, oriented | "Welcome to Brick Inventory. Let's get your collection sorted." / "First, let's add a storage location." |
