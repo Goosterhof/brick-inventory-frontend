@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import {FamilyRouterLink, FamilyRouterView, familyAuthService, familyRouterService} from "@app/services";
 import {PhSignOut} from "@phosphor-icons/vue";
+import NavHeader from "@shared/components/NavHeader.vue";
+import NavMobileLink from "@shared/components/NavMobileLink.vue";
+import {computed} from "vue";
+
+const currentRouteName = computed(() => familyRouterService.currentRouteRef.value.name);
 
 const handleLogout = async () => {
     await familyAuthService.logout();
@@ -9,18 +14,30 @@ const handleLogout = async () => {
 </script>
 
 <template>
-    <header p="4" border="b-3 black">
-        <nav flex gap="4" items="center" justify="between">
-            <div flex gap="4">
-                <FamilyRouterLink :to="{name: 'home'}">Home</FamilyRouterLink>
-                <FamilyRouterLink :to="{name: 'about'}">About</FamilyRouterLink>
-                <span v-show="familyAuthService.isLoggedIn.value">
-                    <FamilyRouterLink :to="{name: 'sets'}">Mijn Sets</FamilyRouterLink>
-                </span>
-            </div>
+    <NavHeader>
+        <template #links>
+            <FamilyRouterLink :to="{name: 'home'}">Home</FamilyRouterLink>
+            <FamilyRouterLink :to="{name: 'about'}">About</FamilyRouterLink>
+            <FamilyRouterLink v-show="familyAuthService.isLoggedIn.value" :to="{name: 'sets'}">
+                Mijn Sets
+            </FamilyRouterLink>
+        </template>
+
+        <template #mobile-links>
+            <NavMobileLink to="/" :active="currentRouteName === 'home'">Home</NavMobileLink>
+            <NavMobileLink to="/about" :active="currentRouteName === 'about'">About</NavMobileLink>
+            <NavMobileLink v-show="familyAuthService.isLoggedIn.value" to="/sets" :active="currentRouteName === 'sets'">
+                Mijn Sets
+            </NavMobileLink>
+        </template>
+
+        <template #actions>
             <button
                 v-if="familyAuthService.isLoggedIn.value"
                 @click="handleLogout"
+                flex
+                items="center"
+                gap="2"
                 p="x-4 y-2"
                 bg="white hover:yellow-300 focus:yellow-300"
                 font="bold"
@@ -30,10 +47,11 @@ const handleLogout = async () => {
                 outline="none"
                 class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             >
-                <PhSignOut size="20" aria-hidden="true" /> Logout
+                <PhSignOut size="20" aria-hidden="true" />
+                Logout
             </button>
-        </nav>
-    </header>
+        </template>
+    </NavHeader>
 
     <main p="4">
         <FamilyRouterView />
