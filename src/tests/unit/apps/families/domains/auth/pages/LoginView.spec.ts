@@ -68,14 +68,14 @@ describe("LoginView", () => {
         expect(inputs[1]?.props("type")).toBe("password");
     });
 
-    it("should mark all fields as required", () => {
+    it("should have all fields required by default", () => {
         // Arrange & Act
         const wrapper = shallowMount(LoginView);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
         for (const input of inputs) {
-            expect(input.props("required")).toBe(true);
+            expect(input.props("optional")).toBe(false);
         }
     });
 

@@ -50,8 +50,8 @@ describe("PrimaryButton", () => {
         // Assert
         expect(wrapper.attributes("class")).toContain("brick-border");
         expect(wrapper.attributes("class")).toContain("brick-shadow");
-        expect(wrapper.attributes("bg")).toBe("black hover:yellow-100 disabled:gray-300");
-        expect(wrapper.attributes("text")).toBe("white hover:black disabled:gray-600");
+        expect(wrapper.attributes("bg")).toBe("black hover:yellow-300 focus:yellow-300 disabled:gray-200");
+        expect(wrapper.attributes("text")).toBe("white hover:black focus:black disabled:gray-600");
         expect(wrapper.attributes("font")).toBe("bold");
         expect(wrapper.attributes("uppercase")).toBeDefined();
     });

@@ -19,21 +19,20 @@ describe("FormLabel", () => {
         expect(wrapper.find("label").attributes("for")).toBe("input-123");
     });
 
-    it("should show required indicator when required", () => {
+    it("should show optional indicator when optional", () => {
         // Arrange
-        const wrapper = shallowMount(FormLabel, {props: {required: true}, slots: {default: "Email"}});
+        const wrapper = shallowMount(FormLabel, {props: {optional: true}, slots: {default: "Email"}});
 
         // Assert
-        expect(wrapper.find("label").text()).toContain("*");
-        expect(wrapper.find("span").attributes("aria-hidden")).toBe("true");
+        expect(wrapper.find("label").text()).toContain("(optional)");
     });
 
-    it("should not show required indicator when not required", () => {
+    it("should not show optional indicator when not optional", () => {
         // Arrange
         const wrapper = shallowMount(FormLabel, {slots: {default: "Email"}});
 
         // Assert
-        expect(wrapper.find("label").text()).not.toContain("*");
+        expect(wrapper.find("label").text()).not.toContain("(optional)");
         expect(wrapper.find("span").exists()).toBe(false);
     });
 });

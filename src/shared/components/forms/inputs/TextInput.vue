@@ -9,14 +9,14 @@ const {
     type = "text",
     placeholder = "",
     disabled = false,
-    required = false,
+    optional = false,
     error = "",
 } = defineProps<{
     label: string;
     type?: "text" | "email" | "password" | "search" | "tel" | "url";
     placeholder?: string;
     disabled?: boolean;
-    required?: boolean;
+    optional?: boolean;
     error?: string;
 }>();
 
@@ -27,32 +27,31 @@ const errorId = computed(() => (error ? `${inputId}-error` : undefined));
 
 const inputStateClass = computed(() => {
     if (disabled) {
-        return "brick-disabled opacity-70";
+        return "brick-disabled";
     }
     if (error) {
-        return "bg-red-100 brick-shadow-error focus:brick-shadow-error-hover";
+        return "bg-red-200 border-red-500 brick-shadow-error focus:brick-shadow-error-hover";
     }
-    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-yellow-100";
+    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-yellow-300";
 });
 </script>
 
 <template>
     <FormField>
-        <FormLabel :for="inputId" :required="required">{{ label }}</FormLabel>
+        <FormLabel :for="inputId" :optional="optional">{{ label }}</FormLabel>
         <input
             :id="inputId"
             v-model="model"
             :type="type"
             :placeholder="placeholder"
             :disabled="disabled"
-            :required="required"
+            :required="!optional"
             :aria-invalid="error ? true : undefined"
             :aria-describedby="errorId"
             p="x-4 y-3"
             text="black"
             font="medium"
-            transition="shadow duration-150"
-            class="brick-border"
+            class="brick-border brick-transition"
             outline="none"
             :class="inputStateClass"
         />

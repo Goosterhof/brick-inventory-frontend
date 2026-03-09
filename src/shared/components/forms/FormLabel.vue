@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const {for: forId, required = false} = defineProps<{for?: string; required?: boolean}>();
+const {for: forId, optional = false} = defineProps<{for?: string; optional?: boolean}>();
 </script>
 
 <template>
     <label :for="forId" class="brick-label">
         <slot />
-        <span v-if="required" text="red-500" aria-hidden="true">*</span>
+        <span v-if="optional" text="gray-600" font="normal"> (optional)</span>
     </label>
 </template>
