@@ -48,11 +48,12 @@ describe("App", () => {
 
         // Assert
         const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
-        expect(links).toHaveLength(3);
-        const [homeLink, aboutLink, setsLink] = links;
+        expect(links).toHaveLength(4);
+        const [homeLink, aboutLink, setsLink, storageLink] = links;
         expect(homeLink?.text()).toBe("Home");
         expect(aboutLink?.text()).toBe("About");
         expect(setsLink?.text()).toContain("Mijn Sets");
+        expect(storageLink?.text()).toContain("Opslag");
     });
 
     it("should render mobile navigation links", () => {
@@ -61,10 +62,11 @@ describe("App", () => {
 
         // Assert
         const mobileLinks = wrapper.findAllComponents({name: "NavMobileLink"});
-        expect(mobileLinks).toHaveLength(3);
+        expect(mobileLinks).toHaveLength(4);
         expect(mobileLinks[0]?.text()).toBe("Home");
         expect(mobileLinks[1]?.text()).toBe("About");
         expect(mobileLinks[2]?.text()).toContain("Mijn Sets");
+        expect(mobileLinks[3]?.text()).toContain("Opslag");
     });
 
     it("should mark active mobile link based on current route", () => {

@@ -4,6 +4,7 @@ import {routes as aboutRoutes} from "@app/domains/about";
 import {routes as authRoutes} from "@app/domains/auth";
 import {routes as homeRoutes} from "@app/domains/home";
 import {routes as setsRoutes} from "@app/domains/sets";
+import {routes as storageRoutes} from "@app/domains/storage";
 import {createRouterService} from "@shared/services/router";
 
 const routes = [
@@ -11,6 +12,7 @@ const routes = [
     ...aboutRoutes,
     ...authRoutes,
     ...setsRoutes,
+    ...storageRoutes,
 ] as const satisfies readonly RouteRecordRaw[];
 
 export type FamilyAppRoutes = typeof routes;
