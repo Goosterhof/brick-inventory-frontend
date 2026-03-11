@@ -27,15 +27,29 @@ const handleLogout = async () => {
         </template>
 
         <template #mobile-links>
-            <NavMobileLink to="/" :active="currentRouteName === 'home'">Home</NavMobileLink>
-            <NavMobileLink to="/about" :active="currentRouteName === 'about'">About</NavMobileLink>
-            <NavMobileLink v-show="familyAuthService.isLoggedIn.value" to="/sets" :active="currentRouteName === 'sets'">
+            <NavMobileLink to="/" :active="currentRouteName === 'home'" @click="familyRouterService.goToRoute('home')">
+                Home
+            </NavMobileLink>
+            <NavMobileLink
+                to="/about"
+                :active="currentRouteName === 'about'"
+                @click="familyRouterService.goToRoute('about')"
+            >
+                About
+            </NavMobileLink>
+            <NavMobileLink
+                v-show="familyAuthService.isLoggedIn.value"
+                to="/sets"
+                :active="currentRouteName === 'sets'"
+                @click="familyRouterService.goToRoute('sets')"
+            >
                 Mijn Sets
             </NavMobileLink>
             <NavMobileLink
                 v-show="familyAuthService.isLoggedIn.value"
                 to="/storage"
                 :active="currentRouteName === 'storage'"
+                @click="familyRouterService.goToRoute('storage')"
             >
                 Opslag
             </NavMobileLink>
