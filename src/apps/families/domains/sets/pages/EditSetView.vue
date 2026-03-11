@@ -70,7 +70,7 @@ const handleDelete = async () => {
         <p v-if="loading" text="gray-600">Laden...</p>
 
         <template v-else-if="familySet">
-            <h1 text="2xl" font="bold" m="b-2">Set bewerken</h1>
+            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">Set bewerken</h1>
             <p text="gray-600" m="b-6">{{ familySet.set.name }} ({{ familySet.set.setNum }})</p>
 
             <form flex="~ col" gap="4" @submit.prevent="handleSubmit">
@@ -82,11 +82,11 @@ const handleDelete = async () => {
                         id="status-select"
                         v-model="status"
                         p="x-4 y-3"
-                        bg="white focus:yellow-300"
+                        bg="white hover:yellow-300 focus:yellow-300"
                         text="black"
                         font="medium"
                         outline="none"
-                        class="brick-border brick-shadow brick-transition focus:brick-shadow-hover"
+                        class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     >
                         <option value="sealed">Verzegeld</option>
                         <option value="built">Gebouwd</option>
@@ -105,11 +105,11 @@ const handleDelete = async () => {
                         v-model="purchaseDate"
                         type="date"
                         p="x-4 y-3"
-                        bg="white focus:yellow-300"
+                        bg="white hover:yellow-300 focus:yellow-300"
                         text="black"
                         font="medium"
                         outline="none"
-                        class="brick-border brick-shadow brick-transition focus:brick-shadow-hover"
+                        class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     />
                 </div>
 
@@ -123,11 +123,11 @@ const handleDelete = async () => {
                         v-model="notes"
                         rows="3"
                         p="x-4 y-3"
-                        bg="white focus:yellow-300"
+                        bg="white hover:yellow-300 focus:yellow-300"
                         text="black"
                         font="medium"
                         outline="none"
-                        class="brick-border brick-shadow brick-transition focus:brick-shadow-hover"
+                        class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     />
                 </div>
 

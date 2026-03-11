@@ -44,7 +44,7 @@ const goBack = async () => {
 </script>
 
 <template>
-    <div>
+    <div max-w="6xl" m="x-auto">
         <p v-if="loading" text="gray-600">Laden...</p>
 
         <template v-else-if="familySet">
@@ -78,7 +78,7 @@ const goBack = async () => {
                 </div>
 
                 <div flex="1 ~ col" gap="3">
-                    <h1 text="2xl" font="bold">{{ familySet.set.name }}</h1>
+                    <h1 text="2xl" font="bold" uppercase tracking="wide">{{ familySet.set.name }}</h1>
                     <p text="gray-600">{{ familySet.set.setNum }}</p>
 
                     <div flex="~ col" gap="2" m="t-2">
@@ -126,7 +126,7 @@ const goBack = async () => {
             </div>
 
             <div v-else-if="setWithParts" m="t-8">
-                <h2 text="xl" font="bold" m="b-4">
+                <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
                     Onderdelen ({{ setWithParts.parts.filter((p) => !p.isSpare).length }})
                 </h2>
 
@@ -139,7 +139,7 @@ const goBack = async () => {
                         items="center"
                         p="3"
                         bg="white"
-                        class="brick-border"
+                        class="brick-border brick-shadow"
                     >
                         <div
                             w="6"
@@ -166,7 +166,7 @@ const goBack = async () => {
                 </div>
 
                 <div v-if="setWithParts.parts.filter((p) => p.isSpare).length > 0" m="t-6">
-                    <h2 text="xl" font="bold" m="b-4">
+                    <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
                         Reserve ({{ setWithParts.parts.filter((p) => p.isSpare).length }})
                     </h2>
 
@@ -178,8 +178,8 @@ const goBack = async () => {
                             gap="3"
                             items="center"
                             p="3"
-                            bg="gray-50"
-                            class="brick-border"
+                            bg="gray-200"
+                            class="brick-border brick-shadow"
                         >
                             <div
                                 w="6"

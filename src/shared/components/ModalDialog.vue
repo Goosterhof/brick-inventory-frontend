@@ -36,7 +36,7 @@ const handleBackdropClick = (event: MouseEvent) => {
         p="0"
         m="auto"
         bg="transparent"
-        class="backdrop:bg-black/50"
+        class="backdrop:bg-black"
     >
         <div bg="white" p="6" min-w="80" max-w="lg" class="brick-border brick-shadow">
             <div flex justify="between" items="center" m="b-4">

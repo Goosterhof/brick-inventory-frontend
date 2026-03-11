@@ -35,7 +35,7 @@ const goBack = async () => {
 </script>
 
 <template>
-    <div>
+    <div max-w="6xl" m="x-auto">
         <p v-if="loading" text="gray-600">Laden...</p>
 
         <template v-else-if="storageOption">
@@ -54,7 +54,7 @@ const goBack = async () => {
             </div>
 
             <div flex="~ col" gap="3">
-                <h1 text="2xl" font="bold">{{ storageOption.name }}</h1>
+                <h1 text="2xl" font="bold" uppercase tracking="wide">{{ storageOption.name }}</h1>
 
                 <div v-if="storageOption.description" flex gap="2">
                     <span font="bold">Beschrijving:</span>
@@ -79,7 +79,7 @@ const goBack = async () => {
             </div>
 
             <div m="t-8">
-                <h2 text="xl" font="bold" m="b-4">Onderdelen ({{ storageParts.length }})</h2>
+                <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">Onderdelen ({{ storageParts.length }})</h2>
 
                 <p v-if="partsLoading" text="gray-600">Onderdelen laden...</p>
 
@@ -94,7 +94,7 @@ const goBack = async () => {
                         items="center"
                         p="3"
                         bg="white"
-                        class="brick-border"
+                        class="brick-border brick-shadow"
                     >
                         <div
                             v-if="storagePart.color"
