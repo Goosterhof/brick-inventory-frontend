@@ -54,6 +54,40 @@ const mockFamilySetResponse = {
     },
 };
 
+const mockSetWithPartsResponse = {
+    id: 10,
+    set_num: "75192-1",
+    name: "Millennium Falcon",
+    year: 2017,
+    theme: "Star Wars",
+    num_parts: 7541,
+    image_url: "https://example.com/75192.jpg",
+    parts: [
+        {
+            id: 1,
+            quantity: 10,
+            is_spare: false,
+            element_id: "300101",
+            part: {
+                id: 10,
+                part_num: "3001",
+                name: "Brick 2 x 4",
+                category: null,
+                image_url: "https://example.com/3001.jpg",
+            },
+            color: {id: 1, name: "Red", rgb: "CC0000", is_transparent: false},
+        },
+        {
+            id: 2,
+            quantity: 2,
+            is_spare: true,
+            element_id: "300226",
+            part: {id: 20, part_num: "3002", name: "Brick 2 x 3", category: null, image_url: null},
+            color: {id: 5, name: "Blue", rgb: "0000CC", is_transparent: false},
+        },
+    ],
+};
+
 describe("SetDetailView", () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -125,7 +159,9 @@ describe("SetDetailView", () => {
         await flushPromises();
 
         // Act
-        await wrapper.findComponent(PrimaryButton).trigger("click");
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const editButton = buttons.find((btn) => btn.text().includes("Bewerken"));
+        await editButton?.trigger("click");
         await flushPromises();
 
         // Assert
@@ -171,5 +207,123 @@ describe("SetDetailView", () => {
 
         // Assert
         expect(wrapper.text()).not.toContain("Notities");
+    });
+
+    it("should show load parts button initially", async () => {
+        // Arrange
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+
+        // Act
+        const wrapper = shallowMount(SetDetailView);
+        await flushPromises();
+
+        // Assert
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        expect(loadPartsButton?.exists()).toBe(true);
+    });
+
+    it("should fetch and display parts when load parts button is clicked", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse});
+        const wrapper = shallowMount(SetDetailView);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(mockGetRequest).toHaveBeenCalledWith("/sets/75192-1/parts");
+        expect(wrapper.text()).toContain("Onderdelen (1)");
+        expect(wrapper.text()).toContain("Brick 2 x 4");
+        expect(wrapper.text()).toContain("3001");
+        expect(wrapper.text()).toContain("10x");
+    });
+
+    it("should display spare parts in separate section", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse});
+        const wrapper = shallowMount(SetDetailView);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("Reserve (1)");
+        expect(wrapper.text()).toContain("Brick 2 x 3");
+        expect(wrapper.text()).toContain("2x");
+    });
+
+    it("should hide load parts button after parts are loaded", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse});
+        const wrapper = shallowMount(SetDetailView);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        const buttonsAfter = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButtonAfter = buttonsAfter.find((btn) => btn.text().includes("Onderdelen laden"));
+        expect(loadPartsButtonAfter).toBeUndefined();
+    });
+
+    it("should render color swatches for parts", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse});
+        const wrapper = shallowMount(SetDetailView);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        const colorSwatches = wrapper
+            .findAll("[style]")
+            .filter((el) => el.attributes("style")?.includes("background-color"));
+        expect(colorSwatches.length).toBeGreaterThanOrEqual(1);
+        expect(wrapper.text()).toContain("Red");
+    });
+
+    it("should render part images when available", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse});
+        const wrapper = shallowMount(SetDetailView);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        const partImg = wrapper.findAll("img").find((el) => el.attributes("src") === "https://example.com/3001.jpg");
+        expect(partImg?.exists()).toBe(true);
+        expect(partImg?.attributes("alt")).toBe("Brick 2 x 4");
     });
 });
