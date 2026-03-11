@@ -194,7 +194,7 @@ onUnmounted(() => {
                 <button
                     type="button"
                     p="x-4 y-2"
-                    bg="yellow-300 hover:yellow-300 focus:yellow-300"
+                    bg="white hover:yellow-300 focus:yellow-300"
                     text="black"
                     font="bold"
                     uppercase
@@ -213,8 +213,8 @@ onUnmounted(() => {
         <button
             type="button"
             p="x-6 y-3"
-            bg="yellow-300 hover:yellow-300 focus:yellow-300 disabled:gray-200"
-            text="black disabled:gray-600"
+            bg="black hover:yellow-300 focus:yellow-300 disabled:gray-200"
+            text="white hover:black focus:black disabled:gray-600"
             font="bold"
             uppercase
             tracking="wide"

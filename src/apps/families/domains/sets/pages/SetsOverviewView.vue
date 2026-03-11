@@ -32,9 +32,9 @@ const goToDetail = async (id: number) => {
 </script>
 
 <template>
-    <div>
+    <div max-w="6xl" m="x-auto">
         <div flex justify="between" items="center" m="b-6">
-            <h1 text="2xl" font="bold">Mijn Sets</h1>
+            <h1 text="2xl" font="bold" uppercase tracking="wide">Mijn Sets</h1>
             <PrimaryButton @click="goToAdd">Set toevoegen</PrimaryButton>
         </div>
 

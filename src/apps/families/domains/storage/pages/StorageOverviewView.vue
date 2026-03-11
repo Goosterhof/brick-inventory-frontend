@@ -25,9 +25,9 @@ const goToDetail = async (id: number) => {
 </script>
 
 <template>
-    <div>
+    <div max-w="6xl" m="x-auto">
         <div flex justify="between" items="center" m="b-6">
-            <h1 text="2xl" font="bold">Opslag</h1>
+            <h1 text="2xl" font="bold" uppercase tracking="wide">Opslag</h1>
             <PrimaryButton @click="goToAdd">Opslag toevoegen</PrimaryButton>
         </div>
 

@@ -20,10 +20,10 @@ defineEmits<{close: []}>();
         <button
             @click="$emit('close')"
             p="1"
-            bg="transparent hover:yellow-300 focus:yellow-300"
+            bg="white hover:yellow-300 focus:yellow-300"
             cursor="pointer"
             outline="none"
-            class="brick-transition"
+            class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             aria-label="Dismiss"
         >
             <PhX size="16" aria-hidden="true" />

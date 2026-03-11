@@ -4,7 +4,7 @@ import {RouterView} from "vue-router";
 </script>
 
 <template>
-    <header p="4" border="b-3 black" bg="gray-100">
+    <header p="4" border="b-3 black" bg="white">
         <nav flex gap="4" items="center">
             <span font="bold" text="lg">Admin</span>
             <NavLink to="/">Dashboard</NavLink>

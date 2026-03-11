@@ -46,7 +46,7 @@ const handleSubmit = async () => {
 
 <template>
     <div max-w="md" m="x-auto">
-        <h1 text="2xl" font="bold" m="b-6">Opslag toevoegen</h1>
+        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">Opslag toevoegen</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="handleSubmit">
             <TextInput v-model="name" label="Naam" :error="errors.name" />
@@ -61,11 +61,11 @@ const handleSubmit = async () => {
                     v-model="description"
                     rows="3"
                     p="x-4 y-3"
-                    bg="white focus:yellow-300"
+                    bg="white hover:yellow-300 focus:yellow-300"
                     text="black"
                     font="medium"
                     outline="none"
-                    class="brick-border brick-shadow brick-transition focus:brick-shadow-hover"
+                    class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                 />
             </div>
 

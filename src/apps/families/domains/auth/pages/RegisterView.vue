@@ -39,7 +39,7 @@ const handleSubmit = async () => {
 
 <template>
     <div max-w="md" m="x-auto">
-        <h1 text="2xl" font="bold" m="b-6">Create Account</h1>
+        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">Create Account</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="handleSubmit">
             <TextInput v-model="familyName" label="Family Name" :error="errors.familyName" />
