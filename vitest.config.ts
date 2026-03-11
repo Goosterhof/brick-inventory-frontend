@@ -16,6 +16,7 @@ export default mergeConfig(
                 include: ["src/**/*.ts", "src/**/*.vue"],
                 exclude: [
                     "src/apps/**/main.ts",
+                    "src/apps/**/App.vue",
                     "src/**/*.d.ts",
                     "src/apps/**/router/**",
                     "src/apps/**/domains/**",
