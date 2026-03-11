@@ -1,0 +1,20 @@
+<script setup lang="ts">
+defineEmits<{click: []}>();
+</script>
+
+<template>
+    <button
+        @click="$emit('click')"
+        flex
+        gap="4"
+        items="center"
+        p="4"
+        bg="white hover:yellow-300 focus:yellow-300"
+        cursor="pointer"
+        text="left"
+        outline="none"
+        class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
+    >
+        <slot />
+    </button>
+</template>

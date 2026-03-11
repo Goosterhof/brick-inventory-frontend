@@ -1,5 +1,7 @@
 import EditStorageView from "@app/domains/storage/pages/EditStorageView.vue";
+import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
@@ -98,8 +100,8 @@ describe("EditStorageView", () => {
         expect(numberInputs[0]?.props("modelValue")).toBe(1);
         expect(numberInputs[1]?.props("modelValue")).toBe(2);
 
-        const textarea = wrapper.find("textarea");
-        expect((textarea.element as HTMLTextAreaElement).value).toBe("Linkerla op plank 1");
+        const textareaInput = wrapper.findComponent(TextareaInput);
+        expect(textareaInput.props("modelValue")).toBe("Linkerla op plank 1");
     });
 
     it("should show loading state initially", () => {
@@ -196,8 +198,7 @@ describe("EditStorageView", () => {
         await flushPromises();
 
         // Act
-        const deleteButton = wrapper.findAll("button").find((btn) => btn.text() === "Verwijderen");
-        await deleteButton?.trigger("click");
+        wrapper.findComponent(DangerButton).vm.$emit("click");
         await flushPromises();
 
         // Assert
@@ -213,8 +214,7 @@ describe("EditStorageView", () => {
         await flushPromises();
 
         // Act
-        const deleteButton = wrapper.findAll("button").find((btn) => btn.text() === "Verwijderen");
-        await deleteButton?.trigger("click");
+        wrapper.findComponent(DangerButton).vm.$emit("click");
         await flushPromises();
 
         // Assert
@@ -233,7 +233,7 @@ describe("EditStorageView", () => {
         const primaryButton = wrapper.findComponent(PrimaryButton);
         expect(primaryButton.text()).toBe("Opslaan");
 
-        const deleteButton = wrapper.findAll("button").find((btn) => btn.text() === "Verwijderen");
-        expect(deleteButton?.exists()).toBe(true);
+        const dangerButton = wrapper.findComponent(DangerButton);
+        expect(dangerButton.exists()).toBe(true);
     });
 });

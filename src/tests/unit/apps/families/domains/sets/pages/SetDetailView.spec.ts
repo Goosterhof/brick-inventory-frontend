@@ -1,4 +1,6 @@
 import SetDetailView from "@app/domains/sets/pages/SetDetailView.vue";
+import BackButton from "@shared/components/BackButton.vue";
+import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
@@ -175,8 +177,7 @@ describe("SetDetailView", () => {
         await flushPromises();
 
         // Act
-        const backButton = wrapper.findAll("button").find((btn) => btn.text().includes("Terug"));
-        await backButton?.trigger("click");
+        wrapper.findComponent(BackButton).vm.$emit("click");
         await flushPromises();
 
         // Assert
@@ -240,9 +241,11 @@ describe("SetDetailView", () => {
         // Assert
         expect(mockGetRequest).toHaveBeenCalledWith("/sets/75192-1/parts");
         expect(wrapper.text()).toContain("Onderdelen (1)");
-        expect(wrapper.text()).toContain("Brick 2 x 4");
-        expect(wrapper.text()).toContain("3001");
-        expect(wrapper.text()).toContain("10x");
+        const parts = wrapper.findAllComponents(PartListItem);
+        const regularPart = parts.find((p) => !p.props("spare"));
+        expect(regularPart?.props("name")).toBe("Brick 2 x 4");
+        expect(regularPart?.props("partNum")).toBe("3001");
+        expect(regularPart?.props("quantity")).toBe(10);
     });
 
     it("should display spare parts in separate section", async () => {
@@ -261,8 +264,10 @@ describe("SetDetailView", () => {
 
         // Assert
         expect(wrapper.text()).toContain("Reserve (1)");
-        expect(wrapper.text()).toContain("Brick 2 x 3");
-        expect(wrapper.text()).toContain("2x");
+        const parts = wrapper.findAllComponents(PartListItem);
+        const sparePart = parts.find((p) => p.props("spare"));
+        expect(sparePart?.props("name")).toBe("Brick 2 x 3");
+        expect(sparePart?.props("quantity")).toBe(2);
     });
 
     it("should hide load parts button after parts are loaded", async () => {
@@ -300,11 +305,9 @@ describe("SetDetailView", () => {
         await flushPromises();
 
         // Assert
-        const colorSwatches = wrapper
-            .findAll("[style]")
-            .filter((el) => el.attributes("style")?.includes("background-color"));
-        expect(colorSwatches.length).toBeGreaterThanOrEqual(1);
-        expect(wrapper.text()).toContain("Red");
+        const parts = wrapper.findAllComponents(PartListItem);
+        expect(parts[0]?.props("colorRgb")).toBe("CC0000");
+        expect(parts[0]?.props("colorName")).toBe("Red");
     });
 
     it("should render part images when available", async () => {
@@ -322,8 +325,7 @@ describe("SetDetailView", () => {
         await flushPromises();
 
         // Assert
-        const partImg = wrapper.findAll("img").find((el) => el.attributes("src") === "https://example.com/3001.jpg");
-        expect(partImg?.exists()).toBe(true);
-        expect(partImg?.attributes("alt")).toBe("Brick 2 x 4");
+        const parts = wrapper.findAllComponents(PartListItem);
+        expect(parts[0]?.props("imageUrl")).toBe("https://example.com/3001.jpg");
     });
 });
