@@ -1,5 +1,8 @@
 import AddSetView from "@app/domains/sets/pages/AddSetView.vue";
+import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
+import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
@@ -61,9 +64,9 @@ describe("AddSetView", () => {
         expect(numberInputs).toHaveLength(1);
         expect(numberInputs[0]?.props("label")).toBe("Aantal");
 
-        expect(wrapper.find("select").exists()).toBe(true);
-        expect(wrapper.find("input[type='date']").exists()).toBe(true);
-        expect(wrapper.find("textarea").exists()).toBe(true);
+        expect(wrapper.findComponent(SelectInput).exists()).toBe(true);
+        expect(wrapper.findComponent(DateInput).exists()).toBe(true);
+        expect(wrapper.findComponent(TextareaInput).exists()).toBe(true);
     });
 
     it("should render submit button", () => {

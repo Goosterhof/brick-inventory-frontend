@@ -1,4 +1,7 @@
 import SetsOverviewView from "@app/domains/sets/pages/SetsOverviewView.vue";
+import EmptyState from "@shared/components/EmptyState.vue";
+import ListItemButton from "@shared/components/ListItemButton.vue";
+import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
@@ -64,7 +67,7 @@ describe("SetsOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Mijn Sets");
+        expect(wrapper.findComponent(PageHeader).props("title")).toBe("Mijn Sets");
     });
 
     it("should fetch sets on mount", async () => {
@@ -103,7 +106,7 @@ describe("SetsOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("Nog geen sets. Voeg je eerste set toe!");
+        expect(wrapper.findComponent(EmptyState).props("message")).toBe("Nog geen sets. Voeg je eerste set toe!");
     });
 
     it("should show loading state initially", () => {
@@ -138,7 +141,7 @@ describe("SetsOverviewView", () => {
         await flushPromises();
 
         // Act
-        await wrapper.find("button").trigger("click");
+        wrapper.findComponent(ListItemButton).vm.$emit("click");
         await flushPromises();
 
         // Assert

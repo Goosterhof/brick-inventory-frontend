@@ -1,5 +1,6 @@
 import AddStorageView from "@app/domains/storage/pages/AddStorageView.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
@@ -62,7 +63,7 @@ describe("AddStorageView", () => {
         expect(numberInputs[0]?.props("label")).toBe("Rij");
         expect(numberInputs[1]?.props("label")).toBe("Kolom");
 
-        expect(wrapper.find("textarea").exists()).toBe(true);
+        expect(wrapper.findComponent(TextareaInput).exists()).toBe(true);
     });
 
     it("should render submit button", () => {

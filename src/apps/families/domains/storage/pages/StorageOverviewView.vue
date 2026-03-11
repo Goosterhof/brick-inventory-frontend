@@ -2,6 +2,9 @@
 import type {StorageOption} from "@app/types/storageOption";
 
 import {familyHttpService, familyRouterService} from "@app/services";
+import EmptyState from "@shared/components/EmptyState.vue";
+import ListItemButton from "@shared/components/ListItemButton.vue";
+import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
@@ -26,32 +29,19 @@ const goToDetail = async (id: number) => {
 
 <template>
     <div max-w="6xl" m="x-auto">
-        <div flex justify="between" items="center" m="b-6">
-            <h1 text="2xl" font="bold" uppercase tracking="wide">Opslag</h1>
+        <PageHeader title="Opslag">
             <PrimaryButton @click="goToAdd">Opslag toevoegen</PrimaryButton>
-        </div>
+        </PageHeader>
 
         <p v-if="loading" text="gray-600">Laden...</p>
 
-        <p v-else-if="storageOptions.length === 0" text="gray-600">
-            Nog geen opslaglocaties. Voeg je eerste opslaglocatie toe!
-        </p>
+        <EmptyState
+            v-else-if="storageOptions.length === 0"
+            message="Nog geen opslaglocaties. Voeg je eerste opslaglocatie toe!"
+        />
 
         <div v-else flex="~ col" gap="4">
-            <button
-                v-for="option in storageOptions"
-                :key="option.id"
-                @click="goToDetail(option.id)"
-                flex
-                gap="4"
-                items="center"
-                p="4"
-                bg="white hover:yellow-300 focus:yellow-300"
-                cursor="pointer"
-                text="left"
-                outline="none"
-                class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
-            >
+            <ListItemButton v-for="option in storageOptions" :key="option.id" @click="goToDetail(option.id)">
                 <div flex="1">
                     <p font="bold">{{ option.name }}</p>
                     <p v-if="option.description" text="sm gray-600">{{ option.description }}</p>
@@ -64,7 +54,7 @@ const goToDetail = async (id: number) => {
                         </span>
                     </div>
                 </div>
-            </button>
+            </ListItemButton>
         </div>
     </div>
 </template>

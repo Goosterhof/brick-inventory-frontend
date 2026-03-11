@@ -3,6 +3,8 @@ import type {FamilySet} from "@app/types/familySet";
 import type {SetWithParts} from "@app/types/part";
 
 import {familyHttpService, familyRouterService} from "@app/services";
+import BackButton from "@shared/components/BackButton.vue";
+import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
@@ -49,17 +51,7 @@ const goBack = async () => {
 
         <template v-else-if="familySet">
             <div m="b-6">
-                <button
-                    @click="goBack"
-                    text="black"
-                    cursor="pointer"
-                    bg="white hover:yellow-300 focus:yellow-300"
-                    p="x-4 y-2"
-                    outline="none"
-                    class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
-                >
-                    &larr; Terug naar overzicht
-                </button>
+                <BackButton @click="goBack">&larr; Terug naar overzicht</BackButton>
             </div>
 
             <div flex="~ col md:row" gap="6">
@@ -131,38 +123,16 @@ const goBack = async () => {
                 </h2>
 
                 <div flex="~ col" gap="2">
-                    <div
+                    <PartListItem
                         v-for="setPart in setWithParts.parts.filter((p) => !p.isSpare)"
                         :key="setPart.id"
-                        flex
-                        gap="3"
-                        items="center"
-                        p="3"
-                        bg="white"
-                        class="brick-border brick-shadow"
-                    >
-                        <div
-                            w="6"
-                            h="6"
-                            shrink="0"
-                            class="brick-border"
-                            :style="{backgroundColor: '#' + setPart.color.rgb}"
-                        />
-                        <img
-                            v-if="setPart.part.imageUrl"
-                            :src="setPart.part.imageUrl"
-                            :alt="setPart.part.name"
-                            w="10"
-                            h="10"
-                            object="contain"
-                            shrink="0"
-                        />
-                        <div flex="1" min-w="0">
-                            <p font="bold" truncate>{{ setPart.part.name }}</p>
-                            <p text="sm gray-600">{{ setPart.part.partNum }} &middot; {{ setPart.color.name }}</p>
-                        </div>
-                        <span font="bold" shrink="0">{{ setPart.quantity }}x</span>
-                    </div>
+                        :name="setPart.part.name"
+                        :part-num="setPart.part.partNum"
+                        :quantity="setPart.quantity"
+                        :image-url="setPart.part.imageUrl"
+                        :color-name="setPart.color.name"
+                        :color-rgb="setPart.color.rgb"
+                    />
                 </div>
 
                 <div v-if="setWithParts.parts.filter((p) => p.isSpare).length > 0" m="t-6">
@@ -171,29 +141,16 @@ const goBack = async () => {
                     </h2>
 
                     <div flex="~ col" gap="2">
-                        <div
+                        <PartListItem
                             v-for="setPart in setWithParts.parts.filter((p) => p.isSpare)"
                             :key="setPart.id"
-                            flex
-                            gap="3"
-                            items="center"
-                            p="3"
-                            bg="gray-200"
-                            class="brick-border brick-shadow"
-                        >
-                            <div
-                                w="6"
-                                h="6"
-                                shrink="0"
-                                class="brick-border"
-                                :style="{backgroundColor: '#' + setPart.color.rgb}"
-                            />
-                            <div flex="1" min-w="0">
-                                <p font="bold" truncate>{{ setPart.part.name }}</p>
-                                <p text="sm gray-600">{{ setPart.part.partNum }} &middot; {{ setPart.color.name }}</p>
-                            </div>
-                            <span font="bold" shrink="0">{{ setPart.quantity }}x</span>
-                        </div>
+                            :name="setPart.part.name"
+                            :part-num="setPart.part.partNum"
+                            :quantity="setPart.quantity"
+                            :color-name="setPart.color.name"
+                            :color-rgb="setPart.color.rgb"
+                            spare
+                        />
                     </div>
                 </div>
             </div>

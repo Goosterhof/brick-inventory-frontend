@@ -2,6 +2,9 @@
 import type {FamilySet} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService} from "@app/services";
+import EmptyState from "@shared/components/EmptyState.vue";
+import ListItemButton from "@shared/components/ListItemButton.vue";
+import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
@@ -33,30 +36,16 @@ const goToDetail = async (id: number) => {
 
 <template>
     <div max-w="6xl" m="x-auto">
-        <div flex justify="between" items="center" m="b-6">
-            <h1 text="2xl" font="bold" uppercase tracking="wide">Mijn Sets</h1>
+        <PageHeader title="Mijn Sets">
             <PrimaryButton @click="goToAdd">Set toevoegen</PrimaryButton>
-        </div>
+        </PageHeader>
 
         <p v-if="loading" text="gray-600">Laden...</p>
 
-        <p v-else-if="sets.length === 0" text="gray-600">Nog geen sets. Voeg je eerste set toe!</p>
+        <EmptyState v-else-if="sets.length === 0" message="Nog geen sets. Voeg je eerste set toe!" />
 
         <div v-else flex="~ col" gap="4">
-            <button
-                v-for="familySet in sets"
-                :key="familySet.id"
-                @click="goToDetail(familySet.id)"
-                flex
-                gap="4"
-                items="center"
-                p="4"
-                bg="white hover:yellow-300 focus:yellow-300"
-                cursor="pointer"
-                text="left"
-                outline="none"
-                class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
-            >
+            <ListItemButton v-for="familySet in sets" :key="familySet.id" @click="goToDetail(familySet.id)">
                 <img
                     v-if="familySet.set.imageUrl"
                     :src="familySet.set.imageUrl"
@@ -78,7 +67,7 @@ const goToDetail = async (id: number) => {
                         <span text="xs gray-600">{{ familySet.quantity }}x</span>
                     </div>
                 </div>
-            </button>
+            </ListItemButton>
         </div>
     </div>
 </template>

@@ -1,4 +1,7 @@
 import StorageDetailView from "@app/domains/storage/pages/StorageDetailView.vue";
+import BackButton from "@shared/components/BackButton.vue";
+import EmptyState from "@shared/components/EmptyState.vue";
+import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
@@ -135,8 +138,7 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Act
-        const backButton = wrapper.findAll("button").find((btn) => btn.text().includes("Terug"));
-        await backButton?.trigger("click");
+        wrapper.findComponent(BackButton).vm.$emit("click");
         await flushPromises();
 
         // Assert
@@ -196,11 +198,13 @@ describe("StorageDetailView", () => {
 
         // Assert
         expect(wrapper.text()).toContain("Onderdelen (2)");
-        expect(wrapper.text()).toContain("Brick 2 x 4");
-        expect(wrapper.text()).toContain("3001");
-        expect(wrapper.text()).toContain("12x");
-        expect(wrapper.text()).toContain("Brick 2 x 3");
-        expect(wrapper.text()).toContain("8x");
+        const parts = wrapper.findAllComponents(PartListItem);
+        expect(parts).toHaveLength(2);
+        expect(parts[0]?.props("name")).toBe("Brick 2 x 4");
+        expect(parts[0]?.props("partNum")).toBe("3001");
+        expect(parts[0]?.props("quantity")).toBe(12);
+        expect(parts[1]?.props("name")).toBe("Brick 2 x 3");
+        expect(parts[1]?.props("quantity")).toBe(8);
     });
 
     it("should render color swatch when color is present", async () => {
@@ -209,11 +213,8 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        const colorSwatches = wrapper
-            .findAll("[style]")
-            .filter((el) => el.attributes("style")?.includes("background-color"));
-        expect(colorSwatches.length).toBeGreaterThanOrEqual(1);
-        expect(colorSwatches[0]?.attributes("style")).toContain("rgb(204, 0, 0)");
+        const parts = wrapper.findAllComponents(PartListItem);
+        expect(parts[0]?.props("colorRgb")).toBe("CC0000");
     });
 
     it("should render color name when color is present", async () => {
@@ -222,7 +223,8 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("Red");
+        const parts = wrapper.findAllComponents(PartListItem);
+        expect(parts[0]?.props("colorName")).toBe("Red");
     });
 
     it("should render part image when available", async () => {
@@ -231,9 +233,8 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        const img = wrapper.findAll("img").find((el) => el.attributes("src") === "https://example.com/3001.jpg");
-        expect(img?.exists()).toBe(true);
-        expect(img?.attributes("alt")).toBe("Brick 2 x 4");
+        const parts = wrapper.findAllComponents(PartListItem);
+        expect(parts[0]?.props("imageUrl")).toBe("https://example.com/3001.jpg");
     });
 
     it("should show empty message when no parts", async () => {
@@ -242,6 +243,6 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("Geen onderdelen in deze opslaglocatie");
+        expect(wrapper.findComponent(EmptyState).props("message")).toBe("Geen onderdelen in deze opslaglocatie.");
     });
 });

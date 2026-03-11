@@ -1,5 +1,7 @@
 import EditSetView from "@app/domains/sets/pages/EditSetView.vue";
+import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
@@ -102,8 +104,8 @@ describe("EditSetView", () => {
         const numberInput = wrapper.findComponent(NumberInput);
         expect(numberInput.props("modelValue")).toBe(2);
 
-        const select = wrapper.find("select");
-        expect((select.element as HTMLSelectElement).value).toBe("built");
+        const selectInput = wrapper.findComponent(SelectInput);
+        expect(selectInput.props("modelValue")).toBe("built");
     });
 
     it("should show loading state initially", () => {
@@ -199,8 +201,7 @@ describe("EditSetView", () => {
         await flushPromises();
 
         // Act
-        const deleteButton = wrapper.findAll("button").find((btn) => btn.text() === "Verwijderen");
-        await deleteButton?.trigger("click");
+        wrapper.findComponent(DangerButton).vm.$emit("click");
         await flushPromises();
 
         // Assert
@@ -216,8 +217,7 @@ describe("EditSetView", () => {
         await flushPromises();
 
         // Act
-        const deleteButton = wrapper.findAll("button").find((btn) => btn.text() === "Verwijderen");
-        await deleteButton?.trigger("click");
+        wrapper.findComponent(DangerButton).vm.$emit("click");
         await flushPromises();
 
         // Assert
@@ -236,7 +236,7 @@ describe("EditSetView", () => {
         const primaryButton = wrapper.findComponent(PrimaryButton);
         expect(primaryButton.text()).toBe("Opslaan");
 
-        const deleteButton = wrapper.findAll("button").find((btn) => btn.text() === "Verwijderen");
-        expect(deleteButton?.exists()).toBe(true);
+        const dangerButton = wrapper.findComponent(DangerButton);
+        expect(dangerButton.exists()).toBe(true);
     });
 });

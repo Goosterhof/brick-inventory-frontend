@@ -1,4 +1,7 @@
 import StorageOverviewView from "@app/domains/storage/pages/StorageOverviewView.vue";
+import EmptyState from "@shared/components/EmptyState.vue";
+import ListItemButton from "@shared/components/ListItemButton.vue";
+import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
@@ -56,7 +59,7 @@ describe("StorageOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Opslag");
+        expect(wrapper.findComponent(PageHeader).props("title")).toBe("Opslag");
     });
 
     it("should fetch storage options on mount", async () => {
@@ -95,7 +98,9 @@ describe("StorageOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("Nog geen opslaglocaties. Voeg je eerste opslaglocatie toe!");
+        expect(wrapper.findComponent(EmptyState).props("message")).toBe(
+            "Nog geen opslaglocaties. Voeg je eerste opslaglocatie toe!",
+        );
     });
 
     it("should show loading state initially", () => {
@@ -130,7 +135,7 @@ describe("StorageOverviewView", () => {
         await flushPromises();
 
         // Act
-        await wrapper.find("button").trigger("click");
+        wrapper.findComponent(ListItemButton).vm.$emit("click");
         await flushPromises();
 
         // Assert
