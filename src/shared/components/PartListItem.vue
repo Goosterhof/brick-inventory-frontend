@@ -1,5 +1,7 @@
 <script setup lang="ts">
-defineProps<{
+import {computed} from "vue";
+
+const props = defineProps<{
     name: string;
     partNum: string;
     quantity: number;
@@ -8,18 +10,18 @@ defineProps<{
     colorRgb?: string | null;
     spare?: boolean;
 }>();
+
+const colorStyle = computed(() => (props.colorRgb ? {backgroundColor: "#" + props.colorRgb} : undefined));
+const partDescription = computed(() => (props.colorName ? `${props.partNum} · ${props.colorName}` : props.partNum));
 </script>
 
 <template>
     <div flex gap="3" items="center" p="3" :bg="spare ? 'gray-200' : 'white'" class="brick-border brick-shadow">
-        <div v-if="colorRgb" w="6" h="6" shrink="0" class="brick-border" :style="{backgroundColor: '#' + colorRgb}" />
-        <img v-if="imageUrl" :src="imageUrl" :alt="name" w="10" h="10" object="contain" shrink="0" />
+        <div v-show="colorStyle" w="6" h="6" shrink="0" class="brick-border" :style="colorStyle" />
+        <img v-show="imageUrl" :src="imageUrl ?? undefined" :alt="name" w="10" h="10" object="contain" shrink="0" />
         <div flex="1" min-w="0">
             <p font="bold" truncate>{{ name }}</p>
-            <p text="sm gray-600">
-                {{ partNum }}
-                <template v-if="colorName"> &middot; {{ colorName }} </template>
-            </p>
+            <p text="sm gray-600">{{ partDescription }}</p>
         </div>
         <span font="bold" shrink="0">{{ quantity }}x</span>
     </div>

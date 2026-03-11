@@ -22,68 +22,57 @@ describe("PartListItem", () => {
         expect(wrapper.text()).toContain("5x");
     });
 
-    it("should render color swatch when colorRgb is provided", () => {
+    it("should show color swatch when colorRgb is provided", () => {
         // Arrange
         const wrapper = mount(PartListItem, {props: {...defaultProps, colorRgb: "FF0000"}});
 
         // Assert
         const swatch = wrapper.find("[w='6']");
-        expect(swatch.exists()).toBe(true);
+        expect(swatch.isVisible()).toBe(true);
         expect(swatch.attributes("style")).toContain("background-color: rgb(255, 0, 0)");
     });
 
-    it("should toggle color swatch when colorRgb changes", async () => {
+    it("should hide color swatch when colorRgb is not provided", () => {
         // Arrange
-        const wrapper = mount(PartListItem, {props: {...defaultProps, colorRgb: "FF0000"}});
-        expect(wrapper.find("[w='6']").exists()).toBe(true);
-
-        // Act
-        await wrapper.setProps({colorRgb: undefined});
+        const wrapper = mount(PartListItem, {props: defaultProps});
 
         // Assert
-        expect(wrapper.find("[w='6']").exists()).toBe(false);
+        expect(wrapper.find("[w='6']").isVisible()).toBe(false);
     });
 
-    it("should render image when imageUrl is provided", () => {
+    it("should show image when imageUrl is provided", () => {
         // Arrange
         const wrapper = mount(PartListItem, {props: {...defaultProps, imageUrl: "https://example.com/img.png"}});
 
         // Assert
         const img = wrapper.find("img");
-        expect(img.exists()).toBe(true);
+        expect(img.isVisible()).toBe(true);
         expect(img.attributes("src")).toBe("https://example.com/img.png");
         expect(img.attributes("alt")).toBe("Brick 2x4");
     });
 
-    it("should toggle image when imageUrl changes", async () => {
+    it("should hide image when imageUrl is not provided", () => {
         // Arrange
-        const wrapper = mount(PartListItem, {props: {...defaultProps, imageUrl: "https://example.com/img.png"}});
-        expect(wrapper.find("img").exists()).toBe(true);
-
-        // Act
-        await wrapper.setProps({imageUrl: undefined});
+        const wrapper = mount(PartListItem, {props: defaultProps});
 
         // Assert
-        expect(wrapper.find("img").exists()).toBe(false);
+        expect(wrapper.find("img").isVisible()).toBe(false);
     });
 
-    it("should render color name when provided", () => {
+    it("should render color name in description when provided", () => {
         // Arrange
         const wrapper = mount(PartListItem, {props: {...defaultProps, colorName: "Red"}});
 
         // Assert
-        expect(wrapper.text()).toContain("Red");
+        expect(wrapper.text()).toContain("3001 · Red");
     });
 
-    it("should toggle color name when colorName changes", async () => {
+    it("should render only part number when colorName is not provided", () => {
         // Arrange
-        const wrapper = mount(PartListItem, {props: {...defaultProps, colorName: "Red"}});
-        expect(wrapper.text()).toContain("Red");
-
-        // Act
-        await wrapper.setProps({colorName: undefined});
+        const wrapper = mount(PartListItem, {props: defaultProps});
 
         // Assert
+        expect(wrapper.text()).toContain("3001");
         expect(wrapper.text()).not.toContain("·");
     });
 
