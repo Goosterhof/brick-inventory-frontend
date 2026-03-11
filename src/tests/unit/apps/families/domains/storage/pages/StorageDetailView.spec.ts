@@ -46,30 +46,56 @@ const mockStorageOptionResponse = {
     child_ids: [6, 7],
 };
 
+const mockStoragePartsResponse = [
+    {
+        id: 1,
+        storage_option_id: 5,
+        quantity: 12,
+        part: {
+            id: 10,
+            part_num: "3001",
+            name: "Brick 2 x 4",
+            category: null,
+            image_url: "https://example.com/3001.jpg",
+        },
+        color: {id: 1, name: "Red", rgb: "CC0000", is_transparent: false},
+    },
+    {
+        id: 2,
+        storage_option_id: 5,
+        quantity: 8,
+        part: {id: 20, part_num: "3002", name: "Brick 2 x 3", category: null, image_url: null},
+        color: null,
+    },
+];
+
+const mountWithResponses = (
+    optionData: Record<string, unknown> = mockStorageOptionResponse,
+    partsData: unknown[] = mockStoragePartsResponse,
+) => {
+    mockGetRequest.mockResolvedValueOnce({data: optionData}).mockResolvedValueOnce({data: partsData});
+    return shallowMount(StorageDetailView);
+};
+
 describe("StorageDetailView", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockCurrentRouteId.value = 5;
     });
 
-    it("should fetch storage option by route id on mount", async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-
-        // Act
-        shallowMount(StorageDetailView);
+    it("should fetch storage option and parts by route id on mount", async () => {
+        // Arrange & Act
+        mountWithResponses();
         await flushPromises();
 
         // Assert
         expect(mockGetRequest).toHaveBeenCalledWith("/storage-options/5");
+        expect(mockGetRequest).toHaveBeenCalledWith("/storage-options/5/parts");
     });
 
     it("should render storage option details", async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-
-        // Act
-        const wrapper = shallowMount(StorageDetailView);
+        // Arrange & Act
+        const wrapper = mountWithResponses();
         await flushPromises();
 
         // Assert
@@ -92,8 +118,7 @@ describe("StorageDetailView", () => {
 
     it("should navigate to edit page when edit button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        const wrapper = shallowMount(StorageDetailView);
+        const wrapper = mountWithResponses();
         await flushPromises();
 
         // Act
@@ -106,8 +131,7 @@ describe("StorageDetailView", () => {
 
     it("should navigate back to overview when back button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        const wrapper = shallowMount(StorageDetailView);
+        const wrapper = mountWithResponses();
         await flushPromises();
 
         // Act
@@ -120,12 +144,8 @@ describe("StorageDetailView", () => {
     });
 
     it("should not show description when null", async () => {
-        // Arrange
-        const responseWithoutDescription = {...mockStorageOptionResponse, description: null};
-        mockGetRequest.mockResolvedValue({data: responseWithoutDescription});
-
-        // Act
-        const wrapper = shallowMount(StorageDetailView);
+        // Arrange & Act
+        const wrapper = mountWithResponses({...mockStorageOptionResponse, description: null});
         await flushPromises();
 
         // Assert
@@ -133,12 +153,8 @@ describe("StorageDetailView", () => {
     });
 
     it("should not show row when null", async () => {
-        // Arrange
-        const responseWithoutRow = {...mockStorageOptionResponse, row: null};
-        mockGetRequest.mockResolvedValue({data: responseWithoutRow});
-
-        // Act
-        const wrapper = shallowMount(StorageDetailView);
+        // Arrange & Act
+        const wrapper = mountWithResponses({...mockStorageOptionResponse, row: null});
         await flushPromises();
 
         // Assert
@@ -146,12 +162,8 @@ describe("StorageDetailView", () => {
     });
 
     it("should not show column when null", async () => {
-        // Arrange
-        const responseWithoutColumn = {...mockStorageOptionResponse, column: null};
-        mockGetRequest.mockResolvedValue({data: responseWithoutColumn});
-
-        // Act
-        const wrapper = shallowMount(StorageDetailView);
+        // Arrange & Act
+        const wrapper = mountWithResponses({...mockStorageOptionResponse, column: null});
         await flushPromises();
 
         // Assert
@@ -159,12 +171,8 @@ describe("StorageDetailView", () => {
     });
 
     it("should not show sub-locations when no children", async () => {
-        // Arrange
-        const responseWithoutChildren = {...mockStorageOptionResponse, child_ids: []};
-        mockGetRequest.mockResolvedValue({data: responseWithoutChildren});
-
-        // Act
-        const wrapper = shallowMount(StorageDetailView);
+        // Arrange & Act
+        const wrapper = mountWithResponses({...mockStorageOptionResponse, child_ids: []});
         await flushPromises();
 
         // Assert
@@ -172,15 +180,68 @@ describe("StorageDetailView", () => {
     });
 
     it("should show child count when children exist", async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-
-        // Act
-        const wrapper = shallowMount(StorageDetailView);
+        // Arrange & Act
+        const wrapper = mountWithResponses();
         await flushPromises();
 
         // Assert
         expect(wrapper.text()).toContain("Sub-locaties");
         expect(wrapper.text()).toContain("2");
+    });
+
+    it("should render parts with names and quantities", async () => {
+        // Arrange & Act
+        const wrapper = mountWithResponses();
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("Onderdelen (2)");
+        expect(wrapper.text()).toContain("Brick 2 x 4");
+        expect(wrapper.text()).toContain("3001");
+        expect(wrapper.text()).toContain("12x");
+        expect(wrapper.text()).toContain("Brick 2 x 3");
+        expect(wrapper.text()).toContain("8x");
+    });
+
+    it("should render color swatch when color is present", async () => {
+        // Arrange & Act
+        const wrapper = mountWithResponses();
+        await flushPromises();
+
+        // Assert
+        const colorSwatches = wrapper
+            .findAll("[style]")
+            .filter((el) => el.attributes("style")?.includes("background-color"));
+        expect(colorSwatches.length).toBeGreaterThanOrEqual(1);
+        expect(colorSwatches[0].attributes("style")).toContain("rgb(204, 0, 0)");
+    });
+
+    it("should render color name when color is present", async () => {
+        // Arrange & Act
+        const wrapper = mountWithResponses();
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("Red");
+    });
+
+    it("should render part image when available", async () => {
+        // Arrange & Act
+        const wrapper = mountWithResponses();
+        await flushPromises();
+
+        // Assert
+        const img = wrapper.findAll("img").find((el) => el.attributes("src") === "https://example.com/3001.jpg");
+        expect(img?.exists()).toBe(true);
+        expect(img?.attributes("alt")).toBe("Brick 2 x 4");
+    });
+
+    it("should show empty message when no parts", async () => {
+        // Arrange & Act
+        const wrapper = mountWithResponses(mockStorageOptionResponse, []);
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("Geen onderdelen in deze opslaglocatie");
     });
 });
