@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type {StorageOptionPart} from "@app/types/part";
 import type {StorageOption} from "@app/types/storageOption";
 
 import {familyHttpService, familyRouterService} from "@app/services";
@@ -7,13 +8,20 @@ import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
 
 const storageOption = ref<StorageOption | null>(null);
+const storageParts = ref<StorageOptionPart[]>([]);
 const loading = ref(true);
+const partsLoading = ref(true);
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
-    const response = await familyHttpService.getRequest<StorageOption>(`/storage-options/${id}`);
-    storageOption.value = toCamelCaseTyped(response.data);
+    const [optionResponse, partsResponse] = await Promise.all([
+        familyHttpService.getRequest<StorageOption>(`/storage-options/${id}`),
+        familyHttpService.getRequest<StorageOptionPart[]>(`/storage-options/${id}/parts`),
+    ]);
+    storageOption.value = toCamelCaseTyped(optionResponse.data);
+    storageParts.value = partsResponse.data.map((item) => toCamelCaseTyped(item));
     loading.value = false;
+    partsLoading.value = false;
 });
 
 const goToEdit = async () => {
@@ -67,6 +75,53 @@ const goBack = async () => {
 
                 <div m="t-4">
                     <PrimaryButton @click="goToEdit">Bewerken</PrimaryButton>
+                </div>
+            </div>
+
+            <div m="t-8">
+                <h2 text="xl" font="bold" m="b-4">Onderdelen ({{ storageParts.length }})</h2>
+
+                <p v-if="partsLoading" text="gray-600">Onderdelen laden...</p>
+
+                <p v-else-if="storageParts.length === 0" text="gray-600">Geen onderdelen in deze opslaglocatie.</p>
+
+                <div v-else flex="~ col" gap="2">
+                    <div
+                        v-for="storagePart in storageParts"
+                        :key="storagePart.id"
+                        flex
+                        gap="3"
+                        items="center"
+                        p="3"
+                        bg="white"
+                        class="brick-border"
+                    >
+                        <div
+                            v-if="storagePart.color"
+                            w="6"
+                            h="6"
+                            shrink="0"
+                            class="brick-border"
+                            :style="{backgroundColor: '#' + storagePart.color.rgb}"
+                        />
+                        <img
+                            v-if="storagePart.part.imageUrl"
+                            :src="storagePart.part.imageUrl"
+                            :alt="storagePart.part.name"
+                            w="10"
+                            h="10"
+                            object="contain"
+                            shrink="0"
+                        />
+                        <div flex="1" min-w="0">
+                            <p font="bold" truncate>{{ storagePart.part.name }}</p>
+                            <p text="sm gray-600">
+                                {{ storagePart.part.partNum }}
+                                <template v-if="storagePart.color"> &middot; {{ storagePart.color.name }} </template>
+                            </p>
+                        </div>
+                        <span font="bold" shrink="0">{{ storagePart.quantity }}x</span>
+                    </div>
                 </div>
             </div>
         </template>
