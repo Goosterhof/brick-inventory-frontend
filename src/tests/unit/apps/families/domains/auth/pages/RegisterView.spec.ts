@@ -29,6 +29,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: mockGoToDashboard, goToRoute: vi.fn()},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -45,11 +46,11 @@ describe("RegisterView", () => {
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
         expect(inputs).toHaveLength(5);
-        expect(inputs[0]?.props("label")).toBe("Family Name");
-        expect(inputs[1]?.props("label")).toBe("Name");
-        expect(inputs[2]?.props("label")).toBe("Email");
-        expect(inputs[3]?.props("label")).toBe("Password");
-        expect(inputs[4]?.props("label")).toBe("Password Confirmation");
+        expect(inputs[0]?.props("label")).toBe("auth.familyName");
+        expect(inputs[1]?.props("label")).toBe("auth.name");
+        expect(inputs[2]?.props("label")).toBe("auth.email");
+        expect(inputs[3]?.props("label")).toBe("auth.password");
+        expect(inputs[4]?.props("label")).toBe("auth.passwordConfirmation");
     });
 
     it("should render email field with email type", () => {
@@ -90,7 +91,7 @@ describe("RegisterView", () => {
         const button = wrapper.findComponent(PrimaryButton);
         expect(button.exists()).toBe(true);
         expect(button.props("type")).toBe("submit");
-        expect(button.text()).toBe("Register");
+        expect(button.text()).toBe("auth.register");
     });
 
     it("should call authService.register on form submit", async () => {
@@ -137,6 +138,6 @@ describe("RegisterView", () => {
         const wrapper = shallowMount(RegisterView);
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Create Account");
+        expect(wrapper.find("h1").text()).toBe("auth.createAccount");
     });
 });

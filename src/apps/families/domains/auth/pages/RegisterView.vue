@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import {familyAuthService, familyHttpService, familyRouterService} from "@app/services";
+import {familyAuthService, familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {useFormSubmit} from "@shared/composables/useFormSubmit";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
 import {ref} from "vue";
 
+const {t} = familyTranslationService;
 const familyName = ref("");
 const name = ref("");
 const email = ref("");
@@ -32,25 +33,25 @@ const onSubmit = () =>
 
 <template>
     <div max-w="md" m="x-auto">
-        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">Create Account</h1>
+        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">{{ t("auth.createAccount").value }}</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="onSubmit">
-            <TextInput v-model="familyName" label="Family Name" :error="errors.familyName" />
+            <TextInput v-model="familyName" :label="t('auth.familyName').value" :error="errors.familyName" />
 
-            <TextInput v-model="name" label="Name" :error="errors.name" />
+            <TextInput v-model="name" :label="t('auth.name').value" :error="errors.name" />
 
-            <TextInput v-model="email" label="Email" type="email" :error="errors.email" />
+            <TextInput v-model="email" :label="t('auth.email').value" type="email" :error="errors.email" />
 
-            <TextInput v-model="password" label="Password" type="password" :error="errors.password" />
+            <TextInput v-model="password" :label="t('auth.password').value" type="password" :error="errors.password" />
 
             <TextInput
                 v-model="passwordConfirmation"
-                label="Password Confirmation"
+                :label="t('auth.passwordConfirmation').value"
                 type="password"
                 :error="errors.passwordConfirmation"
             />
 
-            <PrimaryButton type="submit">Register</PrimaryButton>
+            <PrimaryButton type="submit">{{ t("auth.register").value }}</PrimaryButton>
         </form>
     </div>
 </template>

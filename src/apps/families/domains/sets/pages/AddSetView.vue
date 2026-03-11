@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
-import {familyHttpService, familyRouterService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
@@ -14,6 +14,7 @@ import {toCamelCaseTyped} from "@shared/helpers/string";
 import {deepSnakeKeys} from "string-ts";
 import {ref} from "vue";
 
+const {t} = familyTranslationService;
 const setNum = ref("");
 const quantity = ref<number | null>(1);
 const status = ref<FamilySetStatus>("sealed");
@@ -44,25 +45,31 @@ const onSubmit = () =>
 
 <template>
     <div max-w="md" m="x-auto">
-        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">Set toevoegen</h1>
+        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">{{ t("sets.addSet").value }}</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="onSubmit">
-            <TextInput v-model="setNum" label="Setnummer" :error="errors.setNum" />
+            <TextInput v-model="setNum" :label="t('sets.setNumber').value" :error="errors.setNum" />
 
-            <NumberInput v-model="quantity" label="Aantal" :error="errors.quantity" :min="1" optional />
+            <NumberInput
+                v-model="quantity"
+                :label="t('sets.quantity').value"
+                :error="errors.quantity"
+                :min="1"
+                optional
+            />
 
-            <SelectInput v-model="status" label="Status" :error="errors.status">
-                <option value="sealed">Verzegeld</option>
-                <option value="built">Gebouwd</option>
-                <option value="in_progress">In aanbouw</option>
-                <option value="incomplete">Incompleet</option>
+            <SelectInput v-model="status" :label="t('sets.status').value" :error="errors.status">
+                <option value="sealed">{{ t("sets.sealed").value }}</option>
+                <option value="built">{{ t("sets.built").value }}</option>
+                <option value="in_progress">{{ t("sets.inProgress").value }}</option>
+                <option value="incomplete">{{ t("sets.incomplete").value }}</option>
             </SelectInput>
 
-            <DateInput v-model="purchaseDate" label="Aankoopdatum" optional />
+            <DateInput v-model="purchaseDate" :label="t('sets.purchaseDate').value" optional />
 
-            <TextareaInput v-model="notes" label="Notities" optional />
+            <TextareaInput v-model="notes" :label="t('sets.notes').value" optional />
 
-            <PrimaryButton type="submit">Toevoegen</PrimaryButton>
+            <PrimaryButton type="submit">{{ t("sets.add").value }}</PrimaryButton>
         </form>
     </div>
 </template>
