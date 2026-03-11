@@ -75,7 +75,7 @@ const loadItems = async () => {
         const data = await fetchItems();
         // use data
     } catch (e) {
-        error.value = "Failed to load items";
+        error.value = t("errors.generic").value;
     } finally {
         familyLoadingService.stop();
     }
@@ -87,9 +87,10 @@ const loadItems = async () => {
 ```vue
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
-import {familyHttpService, familyLoadingService} from "@app/services";
+import {familyHttpService, familyLoadingService, familyTranslationService} from "@app/services";
 import type {Resource} from "@app/types/resource";
 
+const {t} = familyTranslationService;
 const items = ref<Resource[]>([]);
 const error = ref<string | null>(null);
 
@@ -100,7 +101,7 @@ const loadItems = async () => {
         const response = await familyHttpService.getRequest<Resource[]>("/resources");
         items.value = response.data;
     } catch {
-        error.value = "Failed to load items";
+        error.value = t("errors.generic").value;
     } finally {
         familyLoadingService.stop();
     }

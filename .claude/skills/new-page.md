@@ -4,15 +4,19 @@ Step-by-step guide for adding a new page to an existing domain.
 
 ## Steps
 
-1. Create the page component in the domain's `pages/` directory:
+1. Create the page component in the domain's `pages/` directory (all user-facing text must use the translation service):
 
     ```vue
     <!-- src/apps/{appName}/domains/{domain}/pages/{PageName}View.vue -->
-    <script setup lang="ts"></script>
+    <script setup lang="ts">
+    import {familyTranslationService} from "@app/services";
+
+    const {t} = familyTranslationService;
+    </script>
 
     <template>
         <div>
-            <h1>{Page Title}</h1>
+            <h1>{{ t("{domain}.title").value }}</h1>
         </div>
     </template>
     ```
