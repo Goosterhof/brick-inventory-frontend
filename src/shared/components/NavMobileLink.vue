@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import {RouterLink} from "vue-router";
-
 const {to, active = false} = defineProps<{to: string; active?: boolean}>();
+
+const emit = defineEmits<{click: []}>();
+
+const handleClick = (event: Event) => {
+    event.preventDefault();
+    emit("click");
+};
 </script>
 
 <template>
-    <RouterLink
-        :to="to"
+    <a
+        :href="to"
         block
         p="4"
         border="b-3 black"
@@ -16,7 +21,8 @@ const {to, active = false} = defineProps<{to: string; active?: boolean}>();
         outline="none"
         :bg="active ? 'yellow-300' : 'white hover:yellow-300 focus:yellow-300'"
         class="brick-transition"
+        @click="handleClick"
     >
         <slot />
-    </RouterLink>
+    </a>
 </template>
