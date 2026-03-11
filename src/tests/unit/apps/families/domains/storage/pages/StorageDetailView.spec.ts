@@ -213,7 +213,7 @@ describe("StorageDetailView", () => {
             .findAll("[style]")
             .filter((el) => el.attributes("style")?.includes("background-color"));
         expect(colorSwatches.length).toBeGreaterThanOrEqual(1);
-        expect(colorSwatches[0].attributes("style")).toContain("rgb(204, 0, 0)");
+        expect(colorSwatches[0]?.attributes("style")).toContain("rgb(204, 0, 0)");
     });
 
     it("should render color name when color is present", async () => {
