@@ -9,8 +9,12 @@ Step-by-step guide for adding a modal within a domain.
     ```vue
     <!-- src/apps/{appName}/domains/{domain}/modals/{ModalName}Modal.vue -->
     <script setup lang="ts">
+    import {familyTranslationService} from "@app/services";
+
     const {title} = defineProps<{title: string}>();
     const emit = defineEmits<{close: []; confirm: []}>();
+
+    const {t} = familyTranslationService;
     </script>
 
     <template>
@@ -48,7 +52,7 @@ Step-by-step guide for adding a modal within a domain.
                         shadow="[4px_4px_0px_0px_rgba(0,0,0,1)]"
                         @click="emit('close')"
                     >
-                        Cancel
+                        {{ t("common.cancel").value }}
                     </button>
                     <button
                         border="3 black"
@@ -59,7 +63,7 @@ Step-by-step guide for adding a modal within a domain.
                         shadow="[4px_4px_0px_0px_rgba(0,0,0,1)]"
                         @click="emit('confirm')"
                     >
-                        Confirm
+                        {{ t("common.submit").value }}
                     </button>
                 </div>
             </div>
@@ -72,8 +76,10 @@ Step-by-step guide for adding a modal within a domain.
     ```vue
     <script setup lang="ts">
     import {ref} from "vue";
+    import {familyTranslationService} from "@app/services";
     import ConfirmModal from "../modals/ConfirmModal.vue";
 
+    const {t} = familyTranslationService;
     const showModal = ref(false);
 
     const handleConfirm = () => {
@@ -84,8 +90,13 @@ Step-by-step guide for adding a modal within a domain.
 
     <template>
         <button @click="showModal = true">Open Modal</button>
-        <ConfirmModal v-if="showModal" title="Are you sure?" @close="showModal = false" @confirm="handleConfirm">
-            <p>This action cannot be undone.</p>
+        <ConfirmModal
+            v-if="showModal"
+            :title="t('{domain}.confirmDelete').value"
+            @close="showModal = false"
+            @confirm="handleConfirm"
+        >
+            <p>{{ t("{domain}.confirmDeleteMessage").value }}</p>
         </ConfirmModal>
     </template>
     ```

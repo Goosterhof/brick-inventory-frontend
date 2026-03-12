@@ -31,6 +31,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -59,7 +60,7 @@ describe("StorageOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(PageHeader).props("title")).toBe("Opslag");
+        expect(wrapper.findComponent(PageHeader).props("title")).toBe("storage.title");
     });
 
     it("should fetch storage options on mount", async () => {
@@ -85,8 +86,8 @@ describe("StorageOverviewView", () => {
         // Assert
         expect(wrapper.text()).toContain("Lade A");
         expect(wrapper.text()).toContain("Linkerla op plank 1");
-        expect(wrapper.text()).toContain("2 sub-locaties");
-        expect(wrapper.text()).toContain("Rij 1, Kolom 2");
+        expect(wrapper.text()).toContain("storage.subLocationsCount");
+        expect(wrapper.text()).toContain("storage.rowColumnLabel");
     });
 
     it("should show empty state when no storage options exist", async () => {
@@ -98,9 +99,7 @@ describe("StorageOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(EmptyState).props("message")).toBe(
-            "Nog geen opslaglocaties. Voeg je eerste opslaglocatie toe!",
-        );
+        expect(wrapper.findComponent(EmptyState).props("message")).toBe("storage.noStorage");
     });
 
     it("should show loading state initially", () => {
@@ -111,7 +110,7 @@ describe("StorageOverviewView", () => {
         const wrapper = shallowMount(StorageOverviewView);
 
         // Assert
-        expect(wrapper.text()).toContain("Laden...");
+        expect(wrapper.text()).toContain("common.loading");
     });
 
     it("should navigate to add page when add button is clicked", async () => {
@@ -152,7 +151,7 @@ describe("StorageOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("sub-locaties");
+        expect(wrapper.text()).not.toContain("storage.subLocationsCount");
     });
 
     it("should not show row and column when null", async () => {
@@ -165,8 +164,7 @@ describe("StorageOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("Rij");
-        expect(wrapper.text()).not.toContain("Kolom");
+        expect(wrapper.text()).not.toContain("storage.rowColumnLabel");
     });
 
     it("should not show description when null", async () => {

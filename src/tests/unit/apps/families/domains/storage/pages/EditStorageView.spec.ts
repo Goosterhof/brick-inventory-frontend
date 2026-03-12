@@ -39,6 +39,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -80,7 +81,7 @@ describe("EditStorageView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Opslag bewerken");
+        expect(wrapper.find("h1").text()).toBe("storage.editStorage");
         expect(wrapper.text()).toContain("Lade A");
     });
 
@@ -112,7 +113,7 @@ describe("EditStorageView", () => {
         const wrapper = shallowMount(EditStorageView);
 
         // Assert
-        expect(wrapper.text()).toContain("Laden...");
+        expect(wrapper.text()).toContain("common.loading");
     });
 
     it("should submit update with correct payload", async () => {
@@ -231,7 +232,7 @@ describe("EditStorageView", () => {
 
         // Assert
         const primaryButton = wrapper.findComponent(PrimaryButton);
-        expect(primaryButton.text()).toBe("Opslaan");
+        expect(primaryButton.text()).toBe("storage.save");
 
         const dangerButton = wrapper.findComponent(DangerButton);
         expect(dangerButton.exists()).toBe(true);

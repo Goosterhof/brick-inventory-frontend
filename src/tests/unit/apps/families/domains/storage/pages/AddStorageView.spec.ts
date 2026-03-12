@@ -32,6 +32,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -46,7 +47,7 @@ describe("AddStorageView", () => {
         const wrapper = shallowMount(AddStorageView);
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Opslag toevoegen");
+        expect(wrapper.find("h1").text()).toBe("storage.addStorage");
     });
 
     it("should render form fields", () => {
@@ -56,12 +57,12 @@ describe("AddStorageView", () => {
         // Assert
         const textInputs = wrapper.findAllComponents(TextInput);
         expect(textInputs).toHaveLength(1);
-        expect(textInputs[0]?.props("label")).toBe("Naam");
+        expect(textInputs[0]?.props("label")).toBe("storage.name");
 
         const numberInputs = wrapper.findAllComponents(NumberInput);
         expect(numberInputs).toHaveLength(2);
-        expect(numberInputs[0]?.props("label")).toBe("Rij");
-        expect(numberInputs[1]?.props("label")).toBe("Kolom");
+        expect(numberInputs[0]?.props("label")).toBe("storage.row");
+        expect(numberInputs[1]?.props("label")).toBe("storage.column");
 
         expect(wrapper.findComponent(TextareaInput).exists()).toBe(true);
     });
@@ -74,7 +75,7 @@ describe("AddStorageView", () => {
         const button = wrapper.findComponent(PrimaryButton);
         expect(button.exists()).toBe(true);
         expect(button.props("type")).toBe("submit");
-        expect(button.text()).toBe("Toevoegen");
+        expect(button.text()).toBe("storage.add");
     });
 
     it("should submit correct payload on form submit", async () => {

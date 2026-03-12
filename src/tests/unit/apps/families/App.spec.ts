@@ -16,6 +16,7 @@ vi.mock("@app/services", () => ({
     FamilyRouterView: {name: "FamilyRouterView", template: "<div><slot /></div>"},
     familyAuthService: {isLoggedIn: mockIsLoggedIn, logout: mockLogout},
     familyRouterService: {goToRoute: mockGoToRoute, currentRouteRef: mockCurrentRouteRef},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
 }));
 
 vi.mock("@shared/components/NavHeader.vue", () => ({
@@ -50,10 +51,10 @@ describe("App", () => {
         const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
         expect(links).toHaveLength(4);
         const [homeLink, aboutLink, setsLink, storageLink] = links;
-        expect(homeLink?.text()).toBe("Home");
-        expect(aboutLink?.text()).toBe("About");
-        expect(setsLink?.text()).toContain("Mijn Sets");
-        expect(storageLink?.text()).toContain("Opslag");
+        expect(homeLink?.text()).toBe("navigation.home");
+        expect(aboutLink?.text()).toBe("navigation.about");
+        expect(setsLink?.text()).toContain("navigation.sets");
+        expect(storageLink?.text()).toContain("navigation.storage");
     });
 
     it("should render mobile navigation links", () => {
@@ -63,10 +64,10 @@ describe("App", () => {
         // Assert
         const mobileLinks = wrapper.findAllComponents({name: "NavMobileLink"});
         expect(mobileLinks).toHaveLength(4);
-        expect(mobileLinks[0]?.text()).toBe("Home");
-        expect(mobileLinks[1]?.text()).toBe("About");
-        expect(mobileLinks[2]?.text()).toContain("Mijn Sets");
-        expect(mobileLinks[3]?.text()).toContain("Opslag");
+        expect(mobileLinks[0]?.text()).toBe("navigation.home");
+        expect(mobileLinks[1]?.text()).toBe("navigation.about");
+        expect(mobileLinks[2]?.text()).toContain("navigation.sets");
+        expect(mobileLinks[3]?.text()).toContain("navigation.storage");
     });
 
     it("should mark active mobile link based on current route", () => {
@@ -107,10 +108,10 @@ describe("App", () => {
         // Assert
         const button = wrapper.find("button");
         expect(button.exists()).toBe(true);
-        expect(button.text()).toContain("Logout");
+        expect(button.text()).toContain("auth.logout");
     });
 
-    it("should show Mijn Sets link when logged in", () => {
+    it("should show sets link when logged in", () => {
         // Arrange
         mockIsLoggedIn.value = true;
 
@@ -120,7 +121,7 @@ describe("App", () => {
         // Assert
         const setsLink = wrapper
             .findAllComponents({name: "FamilyRouterLink"})
-            .find((link) => link.text().includes("Mijn Sets"));
+            .find((link) => link.text().includes("navigation.sets"));
         expect(setsLink?.exists()).toBe(true);
         expect(setsLink?.props("to")).toEqual({name: "sets"});
     });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
-import {familyHttpService, familyRouterService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import DangerButton from "@shared/components/DangerButton.vue";
 import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
@@ -14,6 +14,7 @@ import {toCamelCaseTyped} from "@shared/helpers/string";
 import {deepSnakeKeys} from "string-ts";
 import {onMounted, ref} from "vue";
 
+const {t} = familyTranslationService;
 const familySet = ref<FamilySet | null>(null);
 const loading = ref(true);
 
@@ -57,7 +58,7 @@ const onSubmit = () =>
 
 const handleDelete = async () => {
     if (!familySet.value) return;
-    if (!window.confirm("Weet je zeker dat je deze set wilt verwijderen?")) return;
+    if (!window.confirm(t("sets.confirmDelete").value)) return;
 
     await familyHttpService.deleteRequest(`/family-sets/${familySet.value.id}`);
     await familyRouterService.goToRoute("sets");
@@ -66,29 +67,29 @@ const handleDelete = async () => {
 
 <template>
     <div max-w="md" m="x-auto">
-        <p v-if="loading" text="gray-600">Laden...</p>
+        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
 
         <template v-else-if="familySet">
-            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">Set bewerken</h1>
+            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("sets.editSet").value }}</h1>
             <p text="gray-600" m="b-6">{{ familySet.set.name }} ({{ familySet.set.setNum }})</p>
 
             <form flex="~ col" gap="4" @submit.prevent="onSubmit">
-                <NumberInput v-model="quantity" label="Aantal" :error="errors.quantity" :min="1" />
+                <NumberInput v-model="quantity" :label="t('sets.quantity').value" :error="errors.quantity" :min="1" />
 
-                <SelectInput v-model="status" label="Status" :error="errors.status">
-                    <option value="sealed">Verzegeld</option>
-                    <option value="built">Gebouwd</option>
-                    <option value="in_progress">In aanbouw</option>
-                    <option value="incomplete">Incompleet</option>
+                <SelectInput v-model="status" :label="t('sets.status').value" :error="errors.status">
+                    <option value="sealed">{{ t("sets.sealed").value }}</option>
+                    <option value="built">{{ t("sets.built").value }}</option>
+                    <option value="in_progress">{{ t("sets.inProgress").value }}</option>
+                    <option value="incomplete">{{ t("sets.incomplete").value }}</option>
                 </SelectInput>
 
-                <DateInput v-model="purchaseDate" label="Aankoopdatum" optional />
+                <DateInput v-model="purchaseDate" :label="t('sets.purchaseDate').value" optional />
 
-                <TextareaInput v-model="notes" label="Notities" optional />
+                <TextareaInput v-model="notes" :label="t('sets.notes').value" optional />
 
                 <div flex gap="4">
-                    <PrimaryButton type="submit">Opslaan</PrimaryButton>
-                    <DangerButton @click="handleDelete">Verwijderen</DangerButton>
+                    <PrimaryButton type="submit">{{ t("sets.save").value }}</PrimaryButton>
+                    <DangerButton @click="handleDelete">{{ t("sets.delete").value }}</DangerButton>
                 </div>
             </form>
         </template>

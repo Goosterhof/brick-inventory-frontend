@@ -173,6 +173,39 @@ const routes = [...homeRoutes, ...itemRoutes, ...otherRoutes] as const satisfies
 - Interactive elements need keyboard event handlers
 - No positive tabindex values
 
+## Translations (i18n)
+
+All user-facing text **must** use the app's translation service — never hardcode strings in templates or script code.
+
+### Usage
+
+```ts
+import {familyTranslationService} from "@app/services";
+
+const {t} = familyTranslationService;
+```
+
+```vue
+<template>
+    <!-- In text content — use .value to unwrap the ComputedRef -->
+    <h1>{{ t("home.title").value }}</h1>
+
+    <!-- In attribute bindings -->
+    <button :aria-label="t('common.delete').value">{{ t('common.delete').value }}</button>
+
+    <!-- With parameters -->
+    <p>{{ t("errors.minLength", {min: 8}).value }}</p>
+</template>
+```
+
+### Rules
+
+- **No bare strings in templates** — all visible text (headings, labels, buttons, placeholders, error messages, aria-labels) must come from the translation service
+- **Keys use "section.name" format** — e.g., `t("common.save")`, `t("auth.logIn")`, `t("errors.required")`
+- **Add new keys to both locales** — when adding a translation key, add it to both `en` and `nl` in the app's `services/translation.ts`
+- **Reuse existing keys** — check the translation file before creating duplicates (e.g., use `common.save` instead of adding `sets.save` if the meaning is the same)
+- **Translation file location**: `src/apps/{appName}/services/translation.ts`
+
 ## Coding Conventions
 
 - Always run `npm run format` before committing changes

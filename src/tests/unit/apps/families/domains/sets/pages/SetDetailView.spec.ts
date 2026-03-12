@@ -34,6 +34,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -123,7 +124,7 @@ describe("SetDetailView", () => {
         expect(wrapper.text()).toContain("Star Wars");
         expect(wrapper.text()).toContain("7541");
         expect(wrapper.text()).toContain("2x");
-        expect(wrapper.text()).toContain("Gebouwd");
+        expect(wrapper.text()).toContain("sets.built");
         expect(wrapper.text()).toContain("2024-01-15");
         expect(wrapper.text()).toContain("Birthday gift");
     });
@@ -151,7 +152,7 @@ describe("SetDetailView", () => {
         const wrapper = shallowMount(SetDetailView);
 
         // Assert
-        expect(wrapper.text()).toContain("Laden...");
+        expect(wrapper.text()).toContain("common.loading");
     });
 
     it("should navigate to edit page when edit button is clicked", async () => {
@@ -162,7 +163,7 @@ describe("SetDetailView", () => {
 
         // Act
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const editButton = buttons.find((btn) => btn.text().includes("Bewerken"));
+        const editButton = buttons.find((btn) => btn.text().includes("sets.edit"));
         await editButton?.trigger("click");
         await flushPromises();
 
@@ -194,7 +195,7 @@ describe("SetDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("Aankoopdatum");
+        expect(wrapper.text()).not.toContain("2024-01-15");
     });
 
     it("should not show notes when null", async () => {
@@ -207,7 +208,7 @@ describe("SetDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("Notities");
+        expect(wrapper.text()).not.toContain("Birthday gift");
     });
 
     it("should show load parts button initially", async () => {
@@ -220,7 +221,7 @@ describe("SetDetailView", () => {
 
         // Assert
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
         expect(loadPartsButton?.exists()).toBe(true);
     });
 
@@ -234,13 +235,14 @@ describe("SetDetailView", () => {
 
         // Act
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
         await loadPartsButton?.trigger("click");
         await flushPromises();
 
         // Assert
         expect(mockGetRequest).toHaveBeenCalledWith("/sets/75192-1/parts");
-        expect(wrapper.text()).toContain("Onderdelen (1)");
+        expect(wrapper.text()).toContain("sets.parts");
+        expect(wrapper.text()).toContain("(1)");
         const parts = wrapper.findAllComponents(PartListItem);
         const regularPart = parts.find((p) => !p.props("spare"));
         expect(regularPart?.props("name")).toBe("Brick 2 x 4");
@@ -258,12 +260,13 @@ describe("SetDetailView", () => {
 
         // Act
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
         await loadPartsButton?.trigger("click");
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("Reserve (1)");
+        expect(wrapper.text()).toContain("sets.spareParts");
+        expect(wrapper.text()).toContain("(1)");
         const parts = wrapper.findAllComponents(PartListItem);
         const sparePart = parts.find((p) => p.props("spare"));
         expect(sparePart?.props("name")).toBe("Brick 2 x 3");
@@ -280,13 +283,13 @@ describe("SetDetailView", () => {
 
         // Act
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
         await loadPartsButton?.trigger("click");
         await flushPromises();
 
         // Assert
         const buttonsAfter = wrapper.findAllComponents(PrimaryButton);
-        const loadPartsButtonAfter = buttonsAfter.find((btn) => btn.text().includes("Onderdelen laden"));
+        const loadPartsButtonAfter = buttonsAfter.find((btn) => btn.text().includes("sets.loadParts"));
         expect(loadPartsButtonAfter).toBeUndefined();
     });
 
@@ -300,7 +303,7 @@ describe("SetDetailView", () => {
 
         // Act
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
         await loadPartsButton?.trigger("click");
         await flushPromises();
 
@@ -320,7 +323,7 @@ describe("SetDetailView", () => {
 
         // Act
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const loadPartsButton = buttons.find((btn) => btn.text().includes("Onderdelen laden"));
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
         await loadPartsButton?.trigger("click");
         await flushPromises();
 
