@@ -34,6 +34,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -62,8 +63,8 @@ describe("HomeView", () => {
             const wrapper = shallowMount(HomeView);
 
             // Assert
-            expect(wrapper.text()).toContain("Brick Inventory");
-            expect(wrapper.text()).toContain("Elke steen heeft een plek.");
+            expect(wrapper.text()).toContain("home.brandTitle");
+            expect(wrapper.text()).toContain("home.tagline");
             expect(wrapper.findComponent(NavLink).exists()).toBe(true);
         });
 
@@ -100,7 +101,7 @@ describe("HomeView", () => {
             const wrapper = shallowMount(HomeView);
 
             // Assert
-            expect(wrapper.text()).toContain("Je collectie laden...");
+            expect(wrapper.text()).toContain("home.loadingStats");
         });
 
         it("should render dashboard title", async () => {
@@ -112,7 +113,7 @@ describe("HomeView", () => {
             await flushPromises();
 
             // Assert
-            expect(wrapper.findComponent(PageHeader).props("title")).toBe("Dashboard");
+            expect(wrapper.findComponent(PageHeader).props("title")).toBe("home.dashboardTitle");
         });
 
         it("should render stat cards with correct values", async () => {
@@ -140,7 +141,7 @@ describe("HomeView", () => {
             await flushPromises();
 
             // Assert
-            expect(wrapper.text()).toContain("8 totaal (incl. dubbele)");
+            expect(wrapper.text()).toContain("home.totalIncludingDuplicates");
         });
 
         it("should not show total quantity when equal to total sets", async () => {
@@ -152,7 +153,7 @@ describe("HomeView", () => {
             await flushPromises();
 
             // Assert
-            expect(wrapper.text()).not.toContain("totaal (incl. dubbele)");
+            expect(wrapper.text()).not.toContain("home.totalIncludingDuplicates");
         });
 
         it("should render sets by status", async () => {
@@ -164,8 +165,8 @@ describe("HomeView", () => {
             await flushPromises();
 
             // Assert
-            expect(wrapper.text()).toContain("Verzegeld");
-            expect(wrapper.text()).toContain("Gebouwd");
+            expect(wrapper.text()).toContain("sets.sealed");
+            expect(wrapper.text()).toContain("sets.built");
         });
 
         it("should render quick action links", async () => {
@@ -179,8 +180,8 @@ describe("HomeView", () => {
             // Assert
             const navLinks = wrapper.findAllComponents(NavLink);
             expect(navLinks.length).toBe(2);
-            expect(wrapper.text()).toContain("Mijn Sets");
-            expect(wrapper.text()).toContain("Opslag");
+            expect(wrapper.text()).toContain("navigation.sets");
+            expect(wrapper.text()).toContain("navigation.storage");
         });
 
         it("should navigate to sets when quick action is clicked", async () => {
@@ -191,7 +192,7 @@ describe("HomeView", () => {
 
             // Act
             const navLinks = wrapper.findAllComponents(NavLink);
-            const setsLink = navLinks.find((link) => link.text() === "Mijn Sets");
+            const setsLink = navLinks.find((link) => link.text().includes("navigation.sets"));
             await setsLink?.trigger("click");
             await flushPromises();
 
@@ -207,7 +208,7 @@ describe("HomeView", () => {
 
             // Act
             const navLinks = wrapper.findAllComponents(NavLink);
-            const storageLink = navLinks.find((link) => link.text() === "Opslag");
+            const storageLink = navLinks.find((link) => link.text().includes("navigation.storage"));
             await storageLink?.trigger("click");
             await flushPromises();
 
@@ -233,8 +234,8 @@ describe("HomeView", () => {
             await flushPromises();
 
             // Assert
-            expect(wrapper.text()).not.toContain("Sets per status");
-            expect(wrapper.text()).toContain("Snel naar");
+            expect(wrapper.text()).not.toContain("home.setsByStatus");
+            expect(wrapper.text()).toContain("home.quickActions");
         });
     });
 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {StorageOption} from "@app/types/storageOption";
 
-import {familyHttpService, familyRouterService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
@@ -13,6 +13,7 @@ import {toCamelCaseTyped} from "@shared/helpers/string";
 import {deepSnakeKeys} from "string-ts";
 import {onMounted, ref} from "vue";
 
+const {t} = familyTranslationService;
 const storageOption = ref<StorageOption | null>(null);
 const loading = ref(true);
 
@@ -57,7 +58,7 @@ const onSubmit = () =>
 
 const handleDelete = async () => {
     if (!storageOption.value) return;
-    if (!window.confirm("Weet je zeker dat je deze opslaglocatie wilt verwijderen?")) return;
+    if (!window.confirm(t("storage.confirmDelete").value)) return;
 
     await familyHttpService.deleteRequest(`/storage-options/${storageOption.value.id}`);
     await familyRouterService.goToRoute("storage");
@@ -66,29 +67,41 @@ const handleDelete = async () => {
 
 <template>
     <div max-w="md" m="x-auto">
-        <p v-if="loading" text="gray-600">Laden...</p>
+        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
 
         <template v-else-if="storageOption">
-            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">Opslag bewerken</h1>
+            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("storage.editStorage").value }}</h1>
             <p text="gray-600" m="b-6">{{ storageOption.name }}</p>
 
             <form flex="~ col" gap="4" @submit.prevent="onSubmit">
-                <TextInput v-model="name" label="Naam" :error="errors.name" />
+                <TextInput v-model="name" :label="t('storage.name').value" :error="errors.name" />
 
-                <TextareaInput v-model="description" label="Beschrijving" optional />
+                <TextareaInput v-model="description" :label="t('storage.description').value" optional />
 
                 <div flex gap="4">
                     <div flex="1 ~ col" gap="2">
-                        <NumberInput v-model="row" label="Rij" :error="errors.row" :min="0" optional />
+                        <NumberInput
+                            v-model="row"
+                            :label="t('storage.row').value"
+                            :error="errors.row"
+                            :min="0"
+                            optional
+                        />
                     </div>
                     <div flex="1 ~ col" gap="2">
-                        <NumberInput v-model="column" label="Kolom" :error="errors.column" :min="0" optional />
+                        <NumberInput
+                            v-model="column"
+                            :label="t('storage.column').value"
+                            :error="errors.column"
+                            :min="0"
+                            optional
+                        />
                     </div>
                 </div>
 
                 <div flex gap="4">
-                    <PrimaryButton type="submit">Opslaan</PrimaryButton>
-                    <DangerButton @click="handleDelete">Verwijderen</DangerButton>
+                    <PrimaryButton type="submit">{{ t("storage.save").value }}</PrimaryButton>
+                    <DangerButton @click="handleDelete">{{ t("storage.delete").value }}</DangerButton>
                 </div>
             </form>
         </template>

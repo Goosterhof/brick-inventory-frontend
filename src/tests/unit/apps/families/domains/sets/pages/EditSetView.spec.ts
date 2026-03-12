@@ -38,6 +38,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -87,7 +88,7 @@ describe("EditSetView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Set bewerken");
+        expect(wrapper.find("h1").text()).toBe("sets.editSet");
         expect(wrapper.text()).toContain("Millennium Falcon");
         expect(wrapper.text()).toContain("75192-1");
     });
@@ -116,7 +117,7 @@ describe("EditSetView", () => {
         const wrapper = shallowMount(EditSetView);
 
         // Assert
-        expect(wrapper.text()).toContain("Laden...");
+        expect(wrapper.text()).toContain("common.loading");
     });
 
     it("should submit update with correct payload", async () => {
@@ -234,7 +235,7 @@ describe("EditSetView", () => {
 
         // Assert
         const primaryButton = wrapper.findComponent(PrimaryButton);
-        expect(primaryButton.text()).toBe("Opslaan");
+        expect(primaryButton.text()).toBe("sets.save");
 
         const dangerButton = wrapper.findComponent(DangerButton);
         expect(dangerButton.exists()).toBe(true);

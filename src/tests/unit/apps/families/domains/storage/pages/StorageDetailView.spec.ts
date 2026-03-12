@@ -35,6 +35,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -116,7 +117,7 @@ describe("StorageDetailView", () => {
         const wrapper = shallowMount(StorageDetailView);
 
         // Assert
-        expect(wrapper.text()).toContain("Laden...");
+        expect(wrapper.text()).toContain("common.loading");
     });
 
     it("should navigate to edit page when edit button is clicked", async () => {
@@ -151,7 +152,7 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("Beschrijving");
+        expect(wrapper.text()).not.toContain("Linkerla op plank 1");
     });
 
     it("should not show row when null", async () => {
@@ -160,7 +161,7 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("Rij:");
+        expect(wrapper.text()).not.toContain("storage.row");
     });
 
     it("should not show column when null", async () => {
@@ -169,7 +170,7 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("Kolom:");
+        expect(wrapper.text()).not.toContain("storage.column");
     });
 
     it("should not show sub-locations when no children", async () => {
@@ -178,7 +179,7 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("Sub-locaties");
+        expect(wrapper.text()).not.toContain("storage.subLocations");
     });
 
     it("should show child count when children exist", async () => {
@@ -187,7 +188,7 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("Sub-locaties");
+        expect(wrapper.text()).toContain("storage.subLocations");
         expect(wrapper.text()).toContain("2");
     });
 
@@ -197,7 +198,8 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("Onderdelen (2)");
+        expect(wrapper.text()).toContain("storage.parts");
+        expect(wrapper.text()).toContain("(2)");
         const parts = wrapper.findAllComponents(PartListItem);
         expect(parts).toHaveLength(2);
         expect(parts[0]?.props("name")).toBe("Brick 2 x 4");
@@ -243,6 +245,6 @@ describe("StorageDetailView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(EmptyState).props("message")).toBe("Geen onderdelen in deze opslaglocatie.");
+        expect(wrapper.findComponent(EmptyState).props("message")).toBe("storage.noParts");
     });
 });

@@ -30,6 +30,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: mockGoToDashboard, goToRoute: vi.fn()},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -46,8 +47,8 @@ describe("LoginView", () => {
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
         expect(inputs).toHaveLength(2);
-        expect(inputs[0]?.props("label")).toBe("Email");
-        expect(inputs[1]?.props("label")).toBe("Password");
+        expect(inputs[0]?.props("label")).toBe("auth.email");
+        expect(inputs[1]?.props("label")).toBe("auth.password");
     });
 
     it("should render email field with email type", () => {
@@ -87,7 +88,7 @@ describe("LoginView", () => {
         const button = wrapper.findComponent(PrimaryButton);
         expect(button.exists()).toBe(true);
         expect(button.props("type")).toBe("submit");
-        expect(button.text()).toBe("Log In");
+        expect(button.text()).toBe("auth.logIn");
     });
 
     it("should call authService.login on form submit", async () => {
@@ -125,7 +126,7 @@ describe("LoginView", () => {
         const wrapper = shallowMount(LoginView);
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Log In");
+        expect(wrapper.find("h1").text()).toBe("auth.logIn");
     });
 
     it("should not navigate on 422 validation error", async () => {

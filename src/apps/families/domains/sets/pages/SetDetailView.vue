@@ -2,23 +2,24 @@
 import type {FamilySet} from "@app/types/familySet";
 import type {SetWithParts} from "@app/types/part";
 
-import {familyHttpService, familyRouterService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
 
+const {t} = familyTranslationService;
 const familySet = ref<FamilySet | null>(null);
 const setWithParts = ref<SetWithParts | null>(null);
 const loading = ref(true);
 const partsLoading = ref(false);
 
-const statusLabels: Record<FamilySet["status"], string> = {
-    sealed: "Verzegeld",
-    built: "Gebouwd",
-    in_progress: "In aanbouw",
-    incomplete: "Incompleet",
+const statusKey: Record<FamilySet["status"], "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete"> = {
+    sealed: "sets.sealed",
+    built: "sets.built",
+    in_progress: "sets.inProgress",
+    incomplete: "sets.incomplete",
 };
 
 const loadParts = async (setNum: string) => {
@@ -47,11 +48,11 @@ const goBack = async () => {
 
 <template>
     <div max-w="6xl" m="x-auto">
-        <p v-if="loading" text="gray-600">Laden...</p>
+        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
 
         <template v-else-if="familySet">
             <div m="b-6">
-                <BackButton @click="goBack">&larr; Terug naar overzicht</BackButton>
+                <BackButton @click="goBack">&larr; {{ t("sets.backToOverview").value }}</BackButton>
             </div>
 
             <div flex="~ col md:row" gap="6">
@@ -65,7 +66,7 @@ const goBack = async () => {
                         object="contain"
                     />
                     <div v-else w="48" h="48" bg="gray-200" flex items="center" justify="center" text="gray-600">
-                        Geen afbeelding
+                        {{ t("common.noImage").value }}
                     </div>
                 </div>
 
@@ -75,51 +76,51 @@ const goBack = async () => {
 
                     <div flex="~ col" gap="2" m="t-2">
                         <div flex gap="2">
-                            <span font="bold">Jaar:</span>
-                            <span>{{ familySet.set.year ?? "Onbekend" }}</span>
+                            <span font="bold">{{ t("sets.year").value }}:</span>
+                            <span>{{ familySet.set.year ?? t("sets.unknown").value }}</span>
                         </div>
                         <div flex gap="2">
-                            <span font="bold">Thema:</span>
-                            <span>{{ familySet.set.theme ?? "Onbekend" }}</span>
+                            <span font="bold">{{ t("sets.theme").value }}:</span>
+                            <span>{{ familySet.set.theme ?? t("sets.unknown").value }}</span>
                         </div>
                         <div flex gap="2">
-                            <span font="bold">Aantal onderdelen:</span>
+                            <span font="bold">{{ t("sets.numParts").value }}:</span>
                             <span>{{ familySet.set.numParts }}</span>
                         </div>
                         <div flex gap="2">
-                            <span font="bold">Aantal:</span>
+                            <span font="bold">{{ t("sets.quantity").value }}:</span>
                             <span>{{ familySet.quantity }}x</span>
                         </div>
                         <div flex gap="2">
-                            <span font="bold">Status:</span>
-                            <span>{{ statusLabels[familySet.status] }}</span>
+                            <span font="bold">{{ t("sets.status").value }}:</span>
+                            <span>{{ t(statusKey[familySet.status]).value }}</span>
                         </div>
                         <div v-if="familySet.purchaseDate" flex gap="2">
-                            <span font="bold">Aankoopdatum:</span>
+                            <span font="bold">{{ t("sets.purchaseDate").value }}:</span>
                             <span>{{ familySet.purchaseDate }}</span>
                         </div>
                         <div v-if="familySet.notes" flex gap="2">
-                            <span font="bold">Notities:</span>
+                            <span font="bold">{{ t("sets.notes").value }}:</span>
                             <span>{{ familySet.notes }}</span>
                         </div>
                     </div>
 
                     <div flex gap="4" m="t-4">
-                        <PrimaryButton @click="goToEdit">Bewerken</PrimaryButton>
+                        <PrimaryButton @click="goToEdit">{{ t("sets.edit").value }}</PrimaryButton>
                         <PrimaryButton v-if="!setWithParts" @click="loadParts(familySet.set.setNum)">
-                            Onderdelen laden
+                            {{ t("sets.loadParts").value }}
                         </PrimaryButton>
                     </div>
                 </div>
             </div>
 
             <div v-if="partsLoading" m="t-8">
-                <p text="gray-600">Onderdelen laden...</p>
+                <p text="gray-600">{{ t("sets.loadingParts").value }}</p>
             </div>
 
             <div v-else-if="setWithParts" m="t-8">
                 <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
-                    Onderdelen ({{ setWithParts.parts.filter((p) => !p.isSpare).length }})
+                    {{ t("sets.parts").value }} ({{ setWithParts.parts.filter((p) => !p.isSpare).length }})
                 </h2>
 
                 <div flex="~ col" gap="2">
@@ -137,7 +138,7 @@ const goBack = async () => {
 
                 <div v-if="setWithParts.parts.filter((p) => p.isSpare).length > 0" m="t-6">
                     <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
-                        Reserve ({{ setWithParts.parts.filter((p) => p.isSpare).length }})
+                        {{ t("sets.spareParts").value }} ({{ setWithParts.parts.filter((p) => p.isSpare).length }})
                     </h2>
 
                     <div flex="~ col" gap="2">

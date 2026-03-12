@@ -34,6 +34,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -48,7 +49,7 @@ describe("AddSetView", () => {
         const wrapper = shallowMount(AddSetView);
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("Set toevoegen");
+        expect(wrapper.find("h1").text()).toBe("sets.addSet");
     });
 
     it("should render form fields", () => {
@@ -58,11 +59,11 @@ describe("AddSetView", () => {
         // Assert
         const textInputs = wrapper.findAllComponents(TextInput);
         expect(textInputs).toHaveLength(1);
-        expect(textInputs[0]?.props("label")).toBe("Setnummer");
+        expect(textInputs[0]?.props("label")).toBe("sets.setNumber");
 
         const numberInputs = wrapper.findAllComponents(NumberInput);
         expect(numberInputs).toHaveLength(1);
-        expect(numberInputs[0]?.props("label")).toBe("Aantal");
+        expect(numberInputs[0]?.props("label")).toBe("sets.quantity");
 
         expect(wrapper.findComponent(SelectInput).exists()).toBe(true);
         expect(wrapper.findComponent(DateInput).exists()).toBe(true);
@@ -77,7 +78,7 @@ describe("AddSetView", () => {
         const button = wrapper.findComponent(PrimaryButton);
         expect(button.exists()).toBe(true);
         expect(button.props("type")).toBe("submit");
-        expect(button.text()).toBe("Toevoegen");
+        expect(button.text()).toBe("sets.add");
     });
 
     it("should submit correct payload on form submit", async () => {

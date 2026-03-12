@@ -56,3 +56,23 @@ Always use Composition API with `<script setup>` syntax:
 // imports, props, emits, reactive state, computed, methods
 </script>
 ```
+
+## Translations
+
+All user-facing text must use the translation service — no hardcoded strings in templates:
+
+```vue
+<script setup lang="ts">
+import {familyTranslationService} from "@app/services";
+
+const {t} = familyTranslationService;
+</script>
+
+<template>
+    <FormField>
+        <FormLabel :for="inputId" :required="required">{{ t("auth.email").value }}</FormLabel>
+        <input :id="inputId" v-model="model" :placeholder="t('auth.email').value" />
+        <FormError v-if="error" :id="errorId" :message="error" />
+    </FormField>
+</template>
+```

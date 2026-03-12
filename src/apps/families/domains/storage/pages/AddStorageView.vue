@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {StorageOption} from "@app/types/storageOption";
 
-import {familyHttpService, familyRouterService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -12,6 +12,7 @@ import {toCamelCaseTyped} from "@shared/helpers/string";
 import {deepSnakeKeys} from "string-ts";
 import {ref} from "vue";
 
+const {t} = familyTranslationService;
 const name = ref("");
 const description = ref("");
 const row = ref<number | null>(null);
@@ -41,23 +42,29 @@ const onSubmit = () =>
 
 <template>
     <div max-w="md" m="x-auto">
-        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">Opslag toevoegen</h1>
+        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">{{ t("storage.addStorage").value }}</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="onSubmit">
-            <TextInput v-model="name" label="Naam" :error="errors.name" />
+            <TextInput v-model="name" :label="t('storage.name').value" :error="errors.name" />
 
-            <TextareaInput v-model="description" label="Beschrijving" optional />
+            <TextareaInput v-model="description" :label="t('storage.description').value" optional />
 
             <div flex gap="4">
                 <div flex="1 ~ col" gap="2">
-                    <NumberInput v-model="row" label="Rij" :error="errors.row" :min="0" optional />
+                    <NumberInput v-model="row" :label="t('storage.row').value" :error="errors.row" :min="0" optional />
                 </div>
                 <div flex="1 ~ col" gap="2">
-                    <NumberInput v-model="column" label="Kolom" :error="errors.column" :min="0" optional />
+                    <NumberInput
+                        v-model="column"
+                        :label="t('storage.column').value"
+                        :error="errors.column"
+                        :min="0"
+                        optional
+                    />
                 </div>
             </div>
 
-            <PrimaryButton type="submit">Toevoegen</PrimaryButton>
+            <PrimaryButton type="submit">{{ t("storage.add").value }}</PrimaryButton>
         </form>
     </div>
 </template>

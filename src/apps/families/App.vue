@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import {FamilyRouterLink, FamilyRouterView, familyAuthService, familyRouterService} from "@app/services";
+import {
+    FamilyRouterLink,
+    FamilyRouterView,
+    familyAuthService,
+    familyRouterService,
+    familyTranslationService,
+} from "@app/services";
 import {PhSignOut} from "@phosphor-icons/vue";
 import NavHeader from "@shared/components/NavHeader.vue";
 import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import {computed} from "vue";
 
+const {t} = familyTranslationService;
 const currentRouteName = computed(() => familyRouterService.currentRouteRef.value.name);
 
 const handleLogout = async () => {
@@ -16,26 +23,26 @@ const handleLogout = async () => {
 <template>
     <NavHeader>
         <template #links>
-            <FamilyRouterLink :to="{name: 'home'}">Home</FamilyRouterLink>
-            <FamilyRouterLink :to="{name: 'about'}">About</FamilyRouterLink>
+            <FamilyRouterLink :to="{name: 'home'}">{{ t("navigation.home").value }}</FamilyRouterLink>
+            <FamilyRouterLink :to="{name: 'about'}">{{ t("navigation.about").value }}</FamilyRouterLink>
             <FamilyRouterLink v-show="familyAuthService.isLoggedIn.value" :to="{name: 'sets'}">
-                Mijn Sets
+                {{ t("navigation.sets").value }}
             </FamilyRouterLink>
             <FamilyRouterLink v-show="familyAuthService.isLoggedIn.value" :to="{name: 'storage'}">
-                Opslag
+                {{ t("navigation.storage").value }}
             </FamilyRouterLink>
         </template>
 
         <template #mobile-links>
             <NavMobileLink to="/" :active="currentRouteName === 'home'" @click="familyRouterService.goToRoute('home')">
-                Home
+                {{ t("navigation.home").value }}
             </NavMobileLink>
             <NavMobileLink
                 to="/about"
                 :active="currentRouteName === 'about'"
                 @click="familyRouterService.goToRoute('about')"
             >
-                About
+                {{ t("navigation.about").value }}
             </NavMobileLink>
             <NavMobileLink
                 v-show="familyAuthService.isLoggedIn.value"
@@ -43,7 +50,7 @@ const handleLogout = async () => {
                 :active="currentRouteName === 'sets'"
                 @click="familyRouterService.goToRoute('sets')"
             >
-                Mijn Sets
+                {{ t("navigation.sets").value }}
             </NavMobileLink>
             <NavMobileLink
                 v-show="familyAuthService.isLoggedIn.value"
@@ -51,7 +58,7 @@ const handleLogout = async () => {
                 :active="currentRouteName === 'storage'"
                 @click="familyRouterService.goToRoute('storage')"
             >
-                Opslag
+                {{ t("navigation.storage").value }}
             </NavMobileLink>
         </template>
 
@@ -72,7 +79,7 @@ const handleLogout = async () => {
                 class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             >
                 <PhSignOut size="20" aria-hidden="true" />
-                Logout
+                {{ t("auth.logout").value }}
             </button>
         </template>
     </NavHeader>

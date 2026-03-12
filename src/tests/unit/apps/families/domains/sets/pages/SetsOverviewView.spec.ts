@@ -31,6 +31,7 @@ vi.mock("@app/services", () => ({
         resetPassword: vi.fn(),
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
+    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -67,7 +68,7 @@ describe("SetsOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(PageHeader).props("title")).toBe("Mijn Sets");
+        expect(wrapper.findComponent(PageHeader).props("title")).toBe("sets.title");
     });
 
     it("should fetch sets on mount", async () => {
@@ -93,7 +94,7 @@ describe("SetsOverviewView", () => {
         // Assert
         expect(wrapper.text()).toContain("Millennium Falcon");
         expect(wrapper.text()).toContain("75192-1");
-        expect(wrapper.text()).toContain("Gebouwd");
+        expect(wrapper.text()).toContain("sets.built");
         expect(wrapper.text()).toContain("2x");
     });
 
@@ -106,7 +107,7 @@ describe("SetsOverviewView", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(EmptyState).props("message")).toBe("Nog geen sets. Voeg je eerste set toe!");
+        expect(wrapper.findComponent(EmptyState).props("message")).toBe("sets.noSets");
     });
 
     it("should show loading state initially", () => {
@@ -117,7 +118,7 @@ describe("SetsOverviewView", () => {
         const wrapper = shallowMount(SetsOverviewView);
 
         // Assert
-        expect(wrapper.text()).toContain("Laden...");
+        expect(wrapper.text()).toContain("common.loading");
     });
 
     it("should navigate to add page when add button is clicked", async () => {
@@ -174,6 +175,6 @@ describe("SetsOverviewView", () => {
 
         // Assert
         expect(wrapper.find("img").exists()).toBe(false);
-        expect(wrapper.text()).toContain("Geen afbeelding");
+        expect(wrapper.text()).toContain("common.noImage");
     });
 });

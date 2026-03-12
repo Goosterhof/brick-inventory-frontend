@@ -2,7 +2,7 @@
 import type {StorageOptionPart} from "@app/types/part";
 import type {StorageOption} from "@app/types/storageOption";
 
-import {familyHttpService, familyRouterService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
@@ -10,6 +10,7 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
 
+const {t} = familyTranslationService;
 const storageOption = ref<StorageOption | null>(null);
 const storageParts = ref<StorageOptionPart[]>([]);
 const loading = ref(true);
@@ -39,44 +40,46 @@ const goBack = async () => {
 
 <template>
     <div max-w="6xl" m="x-auto">
-        <p v-if="loading" text="gray-600">Laden...</p>
+        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
 
         <template v-else-if="storageOption">
             <div m="b-6">
-                <BackButton @click="goBack">&larr; Terug naar overzicht</BackButton>
+                <BackButton @click="goBack">&larr; {{ t("storage.backToOverview").value }}</BackButton>
             </div>
 
             <div flex="~ col" gap="3">
                 <h1 text="2xl" font="bold" uppercase tracking="wide">{{ storageOption.name }}</h1>
 
                 <div v-if="storageOption.description" flex gap="2">
-                    <span font="bold">Beschrijving:</span>
+                    <span font="bold">{{ t("storage.description").value }}:</span>
                     <span>{{ storageOption.description }}</span>
                 </div>
                 <div v-if="storageOption.row !== null" flex gap="2">
-                    <span font="bold">Rij:</span>
+                    <span font="bold">{{ t("storage.row").value }}:</span>
                     <span>{{ storageOption.row }}</span>
                 </div>
                 <div v-if="storageOption.column !== null" flex gap="2">
-                    <span font="bold">Kolom:</span>
+                    <span font="bold">{{ t("storage.column").value }}:</span>
                     <span>{{ storageOption.column }}</span>
                 </div>
                 <div v-if="storageOption.childIds.length > 0" flex gap="2">
-                    <span font="bold">Sub-locaties:</span>
+                    <span font="bold">{{ t("storage.subLocations").value }}:</span>
                     <span>{{ storageOption.childIds.length }}</span>
                 </div>
 
                 <div m="t-4">
-                    <PrimaryButton @click="goToEdit">Bewerken</PrimaryButton>
+                    <PrimaryButton @click="goToEdit">{{ t("storage.edit").value }}</PrimaryButton>
                 </div>
             </div>
 
             <div m="t-8">
-                <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">Onderdelen ({{ storageParts.length }})</h2>
+                <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
+                    {{ t("storage.parts").value }} ({{ storageParts.length }})
+                </h2>
 
-                <p v-if="partsLoading" text="gray-600">Onderdelen laden...</p>
+                <p v-if="partsLoading" text="gray-600">{{ t("storage.loadingParts").value }}</p>
 
-                <EmptyState v-else-if="storageParts.length === 0" message="Geen onderdelen in deze opslaglocatie." />
+                <EmptyState v-else-if="storageParts.length === 0" :message="t('storage.noParts').value" />
 
                 <div v-else flex="~ col" gap="2">
                     <PartListItem
