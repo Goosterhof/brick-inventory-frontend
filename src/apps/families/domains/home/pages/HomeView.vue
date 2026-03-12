@@ -13,7 +13,7 @@ const {t} = familyTranslationService;
 const stats = ref<FamilyStats | null>(null);
 const loading = ref(true);
 
-const statusKeys: Record<string, string> = {
+const statusKeys: Record<string, "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete"> = {
     sealed: "sets.sealed",
     built: "sets.built",
     in_progress: "sets.inProgress",
@@ -67,7 +67,7 @@ const goToStorage = async () => {
                         </p>
                         <p text="3xl" font="bold">{{ stats.totalSets }}</p>
                         <p v-if="stats.totalSetQuantity !== stats.totalSets" text="sm gray-600">
-                            {{ t("home.totalIncludingDuplicates", {count: stats.totalSetQuantity}).value }}
+                            {{ t("home.totalIncludingDuplicates", {count: String(stats.totalSetQuantity)}).value }}
                         </p>
                     </CardContainer>
 
@@ -84,7 +84,7 @@ const goToStorage = async () => {
                         </p>
                         <p text="3xl" font="bold">{{ stats.totalUniqueParts }}</p>
                         <p v-if="stats.totalPartsQuantity > 0" text="sm gray-600">
-                            {{ t("home.totalPieces", {count: stats.totalPartsQuantity}).value }}
+                            {{ t("home.totalPieces", {count: String(stats.totalPartsQuantity)}).value }}
                         </p>
                     </CardContainer>
                 </div>
@@ -97,7 +97,7 @@ const goToStorage = async () => {
                     <div grid grid-cols="2 sm:4" gap="4" m="b-6">
                         <CardContainer v-for="(count, status) in stats.setsByStatus" :key="status">
                             <p text="sm" font="bold" uppercase tracking="wide" m="b-2">
-                                {{ t(statusKeys[status] ?? "").value || status }}
+                                {{ statusKeys[status] ? t(statusKeys[status]).value : status }}
                             </p>
                             <p text="2xl" font="bold">{{ count }}</p>
                         </CardContainer>
