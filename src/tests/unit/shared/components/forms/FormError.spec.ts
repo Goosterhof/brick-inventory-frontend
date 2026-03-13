@@ -5,7 +5,7 @@ import {describe, expect, it} from "vitest";
 describe("FormError", () => {
     it("should render error message from prop", () => {
         // Arrange
-        const wrapper = shallowMount(FormError, {props: {message: "Invalid email address"}});
+        const wrapper = shallowMount(FormError, {props: {id: "error-1", message: "Invalid email address"}});
 
         // Assert
         expect(wrapper.find("p").text()).toBe("Invalid email address");
@@ -13,13 +13,13 @@ describe("FormError", () => {
 
     it("should have role alert for accessibility", () => {
         // Arrange
-        const wrapper = shallowMount(FormError, {props: {message: "Error"}});
+        const wrapper = shallowMount(FormError, {props: {id: "error-1", message: "Error"}});
 
         // Assert
         expect(wrapper.find("p").attributes("role")).toBe("alert");
     });
 
-    it("should set id attribute when provided", () => {
+    it("should set id attribute", () => {
         // Arrange
         const wrapper = shallowMount(FormError, {props: {id: "error-123", message: "Error"}});
 

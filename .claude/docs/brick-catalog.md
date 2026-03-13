@@ -79,10 +79,10 @@ Desktop navigation link.
 
 Mobile navigation link with active state.
 
-| Prop     | Type      | Default  | Description            |
+| Prop     | Type      | Required | Description            |
 | -------- | --------- | -------- | ---------------------- |
-| `to`     | `string`  | required | Route path             |
-| `active` | `boolean` | `false`  | Active route highlight |
+| `to`     | `string`  | yes      | Route path             |
+| `active` | `boolean` | yes      | Active route highlight |
 
 **Emits**: `click`
 **Slots**: default (link text)
@@ -112,10 +112,10 @@ Wrapper `<div>` that provides vertical spacing between label, input, and error.
 
 Accessible `<label>` with optional indicator.
 
-| Prop       | Type      | Default     | Description                           |
-| ---------- | --------- | ----------- | ------------------------------------- |
-| `for`      | `string`  | `undefined` | Associates with input `id` (optional) |
-| `optional` | `boolean` | `false`     | Shows "(optional)" text               |
+| Prop       | Type      | Required | Description                |
+| ---------- | --------- | -------- | -------------------------- |
+| `for`      | `string`  | yes      | Associates with input `id` |
+| `optional` | `boolean` | yes      | Shows "(optional)" text    |
 
 **Slots**: default (label text)
 
@@ -125,7 +125,7 @@ Error message displayed below an input.
 
 | Prop      | Type     | Required | Description                        |
 | --------- | -------- | -------- | ---------------------------------- |
-| `id`      | `string` | no       | For `aria-describedby` association |
+| `id`      | `string` | yes      | For `aria-describedby` association |
 | `message` | `string` | yes      | Error text                         |
 
 ### Input Components
@@ -221,8 +221,8 @@ Displays a single Lego part with image, color swatch, and quantity.
 | `partNum`   | `string`         | yes      | Part number             |
 | `quantity`  | `number`         | yes      | Count                   |
 | `imageUrl`  | `string \| null` | no       | Part image URL          |
-| `colorName` | `string \| null` | no       | Color display name      |
-| `colorRgb`  | `string \| null` | no       | Hex color (without `#`) |
+| `colorName` | `string \| null` | yes      | Color display name      |
+| `colorRgb`  | `string \| null` | yes      | Hex color (without `#`) |
 | `spare`     | `boolean`        | no       | Spare part indicator    |
 
 ---

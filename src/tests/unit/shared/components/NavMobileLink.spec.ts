@@ -2,13 +2,13 @@ import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
-const mountMobileLink = (props: {to: string; active?: boolean}, slotText = "Home") =>
+const mountMobileLink = (props: {to: string; active: boolean}, slotText = "Home") =>
     shallowMount(NavMobileLink, {props, slots: {default: slotText}});
 
 describe("NavMobileLink", () => {
     it("should render slot content", () => {
         // Arrange
-        const wrapper = mountMobileLink({to: "/"});
+        const wrapper = mountMobileLink({to: "/", active: false});
 
         // Assert
         expect(wrapper.text()).toBe("Home");
@@ -16,7 +16,7 @@ describe("NavMobileLink", () => {
 
     it("should pass to prop as href", () => {
         // Arrange
-        const wrapper = mountMobileLink({to: "/about"});
+        const wrapper = mountMobileLink({to: "/about", active: false});
 
         // Assert
         expect(wrapper.find("a").attributes("href")).toBe("/about");
@@ -24,7 +24,7 @@ describe("NavMobileLink", () => {
 
     it("should have full-width styling with border bottom", () => {
         // Arrange
-        const wrapper = mountMobileLink({to: "/"});
+        const wrapper = mountMobileLink({to: "/", active: false});
         const link = wrapper.find("a");
 
         // Assert
@@ -35,7 +35,7 @@ describe("NavMobileLink", () => {
 
     it("should show default background when not active", () => {
         // Arrange
-        const wrapper = mountMobileLink({to: "/"});
+        const wrapper = mountMobileLink({to: "/", active: false});
         const link = wrapper.find("a");
 
         // Assert
@@ -53,7 +53,7 @@ describe("NavMobileLink", () => {
 
     it("should have bold uppercase text", () => {
         // Arrange
-        const wrapper = mountMobileLink({to: "/"});
+        const wrapper = mountMobileLink({to: "/", active: false});
         const link = wrapper.find("a");
 
         // Assert
@@ -64,7 +64,7 @@ describe("NavMobileLink", () => {
 
     it("should emit click and prevent default on click", async () => {
         // Arrange
-        const wrapper = mountMobileLink({to: "/"});
+        const wrapper = mountMobileLink({to: "/", active: false});
         const link = wrapper.find("a");
 
         // Act

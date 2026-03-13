@@ -14,7 +14,7 @@ const {
 const model = defineModel<string>({required: true});
 
 const inputId = useId();
-const errorId = computed(() => (error ? `${inputId}-error` : undefined));
+const errorId = `${inputId}-error`;
 
 const inputStateClass = computed(() => {
     if (disabled) {
@@ -37,7 +37,7 @@ const inputStateClass = computed(() => {
             :disabled="disabled"
             :required="!optional"
             :aria-invalid="error ? true : undefined"
-            :aria-describedby="errorId"
+            :aria-describedby="error ? errorId : undefined"
             p="x-4 y-3"
             text="black"
             font="medium"
