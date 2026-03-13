@@ -1,7 +1,7 @@
 import vue from "@vitejs/plugin-vue";
 import {fileURLToPath, URL} from "node:url";
-import {defineConfig} from "rolldown-vite";
 import UnoCSS from "unocss/vite";
+import {defineConfig} from "vite";
 import oxlint from "vite-plugin-oxlint";
 import vueDevTools from "vite-plugin-vue-devtools";
 
