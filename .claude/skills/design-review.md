@@ -1,75 +1,53 @@
-# Design Review Skill
+# Design Review — _Inspect_
 
-Checklist for reviewing a feature before shipping. Use this during the **Inspect** phase of the design cycle.
+Quality checklist before shipping. Use during the Inspect phase of the design cycle.
 
 ## Automated Checks
 
-Run all automated checks first. Every check must pass.
+Run all of these. Every one must pass.
 
 ```bash
-npm run format:check  # Code formatting
-npm run lint          # Linting (architecture rules, a11y, complexity)
-npm run lint:vue      # Vue conventions (naming, block order, macros)
-npm run type-check    # TypeScript type checking
-npm run test:coverage # Tests with 100% coverage threshold
-npm run size          # Bundle size under 150 kB per app
-npm run knip          # No unused exports
+npm run format:check
+npm run lint
+npm run lint:vue
+npm run type-check
+npm run test:coverage
+npm run size
+npm run knip
 ```
 
 ## Manual Checklist
 
-### Accessibility
+### Accessibility — _User-friendly_
 
 - [ ] Interactive elements are keyboard-accessible (Tab, Enter, Escape)
-- [ ] Images have alt text
-- [ ] Form inputs have associated labels (via `for`/`id`)
-- [ ] ARIA attributes are correct (`role`, `aria-label`, `aria-live`)
+- [ ] Form inputs have associated labels
 - [ ] Focus management works (modals trap focus, page transitions move focus)
-- [ ] Color contrast meets WCAG AA (especially with neo-brutalism palette)
+- [ ] ARIA attributes are correct where needed
 
-### Responsiveness
+### Responsiveness — _User-friendly_
 
-- [ ] Layout works on mobile (320px+)
-- [ ] Layout works on tablet (768px+)
-- [ ] Layout works on desktop (1024px+)
+- [ ] Layout works on mobile (320px+), tablet (768px+), desktop (1024px+)
 - [ ] No horizontal overflow on small screens
-- [ ] Touch targets are at least 44x44px on mobile
+- [ ] Touch targets are at least 44x44px
 
-### Brick Brutalism Consistency (see `.claude/docs/brand.md`)
+### Brick Brutalism — _Beautiful_
 
-- [ ] Bold 3px black borders on interactive elements (never 1px, never rounded)
-- [ ] Solid offset shadows — no blur, no spread (4px default, 6px hover/focus, 2px active)
-- [ ] Focus states: shadow grows + yellow background highlight
-- [ ] Error states: red background + red offset shadow
-- [ ] Labels: uppercase, bold, wide tracking
-- [ ] High contrast colors throughout — no gradients, no opacity for emphasis
-- [ ] No border-radius anywhere (sharp corners are the brand)
-- [ ] Accent colors used for interaction feedback only, not decoration
+- [ ] 3px black borders on interactive elements (never 1px, never rounded)
+- [ ] Hard offset shadows (4px default, 6px hover/focus, 2px active)
+- [ ] Focus: shadow grows + yellow background
+- [ ] Error: red background + red shadow + red border
+- [ ] No gradients, no opacity tricks, no border-radius
 
-### Code Quality
-
-- [ ] No `any` types — proper TypeScript throughout
-- [ ] No cross-domain imports
-- [ ] Path aliases used consistently (`@shared/`, `@app/`)
-- [ ] Composition API with `<script setup>` syntax
-- [ ] Two-word PascalCase component names
-- [ ] Arrow functions (no function declarations)
-- [ ] No nested ternaries
-- [ ] SFC block order: script → template → style
-
-### Architecture
+### Architecture — _Sturdy_
 
 - [ ] Domain `index.ts` only exports `routes`
-- [ ] No direct localStorage/sessionStorage access
-- [ ] Services used correctly (auth, http, router, storage)
-- [ ] New routes registered in router service
+- [ ] No cross-domain imports
+- [ ] No direct localStorage/sessionStorage
 - [ ] Domain map updated (if new domain or pages added)
 
-### Testing
+### Testing — _Sturdy_
 
-- [ ] All new code has tests
-- [ ] Tests follow AAA pattern (Arrange-Act-Assert)
-- [ ] Tests are self-contained (no shared helpers)
-- [ ] Accessibility tested (ARIA, roles, labels)
+- [ ] All new code has tests with 100% coverage
+- [ ] Tests follow AAA pattern, are self-contained
 - [ ] Edge cases covered (error states, empty states, loading)
-- [ ] `shallowMount` used (not `mount`)
