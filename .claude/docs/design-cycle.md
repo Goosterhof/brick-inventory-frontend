@@ -20,6 +20,7 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 **Goal**: Figure out where the feature lives and what pieces are needed.
 
 - Consult the [Domain Map](./domain-map.md) — does this fit in an existing domain or need a new one?
+- Check the [Brick Catalog](./brick-catalog.md) — can you reuse existing components?
 - Identify required pieces: pages, components, modals, API endpoints
 - Create [Component Specs](./.component-spec-template.md) for non-trivial components
 - Update the domain map if adding a new domain
@@ -100,3 +101,4 @@ npm run knip
 | `new-modal`      | Build (modal templates)    |
 | `testing`        | Build (all tests)          |
 | `design-review`  | Inspect (quality check)    |
+| `brick-audit`    | Inspect (component health) |

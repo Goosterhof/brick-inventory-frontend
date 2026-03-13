@@ -58,18 +58,7 @@ Living document of all domains across apps. Update this when adding or modifying
 
 ## Shared Components
 
-Components available to all apps via `@shared/components/`:
-
-| Component     | Description                       |
-| ------------- | --------------------------------- |
-| PrimaryButton | Neo-brutalist styled button       |
-| NavLink       | Navigation link component         |
-| CameraCapture | Camera/scanner component          |
-| FormField     | Form field wrapper                |
-| FormLabel     | Accessible form label             |
-| FormError     | Form error message                |
-| TextInput     | Text input with label and error   |
-| NumberInput   | Number input with label and error |
+22 components available to all apps via `@shared/components/`. See the [Brick Catalog](./brick-catalog.md) for the full inventory with props, slots, emits, and composition patterns.
 
 ## Adding a New Domain
 
