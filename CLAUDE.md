@@ -114,6 +114,13 @@ export const routes = [
 
 Then register in `src/apps/families/services/router.ts` by importing and spreading into the routes array.
 
+### Naming & Route Conventions
+
+- Page files: `{Descriptive}View.vue` (e.g., `SetsOverviewView.vue`, `AddSetView.vue`)
+- Route names: kebab-case (e.g., `sets-add`, `sets-detail`)
+- Route paths: kebab-case (e.g., `/sets/add`, `/sets/:id/edit`)
+- Route meta: `authOnly: true` for authenticated routes, `canSeeWhenLoggedIn: false` for guest-only routes (login, register)
+
 ## Architecture Rules — _Sturdy_
 
 ### Import Boundaries (enforced by oxlint)
@@ -169,7 +176,7 @@ Note: `t()` returns a `ComputedRef` — use `.value` to unwrap in templates.
 - Use TypeScript for all `.ts` and `.vue` files
 - Use UnoCSS attributify syntax for styling (see `.claude/skills/unocss-styling.md`)
 - Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
-- See `.claude/skills/component-unit-test.md` for testing patterns
+- See `.claude/skills/testing.md` for testing patterns
 - Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink)
 - Use camelCase for variables and functions
 - Use arrow functions (`const fn = () => {}`) instead of function declarations

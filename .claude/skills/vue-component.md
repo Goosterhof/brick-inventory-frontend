@@ -1,10 +1,10 @@
-# Vue Component Skill
+# Vue Component — _Beautiful_
 
-Patterns for writing Vue 3 components in this project.
+Patterns for writing Vue 3 components.
 
-## Props with Destructuring
+## Props
 
-Use prop destructuring with inline defaults (no `withDefaults` needed):
+Use prop destructuring with inline defaults:
 
 ```ts
 const {
@@ -14,52 +14,35 @@ const {
 } = defineProps<{label: string; type?: "text" | "email" | "password"; disabled?: boolean}>();
 ```
 
-## v-model with defineModel
+## v-model
 
-Use `defineModel` for two-way binding instead of manual prop + emit:
+Use `defineModel` for two-way binding:
 
 ```ts
 const model = defineModel<string>({required: true});
 ```
 
-Then bind directly in template:
-
 ```vue
 <input v-model="model" />
 ```
 
-## Form Component Composition
+## Form Composition
 
-Input components should compose the form primitives (FormField, FormLabel, FormError):
+Input components compose the shared form primitives:
 
 ```vue
 <template>
     <FormField>
         <FormLabel :for="inputId" :required="required">{{ label }}</FormLabel>
-        <input :id="inputId" v-model="model" ... />
+        <input :id="inputId" v-model="model" />
         <FormError v-if="error" :id="errorId" :message="error" />
     </FormField>
 </template>
 ```
 
-## Component Naming
-
-- Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink)
-- File name should match component name
-
-## Script Setup
-
-Always use Composition API with `<script setup>` syntax:
-
-```vue
-<script setup lang="ts">
-// imports, props, emits, reactive state, computed, methods
-</script>
-```
-
 ## Translations
 
-All user-facing text must use the translation service — no hardcoded strings in templates:
+All user-facing text uses the translation service:
 
 ```vue
 <script setup lang="ts">
@@ -69,10 +52,6 @@ const {t} = familyTranslationService;
 </script>
 
 <template>
-    <FormField>
-        <FormLabel :for="inputId" :required="required">{{ t("auth.email").value }}</FormLabel>
-        <input :id="inputId" v-model="model" :placeholder="t('auth.email').value" />
-        <FormError v-if="error" :id="errorId" :message="error" />
-    </FormField>
+    <FormLabel :for="inputId">{{ t("auth.email").value }}</FormLabel>
 </template>
 ```

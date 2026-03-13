@@ -20,12 +20,7 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 **Goal**: Figure out where the feature lives and what pieces are needed.
 
 - Consult the [Domain Map](./domain-map.md) — does this fit in an existing domain or need a new one?
-- Identify required pieces:
-    - New pages? → Use `new-page` skill
-    - New domain? → Use `new-domain` skill
-    - New components? → Use `vue-component` skill
-    - New modals? → Use `new-modal` skill
-    - API endpoints? → Use `api-integration` skill
+- Identify required pieces: pages, components, modals, API endpoints
 - Create [Component Specs](./.component-spec-template.md) for non-trivial components
 - Update the domain map if adding a new domain
 
@@ -39,11 +34,10 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 - Use the relevant skills as guides:
     - `vue-component` for component patterns
     - `unocss-styling` for Brick Brutalism styling (see also `.claude/docs/brand.md`)
-    - `api-usage` for HTTP requests and adapters
-    - `api-integration` for end-to-end API wiring
+    - `api` for HTTP requests, resource adapters, and loading/error patterns
+    - `new-modal` for modal templates
 - Write tests alongside code (not after):
-    - `component-unit-test` for Vue components
-    - `typescript-unit-test` for TypeScript logic
+    - `testing` for both Vue component and TypeScript tests
 - Commit early and often with conventional commit messages
 
 **Output**: Working implementation with tests.
@@ -54,22 +48,14 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 
 Run the [Design Review Checklist](../skills/design-review.md):
 
-- [ ] Accessibility (ARIA, keyboard nav, focus management)
-- [ ] Responsiveness (mobile, tablet, desktop)
-- [ ] Neo-brutalism consistency (borders, shadows, colors)
-- [ ] Type safety (no `any`, proper generics)
-- [ ] Test coverage (100% threshold)
-- [ ] Bundle size (under 150 kB per app)
-- [ ] Architecture rules (no cross-domain imports, proper aliases)
-- [ ] Linting and formatting pass
-
 ```bash
+npm run format:check
 npm run lint
 npm run lint:vue
-npm run format:check
 npm run type-check
 npm run test:coverage
 npm run size
+npm run knip
 ```
 
 **Output**: All checks green, review checklist complete.
@@ -106,16 +92,11 @@ npm run size
 
 ## Skills Reference
 
-| Skill                  | Used In                     |
-| ---------------------- | --------------------------- |
-| `new-app`              | Sort (new app needed)       |
-| `new-domain`           | Sort (new domain needed)    |
-| `new-page`             | Sort/Build (adding pages)   |
-| `new-modal`            | Sort/Build (adding modals)  |
-| `vue-component`        | Build (component patterns)  |
-| `unocss-styling`       | Build (styling)             |
-| `api-usage`            | Build (HTTP requests)       |
-| `api-integration`      | Build (end-to-end API)      |
-| `component-unit-test`  | Build (testing components)  |
-| `typescript-unit-test` | Build (testing logic)       |
-| `design-review`        | Inspect (quality checklist) |
+| Skill            | Used In                    |
+| ---------------- | -------------------------- |
+| `vue-component`  | Build (component patterns) |
+| `unocss-styling` | Build (styling)            |
+| `api`            | Build (HTTP & resources)   |
+| `new-modal`      | Build (modal templates)    |
+| `testing`        | Build (all tests)          |
+| `design-review`  | Inspect (quality check)    |
