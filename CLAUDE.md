@@ -200,6 +200,10 @@ Note: `t()` returns a `ComputedRef` — use `.value` to unwrap in templates.
 | `npm run test:coverage` | Run tests with 100% coverage threshold |
 | `npm run size` | Check bundle sizes against budgets |
 
+## Learnings — _Getting Sharper_
+
+After every mistake, non-obvious discovery, or user correction — update `.claude/docs/learnings.md`. This is your memory between sessions. Read it. Use it. Keep it lean. When a learning proves itself, promote it here or to a skill file and delete it from learnings.
+
 ## Git Hooks — _Sturdy_
 
 - **pre-commit** (lint-staged): formats and lints staged `.ts`/`.vue` files, runs Vue conventions on `.vue` files
