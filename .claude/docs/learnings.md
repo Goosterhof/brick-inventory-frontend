@@ -14,10 +14,8 @@ Corrections and discoveries captured during work. Not philosophy — operational
 
 _Things that bite you if you don't know them._
 
-<!-- Example:
-- `t()` returns a `ComputedRef`, not a string — always use `.value` in templates
-- The `resourceAdapter` expects the HTTP service instance, not the module — pass `familyHttpService`, not the import
--->
+- FormLabel's `for` prop is optional — it was documented with `—` (ambiguous) instead of `undefined`. Use explicit defaults in catalog tables to avoid confusion.
+- Button component tests (PrimaryButton, DangerButton, BackButton, ListItemButton) lack keyboard interaction tests (Enter/Space). Same for NavLink and NavMobileLink. Add these when touching these components next.
 
 ## User Preferences
 

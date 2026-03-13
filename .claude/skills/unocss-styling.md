@@ -28,12 +28,12 @@ Prefer attributify syntax over class strings:
 
 See `.claude/docs/brand.md` for the full design system.
 
-| Element | Pattern |
-|---|---|
-| **Borders** | `border="3 black"` — never 1px, never rounded |
-| **Shadows** | `shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]` — 6px hover/focus, 2px active |
-| **Focus** | Shadow grows + `bg-yellow-300` |
-| **Error** | `bg-red-200` + `shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]` + `border-red-500` |
-| **Labels** | `uppercase font-bold tracking-wide` |
-| **Corners** | Sharp — never use `rounded` |
-| **Colors** | Black/white primary, yellow for interaction, red for errors only |
+| Element     | Pattern                                                                        |
+| ----------- | ------------------------------------------------------------------------------ |
+| **Borders** | `border="3 black"` — never 1px, never rounded                                  |
+| **Shadows** | `shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]` — 6px hover/focus, 2px active         |
+| **Focus**   | Shadow grows + `bg-yellow-300`                                                 |
+| **Error**   | `bg-red-200` + `shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]` + `border-red-500` |
+| **Labels**  | `uppercase font-bold tracking-wide`                                            |
+| **Corners** | Sharp — never use `rounded`                                                    |
+| **Colors**  | Black/white primary, yellow for interaction, red for errors only               |

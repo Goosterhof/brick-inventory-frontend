@@ -14,10 +14,10 @@ All buttons use Brick Brutalism styling: 3px black borders, hard offset shadows,
 
 Yellow action button. The default "do something" brick.
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `type` | `"button" \| "submit" \| "reset"` | `"button"` | HTML button type |
-| `disabled` | `boolean` | `false` | Disables interaction |
+| Prop       | Type                              | Default    | Description          |
+| ---------- | --------------------------------- | ---------- | -------------------- |
+| `type`     | `"button" \| "submit" \| "reset"` | `"button"` | HTML button type     |
+| `disabled` | `boolean`                         | `false`    | Disables interaction |
 
 **Slots**: default (button label)
 
@@ -25,10 +25,10 @@ Yellow action button. The default "do something" brick.
 
 Red destructive action button. Delete, remove, destroy.
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `type` | `"button" \| "submit" \| "reset"` | `"button"` | HTML button type |
-| `disabled` | `boolean` | `false` | Disables interaction |
+| Prop       | Type                              | Default    | Description          |
+| ---------- | --------------------------------- | ---------- | -------------------- |
+| `type`     | `"button" \| "submit" \| "reset"` | `"button"` | HTML button type     |
+| `disabled` | `boolean`                         | `false`    | Disables interaction |
 
 **Slots**: default (button label)
 
@@ -68,9 +68,9 @@ Top navigation bar with responsive mobile menu.
 
 Desktop navigation link.
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `to` | `string` | yes | Route path |
+| Prop | Type     | Required | Description |
+| ---- | -------- | -------- | ----------- |
+| `to` | `string` | yes      | Route path  |
 
 **Emits**: `click`
 **Slots**: default (link text)
@@ -79,10 +79,10 @@ Desktop navigation link.
 
 Mobile navigation link with active state.
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `to` | `string` | required | Route path |
-| `active` | `boolean` | `false` | Active route highlight |
+| Prop     | Type      | Default  | Description            |
+| -------- | --------- | -------- | ---------------------- |
+| `to`     | `string`  | required | Route path             |
+| `active` | `boolean` | `false`  | Active route highlight |
 
 **Emits**: `click`
 **Slots**: default (link text)
@@ -112,10 +112,10 @@ Wrapper `<div>` that provides vertical spacing between label, input, and error.
 
 Accessible `<label>` with optional indicator.
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `for` | `string` | — | Associates with input `id` |
-| `optional` | `boolean` | `false` | Shows "(optional)" text |
+| Prop       | Type      | Default     | Description                           |
+| ---------- | --------- | ----------- | ------------------------------------- |
+| `for`      | `string`  | `undefined` | Associates with input `id` (optional) |
+| `optional` | `boolean` | `false`     | Shows "(optional)" text               |
 
 **Slots**: default (label text)
 
@@ -123,21 +123,21 @@ Accessible `<label>` with optional indicator.
 
 Error message displayed below an input.
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `id` | `string` | no | For `aria-describedby` association |
-| `message` | `string` | yes | Error text |
+| Prop      | Type     | Required | Description                        |
+| --------- | -------- | -------- | ---------------------------------- |
+| `id`      | `string` | no       | For `aria-describedby` association |
+| `message` | `string` | yes      | Error text                         |
 
 ### Input Components
 
 All inputs share this base API:
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `label` | `string` | required | Label text |
-| `disabled` | `boolean` | `false` | Disables input |
-| `optional` | `boolean` | `false` | Shows optional indicator on label |
-| `error` | `string` | `""` | Error message (shows FormError when non-empty) |
+| Prop       | Type      | Default  | Description                                    |
+| ---------- | --------- | -------- | ---------------------------------------------- |
+| `label`    | `string`  | required | Label text                                     |
+| `disabled` | `boolean` | `false`  | Disables input                                 |
+| `optional` | `boolean` | `false`  | Shows optional indicator on label              |
+| `error`    | `string`  | `""`     | Error message (shows FormError when non-empty) |
 
 All use `v-model` (not prop + emit). All compose FormField → FormLabel → input → FormError.
 
@@ -159,9 +159,9 @@ All use `v-model` (not prop + emit). All compose FormField → FormLabel → inp
 
 Page title bar with optional right-side content (e.g., action buttons).
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `title` | `string` | yes | Page heading text |
+| Prop    | Type     | Required | Description       |
+| ------- | -------- | -------- | ----------------- |
+| `title` | `string` | yes      | Page heading text |
 
 **Slots**: default (right-side content)
 
@@ -175,9 +175,9 @@ Brick Brutalism card wrapper. 3px border, hard shadow, white background.
 
 Message shown when a list or section has no content.
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `message` | `string` | yes | Empty state text |
+| Prop      | Type     | Required | Description      |
+| --------- | -------- | -------- | ---------------- |
+| `message` | `string` | yes      | Empty state text |
 
 ---
 
@@ -187,9 +187,9 @@ Message shown when a list or section has no content.
 
 Accessible modal with backdrop, close button, and focus management.
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `open` | `boolean` | yes | Controls visibility |
+| Prop   | Type      | Required | Description         |
+| ------ | --------- | -------- | ------------------- |
+| `open` | `boolean` | yes      | Controls visibility |
 
 **Emits**: `close`
 **Slots**: `title` (modal heading), default (modal body)
@@ -199,10 +199,10 @@ Accessible modal with backdrop, close button, and focus management.
 
 Temporary notification banner.
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `message` | `string` | required | Notification text |
-| `variant` | `"success" \| "error"` | `"success"` | Visual style |
+| Prop      | Type                   | Default     | Description       |
+| --------- | ---------------------- | ----------- | ----------------- |
+| `message` | `string`               | required    | Notification text |
+| `variant` | `"success" \| "error"` | `"success"` | Visual style      |
 
 **Emits**: `close`
 **Uses**: `PhCheckCircle`, `PhWarningCircle`, `PhX` icons.
@@ -215,15 +215,15 @@ Temporary notification banner.
 
 Displays a single Lego part with image, color swatch, and quantity.
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `name` | `string` | yes | Part name |
-| `partNum` | `string` | yes | Part number |
-| `quantity` | `number` | yes | Count |
-| `imageUrl` | `string \| null` | no | Part image URL |
-| `colorName` | `string \| null` | no | Color display name |
-| `colorRgb` | `string \| null` | no | Hex color (without `#`) |
-| `spare` | `boolean` | no | Spare part indicator |
+| Prop        | Type             | Required | Description             |
+| ----------- | ---------------- | -------- | ----------------------- |
+| `name`      | `string`         | yes      | Part name               |
+| `partNum`   | `string`         | yes      | Part number             |
+| `quantity`  | `number`         | yes      | Count                   |
+| `imageUrl`  | `string \| null` | no       | Part image URL          |
+| `colorName` | `string \| null` | no       | Color display name      |
+| `colorRgb`  | `string \| null` | no       | Hex color (without `#`) |
+| `spare`     | `boolean`        | no       | Spare part indicator    |
 
 ---
 
@@ -239,14 +239,14 @@ Manages camera stream lifecycle. Captures images as JPEG blobs.
 
 ## Component Count
 
-| Category | Count | Components |
-|---|---|---|
-| Buttons | 4 | PrimaryButton, DangerButton, BackButton, ListItemButton |
-| Navigation | 3 | NavHeader, NavLink, NavMobileLink |
-| Form primitives | 3 | FormField, FormLabel, FormError |
-| Form inputs | 5 | TextInput, NumberInput, DateInput, TextareaInput, SelectInput |
-| Layout | 3 | PageHeader, CardContainer, EmptyState |
-| Feedback | 2 | ModalDialog, ToastMessage |
-| Data display | 1 | PartListItem |
-| Scanner | 1 | CameraCapture |
-| **Total** | **22** | |
+| Category        | Count  | Components                                                    |
+| --------------- | ------ | ------------------------------------------------------------- |
+| Buttons         | 4      | PrimaryButton, DangerButton, BackButton, ListItemButton       |
+| Navigation      | 3      | NavHeader, NavLink, NavMobileLink                             |
+| Form primitives | 3      | FormField, FormLabel, FormError                               |
+| Form inputs     | 5      | TextInput, NumberInput, DateInput, TextareaInput, SelectInput |
+| Layout          | 3      | PageHeader, CardContainer, EmptyState                         |
+| Feedback        | 2      | ModalDialog, ToastMessage                                     |
+| Data display    | 1      | PartListItem                                                  |
+| Scanner         | 1      | CameraCapture                                                 |
+| **Total**       | **22** |                                                               |
