@@ -372,14 +372,14 @@ describe("BarcodeScanner", () => {
         });
     });
 
-    describe("resetScanner", () => {
-        it("should clear detected code and resume scanning", async () => {
+    describe("resetKey prop", () => {
+        it("should clear detected code and resume scanning when resetKey changes", async () => {
             // Arrange
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: {resetKey: 0}});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -389,7 +389,7 @@ describe("BarcodeScanner", () => {
 
             // Act
             mockDetect.mockResolvedValue([]);
-            wrapper.vm.resetScanner();
+            await wrapper.setProps({resetKey: 1});
             await flushPromises();
 
             // Assert

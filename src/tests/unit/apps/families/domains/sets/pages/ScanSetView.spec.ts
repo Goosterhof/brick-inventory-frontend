@@ -242,10 +242,7 @@ describe("ScanSetView", () => {
         it("should reset state when scan again is clicked", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const mockResetScanner = vi.fn();
-            const wrapper = shallowMount(ScanSetView, {
-                global: {stubs: {BarcodeScanner: {template: "<div />", methods: {resetScanner: mockResetScanner}}}},
-            });
+            const wrapper = shallowMount(ScanSetView);
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
             await flushPromises();
 
@@ -258,7 +255,7 @@ describe("ScanSetView", () => {
 
             // Assert
             expect(wrapper.text()).not.toContain("5702015357197");
-            expect(mockResetScanner).toHaveBeenCalled();
+            expect(wrapper.findComponent(BarcodeScanner).props("resetKey")).toBe(1);
         });
     });
 });

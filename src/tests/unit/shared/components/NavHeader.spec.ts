@@ -101,13 +101,13 @@ describe("NavHeader", () => {
         expect(mobileMenu.classes()).toContain("grid-rows-[0fr]");
     });
 
-    it("should expose closeMenu method", async () => {
+    it("should close menu when mobile links area is clicked", async () => {
         // Arrange
         const wrapper = mountNavHeader();
         await wrapper.find("button[aria-label='Menu']").trigger("click");
 
         // Act
-        wrapper.vm.closeMenu();
+        await wrapper.find("#mobile-menu div[border='t-3 black']").trigger("click");
         await wrapper.vm.$nextTick();
 
         // Assert

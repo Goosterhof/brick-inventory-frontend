@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {BarcodeDetector} from "barcode-detector";
-import {ref, onMounted, onUnmounted} from "vue";
+import {ref, watch, onMounted, onUnmounted} from "vue";
 
+const props = defineProps<{resetKey?: number}>();
 const emit = defineEmits<{detect: [barcode: string]; error: [message: string]}>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -113,7 +114,12 @@ const resetScanner = () => {
     }
 };
 
-defineExpose({resetScanner});
+watch(
+    () => props.resetKey,
+    () => {
+        resetScanner();
+    },
+);
 
 onMounted(() => {
     startCamera();

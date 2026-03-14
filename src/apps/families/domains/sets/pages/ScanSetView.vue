@@ -10,7 +10,7 @@ import {toCamelCaseTyped} from "@shared/helpers/string";
 import {ref} from "vue";
 
 const {t} = familyTranslationService;
-const scannerRef = ref<{resetScanner: () => void} | null>(null);
+const resetKey = ref(0);
 const scannedCode = ref("");
 const matchedSets = ref<FamilySet[]>([]);
 const isSearching = ref(false);
@@ -44,7 +44,7 @@ const scanAgain = () => {
     scannedCode.value = "";
     matchedSets.value = [];
     hasSearched.value = false;
-    scannerRef.value?.resetScanner();
+    resetKey.value++;
 };
 
 const goBack = async () => {
@@ -58,7 +58,7 @@ const goBack = async () => {
             <BackButton @click="goBack">{{ t("sets.backToOverview").value }}</BackButton>
         </PageHeader>
 
-        <BarcodeScanner ref="scannerRef" @detect="onDetect" @error="() => {}" />
+        <BarcodeScanner :reset-key="resetKey" @detect="onDetect" @error="() => {}" />
 
         <div v-if="scannedCode" m="t-6" flex="~ col" gap="4">
             <p font="bold" text="lg">{{ t("sets.scannedCode").value }}: {{ scannedCode }}</p>
