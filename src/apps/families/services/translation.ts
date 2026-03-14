@@ -92,6 +92,11 @@ const translations = {
             loadingParts: "Loading parts...",
             parts: "Parts",
             spareParts: "Spare",
+            scanSet: "Scan set",
+            scannedCode: "Scanned code",
+            matchingSets: "Matching sets",
+            noMatchingSets: "No matching sets found in your collection.",
+            scanAgain: "Scan again",
         },
         storage: {
             title: "Storage",
@@ -206,6 +211,11 @@ const translations = {
             loadingParts: "Onderdelen laden...",
             parts: "Onderdelen",
             spareParts: "Reserve",
+            scanSet: "Set scannen",
+            scannedCode: "Gescande code",
+            matchingSets: "Overeenkomende sets",
+            noMatchingSets: "Geen overeenkomende sets gevonden in je collectie.",
+            scanAgain: "Opnieuw scannen",
         },
         storage: {
             title: "Opslag",

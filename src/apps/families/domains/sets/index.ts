@@ -15,4 +15,5 @@ export const routes = [
         component: () => import("./pages/EditSetView.vue"),
         meta: {authOnly: true},
     },
+    {path: "/sets/scan", name: "sets-scan", component: () => import("./pages/ScanSetView.vue"), meta: {authOnly: true}},
 ] as const satisfies readonly RouteRecordRaw[];
