@@ -52,9 +52,7 @@ for (const file of files) {
 
     // Check 3: No defineExpose — use props/emits for parent-child communication
     if (content.includes("defineExpose")) {
-        errors.push(
-            `${file}: defineExpose is forbidden. Use props and emits for parent-child communication instead.`,
-        );
+        errors.push(`${file}: defineExpose is forbidden. Use props and emits for parent-child communication instead.`);
     }
 
     // Check 4: Define-macros order — defineProps before defineEmits before defineSlots
