@@ -35,6 +35,12 @@ _Approaches that proved effective in this codebase._
 - For form pages: wire up the happy path end-to-end before handling errors
 -->
 
+## Future Improvements
+
+_Things to revisit when external tooling catches up._
+
+- **Oxlint JS plugins can replace `scripts/lint-vue-conventions.mjs`** — once Vue SFC support lands in the beta (Milestone 3: https://github.com/oxc-project/oxc/issues/19918). The three custom checks (multi-word PascalCase names, block order, define-macros order) can become native oxlint rules via a `jsPlugins` entry in `.oxlintrc.json`. This removes the separate `lint:vue` script, the extra `*.vue` lint-staged entry, and gives IDE integration for free. Alpha announced 2026-03-11: https://oxc.rs/blog/2026-03-11-oxlint-js-plugins-alpha
+
 ## Mistakes Not to Repeat
 
 _Specific errors and their fixes._
