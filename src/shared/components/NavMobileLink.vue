@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {to, active = false} = defineProps<{to: string; active?: boolean}>();
+const {to, active} = defineProps<{to: string; active: boolean}>();
 
 const emit = defineEmits<{click: []}>();
 

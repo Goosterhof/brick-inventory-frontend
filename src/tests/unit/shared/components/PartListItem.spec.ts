@@ -3,7 +3,7 @@ import {mount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 describe("PartListItem", () => {
-    const defaultProps = {name: "Brick 2x4", partNum: "3001", quantity: 5};
+    const defaultProps = {name: "Brick 2x4", partNum: "3001", quantity: 5, colorName: null, colorRgb: null};
 
     it("should render part name and number", () => {
         // Arrange

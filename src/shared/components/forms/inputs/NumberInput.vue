@@ -33,7 +33,7 @@ const handleInput = (event: Event) => {
 };
 
 const inputId = useId();
-const errorId = computed(() => (error ? `${inputId}-error` : undefined));
+const errorId = `${inputId}-error`;
 
 const inputStateClass = computed(() => {
     if (disabled) {
@@ -61,7 +61,7 @@ const inputStateClass = computed(() => {
             :max="max"
             :step="step"
             :aria-invalid="error ? true : undefined"
-            :aria-describedby="errorId"
+            :aria-describedby="error ? errorId : undefined"
             p="x-4 y-3"
             text="black"
             font="medium"

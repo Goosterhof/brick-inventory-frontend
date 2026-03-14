@@ -6,8 +6,8 @@ const props = defineProps<{
     partNum: string;
     quantity: number;
     imageUrl?: string | null;
-    colorName?: string | null;
-    colorRgb?: string | null;
+    colorName: string | null;
+    colorRgb: string | null;
     spare?: boolean;
 }>();
 

@@ -89,8 +89,8 @@ const goBack = async () => {
                         :part-num="storagePart.part.partNum"
                         :quantity="storagePart.quantity"
                         :image-url="storagePart.part.imageUrl"
-                        :color-name="storagePart.color?.name"
-                        :color-rgb="storagePart.color?.rgb"
+                        :color-name="storagePart.color?.name ?? null"
+                        :color-rgb="storagePart.color?.rgb ?? null"
                     />
                 </div>
             </div>

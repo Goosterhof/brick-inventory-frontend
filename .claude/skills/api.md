@@ -25,13 +25,13 @@ import {resourceAdapter} from "@shared/services/resource-adapter";
 
 // Existing resource (has id)
 const adapted = resourceAdapter(resource, "family-sets", storeModule, httpService);
-adapted.update();                    // PUT /family-sets/{id}
-adapted.patch({status: "built"});    // PATCH /family-sets/{id}
-adapted.delete();                    // DELETE /family-sets/{id}
+adapted.update(); // PUT /family-sets/{id}
+adapted.patch({status: "built"}); // PATCH /family-sets/{id}
+adapted.delete(); // DELETE /family-sets/{id}
 
 // New resource (no id)
 const newAdapted = resourceAdapter(newResource, "family-sets", storeModule, httpService);
-newAdapted.create();                 // POST /family-sets
+newAdapted.create(); // POST /family-sets
 ```
 
 ## Loading & Error Pattern
