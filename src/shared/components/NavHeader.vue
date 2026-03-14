@@ -11,8 +11,6 @@ const toggleMenu = () => {
 const closeMenu = () => {
     menuOpen.value = false;
 };
-
-defineExpose({closeMenu});
 </script>
 
 <template>

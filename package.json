@@ -41,6 +41,7 @@
     "dependencies": {
         "@phosphor-icons/vue": "^2.2.1",
         "axios": "^1.13.6",
+        "barcode-detector": "^3.1.1",
         "string-ts": "^2.3.1",
         "vue": "^3.5.30",
         "vue-router": "^5.0.3"

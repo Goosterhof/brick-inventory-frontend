@@ -50,7 +50,12 @@ for (const file of files) {
         errors.push(`${file}: <script> block must come before <style>`);
     }
 
-    // Check 3: Define-macros order — defineProps before defineEmits before defineSlots
+    // Check 3: No defineExpose — use props/emits for parent-child communication
+    if (content.includes("defineExpose")) {
+        errors.push(`${file}: defineExpose is forbidden. Use props and emits for parent-child communication instead.`);
+    }
+
+    // Check 4: Define-macros order — defineProps before defineEmits before defineSlots
     const propsIndex = content.indexOf("defineProps");
     const emitsIndex = content.indexOf("defineEmits");
     const slotsIndex = content.indexOf("defineSlots");
