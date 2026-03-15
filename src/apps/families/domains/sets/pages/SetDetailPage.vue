@@ -375,6 +375,7 @@ const handleAssigned = () => {
                 v-if="selectedPart"
                 :open="showAssignModal"
                 :part="selectedPart"
+                :existing-locations="getStorageLocations(selectedPart)"
                 @close="closeAssignModal"
                 @assigned="handleAssigned"
             />

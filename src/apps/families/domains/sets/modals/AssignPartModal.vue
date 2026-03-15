@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {SetPart} from "@app/types/part";
+import type {SetPart, StorageMapEntry} from "@app/types/part";
 import type {StorageOption} from "@app/types/storageOption";
 
 import {familyHttpService, familyTranslationService} from "@app/services";
@@ -10,7 +10,11 @@ import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
 
-const {part} = defineProps<{open: boolean; part: SetPart}>();
+const {part, existingLocations = []} = defineProps<{
+    open: boolean;
+    part: SetPart;
+    existingLocations?: StorageMapEntry[];
+}>();
 const emit = defineEmits<{close: []; assigned: []}>();
 
 const {t} = familyTranslationService;
@@ -73,6 +77,24 @@ const handleSubmit = async () => {
                 <div flex="1" min-w="0">
                     <p font="bold" truncate>{{ part.part.name }}</p>
                     <p text="sm gray-600">{{ part.part.partNum }} · {{ part.color.name }}</p>
+                </div>
+            </div>
+
+            <div v-if="existingLocations.length > 0" p="3" bg="yellow-100" class="brick-border" border="1">
+                <p text="sm" font="bold" m="b-1">{{ t("sets.alreadyStored").value }}</p>
+                <div flex gap="1" flex-wrap="wrap">
+                    <span
+                        v-for="loc in existingLocations"
+                        :key="loc.storageOptionId"
+                        text="xs"
+                        p="x-2 y-0.5"
+                        bg="yellow-300"
+                        font="bold"
+                        class="brick-border"
+                        border="1"
+                    >
+                        {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                    </span>
                 </div>
             </div>
 
