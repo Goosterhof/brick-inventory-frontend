@@ -20,12 +20,17 @@ const grid: (string | null)[][] = [
 
 const hasBorderRight = (row: number, col: number): boolean => {
     if (col >= 2) return false;
-    return grid[row][col] !== grid[row][col + 1];
+    const currentRow = grid[row];
+    if (!currentRow) return false;
+    return currentRow[col] !== currentRow[col + 1];
 };
 
 const hasBorderBottom = (row: number, col: number): boolean => {
     if (row >= 4) return false;
-    return grid[row][col] !== grid[row + 1][col];
+    const currentRow = grid[row];
+    const nextRow = grid[row + 1];
+    if (!currentRow || !nextRow) return false;
+    return currentRow[col] !== nextRow[col];
 };
 </script>
 
