@@ -198,4 +198,28 @@ describe("AssignPartModal", () => {
             expect(wrapper.emitted("close")).toBeTruthy();
         });
     });
+
+    describe("smart sorter hint", () => {
+        it("should show existing locations when part is already stored", async () => {
+            // Arrange
+            const existingLocations = [
+                {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: "Drawer A", quantity: 8},
+            ];
+            const wrapper = shallowMount(AssignPartModal, {props: {open: true, part: mockPart, existingLocations}});
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("sets.alreadyStored");
+            expect(wrapper.text()).toContain("Drawer A (8x)");
+        });
+
+        it("should not show hint when no existing locations", async () => {
+            // Arrange
+            const wrapper = mountModal();
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).not.toContain("sets.alreadyStored");
+        });
+    });
 });
