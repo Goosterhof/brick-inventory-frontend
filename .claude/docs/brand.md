@@ -22,39 +22,78 @@ Brick Brutalism takes the raw honesty of brutalist architecture and the tactile 
 
 4. **Playfulness** — Brutalism doesn't mean joyless. The interface is bold because it's excited to be used, not because it's trying to intimidate. Playfulness shows up in specific, tangible ways:
     - **Snap transitions** — Shadow changes on hover/press are fast (150ms) and use `transition-timing-function: cubic-bezier(0.2, 0, 0, 1)` for a physical snap feel. Elements don't drift; they click.
-    - **Stud highlights** — Yellow (`yellow-300`) floods the background of focused and hovered elements instantly, like pressing down on a Lego stud and seeing it light up.
+    - **Stud highlights** — `--brick-yellow` floods the background of focused and hovered elements instantly, like pressing down on a Lego stud and seeing it light up.
     - **Uppercase labels** — Headings and button text shout in caps with wide tracking. The typography is loud on purpose, like embossed text on a brick.
     - **Personality in empty states** — When there's nothing to show, the UI doesn't just say "No results." It says something with character (see Brand Voice below).
     - **Satisfying feedback** — Destructive actions require confirmation with a bold, honest prompt. Successful actions get a brief, encouraging acknowledgment. The app reacts to you.
 
-## Color Palette
+## Color Palette — The Brick Brutalism Palette
 
-The palette is intentionally constrained. Like a monochrome Lego set with a few accent bricks, every color has a specific job.
+The palette is intentionally constrained. Like a monochrome Lego set with a few accent bricks, every color has a specific job. But these are not generic utility colors — they are **domain-researched values** inspired by the actual pigments of injection-molded ABS plastic. Real Lego colors are warmer and more saturated than digital color pickers produce. They look like physical objects under warehouse lighting, not like pixels on a Dribbble shot. That warmth is the difference between "an app about Lego" and "an app that feels like Lego."
+
+> **Why not just use Lego's exact Pantone values?** Lego's brand colors are trademarked. We don't copy — we study. Each Brick Brutalism token is inspired by the warmth and saturation of ABS plastic but tuned to our own values. Close enough to evoke the material. Distinct enough to be ours.
 
 ### Primary
 
-| Role        | Color | Value               | Usage                                   |
-| ----------- | ----- | ------------------- | --------------------------------------- |
-| **Ink**     | Black | `black` / `#000000` | Text, borders, shadows, primary buttons |
-| **Surface** | White | `white` / `#FFFFFF` | Backgrounds, cards, input fields        |
+| Token | Hex | Inspiration | WCAG vs White | WCAG vs Black | Role |
+| ----- | --- | ----------- | ------------- | ------------- | ---- |
+| **`--brick-ink`** | `#000000` | The black bricks in every set — absolute, no warmth, no apology | N/A | N/A | Text, borders, shadows, primary buttons |
+| **`--brick-surface`** | `#FFFFFF` | The white baseplate — clean, infinite building space | N/A | N/A | Backgrounds, cards, input fields |
 
-### Accents
+### Accent Bricks
 
-| Role                  | Color  | Value                    | Usage                                                                                                                                                                                                                                                                                                        |
-| --------------------- | ------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Highlight**         | Yellow | `yellow-300` / `#FDE047` | Focus states, hover feedback, active indicators                                                                                                                                                                                                                                                              |
-| **Highlight Subtle**  | Yellow | `yellow-100` / `#FEF9C3` | Active/pressed states on interactive elements where full yellow is too loud (e.g., inline link active state). **Never use on non-interactive elements** — yellow is reserved for interactive feedback. If a callout, annotation, or informational block needs a background tint, use `gray-200`, not yellow. |
-| **Danger Background** | Red    | `red-200` / `#FECACA`    | Error backgrounds, destructive action hints                                                                                                                                                                                                                                                                  |
-| **Danger Border**     | Red    | `red-500` / `#EF4444`    | Error borders, error shadows                                                                                                                                                                                                                                                                                 |
-| **Danger Text**       | Red    | `red-600` / `#DC2626`    | Error messages, validation text                                                                                                                                                                                                                                                                              |
+| Token | Hex | Inspiration | WCAG vs White | WCAG vs Black | Role |
+| ----- | --- | ----------- | ------------- | ------------- | ---- |
+| **`--brick-yellow`** | `#F5C518` | Inspired by Lego Bright Yellow (Pantone 116C ~#F5CD2F). Shifted slightly toward orange for screen vibrancy — real ABS yellow reads warmer than print yellow. This is the yellow of a fresh 2x4 brick under daylight. | 1.55:1 (decorative only) | 13.52:1 | Focus states, hover feedback, active indicators — the stud you are about to press |
+| **`--brick-yellow-subtle`** | `#FDF0C4` | Pale warm cream — the echo of `--brick-yellow` at low volume. Derived by desaturating and lightening the primary yellow, not by picking a random Tailwind tint. | 1.17:1 (decorative only) | 17.89:1 | Active/pressed states where full yellow is too loud (e.g., inline link active state). **Never use on non-interactive elements** — yellow is reserved for interactive feedback. Use `gray-200` for neutral background highlights. |
+| **`--brick-red`** | `#C41A16` | Inspired by Lego Bright Red (Pantone 21C ~#C91A09). A touch cooler to improve screen legibility — real ABS red is warm but can muddy on backlit displays. Honest, plastic-red energy. The color of every fire truck brick ever made. | 4.72:1 (AA large text) | 4.45:1 | Error borders, error shadows, destructive action accents |
+| **`--brick-red-light`** | `#F8D0CF` | Warm blush derived from `--brick-red`, not from a generic red scale. Sits in the same color family. | 1.30:1 (background only) | 16.10:1 | Error backgrounds, destructive action hints |
+| **`--brick-red-dark`** | `#9B1510` | Deep kiln red — `--brick-red` pushed darker for maximum text legibility on white surfaces. | 7.08:1 (AA) | 2.97:1 | Error messages, validation text |
+| **`--brick-blue`** | `#0055BF` | Inspired by Lego Bright Blue (Pantone Reflex Blue ~#0055BF). Matched nearly exactly — this blue is already bold enough for screens. The deep, confident blue of classic space sets. | 4.87:1 (AA large text) | 4.31:1 | Reserved for future use: link color, informational states. Not currently active — held in reserve so the palette can grow without reaching for generic Tailwind. |
+| **`--baseplate-green`** | `#237841` | Inspired by Lego Bright Green (~#237841). The baseplate green every builder remembers — the grid you snap your first brick onto. Earthy, saturated, unmistakable. | 4.22:1 (AA large text) | 4.97:1 | Reserved for future use: success states, confirmation feedback. Not currently active. |
+
+### UnoCSS Configuration
+
+Define these as custom theme colors in `uno.config.ts` so they are available as utilities (`bg-brick-yellow`, `text-brick-red-dark`, `border-brick-red`, etc.):
+
+```ts
+// uno.config.ts
+import { defineConfig } from 'unocss'
+
+export default defineConfig({
+  theme: {
+    colors: {
+      brick: {
+        ink: '#000000',
+        surface: '#FFFFFF',
+        yellow: {
+          DEFAULT: '#F5C518',
+          subtle: '#FDF0C4',
+        },
+        red: {
+          DEFAULT: '#C41A16',
+          light: '#F8D0CF',
+          dark: '#9B1510',
+        },
+        blue: '#0055BF',
+      },
+      baseplate: {
+        green: '#237841',
+      },
+    },
+  },
+})
+```
+
+Usage examples: `bg-brick-yellow`, `text-brick-red-dark`, `border-brick-red`, `bg-brick-red-light`, `bg-brick-yellow-subtle`, `text-baseplate-green`.
 
 ### Error Color Hierarchy
 
-Error states use three tiers of red, each with a clear role:
+Error states use three tiers of brick-red, each with a clear role:
 
-- **red-200** (`#FECACA`) — Background fill. Visible but not overwhelming. Applied to the container.
-- **red-500** (`#EF4444`) — Border and shadow. The structural indicator that something is wrong.
-- **red-600** (`#DC2626`) — Text. The message itself. Highest contrast for readability.
+- **`--brick-red-light`** (`#F8D0CF`) — Background fill. Warm but not overwhelming. Applied to the container.
+- **`--brick-red`** (`#C41A16`) — Border and shadow. The structural indicator that something is wrong.
+- **`--brick-red-dark`** (`#9B1510`) — Text. The message itself. 7.08:1 contrast on white — exceeds AA.
 
 ### Neutrals
 
@@ -64,30 +103,90 @@ Error states use three tiers of red, each with a clear role:
 | **Disabled**       | Gray 300 | `gray-300` / `#D1D5DB` | Disabled borders                |
 | **Secondary Text** | Gray 600 | `gray-600` / `#4B5563` | Placeholder text, subtle labels |
 
+Neutrals stay as generic grays — they are structural, not branded. Graying out a disabled input is the same in every domain. The Brick Brutalism palette applies to elements with *meaning*, not to elements that have surrendered it.
+
 ### Color Rules
 
 - **Never use gradients.** Flat fills only. Bricks are solid plastic, not watercolor.
 - **Never use opacity for emphasis.** Change the color, not the transparency.
-- **Accent colors are rewards.** Yellow appears when you interact. It's feedback, not decoration.
-- **Yellow is strictly interactive.** Both `yellow-300` and `yellow-100` are reserved for interactive feedback states (hover, focus, active). Never apply yellow to non-interactive, informational, or decorative contexts (callouts, badges, annotations). Use `gray-200` for neutral background highlights.
-- **Red means something is wrong.** Don't use it for branding or decoration.
+- **Accent colors are rewards.** `--brick-yellow` appears when you interact. It's feedback, not decoration.
+- **Yellow is strictly interactive.** Both `--brick-yellow` and `--brick-yellow-subtle` are reserved for interactive feedback states (hover, focus, active). Never apply yellow to non-interactive, informational, or decorative contexts (callouts, badges, annotations). Use `gray-200` for neutral background highlights.
+- **Red means something is wrong.** Don't use `--brick-red` for branding or decoration.
+- **Use token names, not hex values.** Write `bg-brick-yellow`, not `bg-[#F5C518]`. The tokens are the API. If a value changes, it changes in one place.
+- **Reserved colors earn their place.** `--brick-blue` and `--baseplate-green` exist in the palette but are not yet assigned to UI roles. When a feature needs a new semantic color, it draws from reserves — it does not invent a new one.
 
 ## Typography
 
 ### Style
 
-- **Labels and headings**: `uppercase font-bold tracking-wide` — like embossed text on a brick. Loud, clear, unapologetic.
-- **Body text**: `font-medium text-black` — readable, no-nonsense.
-- **Error text**: `text-sm text-red-600` — small but impossible to ignore.
+- **Labels and headings**: `font-heading uppercase font-900 tracking-wide` — like the text stamped into the underside of a Lego brick. Loud, clear, unapologetic. The heading typeface (Space Grotesk) makes this treatment unmistakable.
+- **Body text**: `font-medium text-brick-ink` — system font stack, readable, no-nonsense.
+- **Error text**: `text-sm text-brick-red-dark` — small but impossible to ignore.
 
 ### Font Choice
 
-This project uses the system font stack (UnoCSS default) rather than a custom typeface. This is a deliberate trade-off: system fonts mean the brand's typographic voice shifts between platforms (San Francisco on Mac, Segoe UI on Windows, Roboto on Android). We accept this inconsistency in exchange for zero font-loading latency and no layout shift — performance matters more in a tool you use daily. The brand's typographic identity comes from weight, case, and spacing (bold, uppercase, wide-tracked) rather than from the typeface itself.
+**Headings: Space Grotesk (weight 700)**
+
+The original version of this document defended system fonts everywhere as a deliberate trade-off — performance over brand consistency. That defense was honest at the time but incomplete. The problem: system fonts (San Francisco, Segoe UI, Roboto) are designed to disappear. They are invisible on purpose. In a design system built on physicality and bold presence, invisible typography is a contradiction. Headings are the loudest elements in the interface — uppercase, bold, wide-tracked — and they were being rendered in fonts specifically engineered to not be noticed.
+
+Space Grotesk fixes this. It descends from Space Mono (a monospace font with retro-technical energy) but is proportional, making it readable at heading sizes without the awkward spacing of a true monospace. Its letterforms are geometric and slightly quirky — the kind of precision that evokes engineered parts, stamped molds, technical lettering on injection-molded plastic. When rendered in uppercase at heavy weight with wide tracking, it looks like the text embossed into the underside of a Lego brick: mechanical, deliberate, and physically *there*.
+
+**Why Space Grotesk over the other candidates:**
+- **Epilogue** — excellent weight range but too polished; reads "modern startup," not "injection mold."
+- **Archivo Black** — ultra-bold but only one weight; no flexibility for subheadings.
+- **Darker Grotesque** — beautiful but too tight and edgy; competes with the border system for visual attention.
+- **Syne** — too art-adjacent; this is a tool app, not a gallery.
+
+**What we gained:** Typographic identity that is physically recognizable. A user will remember these headings.
+**What we sacrificed:** Zero font-loading latency for headings. Space Grotesk 700 is ~22KB (woff2). First-time visitors see a brief FOUT (flash of unstyled text) on headings before the font loads. Body text is unaffected — it remains system font with zero latency. We mitigate with `font-display: swap` and preloading.
+
+**Body: System font stack (UnoCSS default)**
+
+Body text stays on system fonts. The original defense still holds for running text: performance matters more than brand consistency for the 95% of text that users actually *read*. The brand's body text identity comes from weight and color, not from the typeface.
+
+### Heading Specifications
+
+| Element | Size | Weight | Tracking | Transform | Font |
+| ------- | ---- | ------ | -------- | --------- | ---- |
+| **h1** | `text-3xl` (30px) | 700 | `tracking-wide` | `uppercase` | Space Grotesk |
+| **h2** | `text-2xl` (24px) | 700 | `tracking-wide` | `uppercase` | Space Grotesk |
+| **h3** | `text-xl` (20px) | 700 | `tracking-wide` | `uppercase` | Space Grotesk |
+| **Labels** | `text-sm` (14px) | 700 | `tracking-wide` | `uppercase` | Space Grotesk |
+| **Body** | `text-base` (16px) | 500 | normal | none | System stack |
+
+### UnoCSS Font Configuration
+
+```ts
+// uno.config.ts (extend the theme)
+export default defineConfig({
+  theme: {
+    fontFamily: {
+      heading: ['Space Grotesk', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+    },
+  },
+  preflights: [
+    {
+      getCSS: () => `
+        @font-face {
+          font-family: 'Space Grotesk';
+          font-style: normal;
+          font-weight: 700;
+          font-display: swap;
+          src: url('/fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+        }
+      `,
+    },
+  ],
+})
+```
+
+Load a single weight (700). No italic — headings are uppercase and don't use italics. Total cost: ~22KB woff2. Add a `<link rel="preload">` in the HTML head for the font file to minimize FOUT.
 
 ### Rules
 
 - Never center long text. Left-align for readability.
 - Use size to create hierarchy, not color. Black text at different sizes beats colored text at the same size.
+- **Headings always use `font-heading`**. Body text never does. The separation is the point — headings shout, body text speaks.
 
 ## Borders & Edges
 
@@ -119,7 +218,7 @@ Shadows in Brick Brutalism are not about realism — they're about physicality. 
 | **Default**          | 4px offset     | `shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`     |
 | **Hover / Focus**    | 6px offset     | `shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]`     |
 | **Active / Pressed** | 2px offset     | `shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]`     |
-| **Error**            | 4px red offset | `shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]` |
+| **Error**            | 4px red offset | `shadow-[4px_4px_0px_0px_#C41A16]` |
 
 ### Rules
 
@@ -161,20 +260,20 @@ Every interactive element must communicate its state clearly. No ambiguity.
 | -------------------- | ------------------------------------------------------------------------------------------------ | ----------------- |
 | **Default**          | 3px black border, 4px offset shadow                                                              | —                 |
 | **Hover**            | Shadow grows to 6px, background may shift (e.g., yellow highlight)                               | 150ms snap easing |
-| **Focus**            | Shadow grows to 6px, `bg-yellow-300` highlight, `outline="none"` (see Focus Accessibility below) | 150ms snap easing |
+| **Focus**            | Shadow grows to 6px, `bg-brick-yellow` highlight, `outline="none"` (see Focus Accessibility below) | 150ms snap easing |
 | **Active / Pressed** | Shadow shrinks to 2px (brick snaps into place)                                                   | 150ms snap easing |
 | **Disabled**         | `bg-gray-200`, `border-gray-300`, `text-gray-600`, no shadow, `cursor-not-allowed`               | None (immediate)  |
-| **Error**            | `bg-red-200`, red shadow (`red-500`), `border-red-500`                                           | 150ms snap easing |
+| **Error**            | `bg-brick-red-light`, red shadow (`brick-red`), `border-brick-red`                               | 150ms snap easing |
 
 ### Focus Accessibility (WCAG 2.4.11)
 
-The `outline: none` in our focus state is only safe because **both** treatments — `bg-yellow-300` and the 6px shadow — are present together. Neither is sufficient alone:
+The `outline: none` in our focus state is only safe because **both** treatments — `bg-brick-yellow` and the 6px shadow — are present together. Neither is sufficient alone:
 
-- **Yellow-300 (`#FDE047`) on white has a contrast ratio of ~1.07:1** — it fails as a standalone focus indicator.
+- **`--brick-yellow` (`#F5C518`) on white has a contrast ratio of ~1.55:1** — it fails as a standalone focus indicator.
 - **The 6px hard shadow provides the structural, high-contrast indicator** (black on white, well above the minimum area requirement).
 - **The yellow background provides the color-fill reinforcement** that makes focus unmistakable at a glance.
 
-**Rule: `outline: none` must never be applied to a focusable element unless both `bg-yellow-300` and the 6px shadow are present.** If either treatment is missing, keep the browser's default outline or provide an equivalent indicator. Violating this fails WCAG 2.2 Focus Appearance (2.4.11).
+**Rule: `outline: none` must never be applied to a focusable element unless both `bg-brick-yellow` and the 6px shadow are present.** If either treatment is missing, keep the browser's default outline or provide an equivalent indicator. Violating this fails WCAG 2.2 Focus Appearance (2.4.11).
 
 **Small element caveat:** WCAG 2.4.11 requires the focus indicator to have a minimum area (at least as large as a 2px-thick perimeter around the element). For very small focusable elements — icon-only buttons, compact links, or small toggle controls — verify that the 6px shadow encloses enough area to meet this requirement. If the element is smaller than ~24x24px, consider increasing its padding or minimum size so the shadow indicator is large enough to pass.
 
@@ -193,9 +292,9 @@ Inline body links (links within paragraphs or running text) follow different rul
 | State       | Treatment                                                                                                                                                                               |
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Default** | `text-black underline` with 3px `border-b-black` (underline via border-bottom, not text-decoration, for consistent weight)                                                              |
-| **Hover**   | `bg-yellow-300` highlight floods behind the text. The underline remains. Yellow here is consistent with its role as interactive feedback — the user is hovering on something clickable. |
-| **Focus**   | Same as hover: `bg-yellow-300` + underline. Focus and hover are visually identical for inline links.                                                                                    |
-| **Active**  | `bg-yellow-100` — the highlight softens momentarily on press, then the navigation fires.                                                                                                |
+| **Hover**   | `bg-brick-yellow` highlight floods behind the text. The underline remains. Yellow here is consistent with its role as interactive feedback — the user is hovering on something clickable. |
+| **Focus**   | Same as hover: `bg-brick-yellow` + underline. Focus and hover are visually identical for inline links.                                                                                    |
+| **Active**  | `bg-brick-yellow-subtle` — the highlight softens momentarily on press, then the navigation fires.                                                                                                |
 
 **Why yellow works here**: Yellow is reserved for interactive feedback across the system. An inline link turning yellow on hover is consistent — it signals "this is responding to you," not "this is a warning." The 3px underline on the default state already identifies it as a link before any interaction occurs.
 
@@ -228,7 +327,7 @@ The rule: `gap-2` for elements that belong together inside a component, `gap-4` 
 
 Pages follow a predictable structure: a top navigation bar, then content. The navigation bar is full-width with a 3px bottom border — it's the baseplate everything else sits on.
 
-- **Navigation**: Horizontal top bar. Logo left, nav links center or right. Links use uppercase text with the Snap Principle on hover/focus. Active route gets a `yellow-300` underline (3px thick, hard).
+- **Navigation**: Horizontal top bar. Logo left, nav links center or right. Links use uppercase text with the Snap Principle on hover/focus. Active route gets a `brick-yellow` underline (3px thick, hard).
 - **Content area**: Centered with `max-w-6xl mx-auto` for readability. Full-width on mobile.
 - **Sidebars** (if needed): Same 3px border treatment. Separated from main content by a thick border, not whitespace alone.
 
@@ -290,7 +389,7 @@ The hamburger menu is one of the most-used components. It follows the Snap Princ
 **Trigger button:**
 
 - 44x44px minimum. 3px black border, 4px offset shadow. Contains a three-line hamburger icon (2px stroke, square caps).
-- Follows all standard interactive states: shadow grows to 6px on hover/focus (with `bg-yellow-300`), shrinks to 2px on press.
+- Follows all standard interactive states: shadow grows to 6px on hover/focus (with `bg-brick-yellow`), shrinks to 2px on press.
 - When menu is open, the trigger shows an X icon. The button stays in its pressed position (2px shadow) while the menu is open.
 
 **Menu panel:**
@@ -299,8 +398,8 @@ The hamburger menu is one of the most-used components. It follows the Snap Princ
 - 3px black border on the bottom edge (the top edge shares the nav bar's bottom border — no doubled borders).
 - `bg-white` background. No shadow on the panel itself — the nav bar's shadow is enough.
 - Nav links inside are full-width, stacked vertically, with `p-4` padding and 3px `border-b-black` separating each item.
-- Each nav link follows the Snap Principle: `bg-yellow-300` on hover/focus, standard shadow behavior is not applicable (no shadows on items inside the panel — shadows are for elements with spatial depth, and these are flat list items).
-- Active route gets a persistent `bg-yellow-300` with `font-bold`.
+- Each nav link follows the Snap Principle: `bg-brick-yellow` on hover/focus, standard shadow behavior is not applicable (no shadows on items inside the panel — shadows are for elements with spatial depth, and these are flat list items).
+- Active route gets a persistent `bg-brick-yellow` with `font-bold`.
 - Open/close uses the system transition: 150ms, snap easing, transitioning `max-height` or `grid-template-rows` (not `height`, which triggers layout thrash).
 
 Key rules across breakpoints:
@@ -360,7 +459,7 @@ Brick Brutalism is inherently accessible by design — high contrast and bold vi
 ### Requirements
 
 - **Color contrast**: All text meets WCAG AA (4.5:1 for normal text, 3:1 for large text). Black on white exceeds this.
-- **Focus indicators**: Every focusable element has a visible focus state (yellow highlight + shadow growth). The `outline: none` declaration requires **both** `bg-yellow-300` and the 6px shadow to be present — see Focus Accessibility above. Never remove focus outlines without both replacements active.
+- **Focus indicators**: Every focusable element has a visible focus state (yellow highlight + shadow growth). The `outline: none` declaration requires **both** `bg-brick-yellow` and the 6px shadow to be present — see Focus Accessibility above. Never remove focus outlines without both replacements active.
 - **Error identification**: Errors use color (red), position (below the field), and text (descriptive message) — never color alone.
 - **Touch targets**: Minimum 44x44px on mobile. Chunky buttons are a feature, not a compromise.
 - **Keyboard navigation**: All interactions work with keyboard. Tab order follows visual order.
@@ -421,7 +520,7 @@ Things that violate the Brick Brutalism identity. If you see these in a PR, flag
 | 1px borders                        | Too subtle, not confident                          | Use 3px borders (sole exception: `<tr>` separators inside `<table>` elements)                              |
 | Decorative color                   | Color must have meaning                            | Reserve accent colors for states                                                                           |
 | Centered paragraph text            | Hard to read                                       | Left-align body text                                                                                       |
-| Custom fonts                       | Performance cost outweighs typographic consistency | Use system font stack; rely on weight, case, and spacing for identity                                      |
+| Custom fonts for body text         | Performance cost outweighs typographic consistency for running text | Use system font stack for body; `font-heading` (Space Grotesk 700) is allowed for headings and labels only |
 | `transition-all`                   | Overreaching, can cause jank                       | Transition specific properties: `transition-shadow`, `transition-background-color`, `transition-transform` |
 
 ## Brand Voice in UI
@@ -456,6 +555,97 @@ The primary tagline is **"Every brick has a place."** Here are contextual variat
 - **Error page**: "This brick doesn't fit here."
 - **About / Footer**: "Every brick has a place. We help you find it."
 
+## Sound Design — Micro-Sound Specification
+
+Brick Brutalism is a physical metaphor. Bricks have weight, edges, and — when they connect — *sound*. A design system built on the tactile joy of snapping bricks together is incomplete without an audio dimension. But sound in a web app is a minefield of annoyance. This specification defines the narrow band where sound adds delight without becoming noise.
+
+### Philosophy
+
+Sound is the finishing touch, not the foundation. The interface must be fully usable, fully delightful, and fully accessible with sound completely off. Sound is a layer of polish for users who opt into it — a reward for those who want the full sensory experience.
+
+### Sound On/Off
+
+- **Default: OFF.** Sound is opt-in. Users must explicitly enable it via a toggle in the UI (e.g., a speaker icon in the navigation bar).
+- **Respect `prefers-reduced-motion`.** If the user's OS reports reduced motion preference, sound is disabled regardless of the in-app toggle. Motion and sound are both sensory stimuli — users who reduce one often want to reduce both.
+- **Persist the preference** via `localStorage` (through the app storage service, per architecture rules). Once a user enables sound, it stays enabled across sessions until they turn it off.
+
+### Signature Moments (Sounds ON)
+
+Only five interactions get sound. These are the "signature moments" — the actions that map directly to the physical metaphor of connecting Lego bricks.
+
+| Interaction | Sound Evokes | Duration | Notes |
+| ----------- | ------------ | -------- | ----- |
+| **Successful save/create** | A single stud snap — the satisfying click of pressing a brick onto a baseplate. Short, crisp, slightly hollow (ABS plastic, not metal). | ~80ms | The most important sound. This is the moment the user "places a brick." |
+| **Delete confirmation** | A brick being pulled apart — a brief, lower-pitched release sound. Not dramatic, not alarming. The honest sound of disconnection. | ~120ms | Plays after the user confirms deletion, not on the initial click. Accompanies the action, does not warn about it. |
+| **Bulk import complete** | A rapid cascade of snaps — multiple bricks clicking into place in sequence. The sound of a handful of bricks being pressed onto a baseplate in quick succession. | ~300ms | Only on import completion, not on each individual item. The sound celebrates the result, not the process. |
+| **Error/validation failure** | A brick that doesn't fit — a dull thud of a misaligned stud. Not a buzzer, not a beep. A physical miss. | ~60ms | Subtle. The visual error treatment (red border, red shadow, red text) does the heavy lifting. The sound is a tactile footnote. |
+| **Navigation (route change)** | Silent. | — | See "Silent Interactions" below. |
+
+### Silent Interactions (No Sound, Ever)
+
+| Interaction | Why Silent |
+| ----------- | ---------- |
+| **Hover** | Hover is exploratory. Sound on hover punishes browsing. |
+| **Focus (keyboard navigation)** | Keyboard users tab through many elements per second. Sound on focus is auditory assault. |
+| **Route changes** | Navigation is not a physical action in the Lego metaphor. You don't make a sound when you walk to a different table. |
+| **Loading states** | Loading is waiting, not acting. Sound during loading creates anxiety, not delight. |
+| **Typing in inputs** | The user's own keyboard provides the tactile feedback. Doubling it is redundant. |
+| **Toggling/expanding** | Accordion opens, dropdown menus, filter toggles — these are UI affordances, not domain actions. They stay silent. |
+
+### Technical Approach
+
+- **Web Audio API** — not `<audio>` elements. Web Audio API gives precise timing control (critical for 60–120ms samples), volume control, and avoids the latency and loading overhead of HTML audio elements.
+- **Sample format**: WAV or MP3, mono, 22kHz. Each sample under 2KB. Total sound budget: **under 10KB for all five samples**.
+- **Load strategy**: Lazy-load the `AudioContext` and samples on first user interaction after enabling sound. Do not load audio resources if sound is disabled.
+- **Volume**: Fixed at ~30% of system volume. Sound should be *noticed*, not *heard across the room*. No user-adjustable volume — the toggle is on/off, not a mixer.
+- **Concurrency**: If a sound is already playing when the same trigger fires again (e.g., rapid successive saves), interrupt and restart. Do not queue or overlap.
+
+### Accessibility Summary
+
+| Concern | Mitigation |
+| ------- | ---------- |
+| Sound conveys information | No. All information is conveyed visually. Sound is redundant reinforcement only. |
+| Hearing-impaired users | Fully functional experience without sound. Sound is cosmetic. |
+| Sensory overload | Default OFF. Respects `prefers-reduced-motion`. Only 5 triggers, all brief. |
+| Screen readers | Sound does not interfere with screen reader output. Web Audio API plays independently of the accessibility tree. |
+
+## Bold Choices Ledger
+
+| Bold Choice | The Safe Default | What We're Doing Instead | Why |
+|---|---|---|---|
+| ABS-plastic color research | Tailwind's `yellow-300` / `red-500` (generic, used by every app) | Domain-researched `--brick-yellow` (#F5C518), `--brick-red` (#C41A16) tuned from actual Lego Pantone references | Generic utility colors make the app look like every other Tailwind project. Domain-specific values make it look like it *cares* about Lego. The warmth and saturation of real ABS plastic is visibly different from digital color picker defaults. |
+| Heading-only custom typeface | System font stack everywhere (zero latency, zero identity) | Space Grotesk 700 for headings only (~22KB), system fonts for body | Headings are the brand's loudest voice and they were being rendered in fonts designed to disappear. One weight, one font, heading-only — the smallest possible payload for the largest possible identity gain. |
+| Micro-sound design layer | No audio (the industry default for web apps) | Five opt-in signature sounds evoking ABS plastic: stud snap, brick pull, cascade, misalign thud, silence for everything else | The entire design system is built on a physical metaphor (bricks snapping together) but was missing the one sense that makes physical connection *satisfying*. Sound completes the metaphor for users who want it, without imposing on those who don't. |
+| Reserved palette slots | Add colors when you need them (ad-hoc, often mismatched) | `--brick-blue` and `--baseplate-green` defined but not yet assigned to UI roles | The palette grows by drawing from curated reserves, not by inventing new colors under deadline pressure. Every future color has already been researched and contrast-checked. |
+
+## Performance Notes for The Illusionist
+
+Three detonations, three performance profiles. Read before implementing.
+
+### Detonation #1: Brick Brutalism Palette
+
+**Impact: Zero runtime cost.** The palette is CSS custom properties and UnoCSS theme configuration. No additional assets, no runtime computation. The only change is which hex values ship in the stylesheet — the file size difference is negligible.
+
+**Migration note:** Every reference to `yellow-300`, `yellow-100`, `red-200`, `red-500`, `red-600` in existing components must be updated to the new `brick-*` token names. This is a find-and-replace operation, but verify each replacement visually — the new values are warmer and more saturated than the Tailwind defaults they replace.
+
+### Detonation #2: Space Grotesk Heading Font
+
+**Impact: ~22KB woff2, one-time download.**
+- Host the font file locally at `/fonts/SpaceGrotesk-Bold.woff2` — do not use Google Fonts CDN (third-party dependency, privacy concerns, extra DNS lookup).
+- Add `<link rel="preload" href="/fonts/SpaceGrotesk-Bold.woff2" as="font" type="font/woff2" crossorigin>` to the HTML `<head>`.
+- Use `font-display: swap` in the `@font-face` declaration (already specified in the UnoCSS config above). This means headings render in the system font immediately, then swap to Space Grotesk once loaded. The FOUT is brief and only affects headings.
+- **Only load weight 700.** Do not load additional weights. If subheadings need lighter treatment, use size and tracking — not font weight.
+- **Bundle budget check:** 22KB added to initial load. Current budget is 150KB per app. Verify this stays within budget after adding the font.
+
+### Detonation #3: Micro-Sound System
+
+**Impact: ~10KB total samples, lazy-loaded after opt-in.**
+- Do not load any audio resources until the user enables sound. The `AudioContext` and sample buffers are created on first interaction after toggle.
+- Samples should be committed to the repository as static assets (e.g., `/public/sounds/`). Do not fetch from external CDNs.
+- The Web Audio API `AudioContext` must be created in response to a user gesture (browser policy). The sound toggle click itself is the gesture — create the context there.
+- Test with browser autoplay policies. Chrome, Firefox, and Safari all require user gesture before audio. The opt-in toggle satisfies this naturally.
+- **No sound on mobile unless explicitly enabled.** Mobile users have different audio expectations. The toggle applies universally, but consider defaulting the toggle to hidden on mobile breakpoints (< 640px) and only showing it in settings.
+
 ## Summary
 
-Brick Brutalism is an interface that builds with conviction. Every pixel is a brick placed with purpose — thick borders, hard shadows, sharp corners, honest colors. It's an experience that respects the user enough to be clear, bold enough to be memorable, and playful enough to make organizing your brick collection feel like building something great.
+Brick Brutalism is an interface that builds with conviction. Every pixel is a brick placed with purpose — thick borders, hard shadows, sharp corners, domain-researched colors that smell like ABS plastic. Space Grotesk stamps the headings with injection-molded authority. Five optional micro-sounds complete the physical metaphor for those who want to hear the snap. It's an experience that respects the user enough to be clear, bold enough to be memorable, and playful enough to make organizing your brick collection feel like building something great.
