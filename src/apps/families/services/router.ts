@@ -3,6 +3,7 @@ import type {RouteRecordRaw} from "vue-router";
 import {routes as aboutRoutes} from "@app/domains/about";
 import {routes as authRoutes} from "@app/domains/auth";
 import {routes as homeRoutes} from "@app/domains/home";
+import {routes as partsRoutes} from "@app/domains/parts";
 import {routes as setsRoutes} from "@app/domains/sets";
 import {routes as settingsRoutes} from "@app/domains/settings";
 import {routes as storageRoutes} from "@app/domains/storage";
@@ -14,6 +15,7 @@ const routes = [
     ...authRoutes,
     ...setsRoutes,
     ...storageRoutes,
+    ...partsRoutes,
     ...settingsRoutes,
 ] as const satisfies readonly RouteRecordRaw[];
 
