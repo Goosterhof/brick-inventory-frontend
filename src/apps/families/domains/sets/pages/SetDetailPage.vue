@@ -96,6 +96,21 @@ onMounted(async () => {
     loading.value = false;
 });
 
+const allStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", "incomplete"];
+const statusUpdating = ref(false);
+
+const updateStatus = async (newStatus: FamilySet["status"]) => {
+    if (!familySet.value || familySet.value.status === newStatus) return;
+
+    statusUpdating.value = true;
+    try {
+        await familyHttpService.patchRequest(`/family-sets/${familySet.value.id}`, {status: newStatus});
+        familySet.value.status = newStatus;
+    } finally {
+        statusUpdating.value = false;
+    }
+};
+
 const goToEdit = async () => {
     if (!familySet.value) return;
     await familyRouterService.goToRoute("sets-edit", familySet.value.id);
@@ -169,9 +184,28 @@ const handleAssigned = () => {
                             <span font="bold">{{ t("sets.quantity").value }}:</span>
                             <span>{{ familySet.quantity }}x</span>
                         </div>
-                        <div flex gap="2">
+                        <div flex="~ col" gap="2">
                             <span font="bold">{{ t("sets.status").value }}:</span>
-                            <span>{{ t(statusKey[familySet.status]).value }}</span>
+                            <div flex gap="2" flex-wrap="wrap">
+                                <button
+                                    v-for="status in allStatuses"
+                                    :key="status"
+                                    type="button"
+                                    text="xs"
+                                    p="x-3 y-1"
+                                    font="bold"
+                                    uppercase
+                                    tracking="wide"
+                                    cursor="pointer"
+                                    outline="none"
+                                    class="brick-border brick-transition"
+                                    :bg="familySet.status === status ? 'yellow-300' : 'white hover:yellow-100'"
+                                    :disabled="statusUpdating"
+                                    @click="updateStatus(status)"
+                                >
+                                    {{ t(statusKey[status]).value }}
+                                </button>
+                            </div>
                         </div>
                         <div v-if="familySet.purchaseDate" flex gap="2">
                             <span font="bold">{{ t("sets.purchaseDate").value }}:</span>
