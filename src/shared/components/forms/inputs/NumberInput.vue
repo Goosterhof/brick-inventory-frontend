@@ -50,27 +50,30 @@ const inputStateClass = computed(() => {
 <template>
     <FormField>
         <FormLabel :for="inputId" :optional="optional">{{ label }}</FormLabel>
-        <LegoStuds m="l-3 b--1.5" relative z="1" />
-        <input
-            :id="inputId"
-            :value="model"
-            type="number"
-            @input="handleInput"
-            :placeholder="placeholder"
-            :disabled="disabled"
-            :required="!optional"
-            :min="min"
-            :max="max"
-            :step="step"
-            :aria-invalid="error ? true : undefined"
-            :aria-describedby="error ? errorId : undefined"
-            p="x-4 y-3"
-            text="black"
-            font="medium"
-            class="brick-border brick-transition"
-            outline="none"
-            :class="inputStateClass"
-        />
+        <div relative>
+            <LegoStuds :count="4" absolute z="1" w="full" justify="center" style="top: -6px" />
+            <input
+                :id="inputId"
+                :value="model"
+                type="number"
+                @input="handleInput"
+                :placeholder="placeholder"
+                :disabled="disabled"
+                :required="!optional"
+                :min="min"
+                :max="max"
+                :step="step"
+                :aria-invalid="error ? true : undefined"
+                :aria-describedby="error ? errorId : undefined"
+                p="x-4 y-3"
+                w="full"
+                text="black"
+                font="medium"
+                class="brick-border brick-transition"
+                outline="none"
+                :class="inputStateClass"
+            />
+        </div>
         <FormError v-if="error" :id="errorId" :message="error" />
     </FormField>
 </template>

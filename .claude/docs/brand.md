@@ -159,7 +159,7 @@ When placing studs, check these ratios hold:
 - **Default count is 3.** Override with the `count` prop when the surface size warrants more or fewer.
 - **Studs sit above content**, not beside it or below it — like on a real brick.
 - **No shadows on studs** (except the inset depth hint). Studs are part of the brick surface, not floating above it.
-- **Never use studs on interactive elements directly.** Studs go on containers (FormField, card headers, section dividers), not on buttons or inputs themselves.
+- **Studs decorate the surface of brick elements.** Place studs on inputs, cards, and section headers — they sit on the top border, centered across the width. Never put studs on buttons (too small, studs compete with the label).
 
 ## Shadows
 
