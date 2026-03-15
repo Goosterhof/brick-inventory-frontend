@@ -1,4 +1,4 @@
-import ScanSetView from "@app/domains/sets/pages/ScanSetView.vue";
+import ScanSetPage from "@app/domains/sets/pages/ScanSetPage.vue";
 import BackButton from "@shared/components/BackButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -36,14 +36,14 @@ vi.mock("@app/services", () => ({
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-describe("ScanSetView", () => {
+describe("ScanSetPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     it("should render page header with title", () => {
         // Arrange & Act
-        const wrapper = shallowMount(ScanSetView);
+        const wrapper = shallowMount(ScanSetPage);
 
         // Assert
         const header = wrapper.findComponent(PageHeader);
@@ -53,7 +53,7 @@ describe("ScanSetView", () => {
 
     it("should render BarcodeScanner component", () => {
         // Arrange & Act
-        const wrapper = shallowMount(ScanSetView);
+        const wrapper = shallowMount(ScanSetPage);
 
         // Assert
         expect(wrapper.findComponent(BarcodeScanner).exists()).toBe(true);
@@ -61,7 +61,7 @@ describe("ScanSetView", () => {
 
     it("should render back button", () => {
         // Arrange & Act
-        const wrapper = shallowMount(ScanSetView);
+        const wrapper = shallowMount(ScanSetPage);
 
         // Assert
         expect(wrapper.findComponent(BackButton).exists()).toBe(true);
@@ -69,7 +69,7 @@ describe("ScanSetView", () => {
 
     it("should navigate back to sets overview when back button is clicked", async () => {
         // Arrange
-        const wrapper = shallowMount(ScanSetView);
+        const wrapper = shallowMount(ScanSetPage);
 
         // Act
         wrapper.findComponent(BackButton).vm.$emit("click");
@@ -81,7 +81,7 @@ describe("ScanSetView", () => {
 
     it("should not show results section before scan", () => {
         // Arrange & Act
-        const wrapper = shallowMount(ScanSetView);
+        const wrapper = shallowMount(ScanSetPage);
 
         // Assert
         expect(wrapper.text()).not.toContain("sets.scannedCode");
@@ -91,7 +91,7 @@ describe("ScanSetView", () => {
         it("should show scanned code after detection", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
 
             // Act
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
@@ -104,7 +104,7 @@ describe("ScanSetView", () => {
         it("should search for matching sets after detection", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
 
             // Act
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
@@ -122,7 +122,7 @@ describe("ScanSetView", () => {
                     resolveRequest = resolve;
                 }),
             );
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
 
             // Act
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
@@ -138,7 +138,7 @@ describe("ScanSetView", () => {
             mockGetRequest.mockResolvedValue({
                 data: [{id: 1, set: {name: "Star Destroyer", set_num: "75252-1"}, quantity: 1, status: "sealed"}],
             });
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
 
             // Act
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
@@ -154,7 +154,7 @@ describe("ScanSetView", () => {
             mockGetRequest.mockResolvedValue({
                 data: [{id: 42, set: {name: "Star Destroyer", set_num: "75252-1"}, quantity: 1, status: "sealed"}],
             });
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
             await flushPromises();
 
@@ -170,7 +170,7 @@ describe("ScanSetView", () => {
         it("should show no matching sets message when none found", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
 
             // Act
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
@@ -183,7 +183,7 @@ describe("ScanSetView", () => {
         it("should show add set button when no matching sets found", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
             await flushPromises();
 
@@ -195,7 +195,7 @@ describe("ScanSetView", () => {
         it("should navigate to add set when add button is clicked", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
             await flushPromises();
 
@@ -211,7 +211,7 @@ describe("ScanSetView", () => {
         it("should handle search error gracefully", async () => {
             // Arrange
             mockGetRequest.mockRejectedValue(new Error("Network error"));
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
 
             // Act
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
@@ -226,7 +226,7 @@ describe("ScanSetView", () => {
         it("should show scan again button after detection", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
 
             // Act
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
@@ -242,7 +242,7 @@ describe("ScanSetView", () => {
         it("should reset state when scan again is clicked", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: []});
-            const wrapper = shallowMount(ScanSetView);
+            const wrapper = shallowMount(ScanSetPage);
             wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
             await flushPromises();
 

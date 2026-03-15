@@ -1,4 +1,4 @@
-import SetDetailView from "@app/domains/sets/pages/SetDetailView.vue";
+import SetDetailPage from "@app/domains/sets/pages/SetDetailPage.vue";
 import BackButton from "@shared/components/BackButton.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -91,7 +91,7 @@ const mockSetWithPartsResponse = {
     ],
 };
 
-describe("SetDetailView", () => {
+describe("SetDetailPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockCurrentRouteId.value = 42;
@@ -102,7 +102,7 @@ describe("SetDetailView", () => {
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        shallowMount(SetDetailView);
+        shallowMount(SetDetailPage);
         await flushPromises();
 
         // Assert
@@ -114,7 +114,7 @@ describe("SetDetailView", () => {
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Assert
@@ -134,7 +134,7 @@ describe("SetDetailView", () => {
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Assert
@@ -149,7 +149,7 @@ describe("SetDetailView", () => {
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
         // Act
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
 
         // Assert
         expect(wrapper.text()).toContain("common.loading");
@@ -158,7 +158,7 @@ describe("SetDetailView", () => {
     it("should navigate to edit page when edit button is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Act
@@ -174,7 +174,7 @@ describe("SetDetailView", () => {
     it("should navigate back to overview when back button is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Act
@@ -191,7 +191,7 @@ describe("SetDetailView", () => {
         mockGetRequest.mockResolvedValue({data: responseWithoutDate});
 
         // Act
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Assert
@@ -204,7 +204,7 @@ describe("SetDetailView", () => {
         mockGetRequest.mockResolvedValue({data: responseWithoutNotes});
 
         // Act
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Assert
@@ -216,7 +216,7 @@ describe("SetDetailView", () => {
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Assert
@@ -230,7 +230,7 @@ describe("SetDetailView", () => {
         mockGetRequest
             .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse});
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Act
@@ -255,7 +255,7 @@ describe("SetDetailView", () => {
         mockGetRequest
             .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse});
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Act
@@ -278,7 +278,7 @@ describe("SetDetailView", () => {
         mockGetRequest
             .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse});
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Act
@@ -298,7 +298,7 @@ describe("SetDetailView", () => {
         mockGetRequest
             .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse});
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Act
@@ -318,7 +318,7 @@ describe("SetDetailView", () => {
         mockGetRequest
             .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse});
-        const wrapper = shallowMount(SetDetailView);
+        const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
         // Act

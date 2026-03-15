@@ -1,4 +1,4 @@
-import StorageDetailView from "@app/domains/storage/pages/StorageDetailView.vue";
+import StorageDetailPage from "@app/domains/storage/pages/StorageDetailPage.vue";
 import BackButton from "@shared/components/BackButton.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
@@ -78,10 +78,10 @@ const mountWithResponses = (
     partsData: unknown[] = mockStoragePartsResponse,
 ) => {
     mockGetRequest.mockResolvedValueOnce({data: optionData}).mockResolvedValueOnce({data: partsData});
-    return shallowMount(StorageDetailView);
+    return shallowMount(StorageDetailPage);
 };
 
-describe("StorageDetailView", () => {
+describe("StorageDetailPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockCurrentRouteId.value = 5;
@@ -114,7 +114,7 @@ describe("StorageDetailView", () => {
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
         // Act
-        const wrapper = shallowMount(StorageDetailView);
+        const wrapper = shallowMount(StorageDetailPage);
 
         // Assert
         expect(wrapper.text()).toContain("common.loading");

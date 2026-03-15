@@ -1,4 +1,4 @@
-import AddSetView from "@app/domains/sets/pages/AddSetView.vue";
+import AddSetPage from "@app/domains/sets/pages/AddSetPage.vue";
 import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
@@ -39,14 +39,14 @@ vi.mock("@app/services", () => ({
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-describe("AddSetView", () => {
+describe("AddSetPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     it("should render page title", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         // Assert
         expect(wrapper.find("h1").text()).toBe("sets.addSet");
@@ -54,7 +54,7 @@ describe("AddSetView", () => {
 
     it("should render form fields", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         // Assert
         const textInputs = wrapper.findAllComponents(TextInput);
@@ -72,7 +72,7 @@ describe("AddSetView", () => {
 
     it("should render submit button", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         // Assert
         const button = wrapper.findComponent(PrimaryButton);
@@ -86,7 +86,7 @@ describe("AddSetView", () => {
         mockPostRequest.mockResolvedValue({
             data: {id: 1, set_id: 10, quantity: 1, status: "sealed", purchase_date: null, notes: null, set: {}},
         });
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         const textInput = wrapper.findComponent(TextInput);
         textInput.vm.$emit("update:modelValue", "75192-1");
@@ -111,7 +111,7 @@ describe("AddSetView", () => {
         mockPostRequest.mockResolvedValue({
             data: {id: 42, set_id: 10, quantity: 1, status: "sealed", purchase_date: null, notes: null, set: {}},
         });
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         // Act
         await wrapper.find("form").trigger("submit");
@@ -126,7 +126,7 @@ describe("AddSetView", () => {
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
         mockPostRequest.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         // Act
         await wrapper.find("form").trigger("submit");
@@ -141,7 +141,7 @@ describe("AddSetView", () => {
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
         mockPostRequest.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         // Act
         const errorHandler = vi.fn();
@@ -157,7 +157,7 @@ describe("AddSetView", () => {
 
     it("should have setnummer required by default", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddSetView);
+        const wrapper = shallowMount(AddSetPage);
 
         // Assert
         const textInput = wrapper.findComponent(TextInput);
