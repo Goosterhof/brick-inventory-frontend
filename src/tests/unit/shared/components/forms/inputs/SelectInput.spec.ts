@@ -2,6 +2,7 @@ import FormError from "@shared/components/forms/FormError.vue";
 import FormField from "@shared/components/forms/FormField.vue";
 import FormLabel from "@shared/components/forms/FormLabel.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
+import LegoStuds from "@shared/components/forms/LegoStuds.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
@@ -95,6 +96,17 @@ describe("SelectInput", () => {
 
         // Assert
         expect(wrapper.findComponent(FormField).exists()).toBe(true);
+    });
+
+    it("should render LegoStuds above the select", () => {
+        // Arrange
+        const wrapper = shallowMount(SelectInput, {
+            props: {label: "Status", modelValue: "a"},
+            slots: {default: defaultSlot},
+        });
+
+        // Assert
+        expect(wrapper.findComponent(LegoStuds).exists()).toBe(true);
     });
 
     it("should apply error styling when error is present", () => {

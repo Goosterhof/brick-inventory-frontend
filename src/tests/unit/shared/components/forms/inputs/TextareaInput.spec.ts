@@ -2,6 +2,7 @@ import FormError from "@shared/components/forms/FormError.vue";
 import FormField from "@shared/components/forms/FormField.vue";
 import FormLabel from "@shared/components/forms/FormLabel.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
+import LegoStuds from "@shared/components/forms/LegoStuds.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
@@ -81,6 +82,14 @@ describe("TextareaInput", () => {
 
         // Assert
         expect(wrapper.findComponent(FormField).exists()).toBe(true);
+    });
+
+    it("should render LegoStuds above the textarea", () => {
+        // Arrange
+        const wrapper = shallowMount(TextareaInput, {props: {label: "Notes", modelValue: ""}});
+
+        // Assert
+        expect(wrapper.findComponent(LegoStuds).exists()).toBe(true);
     });
 
     it("should default rows to 3", () => {

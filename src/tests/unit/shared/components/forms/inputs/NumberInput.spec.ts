@@ -2,6 +2,7 @@ import FormError from "@shared/components/forms/FormError.vue";
 import FormField from "@shared/components/forms/FormField.vue";
 import FormLabel from "@shared/components/forms/FormLabel.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import LegoStuds from "@shared/components/forms/LegoStuds.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
@@ -157,6 +158,14 @@ describe("NumberInput", () => {
 
         // Assert
         expect(wrapper.findComponent(FormField).exists()).toBe(true);
+    });
+
+    it("should render LegoStuds above the input", () => {
+        // Arrange
+        const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
+
+        // Assert
+        expect(wrapper.findComponent(LegoStuds).exists()).toBe(true);
     });
 
     it("should apply normal styling when not disabled and no error", () => {

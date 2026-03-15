@@ -2,6 +2,7 @@
 import FormError from "@shared/components/forms/FormError.vue";
 import FormField from "@shared/components/forms/FormField.vue";
 import FormLabel from "@shared/components/forms/FormLabel.vue";
+import LegoStuds from "@shared/components/forms/LegoStuds.vue";
 import {computed, useId} from "vue";
 
 const {
@@ -30,6 +31,7 @@ const inputStateClass = computed(() => {
 <template>
     <FormField>
         <FormLabel :for="inputId" :optional="optional">{{ label }}</FormLabel>
+        <LegoStuds m="l-3 b--1.5" relative z="1" />
         <input
             :id="inputId"
             v-model="model"
