@@ -1,4 +1,4 @@
-import StorageOverviewView from "@app/domains/storage/pages/StorageOverviewView.vue";
+import StorageOverviewPage from "@app/domains/storage/pages/StorageOverviewPage.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
@@ -46,7 +46,7 @@ const mockStorageOption = {
     child_ids: [2, 3],
 };
 
-describe("StorageOverviewView", () => {
+describe("StorageOverviewPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
@@ -56,7 +56,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: []});
 
         // Act
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert
@@ -68,7 +68,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: []});
 
         // Act
-        shallowMount(StorageOverviewView);
+        shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert
@@ -80,7 +80,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: [mockStorageOption]});
 
         // Act
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert
@@ -95,7 +95,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: []});
 
         // Act
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert
@@ -107,7 +107,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
         // Act
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
 
         // Assert
         expect(wrapper.text()).toContain("common.loading");
@@ -116,7 +116,7 @@ describe("StorageOverviewView", () => {
     it("should navigate to add page when add button is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: []});
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Act
@@ -130,7 +130,7 @@ describe("StorageOverviewView", () => {
     it("should navigate to detail page when a storage card is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: [mockStorageOption]});
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Act
@@ -147,7 +147,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: [optionWithoutChildren]});
 
         // Act
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert
@@ -160,7 +160,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: [optionWithoutGrid]});
 
         // Act
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert
@@ -173,7 +173,7 @@ describe("StorageOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: [optionWithoutDescription]});
 
         // Act
-        const wrapper = shallowMount(StorageOverviewView);
+        const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert

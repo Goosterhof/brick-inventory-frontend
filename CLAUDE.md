@@ -87,7 +87,7 @@ src/apps/{appName}/
     {domain}/
       index.ts           # Only export: routes
       pages/
-        SomeView.vue
+        SomePage.vue
       components/
         SomeComponent.vue
       modals/
@@ -98,7 +98,7 @@ src/apps/{appName}/
 
 - Each domain has an `index.ts` that exports only `routes` — this is its public API
 - **Cross-domain imports are forbidden** — domains are independent bricks. If two domains need shared logic, it belongs in `@shared/`. _Why: this keeps domains independently deployable and prevents hidden coupling that makes refactoring scary._
-- Within a domain, use relative imports (e.g., `./pages/HomeView.vue`)
+- Within a domain, use relative imports (e.g., `./pages/HomePage.vue`)
 - The router service imports routes from each domain via `@app/domains/{domain}`
 
 ### Adding a New Domain
@@ -108,7 +108,7 @@ src/apps/{appName}/
 import type {RouteRecordRaw} from "vue-router";
 
 export const routes = [
-    {path: "/items", name: "items", component: () => import("./pages/ItemsView.vue")},
+    {path: "/items", name: "items", component: () => import("./pages/ItemsPage.vue")},
 ] as const satisfies readonly RouteRecordRaw[];
 ```
 
@@ -116,7 +116,7 @@ Then register in `src/apps/families/services/router.ts` by importing and spreadi
 
 ### Naming & Route Conventions
 
-- Page files: `{Descriptive}View.vue` (e.g., `SetsOverviewView.vue`, `AddSetView.vue`)
+- Page files: `{Descriptive}Page.vue` (e.g., `SetsOverviewPage.vue`, `AddSetPage.vue`)
 - Route names: kebab-case (e.g., `sets-add`, `sets-detail`)
 - Route paths: kebab-case (e.g., `/sets/add`, `/sets/:id/edit`)
 - Route meta: `authOnly: true` for authenticated routes, `canSeeWhenLoggedIn: false` for guest-only routes (login, register)

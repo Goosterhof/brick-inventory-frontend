@@ -1,4 +1,4 @@
-import LoginView from "@app/domains/auth/pages/LoginView.vue";
+import LoginPage from "@app/domains/auth/pages/LoginPage.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
@@ -35,14 +35,14 @@ vi.mock("@app/services", () => ({
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-describe("LoginView", () => {
+describe("LoginPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     it("should render all form fields", () => {
         // Arrange & Act
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -53,7 +53,7 @@ describe("LoginView", () => {
 
     it("should render email field with email type", () => {
         // Arrange & Act
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -62,7 +62,7 @@ describe("LoginView", () => {
 
     it("should render password field with password type", () => {
         // Arrange & Act
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -71,7 +71,7 @@ describe("LoginView", () => {
 
     it("should have all fields required by default", () => {
         // Arrange & Act
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -82,7 +82,7 @@ describe("LoginView", () => {
 
     it("should render submit button", () => {
         // Arrange & Act
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Assert
         const button = wrapper.findComponent(PrimaryButton);
@@ -93,7 +93,7 @@ describe("LoginView", () => {
 
     it("should call authService.login on form submit", async () => {
         // Arrange
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         const inputs = wrapper.findAllComponents(TextInput);
         inputs[0]?.vm.$emit("update:modelValue", "john@example.com");
@@ -111,7 +111,7 @@ describe("LoginView", () => {
     it("should navigate to dashboard on successful login", async () => {
         // Arrange
         mockLogin.mockResolvedValue(undefined);
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Act
         await wrapper.find("form").trigger("submit");
@@ -123,7 +123,7 @@ describe("LoginView", () => {
 
     it("should render page title", () => {
         // Arrange & Act
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Assert
         expect(wrapper.find("h1").text()).toBe("auth.logIn");
@@ -134,7 +134,7 @@ describe("LoginView", () => {
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
         mockLogin.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Act
         await wrapper.find("form").trigger("submit");
@@ -149,7 +149,7 @@ describe("LoginView", () => {
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
         mockLogin.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(LoginView);
+        const wrapper = shallowMount(LoginPage);
 
         // Act
         const errorHandler = vi.fn();

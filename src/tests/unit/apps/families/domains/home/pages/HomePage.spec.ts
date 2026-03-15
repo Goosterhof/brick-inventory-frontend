@@ -1,4 +1,4 @@
-import HomeView from "@app/domains/home/pages/HomeView.vue";
+import HomePage from "@app/domains/home/pages/HomePage.vue";
 import CardContainer from "@shared/components/CardContainer.vue";
 import NavLink from "@shared/components/NavLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
@@ -48,7 +48,7 @@ const mockStatsResponse = {
     total_parts_quantity: 150,
 };
 
-describe("HomeView", () => {
+describe("HomePage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockIsLoggedIn.value = true;
@@ -60,7 +60,7 @@ describe("HomeView", () => {
             mockIsLoggedIn.value = false;
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
 
             // Assert
             expect(wrapper.text()).toContain("home.brandTitle");
@@ -73,7 +73,7 @@ describe("HomeView", () => {
             mockIsLoggedIn.value = false;
 
             // Act
-            shallowMount(HomeView);
+            shallowMount(HomePage);
 
             // Assert
             expect(mockGetRequest).not.toHaveBeenCalled();
@@ -86,7 +86,7 @@ describe("HomeView", () => {
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
 
             // Act
-            shallowMount(HomeView);
+            shallowMount(HomePage);
             await flushPromises();
 
             // Assert
@@ -98,7 +98,7 @@ describe("HomeView", () => {
             mockGetRequest.mockReturnValue(new Promise(() => {}));
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
 
             // Assert
             expect(wrapper.text()).toContain("home.loadingStats");
@@ -109,7 +109,7 @@ describe("HomeView", () => {
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Assert
@@ -121,7 +121,7 @@ describe("HomeView", () => {
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Assert
@@ -137,7 +137,7 @@ describe("HomeView", () => {
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Assert
@@ -149,7 +149,7 @@ describe("HomeView", () => {
             mockGetRequest.mockResolvedValue({data: {...mockStatsResponse, total_sets: 5, total_set_quantity: 5}});
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Assert
@@ -161,7 +161,7 @@ describe("HomeView", () => {
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Assert
@@ -174,7 +174,7 @@ describe("HomeView", () => {
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Assert
@@ -187,7 +187,7 @@ describe("HomeView", () => {
         it("should navigate to sets when quick action is clicked", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Act
@@ -203,7 +203,7 @@ describe("HomeView", () => {
         it("should navigate to storage when quick action is clicked", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: mockStatsResponse});
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Act
@@ -230,7 +230,7 @@ describe("HomeView", () => {
             });
 
             // Act
-            const wrapper = shallowMount(HomeView);
+            const wrapper = shallowMount(HomePage);
             await flushPromises();
 
             // Assert

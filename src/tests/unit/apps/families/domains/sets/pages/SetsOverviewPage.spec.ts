@@ -1,4 +1,4 @@
-import SetsOverviewView from "@app/domains/sets/pages/SetsOverviewView.vue";
+import SetsOverviewPage from "@app/domains/sets/pages/SetsOverviewPage.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
@@ -54,7 +54,7 @@ const mockFamilySet = {
     },
 };
 
-describe("SetsOverviewView", () => {
+describe("SetsOverviewPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
@@ -64,7 +64,7 @@ describe("SetsOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: []});
 
         // Act
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Assert
@@ -76,7 +76,7 @@ describe("SetsOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: []});
 
         // Act
-        shallowMount(SetsOverviewView);
+        shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Assert
@@ -88,7 +88,7 @@ describe("SetsOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
 
         // Act
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Assert
@@ -103,7 +103,7 @@ describe("SetsOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: []});
 
         // Act
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Assert
@@ -115,7 +115,7 @@ describe("SetsOverviewView", () => {
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
         // Act
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
 
         // Assert
         expect(wrapper.text()).toContain("common.loading");
@@ -124,7 +124,7 @@ describe("SetsOverviewView", () => {
     it("should navigate to add page when add button is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: []});
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Act
@@ -138,7 +138,7 @@ describe("SetsOverviewView", () => {
     it("should navigate to detail page when a set card is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Act
@@ -154,7 +154,7 @@ describe("SetsOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
 
         // Act
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Assert
@@ -170,7 +170,7 @@ describe("SetsOverviewView", () => {
         mockGetRequest.mockResolvedValue({data: [setWithoutImage]});
 
         // Act
-        const wrapper = shallowMount(SetsOverviewView);
+        const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Assert

@@ -1,8 +1,7 @@
-import EditStorageView from "@app/domains/storage/pages/EditStorageView.vue";
+import EditSetPage from "@app/domains/sets/pages/EditSetPage.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
-import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
@@ -13,7 +12,7 @@ const {mockGetRequest, mockPatchRequest, mockDeleteRequest, mockGoToRoute, mockC
     mockPatchRequest: vi.fn(),
     mockDeleteRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
-    mockCurrentRouteId: {value: 5},
+    mockCurrentRouteId: {value: 42},
 }));
 
 vi.mock("@app/services", () => ({
@@ -44,65 +43,70 @@ vi.mock("@app/services", () => ({
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-const mockStorageOptionResponse = {
-    id: 5,
-    name: "Lade A",
-    description: "Linkerla op plank 1",
-    parent_id: null,
-    row: 1,
-    column: 2,
-    child_ids: [6, 7],
+const mockFamilySetResponse = {
+    id: 42,
+    set_id: 10,
+    quantity: 2,
+    status: "built",
+    purchase_date: "2024-01-15",
+    notes: "Birthday gift",
+    set: {
+        id: 10,
+        set_num: "75192-1",
+        name: "Millennium Falcon",
+        year: 2017,
+        theme: "Star Wars",
+        num_parts: 7541,
+        image_url: "https://example.com/75192.jpg",
+    },
 };
 
-describe("EditStorageView", () => {
+describe("EditSetPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mockCurrentRouteId.value = 5;
+        mockCurrentRouteId.value = 42;
     });
 
-    it("should fetch storage option on mount", async () => {
+    it("should fetch set on mount", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        shallowMount(EditStorageView);
+        shallowMount(EditSetPage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/storage-options/5");
+        expect(mockGetRequest).toHaveBeenCalledWith("/family-sets/42");
     });
 
-    it("should render page title with storage name", async () => {
+    it("should render page title with set name", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("h1").text()).toBe("storage.editStorage");
-        expect(wrapper.text()).toContain("Lade A");
+        expect(wrapper.find("h1").text()).toBe("sets.editSet");
+        expect(wrapper.text()).toContain("Millennium Falcon");
+        expect(wrapper.text()).toContain("75192-1");
     });
 
     it("should populate form with existing data", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Assert
-        const textInput = wrapper.findComponent(TextInput);
-        expect(textInput.props("modelValue")).toBe("Lade A");
+        const numberInput = wrapper.findComponent(NumberInput);
+        expect(numberInput.props("modelValue")).toBe(2);
 
-        const numberInputs = wrapper.findAllComponents(NumberInput);
-        expect(numberInputs[0]?.props("modelValue")).toBe(1);
-        expect(numberInputs[1]?.props("modelValue")).toBe(2);
-
-        const textareaInput = wrapper.findComponent(TextareaInput);
-        expect(textareaInput.props("modelValue")).toBe("Linkerla op plank 1");
+        const selectInput = wrapper.findComponent(SelectInput);
+        expect(selectInput.props("modelValue")).toBe("built");
     });
 
     it("should show loading state initially", () => {
@@ -110,7 +114,7 @@ describe("EditStorageView", () => {
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
         // Act
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
 
         // Assert
         expect(wrapper.text()).toContain("common.loading");
@@ -118,9 +122,9 @@ describe("EditStorageView", () => {
 
     it("should submit update with correct payload", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        mockPatchRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        const wrapper = shallowMount(EditStorageView);
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockPatchRequest.mockResolvedValue({data: mockFamilySetResponse});
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
@@ -128,20 +132,19 @@ describe("EditStorageView", () => {
         await flushPromises();
 
         // Assert
-        expect(mockPatchRequest).toHaveBeenCalledWith("/storage-options/5", {
-            name: "Lade A",
-            description: "Linkerla op plank 1",
-            parent_id: null,
-            row: 1,
-            column: 2,
+        expect(mockPatchRequest).toHaveBeenCalledWith("/family-sets/42", {
+            quantity: 2,
+            status: "built",
+            purchase_date: "2024-01-15",
+            notes: "Birthday gift",
         });
     });
 
     it("should navigate to detail page on successful update", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        mockPatchRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        const wrapper = shallowMount(EditStorageView);
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockPatchRequest.mockResolvedValue({data: mockFamilySetResponse});
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
@@ -149,16 +152,16 @@ describe("EditStorageView", () => {
         await flushPromises();
 
         // Assert
-        expect(mockGoToRoute).toHaveBeenCalledWith("storage-detail", 5);
+        expect(mockGoToRoute).toHaveBeenCalledWith("sets-detail", 42);
     });
 
     it("should not navigate on 422 validation error", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
         mockPatchRequest.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
@@ -171,11 +174,11 @@ describe("EditStorageView", () => {
 
     it("should rethrow non-422 errors", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
         mockPatchRequest.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
@@ -190,12 +193,12 @@ describe("EditStorageView", () => {
         expect(mockGoToRoute).not.toHaveBeenCalled();
     });
 
-    it("should delete storage option and navigate to overview on confirm", async () => {
+    it("should delete set and navigate to overview on confirm", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
         mockDeleteRequest.mockResolvedValue({});
         vi.spyOn(window, "confirm").mockReturnValue(true);
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
@@ -203,15 +206,15 @@ describe("EditStorageView", () => {
         await flushPromises();
 
         // Assert
-        expect(mockDeleteRequest).toHaveBeenCalledWith("/storage-options/5");
-        expect(mockGoToRoute).toHaveBeenCalledWith("storage");
+        expect(mockDeleteRequest).toHaveBeenCalledWith("/family-sets/42");
+        expect(mockGoToRoute).toHaveBeenCalledWith("sets");
     });
 
     it("should not delete when user cancels confirmation", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
         vi.spyOn(window, "confirm").mockReturnValue(false);
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
@@ -224,15 +227,15 @@ describe("EditStorageView", () => {
 
     it("should render save and delete buttons", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
 
         // Act
-        const wrapper = shallowMount(EditStorageView);
+        const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Assert
         const primaryButton = wrapper.findComponent(PrimaryButton);
-        expect(primaryButton.text()).toBe("storage.save");
+        expect(primaryButton.text()).toBe("sets.save");
 
         const dangerButton = wrapper.findComponent(DangerButton);
         expect(dangerButton.exists()).toBe(true);
