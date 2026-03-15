@@ -1,23 +1,49 @@
 <script setup lang="ts">
-import type {FamilySet} from "@app/types/familySet";
+import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import EmptyState from "@shared/components/EmptyState.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
 const sets = ref<FamilySet[]>([]);
 const loading = ref(true);
+const searchQuery = ref("");
+const activeStatusFilter = ref<FamilySetStatus | null>(null);
 
 const statusKey: Record<FamilySet["status"], "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete"> = {
     sealed: "sets.sealed",
     built: "sets.built",
     in_progress: "sets.inProgress",
     incomplete: "sets.incomplete",
+};
+
+const allStatuses: FamilySetStatus[] = ["sealed", "in_progress", "built", "incomplete"];
+
+const filteredSets = computed(() => {
+    let result = sets.value;
+
+    if (activeStatusFilter.value) {
+        result = result.filter((s) => s.status === activeStatusFilter.value);
+    }
+
+    const query = searchQuery.value.toLowerCase().trim();
+    if (query) {
+        result = result.filter(
+            (s) => s.set.name.toLowerCase().includes(query) || s.set.setNum.toLowerCase().includes(query),
+        );
+    }
+
+    return result;
+});
+
+const toggleStatusFilter = (status: FamilySetStatus) => {
+    activeStatusFilter.value = activeStatusFilter.value === status ? null : status;
 };
 
 onMounted(async () => {
@@ -52,30 +78,64 @@ const goToDetail = async (id: number) => {
 
         <EmptyState v-else-if="sets.length === 0" :message="t('sets.noSets').value" />
 
-        <div v-else flex="~ col" gap="4">
-            <ListItemButton v-for="familySet in sets" :key="familySet.id" @click="goToDetail(familySet.id)">
-                <img
-                    v-if="familySet.set.imageUrl"
-                    :src="familySet.set.imageUrl"
-                    :alt="familySet.set.name"
-                    w="20"
-                    h="20"
-                    object="contain"
+        <template v-else>
+            <div flex="~ col" gap="4" m="b-4">
+                <TextInput
+                    v-model="searchQuery"
+                    :label="t('common.search').value"
+                    type="search"
+                    :placeholder="t('sets.searchPlaceholder').value"
+                    optional
                 />
-                <div v-else w="20" h="20" bg="gray-200" flex items="center" justify="center" text="sm gray-600">
-                    {{ t("common.noImage").value }}
+
+                <div flex gap="2" flex-wrap="wrap">
+                    <button
+                        v-for="status in allStatuses"
+                        :key="status"
+                        type="button"
+                        text="xs"
+                        p="x-3 y-1"
+                        font="bold"
+                        uppercase
+                        tracking="wide"
+                        cursor="pointer"
+                        outline="none"
+                        class="brick-border brick-transition"
+                        :bg="activeStatusFilter === status ? 'yellow-300' : 'white hover:yellow-100'"
+                        @click="toggleStatusFilter(status)"
+                    >
+                        {{ t(statusKey[status]).value }}
+                    </button>
                 </div>
-                <div flex="1">
-                    <p font="bold">{{ familySet.set.name }}</p>
-                    <p text="sm gray-600">{{ familySet.set.setNum }}</p>
-                    <div flex gap="2" m="t-1">
-                        <span text="xs" p="x-2 y-1" bg="gray-200" font="bold">{{
-                            t(statusKey[familySet.status]).value
-                        }}</span>
-                        <span text="xs gray-600">{{ familySet.quantity }}x</span>
+            </div>
+
+            <EmptyState v-if="filteredSets.length === 0" :message="t('common.noResults').value" />
+
+            <div v-else flex="~ col" gap="4">
+                <ListItemButton v-for="familySet in filteredSets" :key="familySet.id" @click="goToDetail(familySet.id)">
+                    <img
+                        v-if="familySet.set.imageUrl"
+                        :src="familySet.set.imageUrl"
+                        :alt="familySet.set.name"
+                        w="20"
+                        h="20"
+                        object="contain"
+                    />
+                    <div v-else w="20" h="20" bg="gray-200" flex items="center" justify="center" text="sm gray-600">
+                        {{ t("common.noImage").value }}
                     </div>
-                </div>
-            </ListItemButton>
-        </div>
+                    <div flex="1">
+                        <p font="bold">{{ familySet.set.name }}</p>
+                        <p text="sm gray-600">{{ familySet.set.setNum }}</p>
+                        <div flex gap="2" m="t-1">
+                            <span text="xs" p="x-2 y-1" bg="gray-200" font="bold">{{
+                                t(statusKey[familySet.status]).value
+                            }}</span>
+                            <span text="xs gray-600">{{ familySet.quantity }}x</span>
+                        </div>
+                    </div>
+                </ListItemButton>
+            </div>
+        </template>
     </div>
 </template>

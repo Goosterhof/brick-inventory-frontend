@@ -49,9 +49,9 @@ describe("DangerButton", () => {
 
         // Assert
         expect(wrapper.attributes("class")).toContain("brick-shadow-danger");
-        expect(wrapper.attributes("border")).toBe("3 red-500");
-        expect(wrapper.attributes("bg")).toBe("white hover:red-200 focus:red-200 disabled:gray-200");
-        expect(wrapper.attributes("text")).toBe("red-600 disabled:gray-600");
+        expect(wrapper.attributes("border")).toBe("3 brick-red");
+        expect(wrapper.attributes("bg")).toBe("white hover:brick-red-light focus:brick-red-light disabled:gray-200");
+        expect(wrapper.attributes("text")).toBe("brick-red-dark disabled:gray-600");
         expect(wrapper.attributes("font")).toBe("bold");
         expect(wrapper.attributes("uppercase")).toBeDefined();
     });

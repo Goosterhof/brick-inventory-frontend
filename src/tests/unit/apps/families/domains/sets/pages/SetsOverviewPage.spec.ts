@@ -1,5 +1,6 @@
 import SetsOverviewPage from "@app/domains/sets/pages/SetsOverviewPage.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -192,5 +193,104 @@ describe("SetsOverviewPage", () => {
         // Assert
         expect(wrapper.find("img").exists()).toBe(false);
         expect(wrapper.text()).toContain("common.noImage");
+    });
+
+    describe("search and filter", () => {
+        const mockSealedSet = {
+            id: 2,
+            set_id: 20,
+            quantity: 1,
+            status: "sealed",
+            purchase_date: null,
+            notes: null,
+            set: {
+                id: 20,
+                set_num: "10294-1",
+                name: "Titanic",
+                year: 2021,
+                theme: "Creator Expert",
+                num_parts: 9090,
+                image_url: null,
+            },
+        };
+
+        it("should filter sets by search query", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.findComponent(TextInput).setValue("Titanic");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("Titanic");
+            expect(wrapper.text()).not.toContain("Millennium Falcon");
+        });
+
+        it("should filter sets by set number", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.findComponent(TextInput).setValue("75192");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("Millennium Falcon");
+            expect(wrapper.text()).not.toContain("Titanic");
+        });
+
+        it("should filter sets by status", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Act — click "sealed" status filter
+            const sealedButton = wrapper.findAll("button").find((btn) => btn.text() === "sets.sealed");
+            await sealedButton?.trigger("click");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("Titanic");
+            expect(wrapper.text()).not.toContain("Millennium Falcon");
+        });
+
+        it("should toggle status filter off when clicked again", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Act — click sealed, then click sealed again
+            const sealedButton = wrapper.findAll("button").find((btn) => btn.text() === "sets.sealed");
+            await sealedButton?.trigger("click");
+            await sealedButton?.trigger("click");
+            await flushPromises();
+
+            // Assert — both sets visible
+            expect(wrapper.text()).toContain("Millennium Falcon");
+            expect(wrapper.text()).toContain("Titanic");
+        });
+
+        it("should show no results when search matches nothing", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.findComponent(TextInput).setValue("nonexistent");
+            await flushPromises();
+
+            // Assert
+            const emptyStates = wrapper.findAllComponents(EmptyState);
+            const noResults = emptyStates.find((e) => e.props("message") === "common.noResults");
+            expect(noResults?.exists()).toBe(true);
+        });
     });
 });

@@ -101,7 +101,7 @@ describe("TextInput", () => {
 
         // Assert
         expect(input.classes()).toContain("brick-disabled");
-        expect(input.classes()).not.toContain("bg-red-200");
+        expect(input.classes()).not.toContain("bg-brick-red-light");
     });
 
     it("should render placeholder text", () => {
@@ -137,7 +137,7 @@ describe("TextInput", () => {
         const input = wrapper.find("input");
 
         // Assert
-        expect(input.classes()).toContain("bg-red-200");
+        expect(input.classes()).toContain("bg-brick-red-light");
         expect(wrapper.findComponent(FormError).props("message")).toBe("Invalid");
     });
 

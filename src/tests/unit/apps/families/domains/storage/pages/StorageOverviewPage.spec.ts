@@ -1,5 +1,6 @@
 import StorageOverviewPage from "@app/domains/storage/pages/StorageOverviewPage.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -178,5 +179,63 @@ describe("StorageOverviewPage", () => {
 
         // Assert
         expect(wrapper.text()).not.toContain("Linkerla op plank 1");
+    });
+
+    describe("search", () => {
+        const mockStorageOptionB = {
+            id: 2,
+            name: "Lade B",
+            description: "Rechterla op plank 1",
+            parent_id: null,
+            row: 1,
+            column: 3,
+            child_ids: [],
+        };
+
+        it("should filter storage by name", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockStorageOptionB]});
+            const wrapper = shallowMount(StorageOverviewPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.findComponent(TextInput).setValue("Lade B");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("Lade B");
+            expect(wrapper.text()).not.toContain("Lade A");
+        });
+
+        it("should filter storage by description", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockStorageOptionB]});
+            const wrapper = shallowMount(StorageOverviewPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.findComponent(TextInput).setValue("Rechterla");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("Lade B");
+            expect(wrapper.text()).not.toContain("Lade A");
+        });
+
+        it("should show no results when search matches nothing", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockStorageOption]});
+            const wrapper = shallowMount(StorageOverviewPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.findComponent(TextInput).setValue("nonexistent");
+            await flushPromises();
+
+            // Assert
+            const emptyStates = wrapper.findAllComponents(EmptyState);
+            const noResults = emptyStates.find((e) => e.props("message") === "common.noResults");
+            expect(noResults?.exists()).toBe(true);
+        });
     });
 });

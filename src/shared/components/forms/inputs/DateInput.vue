@@ -21,9 +21,9 @@ const inputStateClass = computed(() => {
         return "brick-disabled";
     }
     if (error) {
-        return "bg-red-200 border-red-500 brick-shadow-error focus:brick-shadow-error-hover";
+        return "bg-brick-red-light border-brick-red brick-shadow-error focus:brick-shadow-error-hover";
     }
-    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-yellow-300";
+    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-brick-yellow";
 });
 </script>
 

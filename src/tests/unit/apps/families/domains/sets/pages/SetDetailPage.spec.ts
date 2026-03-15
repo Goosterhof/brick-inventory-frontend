@@ -6,8 +6,9 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockGetRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
+const {mockGetRequest, mockPatchRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
+    mockPatchRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
     mockCurrentRouteId: {value: 42},
 }));
@@ -17,7 +18,7 @@ vi.mock("@app/services", () => ({
         getRequest: mockGetRequest,
         postRequest: vi.fn(),
         putRequest: vi.fn(),
-        patchRequest: vi.fn(),
+        patchRequest: mockPatchRequest,
         deleteRequest: vi.fn(),
         registerRequestMiddleware: vi.fn(() => vi.fn()),
         registerResponseMiddleware: vi.fn(() => vi.fn()),
@@ -212,6 +213,53 @@ describe("SetDetailPage", () => {
         expect(wrapper.text()).not.toContain("Birthday gift");
     });
 
+    it("should render status buttons with current status highlighted", async () => {
+        // Arrange
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+
+        // Act
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Assert
+        const statusButtons = wrapper.findAll("button").filter((btn) => btn.text() !== "");
+        const sealedButton = statusButtons.find((btn) => btn.text() === "sets.sealed");
+        const builtButton = statusButtons.find((btn) => btn.text() === "sets.built");
+        expect(sealedButton?.exists()).toBe(true);
+        expect(builtButton?.exists()).toBe(true);
+    });
+
+    it("should update status when a status button is clicked", async () => {
+        // Arrange
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockPatchRequest.mockResolvedValue({data: {}});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const sealedButton = wrapper.findAll("button").find((btn) => btn.text() === "sets.sealed");
+        await sealedButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(mockPatchRequest).toHaveBeenCalledWith("/family-sets/42", {status: "sealed"});
+    });
+
+    it("should not call API when clicking the current status", async () => {
+        // Arrange
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act — mockFamilySetResponse has status "built"
+        const builtButton = wrapper.findAll("button").find((btn) => btn.text() === "sets.built");
+        await builtButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(mockPatchRequest).not.toHaveBeenCalled();
+    });
+
     it("should show load parts button initially", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
@@ -398,6 +446,74 @@ describe("SetDetailPage", () => {
         expect(wrapper.text()).not.toContain("Drawer");
     });
 
+    it("should show build check when all parts are available", async () => {
+        // Arrange
+        const storageMapData = [
+            {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 10},
+        ];
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: storageMapData});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("sets.buildCheck");
+        expect(wrapper.text()).toContain("sets.readyToBuild");
+        expect(wrapper.text()).toContain("1/1");
+        expect(wrapper.text()).toContain("10/10");
+    });
+
+    it("should show missing parts when not all available", async () => {
+        // Arrange
+        const storageMapData = [
+            {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 3},
+        ];
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: storageMapData});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("sets.notReadyToBuild");
+        expect(wrapper.text()).toContain("0/1");
+        expect(wrapper.text()).toContain("3/10");
+    });
+
+    it("should not show build check when no storage map data", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: []});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).not.toContain("sets.buildCheck");
+    });
+
     it("should open assign modal when a part is clicked", async () => {
         // Arrange
         mockGetRequest
@@ -412,8 +528,8 @@ describe("SetDetailPage", () => {
         await flushPromises();
 
         // Act
-        const partButtons = wrapper.findAll("button[type='button']");
-        await partButtons[0]?.trigger("click");
+        const partListItems = wrapper.findAllComponents(PartListItem);
+        await partListItems[0]?.trigger("click");
         await flushPromises();
 
         // Assert
@@ -435,8 +551,8 @@ describe("SetDetailPage", () => {
         const loadPartsButton = primaryButtons.find((btn) => btn.text().includes("sets.loadParts"));
         await loadPartsButton?.trigger("click");
         await flushPromises();
-        const partButtons = wrapper.findAll("button[type='button']");
-        await partButtons[0]?.trigger("click");
+        const partListItems = wrapper.findAllComponents(PartListItem);
+        await partListItems[0]?.trigger("click");
         await flushPromises();
 
         // Act

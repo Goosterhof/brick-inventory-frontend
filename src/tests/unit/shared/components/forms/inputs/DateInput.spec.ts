@@ -81,7 +81,7 @@ describe("DateInput", () => {
         const wrapper = shallowMount(DateInput, {props: {label: "Date", modelValue: "", error: "Invalid"}});
 
         // Assert
-        expect(wrapper.find("input").classes()).toContain("bg-red-200");
+        expect(wrapper.find("input").classes()).toContain("bg-brick-red-light");
     });
 
     it("should prioritize disabled state over error state", () => {
@@ -92,6 +92,6 @@ describe("DateInput", () => {
 
         // Assert
         expect(wrapper.find("input").classes()).toContain("brick-disabled");
-        expect(wrapper.find("input").classes()).not.toContain("bg-red-200");
+        expect(wrapper.find("input").classes()).not.toContain("bg-brick-red-light");
     });
 });
