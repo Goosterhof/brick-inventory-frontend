@@ -22,6 +22,7 @@ const partDescription = computed(() => (props.colorName ? `${props.partNum} · $
         <div flex="1" min-w="0">
             <p font="bold" truncate>{{ name }}</p>
             <p text="sm gray-600">{{ partDescription }}</p>
+            <slot />
         </div>
         <span font="bold" shrink="0">{{ quantity }}x</span>
     </div>

@@ -33,6 +33,14 @@ export interface SetWithParts {
     parts: SetPart[];
 }
 
+export interface StorageMapEntry {
+    partId: number;
+    colorId: number | null;
+    storageOptionId: number;
+    storageOptionName: string;
+    quantity: number;
+}
+
 export interface StorageOptionPart {
     id: number;
     storageOptionId: number;

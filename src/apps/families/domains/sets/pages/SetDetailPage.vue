@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {FamilySet} from "@app/types/familySet";
-import type {SetPart, SetWithParts} from "@app/types/part";
+import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
 
 import AssignPartModal from "../modals/AssignPartModal.vue";
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
@@ -8,11 +8,13 @@ import BackButton from "@shared/components/BackButton.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
-import {onMounted, ref} from "vue";
+import {deepCamelKeys} from "string-ts";
+import {computed, onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
 const familySet = ref<FamilySet | null>(null);
 const setWithParts = ref<SetWithParts | null>(null);
+const storageMap = ref<StorageMapEntry[]>([]);
 const loading = ref(true);
 const partsLoading = ref(false);
 const selectedPart = ref<SetPart | null>(null);
@@ -25,10 +27,65 @@ const statusKey: Record<FamilySet["status"], "sets.sealed" | "sets.built" | "set
     incomplete: "sets.incomplete",
 };
 
+const storageByPartKey = computed(() => {
+    const map = new Map<string, StorageMapEntry[]>();
+    for (const entry of storageMap.value) {
+        const key = `${entry.partId}_${entry.colorId}`;
+        const existing = map.get(key) ?? [];
+        existing.push(entry);
+        map.set(key, existing);
+    }
+    return map;
+});
+
+const getStorageLocations = (setPart: SetPart): StorageMapEntry[] => {
+    const key = `${setPart.part.id}_${setPart.color.id}`;
+    return storageByPartKey.value.get(key) ?? [];
+};
+
+const getAvailableQuantity = (setPart: SetPart): number => {
+    const locations = getStorageLocations(setPart);
+    return locations.reduce((sum, loc) => sum + loc.quantity, 0);
+};
+
+const buildStats = computed(() => {
+    if (!setWithParts.value || storageMap.value.length === 0) return null;
+
+    const regularParts = setWithParts.value.parts.filter((p) => !p.isSpare);
+    let partsComplete = 0;
+    let totalNeeded = 0;
+    let totalAvailable = 0;
+
+    for (const part of regularParts) {
+        const available = getAvailableQuantity(part);
+        totalNeeded += part.quantity;
+        totalAvailable += Math.min(available, part.quantity);
+        if (available >= part.quantity) {
+            partsComplete++;
+        }
+    }
+
+    return {
+        uniquePartsTotal: regularParts.length,
+        uniquePartsComplete: partsComplete,
+        totalNeeded,
+        totalAvailable,
+        canBuild: partsComplete === regularParts.length,
+    };
+});
+
 const loadParts = async (setNum: string) => {
     partsLoading.value = true;
     const response = await familyHttpService.getRequest<SetWithParts>(`/sets/${setNum}/parts`);
     setWithParts.value = toCamelCaseTyped(response.data);
+
+    try {
+        const mapResponse = await familyHttpService.getRequest<StorageMapEntry[]>(`/sets/${setNum}/storage-map`);
+        storageMap.value = mapResponse.data.map((item) => deepCamelKeys(item) as StorageMapEntry);
+    } catch {
+        storageMap.value = [];
+    }
+
     partsLoading.value = false;
 };
 
@@ -56,6 +113,14 @@ const openAssignModal = (part: SetPart) => {
 const closeAssignModal = () => {
     showAssignModal.value = false;
     selectedPart.value = null;
+};
+
+const handleAssigned = () => {
+    showAssignModal.value = false;
+    selectedPart.value = null;
+    if (familySet.value) {
+        loadParts(familySet.value.set.setNum);
+    }
 };
 </script>
 
@@ -132,6 +197,33 @@ const closeAssignModal = () => {
             </div>
 
             <div v-else-if="setWithParts" m="t-8">
+                <div
+                    v-if="buildStats"
+                    p="4"
+                    m="b-6"
+                    class="brick-border brick-shadow"
+                    :bg="buildStats.canBuild ? 'green-100' : 'white'"
+                >
+                    <h2 text="xl" font="bold" uppercase tracking="wide" m="b-3">
+                        {{ t("sets.buildCheck").value }}
+                    </h2>
+                    <p font="bold" text="lg" :class="buildStats.canBuild ? 'text-green-700' : 'text-red-600'">
+                        {{ buildStats.canBuild ? t("sets.readyToBuild").value : t("sets.notReadyToBuild").value }}
+                    </p>
+                    <div flex gap="6" m="t-2" text="sm">
+                        <span>
+                            {{ t("sets.uniqueParts").value }}: {{ buildStats.uniquePartsComplete }}/{{
+                                buildStats.uniquePartsTotal
+                            }}
+                        </span>
+                        <span>
+                            {{ t("sets.totalPieces").value }}: {{ buildStats.totalAvailable }}/{{
+                                buildStats.totalNeeded
+                            }}
+                        </span>
+                    </div>
+                </div>
+
                 <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
                     {{ t("sets.parts").value }} ({{ setWithParts.parts.filter((p) => !p.isSpare).length }})
                 </h2>
@@ -156,7 +248,32 @@ const closeAssignModal = () => {
                             :image-url="setPart.part.imageUrl"
                             :color-name="setPart.color.name"
                             :color-rgb="setPart.color.rgb"
-                        />
+                        >
+                            <div v-if="storageMap.length > 0" flex gap="1" m="t-1" flex-wrap="wrap" items="center">
+                                <span
+                                    v-for="loc in getStorageLocations(setPart)"
+                                    :key="loc.storageOptionId"
+                                    text="xs"
+                                    p="x-2 y-0.5"
+                                    bg="yellow-300"
+                                    font="bold"
+                                    class="brick-border"
+                                    border="1"
+                                >
+                                    {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                                </span>
+                                <span
+                                    text="xs"
+                                    p="x-2 y-0.5"
+                                    font="bold"
+                                    class="brick-border"
+                                    border="1"
+                                    :bg="getAvailableQuantity(setPart) >= setPart.quantity ? 'green-200' : 'red-200'"
+                                >
+                                    {{ getAvailableQuantity(setPart) }}/{{ setPart.quantity }}
+                                </span>
+                            </div>
+                        </PartListItem>
                     </button>
                 </div>
 
@@ -185,7 +302,28 @@ const closeAssignModal = () => {
                                 :color-name="setPart.color.name"
                                 :color-rgb="setPart.color.rgb"
                                 spare
-                            />
+                            >
+                                <div
+                                    v-if="getStorageLocations(setPart).length > 0"
+                                    flex
+                                    gap="1"
+                                    m="t-1"
+                                    flex-wrap="wrap"
+                                >
+                                    <span
+                                        v-for="loc in getStorageLocations(setPart)"
+                                        :key="loc.storageOptionId"
+                                        text="xs"
+                                        p="x-2 y-0.5"
+                                        bg="yellow-300"
+                                        font="bold"
+                                        class="brick-border"
+                                        border="1"
+                                    >
+                                        {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                                    </span>
+                                </div>
+                            </PartListItem>
                         </button>
                     </div>
                 </div>
@@ -196,7 +334,7 @@ const closeAssignModal = () => {
                 :open="showAssignModal"
                 :part="selectedPart"
                 @close="closeAssignModal"
-                @assigned="closeAssignModal"
+                @assigned="handleAssigned"
             />
         </template>
     </div>
