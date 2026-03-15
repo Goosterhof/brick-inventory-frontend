@@ -122,6 +122,7 @@ const translations = {
             notReadyToBuild: "Missing parts",
             uniqueParts: "Unique parts",
             totalPieces: "Total pieces",
+            searchPlaceholder: "Search by name or set number...",
             scanSet: "Scan set",
             scannedCode: "Scanned code",
             scanNoResult: "No set found for this barcode.",
@@ -149,6 +150,7 @@ const translations = {
             confirmDelete: "Are you sure you want to delete this storage location?",
             parts: "Parts",
             loadingParts: "Loading parts...",
+            searchPlaceholder: "Search by name...",
             noParts: "No parts in this storage location.",
         },
         parts: {
@@ -295,6 +297,7 @@ const translations = {
             notReadyToBuild: "Onderdelen ontbreken",
             uniqueParts: "Unieke onderdelen",
             totalPieces: "Totaal stuks",
+            searchPlaceholder: "Zoeken op naam of setnummer...",
             scanSet: "Set scannen",
             scannedCode: "Gescande code",
             scanNoResult: "Geen set gevonden voor deze barcode.",
@@ -322,6 +325,7 @@ const translations = {
             confirmDelete: "Weet je zeker dat je deze opslaglocatie wilt verwijderen?",
             parts: "Onderdelen",
             loadingParts: "Onderdelen laden...",
+            searchPlaceholder: "Zoeken op naam...",
             noParts: "Geen onderdelen in deze opslaglocatie.",
         },
         parts: {
