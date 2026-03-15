@@ -14,6 +14,7 @@ const translations = {
             search: "Search",
             noResults: "No results found",
             noImage: "No image",
+            export: "Export CSV",
         },
         auth: {
             logIn: "Log In",
@@ -200,6 +201,7 @@ const translations = {
             search: "Zoeken",
             noResults: "Geen resultaten gevonden",
             noImage: "Geen afbeelding",
+            export: "Exporteer CSV",
         },
         auth: {
             logIn: "Inloggen",
