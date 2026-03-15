@@ -16,74 +16,58 @@ describe("AboutPage", () => {
         expect(wrapper.text()).toContain("about.description");
     });
 
-    it("should render four LegoBrick components", () => {
+    it("should render a 3x5 stud grid with 14 studs", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const bricks = wrapper.findAllComponents({name: "LegoBrick"});
-        expect(bricks).toHaveLength(4);
+        const studs = wrapper.findAll("[rounded='full']");
+        expect(studs).toHaveLength(14);
     });
 
-    it("should render a 2x2 brick", () => {
+    it("should render 15 grid cells including one empty", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const bricks = wrapper.findAllComponents({name: "LegoBrick"});
-        const brick2x2 = bricks.find((b) => b.props("columns") === 2 && b.props("rows") === 2);
-        expect(brick2x2?.exists()).toBe(true);
+        const gridCells = wrapper.findAll("[flex]");
+        const cellsWithStuds = wrapper.findAll("[rounded='full']");
+        expect(gridCells.length).toBeGreaterThanOrEqual(15);
+        expect(cellsWithStuds).toHaveLength(14);
     });
 
-    it("should render a 1x1 brick", () => {
+    it("should use four different brick colors", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const bricks = wrapper.findAllComponents({name: "LegoBrick"});
-        const brick1x1 = bricks.find((b) => b.props("columns") === 1 && b.props("rows") === 1);
-        expect(brick1x1?.exists()).toBe(true);
-    });
-
-    it("should render a 1x3 brick", () => {
-        // Arrange
-        const wrapper = shallowMount(AboutPage);
-
-        // Assert
-        const bricks = wrapper.findAllComponents({name: "LegoBrick"});
-        const brick1x3 = bricks.find((b) => b.props("columns") === 1 && b.props("rows") === 3);
-        expect(brick1x3?.exists()).toBe(true);
-    });
-
-    it("should render a 2x3 brick", () => {
-        // Arrange
-        const wrapper = shallowMount(AboutPage);
-
-        // Assert
-        const bricks = wrapper.findAllComponents({name: "LegoBrick"});
-        const brick2x3 = bricks.find((b) => b.props("columns") === 2 && b.props("rows") === 3);
-        expect(brick2x3?.exists()).toBe(true);
-    });
-
-    it("should disable shadow on all bricks", () => {
-        // Arrange
-        const wrapper = shallowMount(AboutPage);
-
-        // Assert
-        const bricks = wrapper.findAllComponents({name: "LegoBrick"});
-        for (const brick of bricks) {
-            expect(brick.props("shadow")).toBe(false);
+        const studs = wrapper.findAll("[rounded='full']");
+        const colors = new Set<string>();
+        for (const stud of studs) {
+            const style = stud.attributes("style") ?? "";
+            colors.add(style);
         }
+        expect(colors.size).toBe(4);
     });
 
-    it("should use different colors for each brick", () => {
+    it("should have brick brutalist border and shadow on container", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const bricks = wrapper.findAllComponents({name: "LegoBrick"});
-        const colors = bricks.map((b) => String(b.props("color") ?? ""));
-        const uniqueColors = new Set(colors.filter(Boolean));
-        expect(uniqueColors.size).toBeGreaterThanOrEqual(3);
+        const container = wrapper.find("[inline-block]");
+        expect(container.attributes("border")).toBe("3 black");
+        expect(container.classes()).toContain("shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]");
+    });
+
+    it("should have internal borders between different brick regions", () => {
+        // Arrange
+        const wrapper = shallowMount(AboutPage);
+
+        // Assert
+        const cellsWithRightBorder = wrapper.findAll(".border-r-3");
+        const cellsWithBottomBorder = wrapper.findAll(".border-b-3");
+        expect(cellsWithRightBorder.length).toBeGreaterThan(0);
+        expect(cellsWithBottomBorder.length).toBeGreaterThan(0);
     });
 });
