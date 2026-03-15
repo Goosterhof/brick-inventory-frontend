@@ -140,7 +140,7 @@ describe("Architecture", () => {
             ).toEqual([]);
         });
 
-        it("should use PascalCase names ending with View for domain pages", () => {
+        it("should use PascalCase names ending with Page for domain pages", () => {
             const appNames = getAppNames();
             const violations: string[] = [];
 
@@ -154,9 +154,9 @@ describe("Architecture", () => {
                     if (!isInPagesDir) continue;
 
                     const name = basename(file, ".vue");
-                    const isValidView = /^[A-Z][a-zA-Z]+View$/.test(name);
+                    const isValidPage = /^[A-Z][a-zA-Z]+Page$/.test(name);
 
-                    if (!isValidView) {
+                    if (!isValidPage) {
                         violations.push(`${appName}/${basename(file)}`);
                     }
                 }
@@ -164,7 +164,7 @@ describe("Architecture", () => {
 
             expect(
                 violations,
-                "View components must be PascalCase ending with View (e.g., HomeView, LoginView)",
+                "Page components must be PascalCase ending with Page (e.g., HomePage, LoginPage)",
             ).toEqual([]);
         });
     });
