@@ -1,4 +1,4 @@
-import RegisterView from "@app/domains/auth/pages/RegisterView.vue";
+import RegisterPage from "@app/domains/auth/pages/RegisterPage.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
@@ -34,14 +34,14 @@ vi.mock("@app/services", () => ({
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-describe("RegisterView", () => {
+describe("RegisterPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     it("should render all form fields", () => {
         // Arrange & Act
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -55,7 +55,7 @@ describe("RegisterView", () => {
 
     it("should render email field with email type", () => {
         // Arrange & Act
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -64,7 +64,7 @@ describe("RegisterView", () => {
 
     it("should render password fields with password type", () => {
         // Arrange & Act
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -74,7 +74,7 @@ describe("RegisterView", () => {
 
     it("should have all fields required by default", () => {
         // Arrange & Act
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
@@ -85,7 +85,7 @@ describe("RegisterView", () => {
 
     it("should render submit button", () => {
         // Arrange & Act
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         // Assert
         const button = wrapper.findComponent(PrimaryButton);
@@ -96,7 +96,7 @@ describe("RegisterView", () => {
 
     it("should call authService.register on form submit", async () => {
         // Arrange
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         const inputs = wrapper.findAllComponents(TextInput);
         inputs[0]?.vm.$emit("update:modelValue", "Smith");
@@ -123,7 +123,7 @@ describe("RegisterView", () => {
     it("should navigate to dashboard on successful registration", async () => {
         // Arrange
         mockRegister.mockResolvedValue(undefined);
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         // Act
         await wrapper.find("form").trigger("submit");
@@ -135,7 +135,7 @@ describe("RegisterView", () => {
 
     it("should render page title", () => {
         // Arrange & Act
-        const wrapper = shallowMount(RegisterView);
+        const wrapper = shallowMount(RegisterPage);
 
         // Assert
         expect(wrapper.find("h1").text()).toBe("auth.createAccount");

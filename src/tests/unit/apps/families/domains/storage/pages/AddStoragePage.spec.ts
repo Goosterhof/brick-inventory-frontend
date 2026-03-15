@@ -1,4 +1,4 @@
-import AddStorageView from "@app/domains/storage/pages/AddStorageView.vue";
+import AddStoragePage from "@app/domains/storage/pages/AddStoragePage.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -37,14 +37,14 @@ vi.mock("@app/services", () => ({
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-describe("AddStorageView", () => {
+describe("AddStoragePage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     it("should render page title", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         // Assert
         expect(wrapper.find("h1").text()).toBe("storage.addStorage");
@@ -52,7 +52,7 @@ describe("AddStorageView", () => {
 
     it("should render form fields", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         // Assert
         const textInputs = wrapper.findAllComponents(TextInput);
@@ -69,7 +69,7 @@ describe("AddStorageView", () => {
 
     it("should render submit button", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         // Assert
         const button = wrapper.findComponent(PrimaryButton);
@@ -83,7 +83,7 @@ describe("AddStorageView", () => {
         mockPostRequest.mockResolvedValue({
             data: {id: 1, name: "Lade A", description: null, parent_id: null, row: null, column: null, child_ids: []},
         });
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         const textInput = wrapper.findComponent(TextInput);
         textInput.vm.$emit("update:modelValue", "Lade A");
@@ -108,7 +108,7 @@ describe("AddStorageView", () => {
         mockPostRequest.mockResolvedValue({
             data: {id: 7, name: "Lade A", description: null, parent_id: null, row: null, column: null, child_ids: []},
         });
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         // Act
         await wrapper.find("form").trigger("submit");
@@ -123,7 +123,7 @@ describe("AddStorageView", () => {
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
         mockPostRequest.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         // Act
         await wrapper.find("form").trigger("submit");
@@ -138,7 +138,7 @@ describe("AddStorageView", () => {
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
         mockPostRequest.mockRejectedValue(axiosError);
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         // Act
         const errorHandler = vi.fn();
@@ -154,7 +154,7 @@ describe("AddStorageView", () => {
 
     it("should have name required by default", () => {
         // Arrange & Act
-        const wrapper = shallowMount(AddStorageView);
+        const wrapper = shallowMount(AddStoragePage);
 
         // Assert
         const textInput = wrapper.findComponent(TextInput);
