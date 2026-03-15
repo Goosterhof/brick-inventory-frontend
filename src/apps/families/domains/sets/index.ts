@@ -20,6 +20,12 @@ export const routes = [
         meta: {authOnly: true, title: "pageTitle.scanSet"},
     },
     {
+        path: "/sets/identify",
+        name: "sets-identify",
+        component: () => import("./pages/IdentifyBrickPage.vue"),
+        meta: {authOnly: true, title: "pageTitle.identifyBrick"},
+    },
+    {
         path: "/sets/:id",
         name: "sets-detail",
         component: () => import("./pages/SetDetailPage.vue"),
