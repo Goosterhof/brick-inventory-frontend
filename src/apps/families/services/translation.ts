@@ -63,7 +63,22 @@ const translations = {
             setsByStatus: "Sets by status",
             quickActions: "Quick links",
         },
-        about: {title: "About", description: "This is the about page."},
+        about: {
+            title: "About",
+            tagline: "Every brick has a place. We help you find it.",
+            description:
+                "Brick Inventory is your personal LEGO collection manager. Track your sets, organize your storage, and never lose a brick again.",
+            featureTrack: "Track Sets",
+            featureTrackDescription:
+                "Keep a complete inventory of every set you own, from sealed boxes to work-in-progress builds.",
+            featureOrganize: "Organize Storage",
+            featureOrganizeDescription:
+                "Map your storage locations down to the row and column. Every bin, drawer, and shelf — accounted for.",
+            featureFind: "Find Parts",
+            featureFindDescription:
+                "Know exactly where every piece lives. No more digging through piles hoping for the right brick.",
+            builtWith: "Built with bricks, for brick lovers.",
+        },
         sets: {
             title: "My Sets",
             addSet: "Add set",
@@ -182,7 +197,22 @@ const translations = {
             setsByStatus: "Sets per status",
             quickActions: "Snel naar",
         },
-        about: {title: "Over", description: "Dit is de over pagina."},
+        about: {
+            title: "Over",
+            tagline: "Elke steen heeft een plek. Wij helpen je die te vinden.",
+            description:
+                "Brick Inventory is jouw persoonlijke LEGO-collectiebeheerder. Houd je sets bij, organiseer je opslag en raak nooit meer een steen kwijt.",
+            featureTrack: "Sets Bijhouden",
+            featureTrackDescription:
+                "Houd een compleet overzicht bij van elke set die je bezit, van verzegelde dozen tot bouwprojecten.",
+            featureOrganize: "Opslag Organiseren",
+            featureOrganizeDescription:
+                "Breng je opslaglocaties in kaart tot op rij en kolom. Elke bak, lade en plank — verantwoord.",
+            featureFind: "Onderdelen Vinden",
+            featureFindDescription:
+                "Weet precies waar elk stuk zich bevindt. Nooit meer graven door stapels in de hoop op de juiste steen.",
+            builtWith: "Gebouwd met stenen, voor steenliefhebbers.",
+        },
         sets: {
             title: "Mijn Sets",
             addSet: "Set toevoegen",
