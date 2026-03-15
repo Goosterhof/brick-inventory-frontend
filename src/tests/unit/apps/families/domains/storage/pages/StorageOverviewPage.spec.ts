@@ -44,7 +44,17 @@ const mockStorageOption = {
     parent_id: null,
     row: 1,
     column: 2,
-    child_ids: [2, 3],
+    child_ids: [2],
+};
+
+const mockChildOption = {
+    id: 2,
+    name: "Lade A - Vak 1",
+    description: null,
+    parent_id: 1,
+    row: null,
+    column: null,
+    child_ids: [],
 };
 
 describe("StorageOverviewPage", () => {
@@ -179,6 +189,36 @@ describe("StorageOverviewPage", () => {
 
         // Assert
         expect(wrapper.text()).not.toContain("Linkerla op plank 1");
+    });
+
+    describe("tree view", () => {
+        it("should show children indented under parent", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockChildOption]});
+
+            // Act
+            const wrapper = shallowMount(StorageOverviewPage);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("Lade A");
+            expect(wrapper.text()).toContain("Lade A - Vak 1");
+            const listItems = wrapper.findAllComponents(ListItemButton);
+            expect(listItems).toHaveLength(2);
+        });
+
+        it("should not show children at top level", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockChildOption]});
+
+            // Act
+            const wrapper = shallowMount(StorageOverviewPage);
+            await flushPromises();
+
+            // Assert — only 1 top-level group, child is nested
+            const topLevelDivs = wrapper.findAll("[m='l-8']");
+            expect(topLevelDivs).toHaveLength(1);
+        });
     });
 
     describe("search", () => {
