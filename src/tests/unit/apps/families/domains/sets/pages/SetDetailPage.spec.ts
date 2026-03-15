@@ -398,6 +398,74 @@ describe("SetDetailPage", () => {
         expect(wrapper.text()).not.toContain("Drawer");
     });
 
+    it("should show build check when all parts are available", async () => {
+        // Arrange
+        const storageMapData = [
+            {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 10},
+        ];
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: storageMapData});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("sets.buildCheck");
+        expect(wrapper.text()).toContain("sets.readyToBuild");
+        expect(wrapper.text()).toContain("1/1");
+        expect(wrapper.text()).toContain("10/10");
+    });
+
+    it("should show missing parts when not all available", async () => {
+        // Arrange
+        const storageMapData = [
+            {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 3},
+        ];
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: storageMapData});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("sets.notReadyToBuild");
+        expect(wrapper.text()).toContain("0/1");
+        expect(wrapper.text()).toContain("3/10");
+    });
+
+    it("should not show build check when no storage map data", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: []});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).not.toContain("sets.buildCheck");
+    });
+
     it("should open assign modal when a part is clicked", async () => {
         // Arrange
         mockGetRequest
