@@ -29,11 +29,17 @@ const getCellShadow = (row: number, col: number): string => {
     const color = getColor(row, col);
     if (!color) return "none";
 
+    const above = getColor(row - 1, col);
+    const below = getColor(row + 1, col);
+    const left = getColor(row, col - 1);
+    const right = getColor(row, col + 1);
+
     const shadows: string[] = [];
-    if (getColor(row - 1, col) !== color) shadows.push("inset 0 3px 0 0 #000");
-    if (getColor(row + 1, col) !== color) shadows.push("inset 0 -3px 0 0 #000");
-    if (getColor(row, col - 1) !== color) shadows.push("inset 3px 0 0 0 #000");
-    if (getColor(row, col + 1) !== color) shadows.push("inset -3px 0 0 0 #000");
+    // Outer edges: always draw. Internal brick boundaries: only draw on the top/left side to avoid doubling.
+    if (above !== color && !above) shadows.push("inset 0 3px 0 0 #000");
+    if (below !== color) shadows.push("inset 0 -3px 0 0 #000");
+    if (left !== color && !left) shadows.push("inset 3px 0 0 0 #000");
+    if (right !== color) shadows.push("inset -3px 0 0 0 #000");
 
     return shadows.join(", ") || "none";
 };
