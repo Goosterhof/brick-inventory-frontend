@@ -47,6 +47,7 @@ const translations = {
             settings: "Settings",
             sets: "My Sets",
             storage: "Storage",
+            parts: "Parts",
         },
         pageTitle: {
             home: "Home",
@@ -62,6 +63,7 @@ const translations = {
             addStorage: "Add Storage",
             storageDetail: "Storage Detail",
             editStorage: "Edit Storage",
+            parts: "Parts",
             settings: "Settings",
         },
         home: {
@@ -149,6 +151,10 @@ const translations = {
             loadingParts: "Loading parts...",
             noParts: "No parts in this storage location.",
         },
+        parts: {
+            title: "Parts Inventory",
+            noParts: "No parts stored yet. Assign parts to storage locations from a set's detail page.",
+        },
         settings: {
             title: "Settings",
             rebrickableTitle: "Rebrickable API",
@@ -215,6 +221,7 @@ const translations = {
             settings: "Instellingen",
             sets: "Mijn Sets",
             storage: "Opslag",
+            parts: "Onderdelen",
         },
         pageTitle: {
             home: "Home",
@@ -230,6 +237,7 @@ const translations = {
             addStorage: "Opslag Toevoegen",
             storageDetail: "Opslag Detail",
             editStorage: "Opslag Bewerken",
+            parts: "Onderdelen",
             settings: "Instellingen",
         },
         home: {
@@ -315,6 +323,11 @@ const translations = {
             parts: "Onderdelen",
             loadingParts: "Onderdelen laden...",
             noParts: "Geen onderdelen in deze opslaglocatie.",
+        },
+        parts: {
+            title: "Onderdelenvoorraad",
+            noParts:
+                "Nog geen onderdelen opgeslagen. Wijs onderdelen toe aan opslaglocaties vanuit een set detailpagina.",
         },
         settings: {
             title: "Instellingen",
