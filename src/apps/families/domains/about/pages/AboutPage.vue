@@ -5,16 +5,31 @@ import LegoBrick from "../components/LegoBrick.vue";
 
 const {t} = familyTranslationService;
 
-const wallColors = [
-    ["#DC2626", "#2563EB", "#F59E0B", "#16A34A", "#DC2626", "#2563EB"],
-    ["#F59E0B", "#16A34A", "#DC2626", "#2563EB", "#F59E0B", "#16A34A"],
-    ["#2563EB", "#DC2626", "#16A34A", "#F59E0B", "#2563EB", "#DC2626"],
+const wallRows = [
+    [
+        {color: "#DC2626", cols: 4, rows: 2},
+        {color: "#2563EB", cols: 2, rows: 2},
+        {color: "#F59E0B", cols: 4, rows: 2},
+        {color: "#16A34A", cols: 2, rows: 2},
+    ],
+    [
+        {color: "#16A34A", cols: 2, rows: 2},
+        {color: "#F59E0B", cols: 4, rows: 2},
+        {color: "#DC2626", cols: 2, rows: 2},
+        {color: "#2563EB", cols: 4, rows: 2},
+    ],
+    [
+        {color: "#2563EB", cols: 4, rows: 2},
+        {color: "#DC2626", cols: 2, rows: 2},
+        {color: "#16A34A", cols: 4, rows: 2},
+        {color: "#F59E0B", cols: 2, rows: 2},
+    ],
 ];
 
 const features = [
-    {key: "Track" as const, color: "#DC2626"},
-    {key: "Organize" as const, color: "#2563EB"},
-    {key: "Find" as const, color: "#16A34A"},
+    {key: "Track" as const, color: "#DC2626", cols: 2, rows: 1},
+    {key: "Organize" as const, color: "#2563EB", cols: 2, rows: 1},
+    {key: "Find" as const, color: "#16A34A", cols: 2, rows: 1},
 ];
 </script>
 
@@ -26,14 +41,14 @@ const features = [
         </section>
 
         <section flex="~ col" items="center" gap="2" overflow="hidden">
-            <div
-                v-for="(row, rowIndex) in wallColors"
-                :key="rowIndex"
-                flex
-                gap="2"
-                :class="{'ml-12': rowIndex % 2 === 1}"
-            >
-                <LegoBrick v-for="(color, colIndex) in row" :key="colIndex" :color="color" />
+            <div v-for="(row, rowIndex) in wallRows" :key="rowIndex" flex gap="2">
+                <LegoBrick
+                    v-for="(brick, colIndex) in row"
+                    :key="colIndex"
+                    :color="brick.color"
+                    :cols="brick.cols"
+                    :rows="brick.rows"
+                />
             </div>
         </section>
 
@@ -52,7 +67,7 @@ const features = [
                 bg="white"
                 class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
             >
-                <LegoBrick :color="feature.color" />
+                <LegoBrick :color="feature.color" :cols="feature.cols" :rows="feature.rows" />
                 <h2 text="xl" font="bold" uppercase tracking="wide">
                     {{ t(`about.feature${feature.key}`).value }}
                 </h2>
@@ -71,11 +86,11 @@ const features = [
             bg="white"
             class="shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
         >
-            <div flex gap="2">
-                <LegoBrick color="#DC2626" />
-                <LegoBrick color="#F59E0B" />
-                <LegoBrick color="#2563EB" />
-                <LegoBrick color="#16A34A" />
+            <div flex gap="2" items="end">
+                <LegoBrick color="#DC2626" :cols="1" :rows="1" />
+                <LegoBrick color="#F59E0B" :cols="2" :rows="2" />
+                <LegoBrick color="#2563EB" :cols="2" :rows="2" />
+                <LegoBrick color="#16A34A" :cols="1" :rows="1" />
             </div>
             <p text="lg" font="bold" uppercase tracking="wide">{{ t("about.builtWith").value }}</p>
         </section>
