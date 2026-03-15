@@ -27,7 +27,7 @@ describe("LegoStuds", () => {
         expect(wrapper.find("div").attributes("aria-hidden")).toBe("true");
     });
 
-    it("should render each stud as a circle", () => {
+    it("should render each stud as a circle with depth", () => {
         // Arrange
         const wrapper = shallowMount(LegoStuds);
 
@@ -35,6 +35,7 @@ describe("LegoStuds", () => {
         const studs = wrapper.findAll("span");
         for (const stud of studs) {
             expect(stud.element.style.borderRadius).toBe("50%");
+            expect(stud.element.style.boxShadow).toContain("inset");
         }
     });
 });

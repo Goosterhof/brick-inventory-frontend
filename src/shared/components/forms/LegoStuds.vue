@@ -3,7 +3,7 @@ const {count = 3} = defineProps<{count?: number}>();
 </script>
 
 <template>
-    <div flex="~" gap="1.5" aria-hidden="true">
+    <div flex="~" gap="2" aria-hidden="true">
         <span
             v-for="i in count"
             :key="i"
@@ -12,7 +12,7 @@ const {count = 3} = defineProps<{count?: number}>();
             border="3 black solid"
             bg="white"
             inline-block
-            style="border-radius: 50%"
+            style="border-radius: 50%; box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.15)"
         />
     </div>
 </template>
