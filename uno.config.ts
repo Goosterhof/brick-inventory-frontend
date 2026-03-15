@@ -15,5 +15,6 @@ export default defineConfig({
         "brick-transition":
             "transition-property-[box-shadow,background-color] transition-duration-150 transition-ease-[cubic-bezier(0.2,0,0,1)]",
     },
+    theme: {fontFamily: {heading: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"]}},
     rules: [],
 });
