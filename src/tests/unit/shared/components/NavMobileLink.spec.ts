@@ -39,7 +39,7 @@ describe("NavMobileLink", () => {
         const link = wrapper.find("a");
 
         // Assert
-        expect(link.attributes("bg")).toBe("white hover:yellow-300 focus:yellow-300");
+        expect(link.attributes("bg")).toBe("white hover:brick-yellow focus:brick-yellow");
     });
 
     it("should show yellow background when active", () => {
@@ -48,7 +48,7 @@ describe("NavMobileLink", () => {
         const link = wrapper.find("a");
 
         // Assert
-        expect(link.attributes("bg")).toBe("yellow-300");
+        expect(link.attributes("bg")).toBe("brick-yellow");
     });
 
     it("should have bold uppercase text", () => {

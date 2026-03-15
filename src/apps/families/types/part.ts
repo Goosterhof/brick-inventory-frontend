@@ -41,6 +41,31 @@ export interface StorageMapEntry {
     quantity: number;
 }
 
+export interface FamilyPartEntry {
+    partId: number;
+    partNum: string;
+    partName: string;
+    partImageUrl: string | null;
+    colorId: number | null;
+    colorName: string | null;
+    colorRgb: string | null;
+    storageOptionId: number;
+    storageOptionName: string;
+    quantity: number;
+}
+
+export interface GroupedFamilyPart {
+    partId: number;
+    partNum: string;
+    partName: string;
+    partImageUrl: string | null;
+    colorId: number | null;
+    colorName: string | null;
+    colorRgb: string | null;
+    totalQuantity: number;
+    locations: {storageOptionId: number; storageOptionName: string; quantity: number}[];
+}
+
 export interface StorageOptionPart {
     id: number;
     storageOptionId: number;

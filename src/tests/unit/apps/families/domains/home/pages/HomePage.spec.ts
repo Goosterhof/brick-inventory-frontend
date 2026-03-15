@@ -179,9 +179,13 @@ describe("HomePage", () => {
 
             // Assert
             const navLinks = wrapper.findAllComponents(NavLink);
-            expect(navLinks.length).toBe(2);
+            expect(navLinks.length).toBe(6);
             expect(wrapper.text()).toContain("navigation.sets");
             expect(wrapper.text()).toContain("navigation.storage");
+            expect(wrapper.text()).toContain("navigation.parts");
+            expect(wrapper.text()).toContain("home.actionScan");
+            expect(wrapper.text()).toContain("home.actionIdentify");
+            expect(wrapper.text()).toContain("home.actionImport");
         });
 
         it("should navigate to sets when quick action is clicked", async () => {

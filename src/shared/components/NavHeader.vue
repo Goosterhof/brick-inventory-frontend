@@ -28,7 +28,7 @@ const closeMenu = () => {
                 flex
                 items="center"
                 justify="center"
-                bg="white hover:yellow-300 focus:yellow-300"
+                bg="white hover:brick-yellow focus:brick-yellow"
                 :class="[
                     'brick-border brick-transition',
                     menuOpen

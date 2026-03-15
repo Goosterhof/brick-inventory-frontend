@@ -9,7 +9,7 @@ defineEmits<{click: []}>();
         gap="4"
         items="center"
         p="4"
-        bg="white hover:yellow-300 focus:yellow-300"
+        bg="white hover:brick-yellow focus:brick-yellow"
         cursor="pointer"
         text="left"
         outline="none"

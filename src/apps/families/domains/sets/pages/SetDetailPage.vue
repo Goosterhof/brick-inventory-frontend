@@ -43,6 +43,37 @@ const getStorageLocations = (setPart: SetPart): StorageMapEntry[] => {
     return storageByPartKey.value.get(key) ?? [];
 };
 
+const getAvailableQuantity = (setPart: SetPart): number => {
+    const locations = getStorageLocations(setPart);
+    return locations.reduce((sum, loc) => sum + loc.quantity, 0);
+};
+
+const buildStats = computed(() => {
+    if (!setWithParts.value || storageMap.value.length === 0) return null;
+
+    const regularParts = setWithParts.value.parts.filter((p) => !p.isSpare);
+    let partsComplete = 0;
+    let totalNeeded = 0;
+    let totalAvailable = 0;
+
+    for (const part of regularParts) {
+        const available = getAvailableQuantity(part);
+        totalNeeded += part.quantity;
+        totalAvailable += Math.min(available, part.quantity);
+        if (available >= part.quantity) {
+            partsComplete++;
+        }
+    }
+
+    return {
+        uniquePartsTotal: regularParts.length,
+        uniquePartsComplete: partsComplete,
+        totalNeeded,
+        totalAvailable,
+        canBuild: partsComplete === regularParts.length,
+    };
+});
+
 const loadParts = async (setNum: string) => {
     partsLoading.value = true;
     const response = await familyHttpService.getRequest<SetWithParts>(`/sets/${setNum}/parts`);
@@ -64,6 +95,21 @@ onMounted(async () => {
     familySet.value = toCamelCaseTyped(response.data);
     loading.value = false;
 });
+
+const allStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", "incomplete"];
+const statusUpdating = ref(false);
+
+const updateStatus = async (newStatus: FamilySet["status"]) => {
+    if (!familySet.value || familySet.value.status === newStatus) return;
+
+    statusUpdating.value = true;
+    try {
+        await familyHttpService.patchRequest(`/family-sets/${familySet.value.id}`, {status: newStatus});
+        familySet.value.status = newStatus;
+    } finally {
+        statusUpdating.value = false;
+    }
+};
 
 const goToEdit = async () => {
     if (!familySet.value) return;
@@ -138,9 +184,28 @@ const handleAssigned = () => {
                             <span font="bold">{{ t("sets.quantity").value }}:</span>
                             <span>{{ familySet.quantity }}x</span>
                         </div>
-                        <div flex gap="2">
+                        <div flex="~ col" gap="2">
                             <span font="bold">{{ t("sets.status").value }}:</span>
-                            <span>{{ t(statusKey[familySet.status]).value }}</span>
+                            <div flex gap="2" flex-wrap="wrap">
+                                <button
+                                    v-for="status in allStatuses"
+                                    :key="status"
+                                    type="button"
+                                    text="xs"
+                                    p="x-3 y-1"
+                                    font="bold"
+                                    uppercase
+                                    tracking="wide"
+                                    cursor="pointer"
+                                    outline="none"
+                                    class="brick-border brick-transition"
+                                    :bg="familySet.status === status ? 'yellow-300' : 'white hover:yellow-100'"
+                                    :disabled="statusUpdating"
+                                    @click="updateStatus(status)"
+                                >
+                                    {{ t(statusKey[status]).value }}
+                                </button>
+                            </div>
                         </div>
                         <div v-if="familySet.purchaseDate" flex gap="2">
                             <span font="bold">{{ t("sets.purchaseDate").value }}:</span>
@@ -166,6 +231,37 @@ const handleAssigned = () => {
             </div>
 
             <div v-else-if="setWithParts" m="t-8">
+                <div
+                    v-if="buildStats"
+                    p="4"
+                    m="b-6"
+                    class="brick-border brick-shadow"
+                    :bg="buildStats.canBuild ? 'baseplate-green/15' : 'white'"
+                >
+                    <h2 text="xl" font="bold" uppercase tracking="wide" m="b-3">
+                        {{ t("sets.buildCheck").value }}
+                    </h2>
+                    <p
+                        font="bold"
+                        text="lg"
+                        :class="buildStats.canBuild ? 'text-baseplate-green' : 'text-brick-red-dark'"
+                    >
+                        {{ buildStats.canBuild ? t("sets.readyToBuild").value : t("sets.notReadyToBuild").value }}
+                    </p>
+                    <div flex gap="6" m="t-2" text="sm">
+                        <span>
+                            {{ t("sets.uniqueParts").value }}: {{ buildStats.uniquePartsComplete }}/{{
+                                buildStats.uniquePartsTotal
+                            }}
+                        </span>
+                        <span>
+                            {{ t("sets.totalPieces").value }}: {{ buildStats.totalAvailable }}/{{
+                                buildStats.totalNeeded
+                            }}
+                        </span>
+                    </div>
+                </div>
+
                 <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
                     {{ t("sets.parts").value }} ({{ setWithParts.parts.filter((p) => !p.isSpare).length }})
                 </h2>
@@ -191,18 +287,32 @@ const handleAssigned = () => {
                             :color-name="setPart.color.name"
                             :color-rgb="setPart.color.rgb"
                         >
-                            <div v-if="getStorageLocations(setPart).length > 0" flex gap="1" m="t-1" flex-wrap="wrap">
+                            <div v-if="storageMap.length > 0" flex gap="1" m="t-1" flex-wrap="wrap" items="center">
                                 <span
                                     v-for="loc in getStorageLocations(setPart)"
                                     :key="loc.storageOptionId"
                                     text="xs"
                                     p="x-2 y-0.5"
-                                    bg="yellow-300"
+                                    bg="brick-yellow"
                                     font="bold"
                                     class="brick-border"
                                     border="1"
                                 >
                                     {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                                </span>
+                                <span
+                                    text="xs"
+                                    p="x-2 y-0.5"
+                                    font="bold"
+                                    class="brick-border"
+                                    border="1"
+                                    :bg="
+                                        getAvailableQuantity(setPart) >= setPart.quantity
+                                            ? 'baseplate-green/25'
+                                            : 'brick-red-light'
+                                    "
+                                >
+                                    {{ getAvailableQuantity(setPart) }}/{{ setPart.quantity }}
                                 </span>
                             </div>
                         </PartListItem>
@@ -247,7 +357,7 @@ const handleAssigned = () => {
                                         :key="loc.storageOptionId"
                                         text="xs"
                                         p="x-2 y-0.5"
-                                        bg="yellow-300"
+                                        bg="brick-yellow"
                                         font="bold"
                                         class="brick-border"
                                         border="1"
