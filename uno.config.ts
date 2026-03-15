@@ -14,6 +14,9 @@ export default defineConfig({
         "brick-disabled": "bg-gray-200 border-gray-300 text-gray-600 cursor-not-allowed shadow-none",
         "brick-transition":
             "transition-property-[box-shadow,background-color] transition-duration-150 transition-ease-[cubic-bezier(0.2,0,0,1)]",
+        "brick-stud-grid": "bg-[radial-gradient(circle,rgba(0,0,0,0.06)_22%,transparent_22%)] bg-[size:24px_24px]",
+        "brick-stud-grid-hover":
+            "hover:bg-[radial-gradient(circle,rgba(0,0,0,0.08)_22%,transparent_22%)] hover:bg-[size:24px_24px]",
     },
     theme: {fontFamily: {heading: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"]}},
     rules: [],
