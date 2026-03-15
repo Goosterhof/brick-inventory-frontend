@@ -372,34 +372,34 @@ When rendering Lego bricks in the UI (e.g., decorative elements, visual indicato
 
 ### Real Dimensions
 
-| Part          | Real Size | Ratio to Unit |
-| ------------- | --------- | ------------- |
-| **1 unit**    | 8mm       | 1.0           |
-| **Stud diameter** | 4.8mm | 0.6           |
-| **Stud pitch** (center-to-center) | 8mm | 1.0 |
-| **Wall thickness** (brick edge to stud edge) | 1.6mm | 0.2 |
-| **Plate height** | 3.2mm  | 0.4           |
-| **Brick height** | 9.6mm  | 1.2           |
+| Part                                         | Real Size | Ratio to Unit |
+| -------------------------------------------- | --------- | ------------- |
+| **1 unit**                                   | 8mm       | 1.0           |
+| **Stud diameter**                            | 4.8mm     | 0.6           |
+| **Stud pitch** (center-to-center)            | 8mm       | 1.0           |
+| **Wall thickness** (brick edge to stud edge) | 1.6mm     | 0.2           |
+| **Plate height**                             | 3.2mm     | 0.4           |
+| **Brick height**                             | 9.6mm     | 1.2           |
 
 ### Recommended Scale: 1mm = 5px
 
-| Part               | Real   | Pixels | UnoCSS              |
-| ------------------ | ------ | ------ | -------------------- |
-| **1 unit**         | 8mm    | 40px   | `w-10 h-10`         |
-| **Stud diameter**  | 4.8mm  | 24px   | `w-6 h-6`           |
-| **Stud margin**    | 1.6mm  | 8px    | `m-2`               |
-| **Wall padding**   | 1.6mm  | 8px    | `p-2`               |
-| **Plate height**   | 3.2mm  | 16px   | `h-4`               |
-| **Brick height**   | 9.6mm  | 48px   | `h-12`              |
+| Part              | Real  | Pixels | UnoCSS      |
+| ----------------- | ----- | ------ | ----------- |
+| **1 unit**        | 8mm   | 40px   | `w-10 h-10` |
+| **Stud diameter** | 4.8mm | 24px   | `w-6 h-6`   |
+| **Stud margin**   | 1.6mm | 8px    | `m-2`       |
+| **Wall padding**  | 1.6mm | 8px    | `p-2`       |
+| **Plate height**  | 3.2mm | 16px   | `h-4`       |
+| **Brick height**  | 9.6mm | 48px   | `h-12`      |
 
 ### Brick Sizes (top-view, at 1mm = 5px)
 
-| Brick  | Grid         | Outer Size (approx) |
-| ------ | ------------ | -------------------- |
-| 1×1    | 1 col × 1 row | 56px × 56px        |
-| 2×1    | 2 col × 1 row | 96px × 56px        |
-| 4×2    | 4 col × 2 row | 176px × 96px       |
-| 2×2    | 2 col × 2 row | 96px × 96px        |
+| Brick | Grid          | Outer Size (approx) |
+| ----- | ------------- | ------------------- |
+| 1×1   | 1 col × 1 row | 56px × 56px         |
+| 2×1   | 2 col × 1 row | 96px × 56px         |
+| 4×2   | 4 col × 2 row | 176px × 96px        |
+| 2×2   | 2 col × 2 row | 96px × 96px         |
 
 ### Rules
 
