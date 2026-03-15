@@ -105,7 +105,7 @@ Borders are the most defining feature of Brick Brutalism. They are the studs on 
 ### Rules
 
 - **Every interactive element gets a border.** Buttons, inputs, links, cards — if you can click it or type in it, it has a 3px black border.
-- **Never use border-radius.** Sharp corners are the brand. Rounding an edge is like filing down a Lego stud.
+- **Never use border-radius.** Sharp corners are the brand. Rounding an edge is like filing down a Lego stud. **Sole exception**: Lego stud elements use `rounded-full` — studs are cylinders in real life (see Lego Brick Dimensions below).
 - **Never use hairline borders** (1px). If a border exists, it must be 3px. Thin borders look indecisive.
 
 ## Shadows
@@ -366,13 +366,55 @@ Brick Brutalism is inherently accessible by design — high contrast and bold vi
 - **Keyboard navigation**: All interactions work with keyboard. Tab order follows visual order.
 - **ARIA**: Use semantic HTML first. Add ARIA only when semantics alone aren't enough.
 
+## Lego Brick Dimensions — _Playable_
+
+When rendering Lego bricks in the UI (e.g., decorative elements, visual indicators), use proportions based on real Lego geometry. This keeps every brick visually consistent and recognizable.
+
+### Real Dimensions
+
+| Part          | Real Size | Ratio to Unit |
+| ------------- | --------- | ------------- |
+| **1 unit**    | 8mm       | 1.0           |
+| **Stud diameter** | 4.8mm | 0.6           |
+| **Stud pitch** (center-to-center) | 8mm | 1.0 |
+| **Wall thickness** (brick edge to stud edge) | 1.6mm | 0.2 |
+| **Plate height** | 3.2mm  | 0.4           |
+| **Brick height** | 9.6mm  | 1.2           |
+
+### Recommended Scale: 1mm = 5px
+
+| Part               | Real   | Pixels | UnoCSS              |
+| ------------------ | ------ | ------ | -------------------- |
+| **1 unit**         | 8mm    | 40px   | `w-10 h-10`         |
+| **Stud diameter**  | 4.8mm  | 24px   | `w-6 h-6`           |
+| **Stud margin**    | 1.6mm  | 8px    | `m-2`               |
+| **Wall padding**   | 1.6mm  | 8px    | `p-2`               |
+| **Plate height**   | 3.2mm  | 16px   | `h-4`               |
+| **Brick height**   | 9.6mm  | 48px   | `h-12`              |
+
+### Brick Sizes (top-view, at 1mm = 5px)
+
+| Brick  | Grid         | Outer Size (approx) |
+| ------ | ------------ | -------------------- |
+| 1×1    | 1 col × 1 row | 56px × 56px        |
+| 2×1    | 2 col × 1 row | 96px × 56px        |
+| 4×2    | 4 col × 2 row | 176px × 96px       |
+| 2×2    | 2 col × 2 row | 96px × 96px        |
+
+### Rules
+
+- **Always use the 0.6 ratio** for stud diameter relative to unit size. This is the single most recognizable Lego proportion.
+- **Studs are round.** This is the one exception to the no-border-radius rule. Lego studs are cylinders — `rounded-full` is correct here.
+- **Studs get 3px black borders and hard offset shadows** — they follow Brick Brutalism like everything else.
+- **Pick a scale and stick to it.** The recommended scale is 1mm = 5px. If a different scale is needed (e.g., for small icons), maintain the ratios.
+
 ## Anti-Patterns
 
 Things that violate the Brick Brutalism identity. If you see these in a PR, flag them.
 
 | Don't                              | Why                                                | Do Instead                                                                                                 |
 | ---------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `rounded`, `rounded-lg`, etc.      | Bricks have sharp edges                            | Remove border-radius entirely                                                                              |
+| `rounded`, `rounded-lg`, etc.      | Bricks have sharp edges                            | Remove border-radius entirely (exception: `rounded-full` on Lego stud elements)                            |
 | `shadow-md`, `shadow-lg` (blurred) | Fake depth, not physical                           | Use hard offset shadows                                                                                    |
 | Gradients                          | Bricks are solid-colored                           | Use flat color fills                                                                                       |
 | Opacity for emphasis               | Muddy and ambiguous                                | Use a different color                                                                                      |

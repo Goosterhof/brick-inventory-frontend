@@ -21,10 +21,7 @@ _Things that bite you if you don't know them._
 
 _How this project's owner likes things done._
 
-<!-- Example:
-- Prefers deleting dead code over commenting it out
-- Wants commit messages to explain "why", not "what"
--->
+- Lego studs must be round (`rounded-full`) — this is an intentional exception to the no-border-radius rule. Documented in brand.md.
 
 ## Patterns That Work
 
