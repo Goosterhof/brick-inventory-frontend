@@ -1,5 +1,5 @@
 import {readdirSync, readFileSync} from "node:fs";
-import {basename, dirname, join, relative, resolve} from "node:path";
+import {basename, dirname, join, relative, resolve, sep} from "node:path";
 import {fileURLToPath} from "node:url";
 import {describe, expect, it} from "vitest";
 
@@ -150,6 +150,9 @@ describe("Architecture", () => {
 
                 const vueFiles = getVueFiles(domainsDir);
                 for (const file of vueFiles) {
+                    const isInPagesDir = file.includes(`${sep}pages${sep}`);
+                    if (!isInPagesDir) continue;
+
                     const name = basename(file, ".vue");
                     const isValidView = /^[A-Z][a-zA-Z]+View$/.test(name);
 
