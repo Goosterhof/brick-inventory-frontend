@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type {FamilySet} from "@app/types/familySet";
-import type {SetWithParts} from "@app/types/part";
+import type {SetPart, SetWithParts} from "@app/types/part";
 
+import AssignPartModal from "../modals/AssignPartModal.vue";
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
@@ -14,6 +15,8 @@ const familySet = ref<FamilySet | null>(null);
 const setWithParts = ref<SetWithParts | null>(null);
 const loading = ref(true);
 const partsLoading = ref(false);
+const selectedPart = ref<SetPart | null>(null);
+const showAssignModal = ref(false);
 
 const statusKey: Record<FamilySet["status"], "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete"> = {
     sealed: "sets.sealed",
@@ -43,6 +46,16 @@ const goToEdit = async () => {
 
 const goBack = async () => {
     await familyRouterService.goToRoute("sets");
+};
+
+const openAssignModal = (part: SetPart) => {
+    selectedPart.value = part;
+    showAssignModal.value = true;
+};
+
+const closeAssignModal = () => {
+    showAssignModal.value = false;
+    selectedPart.value = null;
 };
 </script>
 
@@ -124,16 +137,27 @@ const goBack = async () => {
                 </h2>
 
                 <div flex="~ col" gap="2">
-                    <PartListItem
+                    <button
                         v-for="setPart in setWithParts.parts.filter((p) => !p.isSpare)"
                         :key="setPart.id"
-                        :name="setPart.part.name"
-                        :part-num="setPart.part.partNum"
-                        :quantity="setPart.quantity"
-                        :image-url="setPart.part.imageUrl"
-                        :color-name="setPart.color.name"
-                        :color-rgb="setPart.color.rgb"
-                    />
+                        type="button"
+                        w="full"
+                        text="left"
+                        bg="transparent"
+                        p="0"
+                        cursor="pointer"
+                        outline="none"
+                        @click="openAssignModal(setPart)"
+                    >
+                        <PartListItem
+                            :name="setPart.part.name"
+                            :part-num="setPart.part.partNum"
+                            :quantity="setPart.quantity"
+                            :image-url="setPart.part.imageUrl"
+                            :color-name="setPart.color.name"
+                            :color-rgb="setPart.color.rgb"
+                        />
+                    </button>
                 </div>
 
                 <div v-if="setWithParts.parts.filter((p) => p.isSpare).length > 0" m="t-6">
@@ -142,19 +166,38 @@ const goBack = async () => {
                     </h2>
 
                     <div flex="~ col" gap="2">
-                        <PartListItem
+                        <button
                             v-for="setPart in setWithParts.parts.filter((p) => p.isSpare)"
                             :key="setPart.id"
-                            :name="setPart.part.name"
-                            :part-num="setPart.part.partNum"
-                            :quantity="setPart.quantity"
-                            :color-name="setPart.color.name"
-                            :color-rgb="setPart.color.rgb"
-                            spare
-                        />
+                            type="button"
+                            w="full"
+                            text="left"
+                            bg="transparent"
+                            p="0"
+                            cursor="pointer"
+                            outline="none"
+                            @click="openAssignModal(setPart)"
+                        >
+                            <PartListItem
+                                :name="setPart.part.name"
+                                :part-num="setPart.part.partNum"
+                                :quantity="setPart.quantity"
+                                :color-name="setPart.color.name"
+                                :color-rgb="setPart.color.rgb"
+                                spare
+                            />
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <AssignPartModal
+                v-if="selectedPart"
+                :open="showAssignModal"
+                :part="selectedPart"
+                @close="closeAssignModal"
+                @assigned="closeAssignModal"
+            />
         </template>
     </div>
 </template>

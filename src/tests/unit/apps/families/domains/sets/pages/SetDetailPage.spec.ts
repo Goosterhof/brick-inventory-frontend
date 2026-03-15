@@ -1,3 +1,4 @@
+import AssignPartModal from "@app/domains/sets/modals/AssignPartModal.vue";
 import SetDetailPage from "@app/domains/sets/pages/SetDetailPage.vue";
 import BackButton from "@shared/components/BackButton.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
@@ -330,5 +331,52 @@ describe("SetDetailPage", () => {
         // Assert
         const parts = wrapper.findAllComponents(PartListItem);
         expect(parts[0]?.props("imageUrl")).toBe("https://example.com/3001.jpg");
+    });
+
+    it("should open assign modal when a part is clicked", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+        const primaryButtons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = primaryButtons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+
+        // Act
+        const partButtons = wrapper.findAll("button[type='button']");
+        await partButtons[0]?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        const modal = wrapper.findComponent(AssignPartModal);
+        expect(modal.exists()).toBe(true);
+        expect(modal.props("open")).toBe(true);
+        expect(modal.props("part")).toMatchObject({part: {name: "Brick 2 x 4"}});
+    });
+
+    it("should close assign modal on close event", async () => {
+        // Arrange
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockFamilySetResponse})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+        const primaryButtons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = primaryButtons.find((btn) => btn.text().includes("sets.loadParts"));
+        await loadPartsButton?.trigger("click");
+        await flushPromises();
+        const partButtons = wrapper.findAll("button[type='button']");
+        await partButtons[0]?.trigger("click");
+        await flushPromises();
+
+        // Act
+        wrapper.findComponent(AssignPartModal).vm.$emit("close");
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.findComponent(AssignPartModal).exists()).toBe(false);
     });
 });
