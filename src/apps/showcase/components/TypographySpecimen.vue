@@ -46,13 +46,13 @@ import SectionHeading from "./SectionHeading.vue";
         <!-- Before / After comparison -->
         <div grid="~ cols-1 md:cols-2" gap="6">
             <div p="6" class="brick-border" bg="gray-100">
-                <p class="brick-label" m="b-4" text="red-600">Before — System font heading</p>
+                <p class="brick-label" m="b-4" text="brick-red-dark">Before — System font heading</p>
                 <h2 font="bold sans" text="2xl" uppercase tracking="wide">Storage Locations</h2>
                 <p text="sm gray-600" m="t-3">Generic. Could be any enterprise app. No personality.</p>
             </div>
 
             <div p="6" class="brick-border brick-shadow" bg="white">
-                <p class="brick-label" m="b-4" text="green-700">After — Space Grotesk heading</p>
+                <p class="brick-label" m="b-4" text="baseplate-green">After — Space Grotesk heading</p>
                 <h2 font="heading bold" text="2xl" uppercase tracking="wide">Storage Locations</h2>
                 <p text="sm gray-600" m="t-3">Industrial. Precise. You know it's Brick Brutalism.</p>
             </div>

@@ -7,15 +7,15 @@ const {type = "button", disabled = false} = defineProps<{type?: "button" | "subm
         :type="type"
         :disabled="disabled"
         p="x-4 y-3"
-        border="3 red-500"
-        bg="white hover:red-200 focus:red-200 disabled:gray-200"
-        text="red-600 disabled:gray-600"
+        border="3 brick-red"
+        bg="white hover:brick-red-light focus:brick-red-light disabled:gray-200"
+        text="brick-red-dark disabled:gray-600"
         font="bold"
         uppercase
         tracking="wide"
         cursor="pointer disabled:not-allowed"
         outline="none"
-        class="brick-shadow-danger brick-transition hover:brick-shadow-error-hover focus:brick-shadow-error-hover active:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)] active:translate-x-[2px] active:translate-y-[2px] disabled:brick-disabled"
+        class="brick-shadow-danger brick-transition hover:brick-shadow-error-hover focus:brick-shadow-error-hover active:shadow-[2px_2px_0px_0px_#C41A16] active:translate-x-[2px] active:translate-y-[2px] disabled:brick-disabled"
     >
         <slot />
     </button>

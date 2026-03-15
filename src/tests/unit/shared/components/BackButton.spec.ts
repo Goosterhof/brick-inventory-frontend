@@ -29,6 +29,6 @@ describe("BackButton", () => {
         // Assert
         expect(wrapper.attributes("class")).toContain("brick-border");
         expect(wrapper.attributes("class")).toContain("brick-shadow");
-        expect(wrapper.attributes("bg")).toBe("white hover:yellow-300 focus:yellow-300");
+        expect(wrapper.attributes("bg")).toBe("white hover:brick-yellow focus:brick-yellow");
     });
 });

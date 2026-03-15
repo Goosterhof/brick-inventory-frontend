@@ -44,9 +44,19 @@ import SectionHeading from "./SectionHeading.vue";
             <div>
                 <p class="brick-label" m="b-6">Error Messages</p>
                 <div flex="~ col" gap="4" max-w="lg">
-                    <div flex gap="3" items="center" p="3 r-4" bg="white" border="3 red-500" class="brick-shadow-error">
-                        <PhWarningCircle size="20" text="red-600" aria-hidden="true" />
-                        <p flex="1" text="red-600" font="medium">Could not connect to the brick vault. Try again.</p>
+                    <div
+                        flex
+                        gap="3"
+                        items="center"
+                        p="3 r-4"
+                        bg="white"
+                        border="3 brick-red"
+                        class="brick-shadow-error"
+                    >
+                        <PhWarningCircle size="20" text="brick-red-dark" aria-hidden="true" />
+                        <p flex="1" text="brick-red-dark" font="medium">
+                            Could not connect to the brick vault. Try again.
+                        </p>
                     </div>
 
                     <div flex gap="3" items="start" p="4" bg="[#F8D0CF]" border="3 [#C41A16]">
@@ -87,9 +97,9 @@ import SectionHeading from "./SectionHeading.vue";
                     <div flex gap="3">
                         <button
                             p="x-4 y-3"
-                            border="3 red-500"
+                            border="3 brick-red"
                             bg="white"
-                            text="red-600"
+                            text="brick-red-dark"
                             font="bold"
                             uppercase
                             tracking="wide"

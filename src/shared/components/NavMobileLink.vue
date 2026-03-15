@@ -19,7 +19,7 @@ const handleClick = (event: Event) => {
         uppercase
         tracking="wide"
         outline="none"
-        :bg="active ? 'yellow-300' : 'white hover:yellow-300 focus:yellow-300'"
+        :bg="active ? 'brick-yellow' : 'white hover:brick-yellow focus:brick-yellow'"
         class="brick-transition"
         @click="handleClick"
     >

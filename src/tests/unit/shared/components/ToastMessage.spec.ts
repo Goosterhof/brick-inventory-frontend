@@ -40,7 +40,7 @@ describe("ToastMessage", () => {
         const wrapper = mountToast({message: "Error", variant: "error"});
 
         // Assert
-        expect(wrapper.attributes("class")).toContain("border-red-500");
+        expect(wrapper.attributes("class")).toContain("border-brick-red");
         expect(wrapper.attributes("class")).toContain("brick-shadow-error");
     });
 

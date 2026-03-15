@@ -54,7 +54,7 @@ const stateColors: Record<InteractionState, string> = {
 
                 <button
                     p="x-4 y-3"
-                    bg="black hover:yellow-300 focus:yellow-300"
+                    bg="black hover:brick-yellow focus:brick-yellow"
                     text="white hover:black focus:black"
                     font="bold"
                     uppercase
@@ -100,7 +100,7 @@ const stateColors: Record<InteractionState, string> = {
                     font="medium"
                     w="full"
                     outline="none"
-                    class="brick-border brick-shadow brick-transition focus:brick-shadow-hover focus:bg-yellow-300"
+                    class="brick-border brick-shadow brick-transition focus:brick-shadow-hover focus:bg-brick-yellow"
                     bg="white"
                     @mouseenter="inputState = 'hover'"
                     @mouseleave="inputState = 'default'"
@@ -130,7 +130,7 @@ const stateColors: Record<InteractionState, string> = {
 
                 <div
                     p="4"
-                    bg="white hover:yellow-300 focus-within:yellow-300"
+                    bg="white hover:brick-yellow focus-within:brick-yellow"
                     cursor="pointer"
                     tabindex="0"
                     class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"

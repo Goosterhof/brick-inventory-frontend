@@ -107,7 +107,7 @@ const goBack = async () => {
                         </div>
                     </div>
 
-                    <p v-if="addError" text="red-600" font="bold">{{ addError }}</p>
+                    <p v-if="addError" text="brick-red-dark" font="bold">{{ addError }}</p>
 
                     <PrimaryButton :disabled="isAdding" @click="addToCollection">{{
                         t("sets.addToCollection").value

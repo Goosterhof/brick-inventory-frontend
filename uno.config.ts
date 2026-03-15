@@ -7,9 +7,9 @@ export default defineConfig({
         "brick-shadow": "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
         "brick-shadow-hover": "shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]",
         "brick-shadow-active": "shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
-        "brick-shadow-error": "shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]",
-        "brick-shadow-error-hover": "shadow-[6px_6px_0px_0px_rgba(239,68,68,1)]",
-        "brick-shadow-danger": "shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]",
+        "brick-shadow-error": "shadow-[4px_4px_0px_0px_#C41A16]",
+        "brick-shadow-error-hover": "shadow-[6px_6px_0px_0px_#C41A16]",
+        "brick-shadow-danger": "shadow-[4px_4px_0px_0px_#C41A16]",
         "brick-label": "text-sm text-black font-bold uppercase tracking-wide",
         "brick-disabled": "bg-gray-200 border-gray-300 text-gray-600 cursor-not-allowed shadow-none",
         "brick-transition":
@@ -18,6 +18,18 @@ export default defineConfig({
         "brick-stud-grid-hover":
             "hover:bg-[radial-gradient(circle,rgba(0,0,0,0.08)_22%,transparent_22%)] hover:bg-[size:24px_24px]",
     },
-    theme: {fontFamily: {heading: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"]}},
+    theme: {
+        fontFamily: {heading: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"]},
+        colors: {
+            brick: {
+                ink: "#000000",
+                surface: "#FFFFFF",
+                yellow: {DEFAULT: "#F5C518", subtle: "#FDF0C4"},
+                red: {DEFAULT: "#C41A16", light: "#F8D0CF", dark: "#9B1510"},
+                blue: "#0055BF",
+            },
+            baseplate: {green: "#237841"},
+        },
+    },
     rules: [],
 });

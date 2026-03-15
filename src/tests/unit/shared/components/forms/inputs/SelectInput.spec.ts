@@ -105,7 +105,7 @@ describe("SelectInput", () => {
         });
 
         // Assert
-        expect(wrapper.find("select").classes()).toContain("bg-red-200");
+        expect(wrapper.find("select").classes()).toContain("bg-brick-red-light");
     });
 
     it("should prioritize disabled state over error state", () => {
@@ -117,6 +117,6 @@ describe("SelectInput", () => {
 
         // Assert
         expect(wrapper.find("select").classes()).toContain("brick-disabled");
-        expect(wrapper.find("select").classes()).not.toContain("bg-red-200");
+        expect(wrapper.find("select").classes()).not.toContain("bg-brick-red-light");
     });
 });
