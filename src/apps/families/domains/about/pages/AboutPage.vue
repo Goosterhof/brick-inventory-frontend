@@ -7,42 +7,6 @@ const RED = "#DC2626";
 const BLUE = "#1D4ED8";
 const GREEN = "#16A34A";
 const YELLOW = "#EAB308";
-
-// 3 cols × 5 rows stud grid
-// 2×2 red (top-left), 1×1 blue (row 2 col 3), 2×3 yellow (bottom-left), 1×3 green (bottom-right)
-const grid: (string | null)[][] = [
-    [RED, RED, null],
-    [RED, RED, BLUE],
-    [YELLOW, YELLOW, GREEN],
-    [YELLOW, YELLOW, GREEN],
-    [YELLOW, YELLOW, GREEN],
-];
-
-const getColor = (row: number, col: number): string | null => {
-    if (row < 0 || row >= grid.length || col < 0 || col >= 3) return null;
-    const gridRow = grid[row];
-    if (!gridRow) return null;
-    return gridRow[col] ?? null;
-};
-
-const getCellShadow = (row: number, col: number): string => {
-    const color = getColor(row, col);
-    if (!color) return "none";
-
-    const above = getColor(row - 1, col);
-    const below = getColor(row + 1, col);
-    const left = getColor(row, col - 1);
-    const right = getColor(row, col + 1);
-
-    const shadows: string[] = [];
-    // Outer edges: always draw. Internal brick boundaries: only draw on the top/left side to avoid doubling.
-    if (above !== color && !above) shadows.push("inset 0 3px 0 0 #000");
-    if (below !== color) shadows.push("inset 0 -3px 0 0 #000");
-    if (left !== color && !left) shadows.push("inset 3px 0 0 0 #000");
-    if (right !== color) shadows.push("inset -3px 0 0 0 #000");
-
-    return shadows.join(", ") || "none";
-};
 </script>
 
 <template>
@@ -50,25 +14,61 @@ const getCellShadow = (row: number, col: number): string => {
         <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">{{ t("about.title").value }}</h1>
         <p text="gray-600" m="b-6">{{ t("about.description").value }}</p>
         <div inline-block style="filter: drop-shadow(4px 4px 0 black)">
-            <div grid class="gap-0" style="grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(5, 40px)">
-                <template v-for="(row, ri) in grid" :key="ri">
-                    <div
-                        v-for="(color, ci) in row"
-                        :key="ci"
-                        :style="{backgroundColor: color ?? 'transparent', boxShadow: getCellShadow(ri, ci)}"
-                        flex
-                        items="center"
-                        justify="center"
-                    >
+            <!-- Row 1: Red 2×2 + Blue 1×1 (bottom-aligned) -->
+            <div flex items="end">
+                <!-- Red 2×2 brick -->
+                <div p="2" border="3 black" :style="{backgroundColor: RED}">
+                    <div grid grid-cols-2 grid-rows-2>
+                        <div v-for="i in 4" :key="i" class="w-[40px] h-[40px]" flex items="center" justify="center">
+                            <div
+                                class="w-[24px] h-[24px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                rounded="full"
+                                border="3 black"
+                                :style="{backgroundColor: RED}"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <!-- Blue 1×1 brick -->
+                <div class="ml-[-3px]" p="2" border="3 black" :style="{backgroundColor: BLUE}">
+                    <div class="w-[40px] h-[40px]" flex items="center" justify="center">
                         <div
-                            v-if="color"
                             class="w-[24px] h-[24px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                             rounded="full"
                             border="3 black"
-                            :style="{backgroundColor: color}"
+                            :style="{backgroundColor: BLUE}"
                         />
                     </div>
-                </template>
+                </div>
+            </div>
+            <!-- Row 2: Yellow 2×3 + Green 1×3 -->
+            <div flex class="mt-[-3px]">
+                <!-- Yellow 2×3 brick -->
+                <div p="2" border="3 black" :style="{backgroundColor: YELLOW}">
+                    <div grid grid-cols-2 grid-rows-3>
+                        <div v-for="i in 6" :key="i" class="w-[40px] h-[40px]" flex items="center" justify="center">
+                            <div
+                                class="w-[24px] h-[24px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                rounded="full"
+                                border="3 black"
+                                :style="{backgroundColor: YELLOW}"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <!-- Green 1×3 brick -->
+                <div class="ml-[-3px]" p="2" border="3 black" :style="{backgroundColor: GREEN}">
+                    <div grid grid-cols-1 grid-rows-3>
+                        <div v-for="i in 3" :key="i" class="w-[40px] h-[40px]" flex items="center" justify="center">
+                            <div
+                                class="w-[24px] h-[24px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                rounded="full"
+                                border="3 black"
+                                :style="{backgroundColor: GREEN}"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

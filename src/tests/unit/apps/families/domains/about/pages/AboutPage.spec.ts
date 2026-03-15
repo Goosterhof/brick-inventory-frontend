@@ -48,24 +48,23 @@ describe("AboutPage", () => {
         expect(container.attributes("style")).toContain("drop-shadow");
     });
 
-    it("should render the empty cell without a stud", () => {
+    it("should have four brick containers with wall padding and borders", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const gridCells = wrapper.findAll("[flex]");
-        const studs = wrapper.findAll("[rounded='full']");
-        expect(gridCells.length).toBe(studs.length + 1);
+        const bricks = wrapper.findAll("[p='2'][border='3 black']");
+        expect(bricks).toHaveLength(4);
     });
 
-    it("should have inset box-shadow borders on brick cells", () => {
+    it("should overlap borders between adjacent bricks with negative margins", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const cellsWithInsetShadow = wrapper
-            .findAll("[flex]")
-            .filter((cell) => (cell.attributes("style") ?? "").includes("inset"));
-        expect(cellsWithInsetShadow.length).toBeGreaterThan(0);
+        const negativeMarginElements = wrapper.findAll(".ml-\\[-3px\\]");
+        expect(negativeMarginElements).toHaveLength(2);
+        const negativeTopMargin = wrapper.findAll(".mt-\\[-3px\\]");
+        expect(negativeTopMargin).toHaveLength(1);
     });
 });
