@@ -5,6 +5,8 @@ import {familyHttpService, familyTranslationService} from "@app/services";
 import EmptyState from "@shared/components/EmptyState.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import {downloadCsv, toCsv} from "@shared/helpers/csv";
 import {deepCamelKeys} from "string-ts";
 import {computed, onMounted, ref} from "vue";
 
@@ -60,11 +62,27 @@ const groupedParts = computed((): GroupedFamilyPart[] => {
 
     return [...map.values()];
 });
+
+const exportCsv = () => {
+    const headers = ["Part Number", "Name", "Color", "Total Quantity", "Storage Locations"];
+    const rows = groupedParts.value.map((p) => [
+        p.partNum,
+        p.partName,
+        p.colorName ?? "",
+        String(p.totalQuantity),
+        p.locations.map((l) => `${l.storageOptionName} (${l.quantity}x)`).join("; "),
+    ]);
+    downloadCsv(toCsv(headers, rows), "lego-parts.csv");
+};
 </script>
 
 <template>
     <div max-w="6xl" m="x-auto">
-        <PageHeader :title="t('parts.title').value" />
+        <PageHeader :title="t('parts.title').value">
+            <PrimaryButton v-if="groupedParts.length > 0" @click="exportCsv">{{
+                t("common.export").value
+            }}</PrimaryButton>
+        </PageHeader>
 
         <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
 

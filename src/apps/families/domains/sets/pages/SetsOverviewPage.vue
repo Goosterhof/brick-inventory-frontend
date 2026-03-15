@@ -7,6 +7,7 @@ import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import {downloadCsv, toCsv} from "@shared/helpers/csv";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {computed, onMounted, ref} from "vue";
 
@@ -63,14 +64,31 @@ const goToScan = async () => {
 const goToDetail = async (id: number) => {
     await familyRouterService.goToRoute("sets-detail", id);
 };
+
+const exportCsv = () => {
+    const headers = ["Set Number", "Name", "Year", "Theme", "Parts", "Quantity", "Status", "Purchase Date", "Notes"];
+    const rows = filteredSets.value.map((s) => [
+        s.set.setNum,
+        s.set.name,
+        String(s.set.year ?? ""),
+        s.set.theme ?? "",
+        String(s.set.numParts),
+        String(s.quantity),
+        s.status,
+        s.purchaseDate ?? "",
+        s.notes ?? "",
+    ]);
+    downloadCsv(toCsv(headers, rows), "lego-sets.csv");
+};
 </script>
 
 <template>
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('sets.title').value">
-            <div flex gap="2">
+            <div flex gap="2" flex-wrap="wrap">
                 <PrimaryButton @click="goToScan">{{ t("sets.scanSet").value }}</PrimaryButton>
                 <PrimaryButton @click="goToAdd">{{ t("sets.addSet").value }}</PrimaryButton>
+                <PrimaryButton v-if="sets.length > 0" @click="exportCsv">{{ t("common.export").value }}</PrimaryButton>
             </div>
         </PageHeader>
 
