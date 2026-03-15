@@ -70,7 +70,7 @@ const resetToasts = () => {
                             font="medium"
                             w="full"
                             outline="none"
-                            class="brick-border brick-shadow brick-transition focus:brick-shadow-hover focus:bg-yellow-300"
+                            class="brick-border brick-shadow brick-transition focus:brick-shadow-hover focus:bg-brick-yellow"
                             bg="white"
                         />
                     </FormField>
@@ -90,7 +90,7 @@ const resetToasts = () => {
                             font="medium"
                             w="full"
                             outline="none"
-                            class="brick-border brick-transition bg-red-200 border-red-500 brick-shadow-error focus:brick-shadow-error-hover"
+                            class="brick-border brick-transition bg-brick-red-light border-brick-red brick-shadow-error focus:brick-shadow-error-hover"
                             aria-invalid="true"
                             aria-describedby="error-input-error"
                         />

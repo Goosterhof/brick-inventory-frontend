@@ -18,70 +18,109 @@ const VOLUME = 0.3;
 
 const prefersReducedMotion = (): boolean => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const createNoiseBuffer = (context: AudioContext, duration: number): AudioBuffer => {
+    const sampleRate = context.sampleRate;
+    const bufferSize = Math.ceil(sampleRate * duration);
+    const buffer = context.createBuffer(1, bufferSize, sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+    }
+    return buffer;
+};
+
 type SoundSynthesizer = (context: AudioContext) => void;
 
 const synthesizeSnap: SoundSynthesizer = (context) => {
-    const oscillator = context.createOscillator();
+    const buffer = createNoiseBuffer(context, 0.06);
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
     const gain = context.createGain();
 
-    oscillator.connect(gain);
+    source.buffer = buffer;
+    filter.type = "bandpass";
+    filter.frequency.value = 3000;
+    filter.Q.value = 1;
+
+    source.connect(filter);
+    filter.connect(gain);
     gain.connect(context.destination);
 
-    oscillator.frequency.value = 800;
     gain.gain.setValueAtTime(VOLUME, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.06);
 
-    oscillator.start(context.currentTime);
-    oscillator.stop(context.currentTime + 0.08);
+    source.start(context.currentTime);
+    source.stop(context.currentTime + 0.06);
 };
 
 const synthesizePull: SoundSynthesizer = (context) => {
-    const oscillator = context.createOscillator();
+    const buffer = createNoiseBuffer(context, 0.1);
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
     const gain = context.createGain();
 
-    oscillator.connect(gain);
+    source.buffer = buffer;
+    filter.type = "bandpass";
+    filter.frequency.value = 1150;
+    filter.Q.value = 1;
+
+    source.connect(filter);
+    filter.connect(gain);
     gain.connect(context.destination);
 
-    oscillator.frequency.value = 400;
     gain.gain.setValueAtTime(0.001, context.currentTime);
     gain.gain.linearRampToValueAtTime(VOLUME, context.currentTime + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.12);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.1);
 
-    oscillator.start(context.currentTime);
-    oscillator.stop(context.currentTime + 0.12);
+    source.start(context.currentTime);
+    source.stop(context.currentTime + 0.1);
 };
 
 const synthesizeCascade: SoundSynthesizer = (context) => {
     for (let i = 0; i < 4; i++) {
-        const oscillator = context.createOscillator();
+        const offset = i * 0.04;
+        const buffer = createNoiseBuffer(context, 0.06);
+        const source = context.createBufferSource();
+        const filter = context.createBiquadFilter();
         const gain = context.createGain();
 
-        oscillator.connect(gain);
+        source.buffer = buffer;
+        filter.type = "bandpass";
+        filter.frequency.value = 3000;
+        filter.Q.value = 1;
+
+        source.connect(filter);
+        filter.connect(gain);
         gain.connect(context.destination);
 
-        const offset = i * 0.05;
-        oscillator.frequency.value = 800;
         gain.gain.setValueAtTime(VOLUME, context.currentTime + offset);
-        gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + offset + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + offset + 0.06);
 
-        oscillator.start(context.currentTime + offset);
-        oscillator.stop(context.currentTime + offset + 0.08);
+        source.start(context.currentTime + offset);
+        source.stop(context.currentTime + offset + 0.06);
     }
 };
 
 const synthesizeThud: SoundSynthesizer = (context) => {
-    const oscillator = context.createOscillator();
+    const buffer = createNoiseBuffer(context, 0.05);
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
     const gain = context.createGain();
 
-    oscillator.connect(gain);
+    source.buffer = buffer;
+    filter.type = "bandpass";
+    filter.frequency.value = 450;
+    filter.Q.value = 1;
+
+    source.connect(filter);
+    filter.connect(gain);
     gain.connect(context.destination);
 
-    oscillator.frequency.value = 200;
-    gain.gain.setValueAtTime(VOLUME, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.06);
+    gain.gain.setValueAtTime(VOLUME * 1.2, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.05);
 
-    oscillator.start(context.currentTime);
-    oscillator.stop(context.currentTime + 0.06);
+    source.start(context.currentTime);
+    source.stop(context.currentTime + 0.05);
 };
 
 const synthesizers: Record<SoundType, SoundSynthesizer> = {

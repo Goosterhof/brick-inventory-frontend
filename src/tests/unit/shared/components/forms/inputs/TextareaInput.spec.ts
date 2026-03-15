@@ -96,7 +96,7 @@ describe("TextareaInput", () => {
         const wrapper = shallowMount(TextareaInput, {props: {label: "Notes", modelValue: "", error: "Invalid"}});
 
         // Assert
-        expect(wrapper.find("textarea").classes()).toContain("bg-red-200");
+        expect(wrapper.find("textarea").classes()).toContain("bg-brick-red-light");
     });
 
     it("should prioritize disabled state over error state", () => {
@@ -107,6 +107,6 @@ describe("TextareaInput", () => {
 
         // Assert
         expect(wrapper.find("textarea").classes()).toContain("brick-disabled");
-        expect(wrapper.find("textarea").classes()).not.toContain("bg-red-200");
+        expect(wrapper.find("textarea").classes()).not.toContain("bg-brick-red-light");
     });
 });

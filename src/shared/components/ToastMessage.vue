@@ -12,15 +12,15 @@ defineEmits<{close: []}>();
         items="center"
         p="3 r-4"
         bg="white"
-        :class="[variant === 'error' ? 'border-3 border-red-500 brick-shadow-error' : 'brick-border brick-shadow']"
+        :class="[variant === 'error' ? 'border-3 border-brick-red brick-shadow-error' : 'brick-border brick-shadow']"
     >
         <PhCheckCircle v-if="variant === 'success'" size="20" aria-hidden="true" />
-        <PhWarningCircle v-else size="20" text="red-600" aria-hidden="true" />
-        <p flex="1" :text="variant === 'error' ? 'red-600' : 'black'" font="medium">{{ message }}</p>
+        <PhWarningCircle v-else size="20" text="brick-red-dark" aria-hidden="true" />
+        <p flex="1" :text="variant === 'error' ? 'brick-red-dark' : 'black'" font="medium">{{ message }}</p>
         <button
             @click="$emit('close')"
             p="1"
-            bg="white hover:yellow-300 focus:yellow-300"
+            bg="white hover:brick-yellow focus:brick-yellow"
             cursor="pointer"
             outline="none"
             class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"

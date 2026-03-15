@@ -29,13 +29,20 @@ const createMockAudioContext = () => {
         connect: vi.fn(),
     };
 
-    const mockOscillator = {frequency: {value: 0}, connect: vi.fn(), start: vi.fn(), stop: vi.fn()};
+    const mockFilter = {type: "", frequency: {value: 0}, Q: {value: 0}, connect: vi.fn()};
+
+    const mockBufferSource = {buffer: null, connect: vi.fn(), start: vi.fn(), stop: vi.fn()};
+
+    const mockBuffer = {getChannelData: vi.fn().mockReturnValue(new Float32Array(4800))};
 
     const mockContext = {
         currentTime: 0,
+        sampleRate: 48000,
         destination: {},
-        createOscillator: vi.fn().mockReturnValue(mockOscillator),
+        createBufferSource: vi.fn().mockReturnValue(mockBufferSource),
+        createBiquadFilter: vi.fn().mockReturnValue(mockFilter),
         createGain: vi.fn().mockReturnValue(mockGainNode),
+        createBuffer: vi.fn().mockReturnValue(mockBuffer),
         close: vi.fn(),
     };
 
@@ -235,5 +242,46 @@ describe("createSoundService", () => {
 
         // Assert
         expect(storage.get).toHaveBeenCalledWith("sound-enabled");
+    });
+
+    it("should use noise-based synthesis with bandpass filter for snap", () => {
+        // Arrange
+        const mockContext = createMockAudioContext();
+        vi.stubGlobal(
+            "AudioContext",
+            vi.fn().mockImplementation(function () {
+                return mockContext;
+            }),
+        );
+        const storage = createMockStorageService({"sound-enabled": true});
+        const service = createSoundService(storage);
+
+        // Act
+        service.play("snap");
+
+        // Assert
+        expect(mockContext.createBuffer).toHaveBeenCalled();
+        expect(mockContext.createBufferSource).toHaveBeenCalled();
+        expect(mockContext.createBiquadFilter).toHaveBeenCalled();
+    });
+
+    it("should use noise-based synthesis with bandpass filter for cascade", () => {
+        // Arrange
+        const mockContext = createMockAudioContext();
+        vi.stubGlobal(
+            "AudioContext",
+            vi.fn().mockImplementation(function () {
+                return mockContext;
+            }),
+        );
+        const storage = createMockStorageService({"sound-enabled": true});
+        const service = createSoundService(storage);
+
+        // Act
+        service.play("cascade");
+
+        // Assert — cascade creates 4 snaps
+        expect(mockContext.createBufferSource).toHaveBeenCalledTimes(4);
+        expect(mockContext.createBiquadFilter).toHaveBeenCalledTimes(4);
     });
 });

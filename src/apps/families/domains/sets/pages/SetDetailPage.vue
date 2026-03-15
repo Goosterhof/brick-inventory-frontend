@@ -236,12 +236,16 @@ const handleAssigned = () => {
                     p="4"
                     m="b-6"
                     class="brick-border brick-shadow"
-                    :bg="buildStats.canBuild ? 'green-100' : 'white'"
+                    :bg="buildStats.canBuild ? 'baseplate-green/15' : 'white'"
                 >
                     <h2 text="xl" font="bold" uppercase tracking="wide" m="b-3">
                         {{ t("sets.buildCheck").value }}
                     </h2>
-                    <p font="bold" text="lg" :class="buildStats.canBuild ? 'text-green-700' : 'text-red-600'">
+                    <p
+                        font="bold"
+                        text="lg"
+                        :class="buildStats.canBuild ? 'text-baseplate-green' : 'text-brick-red-dark'"
+                    >
                         {{ buildStats.canBuild ? t("sets.readyToBuild").value : t("sets.notReadyToBuild").value }}
                     </p>
                     <div flex gap="6" m="t-2" text="sm">
@@ -289,7 +293,7 @@ const handleAssigned = () => {
                                     :key="loc.storageOptionId"
                                     text="xs"
                                     p="x-2 y-0.5"
-                                    bg="yellow-300"
+                                    bg="brick-yellow"
                                     font="bold"
                                     class="brick-border"
                                     border="1"
@@ -302,7 +306,11 @@ const handleAssigned = () => {
                                     font="bold"
                                     class="brick-border"
                                     border="1"
-                                    :bg="getAvailableQuantity(setPart) >= setPart.quantity ? 'green-200' : 'red-200'"
+                                    :bg="
+                                        getAvailableQuantity(setPart) >= setPart.quantity
+                                            ? 'baseplate-green/25'
+                                            : 'brick-red-light'
+                                    "
                                 >
                                     {{ getAvailableQuantity(setPart) }}/{{ setPart.quantity }}
                                 </span>
@@ -349,7 +357,7 @@ const handleAssigned = () => {
                                         :key="loc.storageOptionId"
                                         text="xs"
                                         p="x-2 y-0.5"
-                                        bg="yellow-300"
+                                        bg="brick-yellow"
                                         font="bold"
                                         class="brick-border"
                                         border="1"

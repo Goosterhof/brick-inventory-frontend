@@ -90,7 +90,7 @@ const importSets = async () => {
                         :error="tokenError"
                     />
 
-                    <p v-if="tokenSaved" text="green-700" font="bold">{{ t("settings.tokenSaved").value }}</p>
+                    <p v-if="tokenSaved" text="baseplate-green" font="bold">{{ t("settings.tokenSaved").value }}</p>
 
                     <PrimaryButton type="submit" :disabled="tokenSaving || !rebrickableToken">
                         {{ t("settings.saveToken").value }}
@@ -113,10 +113,10 @@ const importSets = async () => {
                             {{ t("settings.importSkipped", {count: String(importResult.skipped)}).value }}
                         </p>
                     </div>
-                    <p v-if="importResult.error" text="red-600" font="bold">{{ importResult.error }}</p>
+                    <p v-if="importResult.error" text="brick-red-dark" font="bold">{{ importResult.error }}</p>
                 </div>
 
-                <p v-if="importError" text="red-600" font="bold">{{ importError }}</p>
+                <p v-if="importError" text="brick-red-dark" font="bold">{{ importError }}</p>
 
                 <PrimaryButton :disabled="importing" @click="importSets">
                     {{ importing ? t("settings.importing").value : t("settings.importButton").value }}

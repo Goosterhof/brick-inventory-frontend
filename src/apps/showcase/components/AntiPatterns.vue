@@ -15,7 +15,9 @@ import SectionHeading from "./SectionHeading.vue";
             <!-- Rounded vs Sharp -->
             <div grid="~ cols-1 md:cols-2" gap="6">
                 <div p="6" border="3 red-400 dashed" bg="red-50">
-                    <p text="xs" font="bold mono" text-color="red-600" uppercase m="b-4">Wrong — Rounded corners</p>
+                    <p text="xs" font="bold mono" text-color="brick-red-dark" uppercase m="b-4">
+                        Wrong — Rounded corners
+                    </p>
                     <button p="x-4 y-3" bg="black" text="white" font="bold" rounded="lg" shadow="md" cursor="default">
                         Save Changes
                     </button>
@@ -25,7 +27,9 @@ import SectionHeading from "./SectionHeading.vue";
                 </div>
 
                 <div p="6" class="brick-border brick-shadow" bg="white">
-                    <p text="xs" font="bold mono" text-color="green-700" uppercase m="b-4">Correct — Sharp corners</p>
+                    <p text="xs" font="bold mono" text-color="baseplate-green" uppercase m="b-4">
+                        Correct — Sharp corners
+                    </p>
                     <button
                         p="x-4 y-3"
                         bg="black"
@@ -45,7 +49,9 @@ import SectionHeading from "./SectionHeading.vue";
             <!-- Blurred vs Hard shadow -->
             <div grid="~ cols-1 md:cols-2" gap="6">
                 <div p="6" border="3 red-400 dashed" bg="red-50">
-                    <p text="xs" font="bold mono" text-color="red-600" uppercase m="b-4">Wrong — Blurred shadow</p>
+                    <p text="xs" font="bold mono" text-color="brick-red-dark" uppercase m="b-4">
+                        Wrong — Blurred shadow
+                    </p>
                     <div p="4" bg="white" border="1 gray-200" rounded="md" shadow="lg">
                         <p font="bold">Part Card</p>
                         <p text="sm gray-600">Floating in undefined space.</p>
@@ -56,7 +62,7 @@ import SectionHeading from "./SectionHeading.vue";
                 </div>
 
                 <div p="6" class="brick-border brick-shadow" bg="white">
-                    <p text="xs" font="bold mono" text-color="green-700" uppercase m="b-4">
+                    <p text="xs" font="bold mono" text-color="baseplate-green" uppercase m="b-4">
                         Correct — Hard offset shadow
                     </p>
                     <div p="4" bg="white" class="brick-border brick-shadow">
@@ -72,7 +78,9 @@ import SectionHeading from "./SectionHeading.vue";
             <!-- Gradient vs Flat -->
             <div grid="~ cols-1 md:cols-2" gap="6">
                 <div p="6" border="3 red-400 dashed" bg="red-50">
-                    <p text="xs" font="bold mono" text-color="red-600" uppercase m="b-4">Wrong — Gradient fill</p>
+                    <p text="xs" font="bold mono" text-color="brick-red-dark" uppercase m="b-4">
+                        Wrong — Gradient fill
+                    </p>
                     <button
                         p="x-4 y-3"
                         text="white"
@@ -89,7 +97,7 @@ import SectionHeading from "./SectionHeading.vue";
                 </div>
 
                 <div p="6" class="brick-border brick-shadow" bg="white">
-                    <p text="xs" font="bold mono" text-color="green-700" uppercase m="b-4">
+                    <p text="xs" font="bold mono" text-color="baseplate-green" uppercase m="b-4">
                         Correct — Flat solid color
                     </p>
                     <button
@@ -111,7 +119,7 @@ import SectionHeading from "./SectionHeading.vue";
             <!-- Thin border vs 3px -->
             <div grid="~ cols-1 md:cols-2" gap="6">
                 <div p="6" border="3 red-400 dashed" bg="red-50">
-                    <p text="xs" font="bold mono" text-color="red-600" uppercase m="b-4">Wrong — 1px border</p>
+                    <p text="xs" font="bold mono" text-color="brick-red-dark" uppercase m="b-4">Wrong — 1px border</p>
                     <div p="4" bg="white" border="1 gray-300" rounded="sm" shadow="sm">
                         <p font="bold">Part Card</p>
                         <p text="sm gray-600">Timid. Apologetic. Barely there.</p>
@@ -122,7 +130,9 @@ import SectionHeading from "./SectionHeading.vue";
                 </div>
 
                 <div p="6" class="brick-border brick-shadow" bg="white">
-                    <p text="xs" font="bold mono" text-color="green-700" uppercase m="b-4">Correct — 3px border</p>
+                    <p text="xs" font="bold mono" text-color="baseplate-green" uppercase m="b-4">
+                        Correct — 3px border
+                    </p>
                     <div p="4" bg="white" class="brick-border brick-shadow">
                         <p font="bold">Part Card</p>
                         <p text="sm gray-600">Present. Committed. Unapologetic.</p>

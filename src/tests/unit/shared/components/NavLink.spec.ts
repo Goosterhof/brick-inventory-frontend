@@ -30,7 +30,7 @@ describe("NavLink", () => {
         // Assert
         expect(link.attributes("class")).toContain("brick-border");
         expect(link.attributes("class")).toContain("brick-shadow");
-        expect(link.attributes("bg")).toBe("white hover:yellow-300 focus:yellow-300");
+        expect(link.attributes("bg")).toBe("white hover:brick-yellow focus:brick-yellow");
         expect(link.attributes("font")).toBe("bold");
         expect(link.attributes("uppercase")).toBeDefined();
     });
