@@ -144,6 +144,16 @@ describe("LoginPage", () => {
         expect(mockGoToDashboard).not.toHaveBeenCalled();
     });
 
+    it("should render link to register page", () => {
+        // Arrange & Act
+        const wrapper = shallowMount(LoginPage);
+
+        // Assert
+        const paragraph = wrapper.find("p");
+        expect(paragraph.text()).toContain("auth.noAccountYet");
+        expect(paragraph.text()).toContain("auth.register");
+    });
+
     it("should rethrow non-422 errors", async () => {
         // Arrange
         const axiosError = new AxiosError("Server error");

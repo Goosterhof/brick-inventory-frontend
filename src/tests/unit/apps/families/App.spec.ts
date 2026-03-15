@@ -49,12 +49,14 @@ describe("App", () => {
 
         // Assert
         const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
-        expect(links).toHaveLength(4);
-        const [homeLink, aboutLink, setsLink, storageLink] = links;
+        expect(links).toHaveLength(6);
+        const [homeLink, aboutLink, setsLink, storageLink, loginLink, registerLink] = links;
         expect(homeLink?.text()).toBe("navigation.home");
         expect(aboutLink?.text()).toBe("navigation.about");
         expect(setsLink?.text()).toContain("navigation.sets");
         expect(storageLink?.text()).toContain("navigation.storage");
+        expect(loginLink?.text()).toContain("auth.logIn");
+        expect(registerLink?.text()).toContain("auth.register");
     });
 
     it("should render mobile navigation links", () => {
@@ -63,11 +65,13 @@ describe("App", () => {
 
         // Assert
         const mobileLinks = wrapper.findAllComponents({name: "NavMobileLink"});
-        expect(mobileLinks).toHaveLength(4);
+        expect(mobileLinks).toHaveLength(6);
         expect(mobileLinks[0]?.text()).toBe("navigation.home");
         expect(mobileLinks[1]?.text()).toBe("navigation.about");
         expect(mobileLinks[2]?.text()).toContain("navigation.sets");
         expect(mobileLinks[3]?.text()).toContain("navigation.storage");
+        expect(mobileLinks[4]?.text()).toContain("auth.logIn");
+        expect(mobileLinks[5]?.text()).toContain("auth.register");
     });
 
     it("should mark active mobile link based on current route", () => {
