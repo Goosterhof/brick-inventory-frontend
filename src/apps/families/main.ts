@@ -5,7 +5,7 @@ import {registerAuthGuard} from "@shared/services/auth/guards";
 import {createApp} from "vue";
 
 import App from "./App.vue";
-import {familyAuthService, familyRouterService} from "./services";
+import {familyAuthService, familyRouterService, familyTranslationService} from "./services";
 
 const app = createApp(App);
 
@@ -15,5 +15,13 @@ app.provide("color", "currentColor");
 
 familyRouterService.install();
 registerAuthGuard(familyAuthService, familyRouterService, "login");
+
+const {t} = familyTranslationService;
+const APP_TITLE = "Brick Inventory";
+
+familyRouterService.registerAfterRouteMiddleware((to) => {
+    const titleKey = to.meta?.title as string | undefined;
+    document.title = titleKey ? `${t(titleKey as Parameters<typeof t>[0]).value} | ${APP_TITLE}` : APP_TITLE;
+});
 
 app.mount("#app");
