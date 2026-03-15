@@ -3,7 +3,7 @@ const {count = 3} = defineProps<{count?: number}>();
 </script>
 
 <template>
-    <div flex="~" gap="2" aria-hidden="true">
+    <div flex="~" gap="2" aria-hidden="true" style="margin-bottom: -4px; position: relative; z-index: 1">
         <span
             v-for="i in count"
             :key="i"

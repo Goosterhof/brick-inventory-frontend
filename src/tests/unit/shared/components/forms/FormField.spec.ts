@@ -12,23 +12,27 @@ describe("FormField", () => {
         expect(wrapper.find("span").text()).toBe("Field content");
     });
 
-    it("should render as a flex column container", () => {
+    it("should render as a flex column layout", () => {
         // Arrange
         const wrapper = shallowMount(FormField);
 
         // Assert
-        expect(wrapper.find("div").attributes("flex")).toBe("~ col");
+        const outerDiv = wrapper.find("div");
+        expect(outerDiv.attributes("flex")).toBe("~ col");
     });
 
-    it("should have gap between children", () => {
+    it("should render a brick container with border", () => {
         // Arrange
         const wrapper = shallowMount(FormField);
 
         // Assert
-        expect(wrapper.find("div").attributes("gap")).toBe("2");
+        const brickContainer = wrapper.find(".brick-border");
+        expect(brickContainer.exists()).toBe(true);
+        expect(brickContainer.attributes("flex")).toBe("~ col");
+        expect(brickContainer.attributes("gap")).toBe("2");
     });
 
-    it("should render LegoStuds", () => {
+    it("should render LegoStuds above the brick container", () => {
         // Arrange
         const wrapper = shallowMount(FormField);
 

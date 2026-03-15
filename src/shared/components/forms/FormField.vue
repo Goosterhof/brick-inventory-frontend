@@ -3,8 +3,10 @@ import LegoStuds from "@shared/components/forms/LegoStuds.vue";
 </script>
 
 <template>
-    <div flex="~ col" gap="2">
-        <LegoStuds />
-        <slot />
+    <div flex="~ col" items="start">
+        <LegoStuds m="l-3" />
+        <div class="brick-border" p="3" flex="~ col" gap="2" w="full">
+            <slot />
+        </div>
     </div>
 </template>
