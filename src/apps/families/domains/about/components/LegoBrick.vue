@@ -16,6 +16,7 @@ const {color = "#DC2626"} = defineProps<{color?: string}>();
                 :key="stud"
                 w="10"
                 h="10"
+                rounded="full"
                 border="3 black"
                 class="shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 :style="{backgroundColor: color}"
