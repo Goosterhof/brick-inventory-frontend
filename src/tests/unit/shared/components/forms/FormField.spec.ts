@@ -1,4 +1,5 @@
 import FormField from "@shared/components/forms/FormField.vue";
+import LegoStuds from "@shared/components/forms/LegoStuds.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
@@ -25,5 +26,13 @@ describe("FormField", () => {
 
         // Assert
         expect(wrapper.find("div").attributes("gap")).toBe("2");
+    });
+
+    it("should render LegoStuds", () => {
+        // Arrange
+        const wrapper = shallowMount(FormField);
+
+        // Assert
+        expect(wrapper.findComponent(LegoStuds).exists()).toBe(true);
     });
 });
