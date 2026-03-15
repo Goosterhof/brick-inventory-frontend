@@ -133,6 +133,16 @@ describe("RegisterPage", () => {
         expect(mockGoToDashboard).toHaveBeenCalled();
     });
 
+    it("should render link to login page", () => {
+        // Arrange & Act
+        const wrapper = shallowMount(RegisterPage);
+
+        // Assert
+        const paragraph = wrapper.find("p");
+        expect(paragraph.text()).toContain("auth.alreadyHaveAccount");
+        expect(paragraph.text()).toContain("auth.logIn");
+    });
+
     it("should render page title", () => {
         // Arrange & Act
         const wrapper = shallowMount(RegisterPage);

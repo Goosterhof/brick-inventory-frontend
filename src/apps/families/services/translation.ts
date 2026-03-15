@@ -27,6 +27,8 @@ const translations = {
             resetPassword: "Reset Password",
             name: "Name",
             familyName: "Family Name",
+            alreadyHaveAccount: "Already have an account?",
+            noAccountYet: "Don't have an account yet?",
         },
         errors: {
             required: "This field is required",
@@ -162,6 +164,8 @@ const translations = {
             resetPassword: "Wachtwoord resetten",
             name: "Naam",
             familyName: "Familienaam",
+            alreadyHaveAccount: "Heb je al een account?",
+            noAccountYet: "Heb je nog geen account?",
         },
         errors: {
             required: "Dit veld is verplicht",
