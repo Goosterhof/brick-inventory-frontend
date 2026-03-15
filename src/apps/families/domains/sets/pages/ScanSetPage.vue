@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {FamilySet} from "@app/types/familySet";
+import type {SetSummary} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
@@ -12,38 +12,55 @@ import {ref} from "vue";
 const {t} = familyTranslationService;
 const resetKey = ref(0);
 const scannedCode = ref("");
-const matchedSets = ref<FamilySet[]>([]);
+const foundSet = ref<SetSummary | null>(null);
 const isSearching = ref(false);
 const hasSearched = ref(false);
+const isAdding = ref(false);
+const addError = ref("");
 
 const onDetect = async (barcode: string) => {
     scannedCode.value = barcode;
     isSearching.value = true;
     hasSearched.value = false;
+    foundSet.value = null;
+    addError.value = "";
 
     try {
-        const response = await familyHttpService.getRequest<FamilySet[]>(`/family-sets?set_num=${barcode}`);
-        matchedSets.value = response.data.map((item) => toCamelCaseTyped(item));
+        const response = await familyHttpService.getRequest<SetSummary>(`/sets/ean/${barcode}`);
+        foundSet.value = toCamelCaseTyped(response.data);
     } catch {
-        matchedSets.value = [];
+        foundSet.value = null;
     } finally {
         isSearching.value = false;
         hasSearched.value = true;
     }
 };
 
-const goToDetail = async (id: number) => {
-    await familyRouterService.goToRoute("sets-detail", id);
-};
+const addToCollection = async () => {
+    if (!foundSet.value) return;
 
-const goToAdd = async () => {
-    await familyRouterService.goToRoute("sets-add");
+    isAdding.value = true;
+    addError.value = "";
+
+    try {
+        const response = await familyHttpService.postRequest<{id: number}>("/family-sets", {
+            set_num: foundSet.value.setNum,
+            quantity: 1,
+            status: "sealed",
+        });
+        await familyRouterService.goToRoute("sets-detail", response.data.id);
+    } catch {
+        addError.value = t("sets.scanAddError").value;
+    } finally {
+        isAdding.value = false;
+    }
 };
 
 const scanAgain = () => {
     scannedCode.value = "";
-    matchedSets.value = [];
+    foundSet.value = null;
     hasSearched.value = false;
+    addError.value = "";
     resetKey.value++;
 };
 
@@ -66,33 +83,39 @@ const goBack = async () => {
             <p v-if="isSearching" text="gray-600">{{ t("common.loading").value }}</p>
 
             <template v-else-if="hasSearched">
-                <div v-if="matchedSets.length > 0" flex="~ col" gap="2">
-                    <p font="bold">{{ t("sets.matchingSets").value }}</p>
-                    <button
-                        v-for="familySet in matchedSets"
-                        :key="familySet.id"
-                        type="button"
-                        flex
-                        items="center"
-                        gap="4"
-                        p="4"
-                        bg="white hover:yellow-300 focus:yellow-300"
-                        text="left black"
-                        cursor="pointer"
-                        outline="none"
-                        class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
-                        @click="goToDetail(familySet.id)"
-                    >
+                <div v-if="foundSet" flex="~ col" gap="4">
+                    <div flex items="center" gap="4" p="4" bg="white" class="brick-border">
+                        <img
+                            v-if="foundSet.imageUrl"
+                            :src="foundSet.imageUrl"
+                            :alt="foundSet.name"
+                            w="20"
+                            h="20"
+                            object="contain"
+                        />
                         <div flex="1">
-                            <p font="bold">{{ familySet.set.name }}</p>
-                            <p text="sm gray-600">{{ familySet.set.setNum }}</p>
+                            <p font="bold">{{ foundSet.name }}</p>
+                            <p text="sm gray-600">{{ foundSet.setNum }}</p>
+                            <div flex gap="2" m="t-1">
+                                <span v-if="foundSet.year" text="xs" p="x-2 y-1" bg="gray-200" font="bold">{{
+                                    foundSet.year
+                                }}</span>
+                                <span v-if="foundSet.numParts" text="xs gray-600"
+                                    >{{ t("sets.numParts").value }}: {{ foundSet.numParts }}</span
+                                >
+                            </div>
                         </div>
-                    </button>
+                    </div>
+
+                    <p v-if="addError" text="red-600" font="bold">{{ addError }}</p>
+
+                    <PrimaryButton :disabled="isAdding" @click="addToCollection">{{
+                        t("sets.addToCollection").value
+                    }}</PrimaryButton>
                 </div>
 
                 <div v-else flex="~ col" gap="4">
-                    <p text="gray-600">{{ t("sets.noMatchingSets").value }}</p>
-                    <PrimaryButton @click="goToAdd">{{ t("sets.addSet").value }}</PrimaryButton>
+                    <p text="gray-600">{{ t("sets.scanNoResult").value }}</p>
                 </div>
             </template>
 

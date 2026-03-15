@@ -30,6 +30,10 @@ const goToAdd = async () => {
     await familyRouterService.goToRoute("sets-add");
 };
 
+const goToScan = async () => {
+    await familyRouterService.goToRoute("sets-scan");
+};
+
 const goToDetail = async (id: number) => {
     await familyRouterService.goToRoute("sets-detail", id);
 };
@@ -38,7 +42,10 @@ const goToDetail = async (id: number) => {
 <template>
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('sets.title').value">
-            <PrimaryButton @click="goToAdd">{{ t("sets.addSet").value }}</PrimaryButton>
+            <div flex gap="2">
+                <PrimaryButton @click="goToScan">{{ t("sets.scanSet").value }}</PrimaryButton>
+                <PrimaryButton @click="goToAdd">{{ t("sets.addSet").value }}</PrimaryButton>
+            </div>
         </PageHeader>
 
         <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>

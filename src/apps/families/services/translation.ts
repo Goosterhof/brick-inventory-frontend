@@ -111,8 +111,9 @@ const translations = {
             spareParts: "Spare",
             scanSet: "Scan set",
             scannedCode: "Scanned code",
-            matchingSets: "Matching sets",
-            noMatchingSets: "No matching sets found in your collection.",
+            scanNoResult: "No set found for this barcode.",
+            scanAddError: "Could not add set to your collection. Please try again.",
+            addToCollection: "Add to collection",
             scanAgain: "Scan again",
         },
         storage: {
@@ -247,8 +248,9 @@ const translations = {
             spareParts: "Reserve",
             scanSet: "Set scannen",
             scannedCode: "Gescande code",
-            matchingSets: "Overeenkomende sets",
-            noMatchingSets: "Geen overeenkomende sets gevonden in je collectie.",
+            scanNoResult: "Geen set gevonden voor deze barcode.",
+            scanAddError: "Kon set niet toevoegen aan je collectie. Probeer het opnieuw.",
+            addToCollection: "Toevoegen aan collectie",
             scanAgain: "Opnieuw scannen",
         },
         storage: {

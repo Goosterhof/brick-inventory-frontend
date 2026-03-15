@@ -14,6 +14,12 @@ export const routes = [
         meta: {authOnly: true, title: "pageTitle.addSet"},
     },
     {
+        path: "/sets/scan",
+        name: "sets-scan",
+        component: () => import("./pages/ScanSetPage.vue"),
+        meta: {authOnly: true, title: "pageTitle.scanSet"},
+    },
+    {
         path: "/sets/:id",
         name: "sets-detail",
         component: () => import("./pages/SetDetailPage.vue"),
@@ -24,11 +30,5 @@ export const routes = [
         name: "sets-edit",
         component: () => import("./pages/EditSetPage.vue"),
         meta: {authOnly: true, title: "pageTitle.editSet"},
-    },
-    {
-        path: "/sets/scan",
-        name: "sets-scan",
-        component: () => import("./pages/ScanSetPage.vue"),
-        meta: {authOnly: true, title: "pageTitle.scanSet"},
     },
 ] as const satisfies readonly RouteRecordRaw[];

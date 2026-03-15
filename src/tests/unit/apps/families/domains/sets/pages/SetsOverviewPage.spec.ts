@@ -121,6 +121,21 @@ describe("SetsOverviewPage", () => {
         expect(wrapper.text()).toContain("common.loading");
     });
 
+    it("should navigate to scan page when scan button is clicked", async () => {
+        // Arrange
+        mockGetRequest.mockResolvedValue({data: []});
+        const wrapper = shallowMount(SetsOverviewPage);
+        await flushPromises();
+
+        // Act
+        const scanButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "sets.scanSet");
+        await scanButton?.trigger("click");
+        await flushPromises();
+
+        // Assert
+        expect(mockGoToRoute).toHaveBeenCalledWith("sets-scan");
+    });
+
     it("should navigate to add page when add button is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: []});
@@ -128,7 +143,8 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Act
-        await wrapper.findComponent(PrimaryButton).trigger("click");
+        const addButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "sets.addSet");
+        await addButton?.trigger("click");
         await flushPromises();
 
         // Assert
