@@ -108,6 +108,59 @@ Borders are the most defining feature of Brick Brutalism. They are the studs on 
 - **Never use border-radius.** Sharp corners are the brand. Rounding an edge is like filing down a Lego stud.
 - **Never use hairline borders** (1px). If a border exists, it must be 3px. Thin borders look indecisive.
 
+## Studs
+
+Studs are the most iconic Lego feature — the raised circles on top of every brick. In Brick Brutalism, studs are **decorative elements that reinforce the Lego identity**. They sit above form fields, section headers, or any surface that represents a "brick."
+
+> **Note**: Studs are the **only** element in the system that uses `border-radius`. This is not an exception to the sharp-corners rule — studs are literally round on real bricks. Square studs aren't studs.
+
+### Real Lego Dimensions (reference)
+
+| Part | Measurement |
+|------|-------------|
+| Stud diameter | 4.8mm |
+| Stud center-to-center spacing | 8.0mm |
+| Gap between studs (edge-to-edge) | 3.2mm |
+| Stud height (cylinder) | 1.8mm |
+| 1×1 brick width | 7.8mm |
+
+### Ratios (these are the constraints)
+
+| Ratio | Real Lego | Target |
+|-------|-----------|--------|
+| **Stud diameter : center-to-center spacing** | 4.8 : 8.0 = **60%** | 60% |
+| **Gap : stud diameter** | 3.2 : 4.8 = **67%** | 67% |
+| **Stud diameter : 1-unit brick width** | 4.8 : 7.8 = **62%** | ~60% |
+
+### Specifications
+
+| Property | Value | UnoCSS / CSS |
+|----------|-------|-------------|
+| **Diameter** | 12px | `w="3" h="3"` |
+| **Border** | 3px black | `border="3 black solid"` |
+| **Shape** | Circle | `style="border-radius: 50%"` |
+| **Background** | White | `bg="white"` |
+| **Depth** | Subtle inset shadow | `box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.15)` |
+| **Gap between studs** | 8px | `gap="2"` |
+| **Center-to-center** | 20px (12 + 8) | — |
+
+### Verification
+
+When placing studs, check these ratios hold:
+
+- **Diameter to gap**: 12px stud, 8px gap → 67% ✓
+- **Diameter to center spacing**: 12px / 20px → 60% ✓
+- **Diameter to parent width**: Studs should occupy less than 30% of the parent's width — they're accents, not wallpaper.
+
+### Rules
+
+- **Studs are decorative.** Always `aria-hidden="true"`. Screen readers skip them.
+- **Studs use the `LegoStuds` component.** Don't hand-roll stud circles — use the shared component for consistent ratios.
+- **Default count is 3.** Override with the `count` prop when the surface size warrants more or fewer.
+- **Studs sit above content**, not beside it or below it — like on a real brick.
+- **No shadows on studs** (except the inset depth hint). Studs are part of the brick surface, not floating above it.
+- **Never use studs on interactive elements directly.** Studs go on containers (FormField, card headers, section dividers), not on buttons or inputs themselves.
+
 ## Shadows
 
 Shadows in Brick Brutalism are not about realism — they're about physicality. A hard offset shadow says "this element is a brick sitting on a surface."

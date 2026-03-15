@@ -28,6 +28,8 @@ This project follows **Brick Brutalism** — a design system combining brutalist
 
 Key rules: 3px black borders, hard offset shadows (no blur), sharp corners (no border-radius), high contrast, yellow for interaction feedback, red for errors only.
 
+**Lego studs**: Decorative circular elements that reinforce the Lego identity. Studs follow real-brick ratios (60% diameter-to-spacing, 67% gap-to-diameter). Always use the `LegoStuds` component — never hand-roll circles. See the Studs section in `brand.md` and run `.claude/skills/stud-audit.md` when adding studs to new surfaces.
+
 ## Project Overview
 
 This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern tooling and TypeScript. The architecture supports multiple independent apps sharing common code.
