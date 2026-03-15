@@ -83,6 +83,9 @@ const translations = {
             totalPieces: "{count} pieces total",
             setsByStatus: "Sets by status",
             quickActions: "Quick links",
+            actionScan: "Scan set",
+            actionIdentify: "Identify brick",
+            actionImport: "Import collection",
         },
         about: {title: "About", description: "This is the about page."},
         sets: {
@@ -264,6 +267,9 @@ const translations = {
             totalPieces: "{count} stuks totaal",
             setsByStatus: "Sets per status",
             quickActions: "Snel naar",
+            actionScan: "Set scannen",
+            actionIdentify: "Steen herkennen",
+            actionImport: "Collectie importeren",
         },
         about: {title: "Over", description: "Dit is de over pagina."},
         sets: {

@@ -30,13 +30,12 @@ onMounted(async () => {
     loading.value = false;
 });
 
-const goToSets = async () => {
-    await familyRouterService.goToRoute("sets");
-};
-
-const goToStorage = async () => {
-    await familyRouterService.goToRoute("storage");
-};
+const goToSets = async () => await familyRouterService.goToRoute("sets");
+const goToStorage = async () => await familyRouterService.goToRoute("storage");
+const goToParts = async () => await familyRouterService.goToRoute("parts");
+const goToScan = async () => await familyRouterService.goToRoute("sets-scan");
+const goToIdentify = async () => await familyRouterService.goToRoute("sets-identify");
+const goToSettings = async () => await familyRouterService.goToRoute("settings");
 </script>
 
 <template>
@@ -108,9 +107,13 @@ const goToStorage = async () => {
                 <h2 text="lg" font="bold" uppercase tracking="wide" m="b-4">
                     {{ t("home.quickActions").value }}
                 </h2>
-                <div flex gap="4">
+                <div grid grid-cols="2 sm:3" gap="4">
                     <NavLink to="/sets" @click="goToSets">{{ t("navigation.sets").value }}</NavLink>
                     <NavLink to="/storage" @click="goToStorage">{{ t("navigation.storage").value }}</NavLink>
+                    <NavLink to="/parts" @click="goToParts">{{ t("navigation.parts").value }}</NavLink>
+                    <NavLink to="/sets/scan" @click="goToScan">{{ t("home.actionScan").value }}</NavLink>
+                    <NavLink to="/sets/identify" @click="goToIdentify">{{ t("home.actionIdentify").value }}</NavLink>
+                    <NavLink to="/settings" @click="goToSettings">{{ t("home.actionImport").value }}</NavLink>
                 </div>
             </template>
         </template>
