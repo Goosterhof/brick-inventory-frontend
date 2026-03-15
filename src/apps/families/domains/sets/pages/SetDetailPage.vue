@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {FamilySet} from "@app/types/familySet";
-import type {SetPart, SetWithParts} from "@app/types/part";
+import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
 
 import AssignPartModal from "../modals/AssignPartModal.vue";
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
@@ -8,11 +8,13 @@ import BackButton from "@shared/components/BackButton.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
-import {onMounted, ref} from "vue";
+import {deepCamelKeys} from "string-ts";
+import {computed, onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
 const familySet = ref<FamilySet | null>(null);
 const setWithParts = ref<SetWithParts | null>(null);
+const storageMap = ref<StorageMapEntry[]>([]);
 const loading = ref(true);
 const partsLoading = ref(false);
 const selectedPart = ref<SetPart | null>(null);
@@ -25,10 +27,34 @@ const statusKey: Record<FamilySet["status"], "sets.sealed" | "sets.built" | "set
     incomplete: "sets.incomplete",
 };
 
+const storageByPartKey = computed(() => {
+    const map = new Map<string, StorageMapEntry[]>();
+    for (const entry of storageMap.value) {
+        const key = `${entry.partId}_${entry.colorId}`;
+        const existing = map.get(key) ?? [];
+        existing.push(entry);
+        map.set(key, existing);
+    }
+    return map;
+});
+
+const getStorageLocations = (setPart: SetPart): StorageMapEntry[] => {
+    const key = `${setPart.part.id}_${setPart.color.id}`;
+    return storageByPartKey.value.get(key) ?? [];
+};
+
 const loadParts = async (setNum: string) => {
     partsLoading.value = true;
     const response = await familyHttpService.getRequest<SetWithParts>(`/sets/${setNum}/parts`);
     setWithParts.value = toCamelCaseTyped(response.data);
+
+    try {
+        const mapResponse = await familyHttpService.getRequest<StorageMapEntry[]>(`/sets/${setNum}/storage-map`);
+        storageMap.value = mapResponse.data.map((item) => deepCamelKeys(item) as StorageMapEntry);
+    } catch {
+        storageMap.value = [];
+    }
+
     partsLoading.value = false;
 };
 
@@ -56,6 +82,14 @@ const openAssignModal = (part: SetPart) => {
 const closeAssignModal = () => {
     showAssignModal.value = false;
     selectedPart.value = null;
+};
+
+const handleAssigned = () => {
+    showAssignModal.value = false;
+    selectedPart.value = null;
+    if (familySet.value) {
+        loadParts(familySet.value.set.setNum);
+    }
 };
 </script>
 
@@ -156,7 +190,22 @@ const closeAssignModal = () => {
                             :image-url="setPart.part.imageUrl"
                             :color-name="setPart.color.name"
                             :color-rgb="setPart.color.rgb"
-                        />
+                        >
+                            <div v-if="getStorageLocations(setPart).length > 0" flex gap="1" m="t-1" flex-wrap="wrap">
+                                <span
+                                    v-for="loc in getStorageLocations(setPart)"
+                                    :key="loc.storageOptionId"
+                                    text="xs"
+                                    p="x-2 y-0.5"
+                                    bg="yellow-300"
+                                    font="bold"
+                                    class="brick-border"
+                                    border="1"
+                                >
+                                    {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                                </span>
+                            </div>
+                        </PartListItem>
                     </button>
                 </div>
 
@@ -185,7 +234,28 @@ const closeAssignModal = () => {
                                 :color-name="setPart.color.name"
                                 :color-rgb="setPart.color.rgb"
                                 spare
-                            />
+                            >
+                                <div
+                                    v-if="getStorageLocations(setPart).length > 0"
+                                    flex
+                                    gap="1"
+                                    m="t-1"
+                                    flex-wrap="wrap"
+                                >
+                                    <span
+                                        v-for="loc in getStorageLocations(setPart)"
+                                        :key="loc.storageOptionId"
+                                        text="xs"
+                                        p="x-2 y-0.5"
+                                        bg="yellow-300"
+                                        font="bold"
+                                        class="brick-border"
+                                        border="1"
+                                    >
+                                        {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                                    </span>
+                                </div>
+                            </PartListItem>
                         </button>
                     </div>
                 </div>
@@ -196,7 +266,7 @@ const closeAssignModal = () => {
                 :open="showAssignModal"
                 :part="selectedPart"
                 @close="closeAssignModal"
-                @assigned="closeAssignModal"
+                @assigned="handleAssigned"
             />
         </template>
     </div>
