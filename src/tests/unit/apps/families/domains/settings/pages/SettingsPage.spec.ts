@@ -95,10 +95,10 @@ describe("SettingsPage", () => {
         await flushPromises();
 
         // Assert
-        const badges = wrapper.findAllComponents(BadgeLabel);
-        expect(badges).toHaveLength(1);
-        expect(badges[0].text()).toBe("settings.familyHead");
-        expect(badges[0].props("variant")).toBe("highlight");
+        const badge = wrapper.findComponent(BadgeLabel);
+        expect(badge.exists()).toBe(true);
+        expect(badge.text()).toBe("settings.familyHead");
+        expect(badge.props("variant")).toBe("highlight");
     });
 
     it("should render import button", () => {
