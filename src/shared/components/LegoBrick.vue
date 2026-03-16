@@ -13,17 +13,19 @@ const studCount = columns * rows;
     <div
         border="3 black"
         p="2"
-        inline-block
         :class="shadow ? 'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' : ''"
         :style="{backgroundColor: color, gridTemplateColumns: `repeat(${columns}, 1fr)`}"
-        grid
+        inline-grid
         place-items="center"
         class="gap-0"
     >
         <div
             v-for="stud in studCount"
             :key="stud"
-            class="w-[24px] h-[24px] m-[8px] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            class="shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            w="6"
+            h="6"
+            m="2"
             rounded="full"
             border="3 black"
             :style="{backgroundColor: color}"

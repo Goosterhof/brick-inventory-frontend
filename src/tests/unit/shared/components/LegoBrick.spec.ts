@@ -1,4 +1,4 @@
-import LegoBrick from "@app/domains/about/components/LegoBrick.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
@@ -53,7 +53,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick, {props: {columns: 3, rows: 2}});
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("style")).toContain("grid-template-columns: repeat(3, 1fr)");
     });
 
@@ -62,7 +62,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick);
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("style")).toContain("background-color");
     });
 
@@ -71,7 +71,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick, {props: {color: "#1D4ED8"}});
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("style")).toContain("background-color");
         const stud = wrapper.find("[rounded='full']");
         expect(stud.attributes("style")).toContain("background-color");
@@ -82,7 +82,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick);
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.classes()).toContain("shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]");
     });
 
@@ -91,7 +91,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick, {props: {shadow: false}});
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.classes()).not.toContain("shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]");
     });
 
@@ -100,7 +100,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick);
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("border")).toBe("3 black");
     });
 
@@ -111,7 +111,8 @@ describe("LegoBrick", () => {
         // Assert
         const stud = wrapper.find("[rounded='full']");
         expect(stud.attributes("border")).toBe("3 black");
-        expect(stud.classes()).toContain("w-[24px]");
-        expect(stud.classes()).toContain("h-[24px]");
+        expect(stud.attributes("w")).toBe("6");
+        expect(stud.attributes("h")).toBe("6");
+        expect(stud.attributes("m")).toBe("2");
     });
 });

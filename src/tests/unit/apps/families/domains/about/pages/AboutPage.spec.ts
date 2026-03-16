@@ -1,4 +1,5 @@
 import AboutPage from "@app/domains/about/pages/AboutPage.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 
@@ -16,27 +17,49 @@ describe("AboutPage", () => {
         expect(wrapper.text()).toContain("about.description");
     });
 
-    it("should render 14 studs for the four bricks", () => {
+    it("should render four LegoBrick components", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const studs = wrapper.findAll("[rounded='full']");
-        expect(studs).toHaveLength(14);
+        const bricks = wrapper.findAllComponents(LegoBrick);
+        expect(bricks).toHaveLength(4);
     });
 
-    it("should use four different brick colors", () => {
+    it("should render bricks with correct colors", () => {
         // Arrange
         const wrapper = shallowMount(AboutPage);
 
         // Assert
-        const studs = wrapper.findAll("[rounded='full']");
-        const colors = new Set<string>();
-        for (const stud of studs) {
-            const style = stud.attributes("style") ?? "";
-            colors.add(style);
+        const bricks = wrapper.findAllComponents(LegoBrick);
+        const colors = bricks.map((brick) => brick.props("color"));
+        expect(colors).toEqual(["#DC2626", "#1D4ED8", "#EAB308", "#16A34A"]);
+    });
+
+    it("should render bricks with correct dimensions", () => {
+        // Arrange
+        const wrapper = shallowMount(AboutPage);
+
+        // Assert
+        const bricks = wrapper.findAllComponents(LegoBrick);
+        const dimensions = bricks.map((brick) => ({columns: brick.props("columns"), rows: brick.props("rows")}));
+        expect(dimensions).toEqual([
+            {columns: 2, rows: 2},
+            {columns: 1, rows: 1},
+            {columns: 2, rows: 3},
+            {columns: 1, rows: 3},
+        ]);
+    });
+
+    it("should disable shadow on all bricks", () => {
+        // Arrange
+        const wrapper = shallowMount(AboutPage);
+
+        // Assert
+        const bricks = wrapper.findAllComponents(LegoBrick);
+        for (const brick of bricks) {
+            expect(brick.props("shadow")).toBe(false);
         }
-        expect(colors.size).toBe(4);
     });
 
     it("should have a drop-shadow on the container", () => {
@@ -46,15 +69,6 @@ describe("AboutPage", () => {
         // Assert
         const container = wrapper.find("[inline-block]");
         expect(container.attributes("style")).toContain("drop-shadow");
-    });
-
-    it("should have four brick containers with wall padding and borders", () => {
-        // Arrange
-        const wrapper = shallowMount(AboutPage);
-
-        // Assert
-        const bricks = wrapper.findAll("[p='2'][border='3 black']");
-        expect(bricks).toHaveLength(4);
     });
 
     it("should overlap borders between adjacent bricks with negative margins", () => {
