@@ -27,10 +27,9 @@ _How this project's owner likes things done._
 
 _Approaches that proved effective in this codebase._
 
-<!-- Example:
-- When adding a new domain: create the route first, then the page, then the test — this order catches naming issues early
-- For form pages: wire up the happy path end-to-end before handling errors
--->
+- When adding a new domain: create routes first (`index.ts`), then pages, then tests — catches naming mismatches early before wiring.
+- For form pages: wire up the happy path end-to-end before handling error states. Get the `loadingService.start()` → API call → `loadingService.stop()` loop working, then layer in `catch` blocks.
+- Use `v-show` instead of `v-if` for conditional navigation elements — `v-if` on compiled Vue components creates untrackable branches in v8 coverage, making 100% coverage impossible without contortion.
 
 ## Future Improvements
 
@@ -42,7 +41,6 @@ _Things to revisit when external tooling catches up._
 
 _Specific errors and their fixes._
 
-<!-- Example:
-- Don't use `vi.fn()` for HTTP mocks when the real service returns `{data: T}` — mock the full shape
-- Don't forget `meta: {authOnly: true}` on protected routes — the router guard silently passes without it
--->
+- Never use `RouterLink` in shared components — the families app uses a custom RouterService and never installs Vue Router. `RouterLink` causes a blank page crash on mount. Use plain `<a>` tags that emit click events.
+- Don't set bundle budgets based on a single entry chunk — size-limit globs match all JS chunks (entry + lazy-loaded routes). Budget must account for the sum, not the biggest file.
+- Don't forget `meta: {authOnly: true}` on protected routes — the router guard silently passes without it, giving unauthenticated users a broken page instead of a redirect.
