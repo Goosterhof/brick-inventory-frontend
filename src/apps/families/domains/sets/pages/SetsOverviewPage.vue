@@ -2,11 +2,13 @@
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
+import FilterChip from "@shared/components/FilterChip.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {downloadCsv, toCsv} from "@shared/helpers/csv";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {computed, onMounted, ref} from "vue";
@@ -107,23 +109,14 @@ const exportCsv = () => {
                 />
 
                 <div flex gap="2" flex-wrap="wrap">
-                    <button
+                    <FilterChip
                         v-for="status in allStatuses"
                         :key="status"
-                        type="button"
-                        text="xs"
-                        p="x-3 y-1"
-                        font="bold"
-                        uppercase
-                        tracking="wide"
-                        cursor="pointer"
-                        outline="none"
-                        class="brick-border brick-transition"
-                        :bg="activeStatusFilter === status ? 'yellow-300' : 'white hover:yellow-100'"
+                        :active="activeStatusFilter === status"
                         @click="toggleStatusFilter(status)"
                     >
                         {{ t(statusKey[status]).value }}
-                    </button>
+                    </FilterChip>
                 </div>
             </div>
 
@@ -145,10 +138,8 @@ const exportCsv = () => {
                     <div flex="1">
                         <p font="bold">{{ familySet.set.name }}</p>
                         <p text="sm gray-600">{{ familySet.set.setNum }}</p>
-                        <div flex gap="2" m="t-1">
-                            <span text="xs" p="x-2 y-1" bg="gray-200" font="bold">{{
-                                t(statusKey[familySet.status]).value
-                            }}</span>
+                        <div flex gap="2" m="t-1" items="center">
+                            <BadgeLabel>{{ t(statusKey[familySet.status]).value }}</BadgeLabel>
                             <span text="xs gray-600">{{ familySet.quantity }}x</span>
                         </div>
                     </div>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {familyHttpService, familyTranslationService} from "@app/services";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {ref} from "vue";
 
 const {t} = familyTranslationService;

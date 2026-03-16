@@ -4,6 +4,7 @@ import type {StorageOption} from "@app/types/storageOption";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
+import DetailRow from "@shared/components/DetailRow.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -50,22 +51,18 @@ const goBack = async () => {
             <div flex="~ col" gap="3">
                 <h1 text="2xl" font="bold" uppercase tracking="wide">{{ storageOption.name }}</h1>
 
-                <div v-if="storageOption.description" flex gap="2">
-                    <span font="bold">{{ t("storage.description").value }}:</span>
-                    <span>{{ storageOption.description }}</span>
-                </div>
-                <div v-if="storageOption.row !== null" flex gap="2">
-                    <span font="bold">{{ t("storage.row").value }}:</span>
-                    <span>{{ storageOption.row }}</span>
-                </div>
-                <div v-if="storageOption.column !== null" flex gap="2">
-                    <span font="bold">{{ t("storage.column").value }}:</span>
-                    <span>{{ storageOption.column }}</span>
-                </div>
-                <div v-if="storageOption.childIds.length > 0" flex gap="2">
-                    <span font="bold">{{ t("storage.subLocations").value }}:</span>
-                    <span>{{ storageOption.childIds.length }}</span>
-                </div>
+                <DetailRow v-if="storageOption.description" :label="t('storage.description').value">
+                    {{ storageOption.description }}
+                </DetailRow>
+                <DetailRow v-if="storageOption.row !== null" :label="t('storage.row').value">
+                    {{ storageOption.row }}
+                </DetailRow>
+                <DetailRow v-if="storageOption.column !== null" :label="t('storage.column').value">
+                    {{ storageOption.column }}
+                </DetailRow>
+                <DetailRow v-if="storageOption.childIds.length > 0" :label="t('storage.subLocations').value">
+                    {{ storageOption.childIds.length }}
+                </DetailRow>
 
                 <div m="t-4">
                     <PrimaryButton @click="goToEdit">{{ t("storage.edit").value }}</PrimaryButton>

@@ -5,6 +5,7 @@ import {familyAuthService, familyHttpService, familyRouterService, familyTransla
 import CardContainer from "@shared/components/CardContainer.vue";
 import NavLink from "@shared/components/NavLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
+import StatCard from "@shared/components/StatCard.vue";
 import {deepCamelKeys} from "string-ts";
 import {onMounted, ref} from "vue";
 
@@ -60,32 +61,22 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
             <template v-else-if="stats">
                 <!-- Headline stats -->
                 <div grid grid-cols="1 sm:2 lg:3" gap="4" m="b-6">
-                    <CardContainer>
-                        <p text="sm" font="bold" uppercase tracking="wide" m="b-2">
-                            {{ t("home.statSets").value }}
-                        </p>
-                        <p text="3xl" font="bold">{{ stats.totalSets }}</p>
+                    <StatCard :label="t('home.statSets').value" :value="String(stats.totalSets)">
                         <p v-if="stats.totalSetQuantity !== stats.totalSets" text="sm gray-600">
                             {{ t("home.totalIncludingDuplicates", {count: String(stats.totalSetQuantity)}).value }}
                         </p>
-                    </CardContainer>
+                    </StatCard>
 
-                    <CardContainer>
-                        <p text="sm" font="bold" uppercase tracking="wide" m="b-2">
-                            {{ t("home.statStorageLocations").value }}
-                        </p>
-                        <p text="3xl" font="bold">{{ stats.totalStorageLocations }}</p>
-                    </CardContainer>
+                    <StatCard
+                        :label="t('home.statStorageLocations').value"
+                        :value="String(stats.totalStorageLocations)"
+                    />
 
-                    <CardContainer>
-                        <p text="sm" font="bold" uppercase tracking="wide" m="b-2">
-                            {{ t("home.statStoredParts").value }}
-                        </p>
-                        <p text="3xl" font="bold">{{ stats.totalUniqueParts }}</p>
+                    <StatCard :label="t('home.statStoredParts').value" :value="String(stats.totalUniqueParts)">
                         <p v-if="stats.totalPartsQuantity > 0" text="sm gray-600">
                             {{ t("home.totalPieces", {count: String(stats.totalPartsQuantity)}).value }}
                         </p>
-                    </CardContainer>
+                    </StatCard>
                 </div>
 
                 <!-- Sets by status -->
@@ -94,12 +85,12 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                         {{ t("home.setsByStatus").value }}
                     </h2>
                     <div grid grid-cols="2 sm:4" gap="4" m="b-6">
-                        <CardContainer v-for="(count, status) in stats.setsByStatus" :key="status">
-                            <p text="sm" font="bold" uppercase tracking="wide" m="b-2">
-                                {{ statusKeys[status] ? t(statusKeys[status]).value : status }}
-                            </p>
-                            <p text="2xl" font="bold">{{ count }}</p>
-                        </CardContainer>
+                        <StatCard
+                            v-for="(count, status) in stats.setsByStatus"
+                            :key="status"
+                            :label="statusKeys[status] ? t(statusKeys[status]).value : String(status)"
+                            :value="String(count)"
+                        />
                     </div>
                 </template>
 

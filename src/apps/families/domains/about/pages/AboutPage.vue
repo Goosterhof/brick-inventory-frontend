@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {familyTranslationService} from "@app/services";
-
 import LegoBrick from "@shared/components/LegoBrick.vue";
 
 const {t} = familyTranslationService;

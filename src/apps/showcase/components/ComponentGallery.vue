@@ -1,11 +1,19 @@
 <script setup lang="ts">
+import BackButton from "@shared/components/BackButton.vue";
+import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import CardContainer from "@shared/components/CardContainer.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
+import DetailRow from "@shared/components/DetailRow.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
+import FilterChip from "@shared/components/FilterChip.vue";
 import FormError from "@shared/components/forms/FormError.vue";
 import FormField from "@shared/components/forms/FormField.vue";
 import FormLabel from "@shared/components/forms/FormLabel.vue";
+import ListItemButton from "@shared/components/ListItemButton.vue";
+import ModalDialog from "@shared/components/ModalDialog.vue";
+import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import StatCard from "@shared/components/StatCard.vue";
 import ToastMessage from "@shared/components/ToastMessage.vue";
 import {ref} from "vue";
 
@@ -15,10 +23,16 @@ const demoInput = ref("Brick 2x4");
 const errorInput = ref("");
 const toastVisible = ref(true);
 const errorToastVisible = ref(true);
+const modalOpen = ref(false);
+const activeFilter = ref<string | null>(null);
 
 const resetToasts = () => {
     toastVisible.value = true;
     errorToastVisible.value = true;
+};
+
+const toggleFilter = (filter: string) => {
+    activeFilter.value = activeFilter.value === filter ? null : filter;
 };
 </script>
 
@@ -49,6 +63,21 @@ const resetToasts = () => {
                     <div flex="~ wrap" gap="3">
                         <DangerButton>Delete Set</DangerButton>
                     </div>
+                </div>
+
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">BackButton</p>
+                    <div flex="~ wrap" gap="3">
+                        <BackButton>&larr; Back to Overview</BackButton>
+                    </div>
+                </div>
+
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">ListItemButton</p>
+                    <ListItemButton>
+                        <span font="bold">Brick 2x4</span>
+                        <span text="sm gray-600">Red &middot; Drawer B-7</span>
+                    </ListItemButton>
                 </div>
             </div>
         </div>
@@ -100,9 +129,9 @@ const resetToasts = () => {
             </div>
         </div>
 
-        <!-- Cards -->
+        <!-- Cards & Layout -->
         <div m="b-12">
-            <p class="brick-label" m="b-6">Cards</p>
+            <p class="brick-label" m="b-6">Cards &amp; Layout</p>
             <div grid="~ cols-1 md:cols-2 lg:cols-3" gap="6">
                 <CardContainer>
                     <p font="heading bold" text="lg" uppercase tracking="wide" m="b-2">Brick 2x4</p>
@@ -121,6 +150,88 @@ const resetToasts = () => {
                     <p text="sm gray-600">Dark gray slope. Drawer A-3.</p>
                     <p text="sm" font="bold" m="t-3">23 in stock</p>
                 </CardContainer>
+            </div>
+        </div>
+
+        <!-- PageHeader -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">PageHeader</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <PageHeader title="My Inventory">
+                    <PrimaryButton>Add Set</PrimaryButton>
+                </PageHeader>
+            </div>
+        </div>
+
+        <!-- StatCard -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">StatCard</p>
+            <div grid="~ cols-1 sm:cols-2 lg:cols-3" gap="6">
+                <StatCard label="Total Sets" value="42">
+                    <p text="sm gray-600">Including 3 duplicates</p>
+                </StatCard>
+                <StatCard label="Storage Locations" value="12" />
+                <StatCard label="Unique Parts" value="1,847">
+                    <p text="sm gray-600">14,203 total pieces</p>
+                </StatCard>
+            </div>
+        </div>
+
+        <!-- DetailRow -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">DetailRow</p>
+            <div p="6" class="brick-border" bg="gray-50" flex="~ col" gap="3">
+                <DetailRow label="Name">Drawer A-3</DetailRow>
+                <DetailRow label="Description">Top shelf, third from left</DetailRow>
+                <DetailRow label="Row">1</DetailRow>
+                <DetailRow label="Column">3</DetailRow>
+            </div>
+        </div>
+
+        <!-- FilterChip -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">FilterChip</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <p text="xs" font="mono" text-color="gray-500" m="b-3">Click to toggle</p>
+                <div flex gap="2" flex-wrap="wrap">
+                    <FilterChip :active="activeFilter === 'sealed'" @click="toggleFilter('sealed')">Sealed</FilterChip>
+                    <FilterChip :active="activeFilter === 'built'" @click="toggleFilter('built')">Built</FilterChip>
+                    <FilterChip :active="activeFilter === 'in-progress'" @click="toggleFilter('in-progress')">
+                        In Progress
+                    </FilterChip>
+                    <FilterChip :active="activeFilter === 'incomplete'" @click="toggleFilter('incomplete')">
+                        Incomplete
+                    </FilterChip>
+                </div>
+            </div>
+        </div>
+
+        <!-- BadgeLabel -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">BadgeLabel</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <div flex gap="3" flex-wrap="wrap" items="center">
+                    <BadgeLabel>Sealed</BadgeLabel>
+                    <BadgeLabel>Built</BadgeLabel>
+                    <BadgeLabel variant="highlight">Drawer A-3 (12x)</BadgeLabel>
+                    <BadgeLabel variant="highlight">Shelf B-1 (5x)</BadgeLabel>
+                </div>
+            </div>
+        </div>
+
+        <!-- ModalDialog -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">ModalDialog</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <PrimaryButton @click="modalOpen = true">Open Modal</PrimaryButton>
+                <ModalDialog :open="modalOpen" @close="modalOpen = false">
+                    <template #title>Confirm Action</template>
+                    <p m="b-4">Are you sure you want to remove this brick from your inventory?</p>
+                    <div flex gap="3">
+                        <DangerButton @click="modalOpen = false">Remove</DangerButton>
+                        <BackButton @click="modalOpen = false">Cancel</BackButton>
+                    </div>
+                </ModalDialog>
             </div>
         </div>
 
