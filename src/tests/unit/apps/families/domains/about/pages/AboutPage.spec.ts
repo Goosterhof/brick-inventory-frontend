@@ -1,5 +1,5 @@
-import LegoBrick from "@app/domains/about/components/LegoBrick.vue";
 import AboutPage from "@app/domains/about/pages/AboutPage.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 

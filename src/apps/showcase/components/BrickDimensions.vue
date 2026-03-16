@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import LegoBrick from "@shared/components/LegoBrick.vue";
+
 import SectionHeading from "./SectionHeading.vue";
 
-const studs = [
+const bricks = [
     {cols: 2, rows: 4, label: "2x4 Brick"},
     {cols: 2, rows: 2, label: "2x2 Brick"},
     {cols: 1, rows: 2, label: "1x2 Plate"},
@@ -57,8 +59,8 @@ const studs = [
         <!-- Brick specimens with studs -->
         <div grid="~ cols-1 sm:cols-2 lg:cols-4" gap="6">
             <div
-                v-for="stud in studs"
-                :key="stud.label"
+                v-for="brick in bricks"
+                :key="brick.label"
                 p="6"
                 class="brick-border brick-shadow"
                 bg="white"
@@ -66,30 +68,11 @@ const studs = [
                 items="center"
                 gap="4"
             >
-                <p class="brick-label" text="center">{{ stud.label }}</p>
+                <p class="brick-label" text="center">{{ brick.label }}</p>
 
-                <!-- Stud grid -->
-                <div
-                    inline-grid
-                    gap="2"
-                    :style="{
-                        gridTemplateColumns: `repeat(${stud.cols}, 1fr)`,
-                        gridTemplateRows: `repeat(${stud.rows}, 1fr)`,
-                    }"
-                >
-                    <div
-                        v-for="i in stud.cols * stud.rows"
-                        :key="i"
-                        w="10"
-                        h="10"
-                        rounded="full"
-                        bg="[#F5C518]"
-                        class="brick-border"
-                        shadow="[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                    />
-                </div>
+                <LegoBrick :columns="brick.cols" :rows="brick.rows" color="#F5C518" :shadow="false" />
 
-                <p text="xs" font="mono" text-color="gray-500">{{ stud.cols }} x {{ stud.rows }} studs</p>
+                <p text="xs" font="mono" text-color="gray-500">{{ brick.cols }} x {{ brick.rows }} studs</p>
             </div>
         </div>
 

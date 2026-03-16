@@ -1,4 +1,4 @@
-import LegoBrick from "@app/domains/about/components/LegoBrick.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
@@ -111,7 +111,8 @@ describe("LegoBrick", () => {
         // Assert
         const stud = wrapper.find("[rounded='full']");
         expect(stud.attributes("border")).toBe("3 black");
-        expect(stud.classes()).toContain("w-[24px]");
-        expect(stud.classes()).toContain("h-[24px]");
+        expect(stud.attributes("w")).toBe("6");
+        expect(stud.attributes("h")).toBe("6");
+        expect(stud.attributes("m")).toBe("2");
     });
 });
