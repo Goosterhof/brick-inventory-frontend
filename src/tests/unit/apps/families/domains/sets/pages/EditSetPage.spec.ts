@@ -1,7 +1,9 @@
 import EditSetPage from "@app/domains/sets/pages/EditSetPage.vue";
+import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
@@ -117,7 +119,7 @@ describe("EditSetPage", () => {
         const wrapper = shallowMount(EditSetPage);
 
         // Assert
-        expect(wrapper.text()).toContain("common.loading");
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
     });
 
     it("should submit update with correct payload", async () => {
@@ -193,16 +195,31 @@ describe("EditSetPage", () => {
         expect(mockGoToRoute).not.toHaveBeenCalled();
     });
 
-    it("should delete set and navigate to overview on confirm", async () => {
+    it("should open confirm dialog when delete button is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        mockDeleteRequest.mockResolvedValue({});
-        vi.spyOn(window, "confirm").mockReturnValue(true);
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
         wrapper.findComponent(DangerButton).vm.$emit("click");
+        await wrapper.vm.$nextTick();
+
+        // Assert
+        expect(wrapper.findComponent(ConfirmDialog).props("open")).toBe(true);
+    });
+
+    it("should delete set and navigate to overview on confirm", async () => {
+        // Arrange
+        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockDeleteRequest.mockResolvedValue({});
+        const wrapper = shallowMount(EditSetPage);
+        await flushPromises();
+
+        // Act
+        wrapper.findComponent(DangerButton).vm.$emit("click");
+        await wrapper.vm.$nextTick();
+        wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
         await flushPromises();
 
         // Assert
@@ -210,19 +227,21 @@ describe("EditSetPage", () => {
         expect(mockGoToRoute).toHaveBeenCalledWith("sets");
     });
 
-    it("should not delete when user cancels confirmation", async () => {
+    it("should close dialog when user cancels confirmation", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        vi.spyOn(window, "confirm").mockReturnValue(false);
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
         // Act
         wrapper.findComponent(DangerButton).vm.$emit("click");
-        await flushPromises();
+        await wrapper.vm.$nextTick();
+        wrapper.findComponent(ConfirmDialog).vm.$emit("cancel");
+        await wrapper.vm.$nextTick();
 
         // Assert
         expect(mockDeleteRequest).not.toHaveBeenCalled();
+        expect(wrapper.findComponent(ConfirmDialog).props("open")).toBe(false);
     });
 
     it("should render save and delete buttons", async () => {

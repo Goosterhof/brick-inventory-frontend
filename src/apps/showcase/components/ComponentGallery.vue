@@ -2,6 +2,7 @@
 import BackButton from "@shared/components/BackButton.vue";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import CardContainer from "@shared/components/CardContainer.vue";
+import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import DetailRow from "@shared/components/DetailRow.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
@@ -9,10 +10,18 @@ import FilterChip from "@shared/components/FilterChip.vue";
 import FormError from "@shared/components/forms/FormError.vue";
 import FormField from "@shared/components/forms/FormField.vue";
 import FormLabel from "@shared/components/forms/FormLabel.vue";
+import DateInput from "@shared/components/forms/inputs/DateInput.vue";
+import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
+import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import ModalDialog from "@shared/components/ModalDialog.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
+import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import SectionDivider from "@shared/components/SectionDivider.vue";
 import StatCard from "@shared/components/StatCard.vue";
 import ToastMessage from "@shared/components/ToastMessage.vue";
 import {ref} from "vue";
@@ -24,7 +33,14 @@ const errorInput = ref("");
 const toastVisible = ref(true);
 const errorToastVisible = ref(true);
 const modalOpen = ref(false);
+const confirmOpen = ref(false);
 const activeFilter = ref<string | null>(null);
+
+const demoText = ref("Classic red brick");
+const demoNumber = ref<number | null>(42);
+const demoSelect = ref("built");
+const demoDate = ref("2024-01-15");
+const demoTextarea = ref("Stored in the top drawer, second shelf from the left.");
 
 const resetToasts = () => {
     toastVisible.value = true;
@@ -126,6 +142,36 @@ const toggleFilter = (filter: string) => {
                         <FormError id="error-input-error" message="Part number is required." />
                     </FormField>
                 </div>
+
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">TextInput</p>
+                    <TextInput v-model="demoText" label="Description" />
+                </div>
+
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">NumberInput</p>
+                    <NumberInput v-model="demoNumber" label="Quantity" :min="0" :max="999" />
+                </div>
+
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">SelectInput</p>
+                    <SelectInput v-model="demoSelect" label="Status">
+                        <option value="sealed">Sealed</option>
+                        <option value="built">Built</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="incomplete">Incomplete</option>
+                    </SelectInput>
+                </div>
+
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">DateInput</p>
+                    <DateInput v-model="demoDate" label="Purchase Date" optional />
+                </div>
+
+                <div p="6" class="brick-border" bg="gray-50" md:col-span="2">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">TextareaInput</p>
+                    <TextareaInput v-model="demoTextarea" label="Notes" optional />
+                </div>
             </div>
         </div>
 
@@ -188,6 +234,30 @@ const toggleFilter = (filter: string) => {
             </div>
         </div>
 
+        <!-- PartListItem -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">PartListItem</p>
+            <div flex="~ col" gap="3" max-w="lg">
+                <PartListItem name="Brick 2x4" part-num="3001" :quantity="12" color-name="Red" color-rgb="C91A09" />
+                <PartListItem name="Plate 1x2" part-num="3023" :quantity="8" color-name="White" color-rgb="FFFFFF" />
+                <PartListItem
+                    name="Technic Axle 3"
+                    part-num="4519"
+                    :quantity="4"
+                    color-name="Black"
+                    color-rgb="05131D"
+                />
+                <PartListItem
+                    name="Tile 1x1 Round"
+                    part-num="98138"
+                    :quantity="2"
+                    color-name="Trans-Clear"
+                    color-rgb="EEEEEE"
+                    spare
+                />
+            </div>
+        </div>
+
         <!-- FilterChip -->
         <div m="b-12">
             <p class="brick-label" m="b-6">FilterChip</p>
@@ -219,6 +289,31 @@ const toggleFilter = (filter: string) => {
             </div>
         </div>
 
+        <!-- SectionDivider -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">SectionDivider</p>
+            <div p="6" class="brick-border" bg="gray-50" flex="~ col" gap="4">
+                <p>Content above the divider</p>
+                <SectionDivider />
+                <p>Content below the divider</p>
+            </div>
+        </div>
+
+        <!-- LoadingState -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">LoadingState</p>
+            <div grid="~ cols-1 md:cols-2" gap="6">
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">Default</p>
+                    <LoadingState />
+                </div>
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">Custom message</p>
+                    <LoadingState message="Fetching bricks..." />
+                </div>
+            </div>
+        </div>
+
         <!-- ModalDialog -->
         <div m="b-12">
             <p class="brick-label" m="b-6">ModalDialog</p>
@@ -232,6 +327,25 @@ const toggleFilter = (filter: string) => {
                         <BackButton @click="modalOpen = false">Cancel</BackButton>
                     </div>
                 </ModalDialog>
+            </div>
+        </div>
+
+        <!-- ConfirmDialog -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">ConfirmDialog</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <p text="xs" font="mono" text-color="gray-500" m="b-3">Replaces window.confirm()</p>
+                <DangerButton @click="confirmOpen = true">Delete Storage</DangerButton>
+                <ConfirmDialog
+                    :open="confirmOpen"
+                    title="Delete Storage"
+                    message="This will permanently remove the storage location and unassign all parts. This cannot be undone."
+                    @confirm="confirmOpen = false"
+                    @cancel="confirmOpen = false"
+                >
+                    <template #confirm>Delete</template>
+                    <template #cancel>Keep It</template>
+                </ConfirmDialog>
             </div>
         </div>
 

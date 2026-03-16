@@ -1,8 +1,10 @@
 import EditStoragePage from "@app/domains/storage/pages/EditStoragePage.vue";
+import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
@@ -113,7 +115,7 @@ describe("EditStoragePage", () => {
         const wrapper = shallowMount(EditStoragePage);
 
         // Assert
-        expect(wrapper.text()).toContain("common.loading");
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
     });
 
     it("should submit update with correct payload", async () => {
@@ -190,16 +192,31 @@ describe("EditStoragePage", () => {
         expect(mockGoToRoute).not.toHaveBeenCalled();
     });
 
-    it("should delete storage option and navigate to overview on confirm", async () => {
+    it("should open confirm dialog when delete button is clicked", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        mockDeleteRequest.mockResolvedValue({});
-        vi.spyOn(window, "confirm").mockReturnValue(true);
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
         // Act
         wrapper.findComponent(DangerButton).vm.$emit("click");
+        await wrapper.vm.$nextTick();
+
+        // Assert
+        expect(wrapper.findComponent(ConfirmDialog).props("open")).toBe(true);
+    });
+
+    it("should delete storage option and navigate to overview on confirm", async () => {
+        // Arrange
+        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockDeleteRequest.mockResolvedValue({});
+        const wrapper = shallowMount(EditStoragePage);
+        await flushPromises();
+
+        // Act
+        wrapper.findComponent(DangerButton).vm.$emit("click");
+        await wrapper.vm.$nextTick();
+        wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
         await flushPromises();
 
         // Assert
@@ -207,19 +224,21 @@ describe("EditStoragePage", () => {
         expect(mockGoToRoute).toHaveBeenCalledWith("storage");
     });
 
-    it("should not delete when user cancels confirmation", async () => {
+    it("should close dialog when user cancels confirmation", async () => {
         // Arrange
         mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        vi.spyOn(window, "confirm").mockReturnValue(false);
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
         // Act
         wrapper.findComponent(DangerButton).vm.$emit("click");
-        await flushPromises();
+        await wrapper.vm.$nextTick();
+        wrapper.findComponent(ConfirmDialog).vm.$emit("cancel");
+        await wrapper.vm.$nextTick();
 
         // Assert
         expect(mockDeleteRequest).not.toHaveBeenCalled();
+        expect(wrapper.findComponent(ConfirmDialog).props("open")).toBe(false);
     });
 
     it("should render save and delete buttons", async () => {

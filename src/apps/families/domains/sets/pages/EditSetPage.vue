@@ -2,11 +2,13 @@
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {useFormSubmit} from "@shared/composables/useFormSubmit";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
@@ -17,6 +19,7 @@ import {onMounted, ref} from "vue";
 const {t} = familyTranslationService;
 const familySet = ref<FamilySet | null>(null);
 const loading = ref(true);
+const showDeleteConfirm = ref(false);
 
 const quantity = ref<number | null>(1);
 const status = ref<FamilySetStatus>("sealed");
@@ -58,7 +61,6 @@ const onSubmit = () =>
 
 const handleDelete = async () => {
     if (!familySet.value) return;
-    if (!window.confirm(t("sets.confirmDelete").value)) return;
 
     await familyHttpService.deleteRequest(`/family-sets/${familySet.value.id}`);
     await familyRouterService.goToRoute("sets");
@@ -67,7 +69,7 @@ const handleDelete = async () => {
 
 <template>
     <div max-w="md" m="x-auto">
-        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
+        <LoadingState v-if="loading" :message="t('common.loading').value" />
 
         <template v-else-if="familySet">
             <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("sets.editSet").value }}</h1>
@@ -89,9 +91,20 @@ const handleDelete = async () => {
 
                 <div flex gap="4">
                     <PrimaryButton type="submit">{{ t("sets.save").value }}</PrimaryButton>
-                    <DangerButton @click="handleDelete">{{ t("sets.delete").value }}</DangerButton>
+                    <DangerButton @click="showDeleteConfirm = true">{{ t("sets.delete").value }}</DangerButton>
                 </div>
             </form>
+
+            <ConfirmDialog
+                :open="showDeleteConfirm"
+                :title="t('sets.delete').value"
+                :message="t('sets.confirmDelete').value"
+                @confirm="handleDelete"
+                @cancel="showDeleteConfirm = false"
+            >
+                <template #confirm>{{ t("sets.delete").value }}</template>
+                <template #cancel>{{ t("common.cancel").value }}</template>
+            </ConfirmDialog>
         </template>
     </div>
 </template>
