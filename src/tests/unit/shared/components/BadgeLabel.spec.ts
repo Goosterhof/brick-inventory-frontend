@@ -48,5 +48,15 @@ describe("BadgeLabel", () => {
             expect(wrapper.attributes("class")).toContain("brick-border");
             expect(wrapper.attributes("border")).toBe("1");
         });
+
+        it("should have dashed border and light background when muted variant", () => {
+            // Arrange & Act
+            const wrapper = shallowMount(BadgeLabel, {props: {variant: "muted"}, slots: {default: "Wishlist"}});
+
+            // Assert
+            expect(wrapper.attributes("bg")).toBe("gray-100");
+            expect(wrapper.attributes("border")).toBe("1 black dashed");
+            expect(wrapper.attributes("class")).not.toContain("brick-border");
+        });
     });
 });

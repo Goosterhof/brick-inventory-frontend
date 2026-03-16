@@ -56,6 +56,7 @@ const getAvailableQuantity = (setPart: SetPart): number => {
 
 const buildStats = computed(() => {
     if (!setWithParts.value || storageMap.value.length === 0) return null;
+    if (familySet.value?.status === "wishlist") return null;
 
     const regularParts = setWithParts.value.parts.filter((p) => !p.isSpare);
     let partsComplete = 0;
@@ -102,7 +103,7 @@ onMounted(async () => {
     loading.value = false;
 });
 
-const allStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", "incomplete", "wishlist"];
+const ownedStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", "incomplete"];
 const statusUpdating = ref(false);
 
 const updateStatus = async (newStatus: FamilySet["status"]) => {
@@ -190,11 +191,11 @@ const handleAssigned = () => {
                             <span font="bold">{{ t("sets.quantity").value }}:</span>
                             <span>{{ familySet.quantity }}x</span>
                         </div>
-                        <div flex="~ col" gap="2">
+                        <div v-if="familySet.status !== 'wishlist'" flex="~ col" gap="2">
                             <span font="bold">{{ t("sets.status").value }}:</span>
                             <div flex gap="2" flex-wrap="wrap">
                                 <button
-                                    v-for="status in allStatuses"
+                                    v-for="status in ownedStatuses"
                                     :key="status"
                                     type="button"
                                     text="xs"
@@ -213,6 +214,11 @@ const handleAssigned = () => {
                                 </button>
                             </div>
                         </div>
+                        <div v-if="familySet.status === 'wishlist'">
+                            <PrimaryButton :disabled="statusUpdating" @click="updateStatus('sealed')">
+                                {{ t("sets.addToCollection").value }}
+                            </PrimaryButton>
+                        </div>
                         <div v-if="familySet.purchaseDate" flex gap="2">
                             <span font="bold">{{ t("sets.purchaseDate").value }}:</span>
                             <span>{{ familySet.purchaseDate }}</span>
@@ -225,7 +231,10 @@ const handleAssigned = () => {
 
                     <div flex gap="4" m="t-4">
                         <PrimaryButton @click="goToEdit">{{ t("sets.edit").value }}</PrimaryButton>
-                        <PrimaryButton v-if="!setWithParts" @click="loadParts(familySet.set.setNum)">
+                        <PrimaryButton
+                            v-if="!setWithParts && familySet.status !== 'wishlist'"
+                            @click="loadParts(familySet.set.setNum)"
+                        >
                             {{ t("sets.loadParts").value }}
                         </PrimaryButton>
                     </div>

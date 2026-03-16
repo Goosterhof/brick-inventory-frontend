@@ -143,7 +143,9 @@ const exportCsv = () => {
                         <p font="bold">{{ familySet.set.name }}</p>
                         <p text="sm gray-600">{{ familySet.set.setNum }}</p>
                         <div flex gap="2" m="t-1" items="center">
-                            <BadgeLabel>{{ t(statusKey[familySet.status]).value }}</BadgeLabel>
+                            <BadgeLabel :variant="familySet.status === 'wishlist' ? 'muted' : 'default'">{{
+                                t(statusKey[familySet.status]).value
+                            }}</BadgeLabel>
                             <span text="xs gray-600">{{ familySet.quantity }}x</span>
                         </div>
                     </div>
