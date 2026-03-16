@@ -57,11 +57,12 @@ describe("StatCard", () => {
         it("should render value in large bold text", () => {
             // Arrange & Act
             const wrapper = shallowMount(StatCard, {props: {label: "Sets", value: "10"}});
-            const value = wrapper.findAll("p")[1];
+            const allParagraphs = wrapper.findAll("p");
+            const value = allParagraphs[1];
 
             // Assert
-            expect(value.attributes("text")).toBe("3xl");
-            expect(value.attributes("font")).toBe("bold");
+            expect(value?.attributes("text")).toBe("3xl");
+            expect(value?.attributes("font")).toBe("bold");
         });
     });
 });

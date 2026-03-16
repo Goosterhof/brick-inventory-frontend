@@ -127,9 +127,9 @@ describe("HomePage", () => {
             // Assert
             const statCards = wrapper.findAllComponents(StatCard);
             expect(statCards.length).toBeGreaterThanOrEqual(3);
-            expect(statCards[0].props("value")).toBe("5");
-            expect(statCards[1].props("value")).toBe("3");
-            expect(statCards[2].props("value")).toBe("12");
+            expect(statCards[0]?.props("value")).toBe("5");
+            expect(statCards[1]?.props("value")).toBe("3");
+            expect(statCards[2]?.props("value")).toBe("12");
         });
 
         it("should show total quantity when different from total sets", async () => {
