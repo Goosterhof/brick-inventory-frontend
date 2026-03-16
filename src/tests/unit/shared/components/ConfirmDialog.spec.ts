@@ -11,12 +11,15 @@ const mountDialog = (open = false, slots?: Record<string, string>) =>
 
 describe("ConfirmDialog", () => {
     describe("rendering", () => {
-        it("should pass title to modal dialog", () => {
+        it("should render title inside modal dialog", () => {
             // Arrange
-            const wrapper = mountDialog();
+            const wrapper = shallowMount(ConfirmDialog, {
+                props: {open: false, title: "Delete Item", message: "Are you sure?"},
+                global: {stubs: {"modal-dialog": false}},
+            });
 
             // Assert
-            expect(wrapper.props("title")).toBe("Delete Item");
+            expect(wrapper.find("h2").text()).toBe("Delete Item");
         });
 
         it("should render message text", () => {
@@ -72,6 +75,18 @@ describe("ConfirmDialog", () => {
 
             // Assert
             expect(wrapper.emitted("confirm")).toHaveLength(1);
+        });
+
+        it("should emit cancel when modal dialog emits close", async () => {
+            // Arrange
+            const wrapper = mountDialog();
+
+            // Act
+            wrapper.findComponent(ModalDialog).vm.$emit("close");
+            await wrapper.vm.$nextTick();
+
+            // Assert
+            expect(wrapper.emitted("cancel")).toHaveLength(1);
         });
 
         it("should emit cancel when cancel button is clicked", async () => {
