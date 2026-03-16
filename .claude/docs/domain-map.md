@@ -4,15 +4,15 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 
 ## Families App
 
-| Domain       | Description                                                                  | Routes                                                                         | Auth Required              |
-| ------------ | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------- |
-| **auth**     | Minifig Badge — prove you belong at this building table                      | `/login`, `/register`                                                          | No (hidden when logged in) |
-| **home**     | The Building Table — your starting baseplate                                 | `/`                                                                            | No                         |
-| **sets**     | The Collection — every set you own, tracked, scanned, and identified         | `/sets`, `/sets/add`, `/sets/scan`, `/sets/identify`, `/sets/:id`, `/sets/:id/edit` | Yes                        |
-| **parts**    | The Parts Bin — individual bricks across your collection                     | `/parts`                                                                       | Yes                        |
-| **storage**  | The Drawer System — where bricks live when they are not being built          | `/storage`, `/storage/add`, `/storage/:id`, `/storage/:id/edit`                | Yes                        |
-| **settings** | The Workbench — family preferences and configuration                         | `/settings`                                                                    | Yes                        |
-| **about**    | About page                                                                   | `/about`                                                                       | No                         |
+| Domain       | Description                                                          | Routes                                                                              | Auth Required              |
+| ------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------- |
+| **auth**     | Minifig Badge — prove you belong at this building table              | `/login`, `/register`                                                               | No (hidden when logged in) |
+| **home**     | The Building Table — your starting baseplate                         | `/`                                                                                 | No                         |
+| **sets**     | The Collection — every set you own, tracked, scanned, and identified | `/sets`, `/sets/add`, `/sets/scan`, `/sets/identify`, `/sets/:id`, `/sets/:id/edit` | Yes                        |
+| **parts**    | The Parts Bin — individual bricks across your collection             | `/parts`                                                                            | Yes                        |
+| **storage**  | The Drawer System — where bricks live when they are not being built  | `/storage`, `/storage/add`, `/storage/:id`, `/storage/:id/edit`                     | Yes                        |
+| **settings** | The Workbench — family preferences and configuration                 | `/settings`                                                                         | Yes                        |
+| **about**    | About page                                                           | `/about`                                                                            | No                         |
 
 ### Domain Details
 
@@ -69,7 +69,7 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 
 | Domain   | Description                                            | Routes | Auth Required |
 | -------- | ------------------------------------------------------ | ------ | ------------- |
-| **home** | The Control Room — admin overview of the whole factory  | `/`    | TBD           |
+| **home** | The Control Room — admin overview of the whole factory | `/`    | TBD           |
 
 ### Domain Details
 
