@@ -1,15 +1,20 @@
 import SettingsPage from "@app/domains/settings/pages/SettingsPage.vue";
+import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockPutRequest, mockPostRequest} = vi.hoisted(() => ({mockPutRequest: vi.fn(), mockPostRequest: vi.fn()}));
+const {mockGetRequest, mockPutRequest, mockPostRequest} = vi.hoisted(() => ({
+    mockGetRequest: vi.fn(),
+    mockPutRequest: vi.fn(),
+    mockPostRequest: vi.fn(),
+}));
 
 vi.mock("@app/services", () => ({
     familyHttpService: {
-        getRequest: vi.fn(),
+        getRequest: mockGetRequest,
         postRequest: mockPostRequest,
         putRequest: mockPutRequest,
         patchRequest: vi.fn(),
@@ -38,6 +43,12 @@ vi.mock("@app/services", () => ({
 describe("SettingsPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockGetRequest.mockResolvedValue({
+            data: [
+                {id: 1, name: "Jan", email: "jan@example.com", is_head: true},
+                {id: 2, name: "Maria", email: "maria@example.com", is_head: false},
+            ],
+        });
     });
 
     it("should render page header with title", () => {
@@ -65,6 +76,29 @@ describe("SettingsPage", () => {
         // Assert
         const saveButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "settings.saveToken");
         expect(saveButton?.exists()).toBe(true);
+    });
+
+    it("should fetch and display family members", async () => {
+        // Arrange & Act
+        const wrapper = shallowMount(SettingsPage);
+        await flushPromises();
+
+        // Assert
+        expect(mockGetRequest).toHaveBeenCalledWith("/family/members");
+        expect(wrapper.text()).toContain("Jan");
+        expect(wrapper.text()).toContain("Maria");
+    });
+
+    it("should show head badge for family head", async () => {
+        // Arrange & Act
+        const wrapper = shallowMount(SettingsPage);
+        await flushPromises();
+
+        // Assert
+        const badges = wrapper.findAllComponents(BadgeLabel);
+        expect(badges).toHaveLength(1);
+        expect(badges[0].text()).toBe("settings.familyHead");
+        expect(badges[0].props("variant")).toBe("highlight");
     });
 
     it("should render import button", () => {

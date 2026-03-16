@@ -1,11 +1,18 @@
 <script setup lang="ts">
+import type {FamilyMember} from "@app/types/profile";
+
 import {familyHttpService, familyTranslationService} from "@app/services";
+import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {ref} from "vue";
+import {deepCamelKeys} from "string-ts";
+import {onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
+
+const members = ref<FamilyMember[]>([]);
+const membersLoading = ref(true);
 
 const rebrickableToken = ref("");
 const tokenSaving = ref(false);
@@ -23,6 +30,12 @@ const importResult = ref<{
     error?: string;
 } | null>(null);
 const importError = ref("");
+
+onMounted(async () => {
+    const response = await familyHttpService.getRequest<FamilyMember[]>("/family/members");
+    members.value = response.data.map((item) => deepCamelKeys(item) as FamilyMember);
+    membersLoading.value = false;
+});
 
 const saveToken = async () => {
     tokenSaving.value = true;
@@ -79,6 +92,35 @@ const importSets = async () => {
         <PageHeader :title="t('settings.title').value" />
 
         <div flex="~ col" gap="8">
+            <section flex="~ col" gap="4">
+                <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.membersTitle").value }}</h2>
+
+                <p v-if="membersLoading" text="gray-600">{{ t("common.loading").value }}</p>
+
+                <div v-else flex="~ col" gap="2">
+                    <div
+                        v-for="member in members"
+                        :key="member.id"
+                        flex
+                        items="center"
+                        gap="3"
+                        p="3"
+                        bg="white"
+                        class="brick-border"
+                    >
+                        <div flex="1">
+                            <p font="bold">{{ member.name }}</p>
+                            <p text="sm gray-600">{{ member.email }}</p>
+                        </div>
+                        <BadgeLabel v-if="member.isHead" variant="highlight">
+                            {{ t("settings.familyHead").value }}
+                        </BadgeLabel>
+                    </div>
+                </div>
+            </section>
+
+            <hr border="t-3 black" />
+
             <section flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.rebrickableTitle").value }}</h2>
                 <p text="gray-600">{{ t("settings.rebrickableDescription").value }}</p>

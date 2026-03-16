@@ -172,6 +172,8 @@ const translations = {
         },
         settings: {
             title: "Settings",
+            membersTitle: "Family members",
+            familyHead: "Head",
             rebrickableTitle: "Rebrickable API",
             rebrickableDescription: "Connect your Rebrickable account to import your LEGO collection.",
             rebrickableToken: "Rebrickable user token",
@@ -361,6 +363,8 @@ const translations = {
         },
         settings: {
             title: "Instellingen",
+            membersTitle: "Gezinsleden",
+            familyHead: "Hoofd",
             rebrickableTitle: "Rebrickable API",
             rebrickableDescription: "Koppel je Rebrickable-account om je LEGO-collectie te importeren.",
             rebrickableToken: "Rebrickable gebruikerstoken",
