@@ -1,5 +1,6 @@
 import StorageDetailPage from "@app/domains/storage/pages/StorageDetailPage.vue";
 import BackButton from "@shared/components/BackButton.vue";
+import DetailRow from "@shared/components/DetailRow.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -161,7 +162,8 @@ describe("StorageDetailPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("storage.row");
+        const rowDetail = wrapper.findAllComponents(DetailRow).find((r) => r.props("label") === "storage.row");
+        expect(rowDetail).toBeUndefined();
     });
 
     it("should not show column when null", async () => {
@@ -170,7 +172,8 @@ describe("StorageDetailPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("storage.column");
+        const colDetail = wrapper.findAllComponents(DetailRow).find((r) => r.props("label") === "storage.column");
+        expect(colDetail).toBeUndefined();
     });
 
     it("should not show sub-locations when no children", async () => {
@@ -179,7 +182,10 @@ describe("StorageDetailPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).not.toContain("storage.subLocations");
+        const subLocationsRow = wrapper
+            .findAllComponents(DetailRow)
+            .find((row) => row.props("label") === "storage.subLocations");
+        expect(subLocationsRow).toBeUndefined();
     });
 
     it("should show child count when children exist", async () => {
@@ -188,8 +194,11 @@ describe("StorageDetailPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain("storage.subLocations");
-        expect(wrapper.text()).toContain("2");
+        const subLocationsRow = wrapper
+            .findAllComponents(DetailRow)
+            .find((row) => row.props("label") === "storage.subLocations");
+        expect(subLocationsRow).toBeTruthy();
+        expect(subLocationsRow?.text()).toContain("2");
     });
 
     it("should render parts with names and quantities", async () => {

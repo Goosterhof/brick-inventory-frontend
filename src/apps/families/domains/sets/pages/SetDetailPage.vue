@@ -2,7 +2,6 @@
 import type {FamilySet} from "@app/types/familySet";
 import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
 
-import AssignPartModal from "../modals/AssignPartModal.vue";
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
@@ -10,6 +9,8 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {deepCamelKeys} from "string-ts";
 import {computed, onMounted, ref} from "vue";
+
+import AssignPartModal from "../modals/AssignPartModal.vue";
 
 const {t} = familyTranslationService;
 const familySet = ref<FamilySet | null>(null);

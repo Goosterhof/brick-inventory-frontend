@@ -237,16 +237,63 @@ Manages camera stream lifecycle. Captures images as JPEG blobs.
 
 ---
 
+## Data Presentation
+
+### DetailRow
+
+Key-value pair display for detail pages. Bold label with colon, value as slot content.
+
+| Prop    | Type     | Required | Description |
+| ------- | -------- | -------- | ----------- |
+| `label` | `string` | yes      | Row label   |
+
+**Slots**: default (value content)
+
+### StatCard
+
+Dashboard stat card with large number and label. Built on Brick Brutalism card styling.
+
+| Prop    | Type     | Required | Description |
+| ------- | -------- | -------- | ----------- |
+| `label` | `string` | yes      | Stat label  |
+| `value` | `string` | yes      | Stat value  |
+
+**Slots**: default (optional description below value)
+
+### FilterChip
+
+Toggle chip for filter UIs. Yellow highlight when active.
+
+| Prop     | Type      | Default | Description           |
+| -------- | --------- | ------- | --------------------- |
+| `active` | `boolean` | `false` | Active/selected state |
+
+**Emits**: `click`
+**Slots**: default (chip label)
+
+### BadgeLabel
+
+Compact label badge for status tags and location indicators.
+
+| Prop      | Type                       | Default     | Description  |
+| --------- | -------------------------- | ----------- | ------------ |
+| `variant` | `"default" \| "highlight"` | `"default"` | Visual style |
+
+**Slots**: default (badge text)
+
+---
+
 ## Component Count
 
-| Category        | Count  | Components                                                    |
-| --------------- | ------ | ------------------------------------------------------------- |
-| Buttons         | 4      | PrimaryButton, DangerButton, BackButton, ListItemButton       |
-| Navigation      | 3      | NavHeader, NavLink, NavMobileLink                             |
-| Form primitives | 3      | FormField, FormLabel, FormError                               |
-| Form inputs     | 5      | TextInput, NumberInput, DateInput, TextareaInput, SelectInput |
-| Layout          | 3      | PageHeader, CardContainer, EmptyState                         |
-| Feedback        | 2      | ModalDialog, ToastMessage                                     |
-| Data display    | 1      | PartListItem                                                  |
-| Scanner         | 1      | CameraCapture                                                 |
-| **Total**       | **22** |                                                               |
+| Category          | Count  | Components                                                    |
+| ----------------- | ------ | ------------------------------------------------------------- |
+| Buttons           | 4      | PrimaryButton, DangerButton, BackButton, ListItemButton       |
+| Navigation        | 3      | NavHeader, NavLink, NavMobileLink                             |
+| Form primitives   | 3      | FormField, FormLabel, FormError                               |
+| Form inputs       | 5      | TextInput, NumberInput, DateInput, TextareaInput, SelectInput |
+| Layout            | 3      | PageHeader, CardContainer, EmptyState                         |
+| Feedback          | 2      | ModalDialog, ToastMessage                                     |
+| Data display      | 1      | PartListItem                                                  |
+| Data presentation | 4      | DetailRow, StatCard, FilterChip, BadgeLabel                   |
+| Scanner           | 1      | CameraCapture                                                 |
+| **Total**         | **26** |                                                               |

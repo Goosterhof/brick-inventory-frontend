@@ -1,7 +1,7 @@
 import HomePage from "@app/domains/home/pages/HomePage.vue";
-import CardContainer from "@shared/components/CardContainer.vue";
 import NavLink from "@shared/components/NavLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
+import StatCard from "@shared/components/StatCard.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
@@ -125,11 +125,11 @@ describe("HomePage", () => {
             await flushPromises();
 
             // Assert
-            const cards = wrapper.findAllComponents(CardContainer);
-            expect(cards.length).toBeGreaterThanOrEqual(3);
-            expect(wrapper.text()).toContain("5");
-            expect(wrapper.text()).toContain("3");
-            expect(wrapper.text()).toContain("12");
+            const statCards = wrapper.findAllComponents(StatCard);
+            expect(statCards.length).toBeGreaterThanOrEqual(3);
+            expect(statCards[0]?.props("value")).toBe("5");
+            expect(statCards[1]?.props("value")).toBe("3");
+            expect(statCards[2]?.props("value")).toBe("12");
         });
 
         it("should show total quantity when different from total sets", async () => {
@@ -165,8 +165,11 @@ describe("HomePage", () => {
             await flushPromises();
 
             // Assert
-            expect(wrapper.text()).toContain("sets.sealed");
-            expect(wrapper.text()).toContain("sets.built");
+            const statusCards = wrapper.findAllComponents(StatCard).filter((c) => {
+                const label = c.props("label");
+                return label === "sets.sealed" || label === "sets.built";
+            });
+            expect(statusCards.length).toBe(2);
         });
 
         it("should render quick action links", async () => {

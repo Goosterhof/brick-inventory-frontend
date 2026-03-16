@@ -1,5 +1,6 @@
 import SetsOverviewPage from "@app/domains/sets/pages/SetsOverviewPage.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
+import FilterChip from "@shared/components/FilterChip.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
@@ -251,8 +252,8 @@ describe("SetsOverviewPage", () => {
             await flushPromises();
 
             // Act — click "sealed" status filter
-            const sealedButton = wrapper.findAll("button").find((btn) => btn.text() === "sets.sealed");
-            await sealedButton?.trigger("click");
+            const sealedChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "sets.sealed");
+            sealedChip?.vm.$emit("click");
             await flushPromises();
 
             // Assert
@@ -267,9 +268,9 @@ describe("SetsOverviewPage", () => {
             await flushPromises();
 
             // Act — click sealed, then click sealed again
-            const sealedButton = wrapper.findAll("button").find((btn) => btn.text() === "sets.sealed");
-            await sealedButton?.trigger("click");
-            await sealedButton?.trigger("click");
+            const sealedChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "sets.sealed");
+            sealedChip?.vm.$emit("click");
+            sealedChip?.vm.$emit("click");
             await flushPromises();
 
             // Assert — both sets visible
