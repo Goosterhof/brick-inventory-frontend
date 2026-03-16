@@ -22,11 +22,15 @@ const partsLoading = ref(false);
 const selectedPart = ref<SetPart | null>(null);
 const showAssignModal = ref(false);
 
-const statusKey: Record<FamilySet["status"], "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete"> = {
+const statusKey: Record<
+    FamilySet["status"],
+    "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist"
+> = {
     sealed: "sets.sealed",
     built: "sets.built",
     in_progress: "sets.inProgress",
     incomplete: "sets.incomplete",
+    wishlist: "sets.wishlist",
 };
 
 const storageByPartKey = computed(() => {
@@ -98,7 +102,7 @@ onMounted(async () => {
     loading.value = false;
 });
 
-const allStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", "incomplete"];
+const allStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", "incomplete", "wishlist"];
 const statusUpdating = ref(false);
 
 const updateStatus = async (newStatus: FamilySet["status"]) => {

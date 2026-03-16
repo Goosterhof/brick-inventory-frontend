@@ -14,11 +14,15 @@ const {t} = familyTranslationService;
 const stats = ref<FamilyStats | null>(null);
 const loading = ref(true);
 
-const statusKeys: Record<string, "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete"> = {
+const statusKeys: Record<
+    string,
+    "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist"
+> = {
     sealed: "sets.sealed",
     built: "sets.built",
     in_progress: "sets.inProgress",
     incomplete: "sets.incomplete",
+    wishlist: "sets.wishlist",
 };
 
 onMounted(async () => {

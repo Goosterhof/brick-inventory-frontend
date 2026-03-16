@@ -83,6 +83,7 @@ const handleDelete = async () => {
                     <option value="built">{{ t("sets.built").value }}</option>
                     <option value="in_progress">{{ t("sets.inProgress").value }}</option>
                     <option value="incomplete">{{ t("sets.incomplete").value }}</option>
+                    <option value="wishlist">{{ t("sets.wishlist").value }}</option>
                 </SelectInput>
 
                 <DateInput v-model="purchaseDate" :label="t('sets.purchaseDate').value" optional />
