@@ -1,6 +1,6 @@
 # UnoCSS Styling — _Beautiful_
 
-Styling patterns using UnoCSS with attributify mode.
+The studs, shadows, and surfaces that make Brick Brutalism physical. Every utility class is a building instruction — attributify mode keeps the template readable so the brick structure stays visible.
 
 ## Attributify Mode
 

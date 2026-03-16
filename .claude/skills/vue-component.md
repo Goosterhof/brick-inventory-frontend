@@ -1,6 +1,6 @@
 # Vue Component — _Beautiful_
 
-Patterns for writing Vue 3 components.
+Every component is a brick in the set. Small, purposeful, clicks firmly into place. A component with more than 3-4 props is a brick trying to do too many things — in real Lego, multi-function pieces are rare and specific. Split it.
 
 ## Props
 

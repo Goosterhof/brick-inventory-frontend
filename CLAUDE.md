@@ -183,22 +183,22 @@ Note: `t()` returns a `ComputedRef` — use `.value` to unwrap in templates.
 - Avoid nested ternaries — use computed properties with if/else instead
 - Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/)
 
-## Scripts
+## Scripts — _Building & Inspecting_
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start families app dev server |
-| `npm run dev:admin` | Start admin app dev server |
-| `npm run build` | Build all apps (with type-check) |
-| `npm run lint` | Run oxlint with type-aware rules |
-| `npm run lint:vue` | Check Vue conventions (naming, block order, macros order) |
-| `npm run format` | Format all files with oxfmt |
-| `npm run format:check` | Check formatting without writing |
-| `npm run knip` | Check for unused exports |
-| `npm run type-check` | Run TypeScript type checking |
-| `npm run test:unit` | Run unit tests (watch mode) |
-| `npm run test:coverage` | Run tests with 100% coverage threshold |
-| `npm run size` | Check bundle sizes against budgets |
+| `npm run dev` | Open the building table — families app dev server |
+| `npm run dev:admin` | Open the control room — admin app dev server |
+| `npm run build` | Box the set — build all apps for production |
+| `npm run lint` | Check clutch power — oxlint with type-aware rules |
+| `npm run lint:vue` | Check brick naming — Vue conventions (naming, block order, macros order) |
+| `npm run format` | Polish the bricks — format all files with oxfmt |
+| `npm run format:check` | Inspect the polish — check formatting without writing |
+| `npm run knip` | Find orphaned bricks — check for unused exports |
+| `npm run type-check` | Check stud alignment — TypeScript type checking |
+| `npm run test:unit` | Quality control (watch) — run unit tests |
+| `npm run test:coverage` | Full quality control — run tests with 100% coverage threshold |
+| `npm run size` | Weigh the box — check bundle sizes against budgets |
 
 ## Learnings — _Getting Sharper_
 

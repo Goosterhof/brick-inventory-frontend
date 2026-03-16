@@ -1,6 +1,6 @@
 # Testing — _Sturdy_
 
-Unit test patterns for Vue components and TypeScript logic.
+Quality Control — stress-test every brick before it ships. A set that passes visual inspection but falls apart when a kid plays with it is a recall, not a release. Every brick in the box gets inspected.
 
 ## Framework & Location
 
