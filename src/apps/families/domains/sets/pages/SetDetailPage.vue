@@ -4,6 +4,7 @@ import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
@@ -142,7 +143,7 @@ const handleAssigned = () => {
 
 <template>
     <div max-w="6xl" m="x-auto">
-        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
+        <LoadingState v-if="loading" :message="t('common.loading').value" />
 
         <template v-else-if="familySet">
             <div m="b-6">
@@ -228,7 +229,7 @@ const handleAssigned = () => {
             </div>
 
             <div v-if="partsLoading" m="t-8">
-                <p text="gray-600">{{ t("sets.loadingParts").value }}</p>
+                <LoadingState :message="t('sets.loadingParts').value" />
             </div>
 
             <div v-else-if="setWithParts" m="t-8">

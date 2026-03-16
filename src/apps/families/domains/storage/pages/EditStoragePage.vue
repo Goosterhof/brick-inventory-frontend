@@ -2,10 +2,12 @@
 import type {StorageOption} from "@app/types/storageOption";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {useFormSubmit} from "@shared/composables/useFormSubmit";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
@@ -16,6 +18,7 @@ import {onMounted, ref} from "vue";
 const {t} = familyTranslationService;
 const storageOption = ref<StorageOption | null>(null);
 const loading = ref(true);
+const showDeleteConfirm = ref(false);
 
 const name = ref("");
 const description = ref("");
@@ -58,7 +61,6 @@ const onSubmit = () =>
 
 const handleDelete = async () => {
     if (!storageOption.value) return;
-    if (!window.confirm(t("storage.confirmDelete").value)) return;
 
     await familyHttpService.deleteRequest(`/storage-options/${storageOption.value.id}`);
     await familyRouterService.goToRoute("storage");
@@ -67,7 +69,7 @@ const handleDelete = async () => {
 
 <template>
     <div max-w="md" m="x-auto">
-        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
+        <LoadingState v-if="loading" :message="t('common.loading').value" />
 
         <template v-else-if="storageOption">
             <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("storage.editStorage").value }}</h1>
@@ -101,9 +103,20 @@ const handleDelete = async () => {
 
                 <div flex gap="4">
                     <PrimaryButton type="submit">{{ t("storage.save").value }}</PrimaryButton>
-                    <DangerButton @click="handleDelete">{{ t("storage.delete").value }}</DangerButton>
+                    <DangerButton @click="showDeleteConfirm = true">{{ t("storage.delete").value }}</DangerButton>
                 </div>
             </form>
+
+            <ConfirmDialog
+                :open="showDeleteConfirm"
+                :title="t('storage.delete').value"
+                :message="t('storage.confirmDelete').value"
+                @confirm="handleDelete"
+                @cancel="showDeleteConfirm = false"
+            >
+                <template #confirm>{{ t("storage.delete").value }}</template>
+                <template #cancel>{{ t("common.cancel").value }}</template>
+            </ConfirmDialog>
         </template>
     </div>
 </template>

@@ -1,6 +1,7 @@
 import AssignPartModal from "@app/domains/sets/modals/AssignPartModal.vue";
 import SetDetailPage from "@app/domains/sets/pages/SetDetailPage.vue";
 import BackButton from "@shared/components/BackButton.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
@@ -154,7 +155,7 @@ describe("SetDetailPage", () => {
         const wrapper = shallowMount(SetDetailPage);
 
         // Assert
-        expect(wrapper.text()).toContain("common.loading");
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
     });
 
     it("should navigate to edit page when edit button is clicked", async () => {

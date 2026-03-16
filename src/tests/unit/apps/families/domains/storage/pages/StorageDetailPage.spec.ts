@@ -2,6 +2,7 @@ import StorageDetailPage from "@app/domains/storage/pages/StorageDetailPage.vue"
 import BackButton from "@shared/components/BackButton.vue";
 import DetailRow from "@shared/components/DetailRow.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
@@ -118,7 +119,7 @@ describe("StorageDetailPage", () => {
         const wrapper = shallowMount(StorageDetailPage);
 
         // Assert
-        expect(wrapper.text()).toContain("common.loading");
+        expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
     });
 
     it("should navigate to edit page when edit button is clicked", async () => {

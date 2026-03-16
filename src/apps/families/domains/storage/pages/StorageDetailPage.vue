@@ -6,6 +6,7 @@ import {familyHttpService, familyRouterService, familyTranslationService} from "
 import BackButton from "@shared/components/BackButton.vue";
 import DetailRow from "@shared/components/DetailRow.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
+import LoadingState from "@shared/components/LoadingState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
@@ -41,7 +42,7 @@ const goBack = async () => {
 
 <template>
     <div max-w="6xl" m="x-auto">
-        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
+        <LoadingState v-if="loading" :message="t('common.loading').value" />
 
         <template v-else-if="storageOption">
             <div m="b-6">
@@ -74,7 +75,7 @@ const goBack = async () => {
                     {{ t("storage.parts").value }} ({{ storageParts.length }})
                 </h2>
 
-                <p v-if="partsLoading" text="gray-600">{{ t("storage.loadingParts").value }}</p>
+                <LoadingState v-if="partsLoading" :message="t('storage.loadingParts').value" />
 
                 <EmptyState v-else-if="storageParts.length === 0" :message="t('storage.noParts').value" />
 
