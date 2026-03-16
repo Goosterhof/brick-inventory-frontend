@@ -1,6 +1,6 @@
 # Design Review — _Inspect_
 
-Quality checklist before shipping. Use during the Inspect phase of the design cycle.
+The final inspection before boxing the set. Every piece gets checked against the instruction booklet. If something wobbles, it does not ship.
 
 ## Automated Checks
 

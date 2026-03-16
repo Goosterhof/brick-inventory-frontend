@@ -1,6 +1,6 @@
 # New Modal — _Playable_
 
-Template for adding a modal within a domain.
+A modal is a brick separator moment — you are pulling the user out of the build to focus their attention on something important. Make it count. The dialog should feel like picking up a single brick: clear purpose, firm edges, satisfying click when it closes.
 
 ## Template
 

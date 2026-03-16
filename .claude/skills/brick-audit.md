@@ -1,6 +1,6 @@
 # Brick Audit — _Sturdy_
 
-Check component health across the codebase. Run this before shipping features or when the brick catalog feels stale.
+Open the parts inventory and check every brick against what is actually in the box. Bricks get added, modified, and retired — the catalog must match reality. Run this before shipping features or when the brick catalog feels stale.
 
 ## What to Check
 

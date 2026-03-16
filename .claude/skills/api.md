@@ -1,6 +1,6 @@
 # API — _Sturdy_
 
-Patterns for making HTTP requests and working with API resources.
+Stud Connections — the interface points where Brick and Plate click together. Every HTTP call is a brick reaching for another brick. If the connection is loose, the whole build wobbles.
 
 ## HTTP Service
 
