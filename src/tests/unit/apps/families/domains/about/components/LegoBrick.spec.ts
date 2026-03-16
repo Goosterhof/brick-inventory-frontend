@@ -53,7 +53,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick, {props: {columns: 3, rows: 2}});
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("style")).toContain("grid-template-columns: repeat(3, 1fr)");
     });
 
@@ -62,7 +62,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick);
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("style")).toContain("background-color");
     });
 
@@ -71,7 +71,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick, {props: {color: "#1D4ED8"}});
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("style")).toContain("background-color");
         const stud = wrapper.find("[rounded='full']");
         expect(stud.attributes("style")).toContain("background-color");
@@ -82,7 +82,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick);
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.classes()).toContain("shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]");
     });
 
@@ -91,7 +91,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick, {props: {shadow: false}});
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.classes()).not.toContain("shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]");
     });
 
@@ -100,7 +100,7 @@ describe("LegoBrick", () => {
         const wrapper = shallowMount(LegoBrick);
 
         // Assert
-        const container = wrapper.find("[grid]");
+        const container = wrapper.find("[inline-grid]");
         expect(container.attributes("border")).toBe("3 black");
     });
 
