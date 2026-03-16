@@ -42,10 +42,13 @@ describe("AboutPage", () => {
 
         // Assert
         const bricks = wrapper.findAllComponents(LegoBrick);
-        expect(bricks[0].props()).toMatchObject({columns: 2, rows: 2});
-        expect(bricks[1].props()).toMatchObject({columns: 1, rows: 1});
-        expect(bricks[2].props()).toMatchObject({columns: 2, rows: 3});
-        expect(bricks[3].props()).toMatchObject({columns: 1, rows: 3});
+        const dimensions = bricks.map((brick) => ({columns: brick.props("columns"), rows: brick.props("rows")}));
+        expect(dimensions).toEqual([
+            {columns: 2, rows: 2},
+            {columns: 1, rows: 1},
+            {columns: 2, rows: 3},
+            {columns: 1, rows: 3},
+        ]);
     });
 
     it("should disable shadow on all bricks", () => {
