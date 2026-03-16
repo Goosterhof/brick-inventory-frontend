@@ -19,14 +19,18 @@ const loading = ref(true);
 const searchQuery = ref("");
 const activeStatusFilter = ref<FamilySetStatus | null>(null);
 
-const statusKey: Record<FamilySet["status"], "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete"> = {
+const statusKey: Record<
+    FamilySet["status"],
+    "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist"
+> = {
     sealed: "sets.sealed",
     built: "sets.built",
     in_progress: "sets.inProgress",
     incomplete: "sets.incomplete",
+    wishlist: "sets.wishlist",
 };
 
-const allStatuses: FamilySetStatus[] = ["sealed", "in_progress", "built", "incomplete"];
+const allStatuses: FamilySetStatus[] = ["sealed", "in_progress", "built", "incomplete", "wishlist"];
 
 const filteredSets = computed(() => {
     let result = sets.value;
