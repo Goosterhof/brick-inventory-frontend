@@ -81,6 +81,21 @@ const buildStats = computed(() => {
     };
 });
 
+const missingParts = computed(() => {
+    if (!buildStats.value || buildStats.value.canBuild) return [];
+    if (!setWithParts.value) return [];
+
+    return setWithParts.value.parts
+        .filter((p) => !p.isSpare)
+        .filter((p) => getAvailableQuantity(p) < p.quantity)
+        .map((p) => ({...p, available: getAvailableQuantity(p), missing: p.quantity - getAvailableQuantity(p)}));
+});
+
+const showMissingParts = ref(false);
+
+const brickLinkUrl = (partNum: string): string =>
+    `https://www.bricklink.com/v2/catalog/catalogitem.page?P=${encodeURIComponent(partNum)}`;
+
 const loadParts = async (setNum: string) => {
     partsLoading.value = true;
     const response = await familyHttpService.getRequest<SetWithParts>(`/sets/${setNum}/parts`);
@@ -274,6 +289,68 @@ const handleAssigned = () => {
                                 buildStats.totalNeeded
                             }}
                         </span>
+                    </div>
+
+                    <div v-if="missingParts.length > 0" m="t-4">
+                        <button
+                            type="button"
+                            text="sm"
+                            font="bold"
+                            uppercase
+                            tracking="wide"
+                            cursor="pointer"
+                            bg="transparent"
+                            p="0"
+                            outline="none"
+                            class="brick-transition"
+                            @click="showMissingParts = !showMissingParts"
+                        >
+                            {{ showMissingParts ? "▾" : "▸" }}
+                            {{ t("sets.missingBricks").value }} ({{ missingParts.length }})
+                        </button>
+
+                        <div v-if="showMissingParts" flex="~ col" gap="2" m="t-3">
+                            <div
+                                v-for="part in missingParts"
+                                :key="part.id"
+                                flex
+                                items="center"
+                                gap="3"
+                                p="3"
+                                bg="brick-red-light"
+                                class="brick-border"
+                            >
+                                <img
+                                    v-if="part.part.imageUrl"
+                                    :src="part.part.imageUrl"
+                                    :alt="part.part.name"
+                                    w="10"
+                                    h="10"
+                                    object="contain"
+                                />
+                                <div flex="1">
+                                    <p font="bold" text="sm">{{ part.part.name }}</p>
+                                    <p text="xs gray-600">{{ part.part.partNum }} · {{ part.color.name }}</p>
+                                </div>
+                                <div text="sm" font="bold" text-color="brick-red-dark">
+                                    {{ part.available }}/{{ part.quantity }}
+                                </div>
+                                <a
+                                    :href="brickLinkUrl(part.part.partNum)"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    text="xs"
+                                    p="x-2 y-1"
+                                    font="bold"
+                                    uppercase
+                                    tracking="wide"
+                                    class="brick-border brick-transition"
+                                    bg="white hover:brick-yellow"
+                                >
+                                    BrickLink
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
