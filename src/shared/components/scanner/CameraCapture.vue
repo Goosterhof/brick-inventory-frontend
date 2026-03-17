@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted} from "vue";
 
+import {assertDefined} from "@shared/helpers/type-check";
+
 const emit = defineEmits<{capture: [imageData: Blob]; error: [message: string]}>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -10,6 +12,7 @@ const cameraError = ref<string>("");
 const isLoading = ref(true);
 const isCameraActive = ref(false);
 const isStarting = ref(false);
+let isUnmounted = false;
 
 const stopCamera = () => {
     if (stream.value) {
@@ -40,20 +43,22 @@ const startCamera = async () => {
             video: {facingMode: "environment", width: {ideal: 1280}, height: {ideal: 720}},
         });
 
-        stream.value = mediaStream;
-
-        /* istanbul ignore next -- defensive guard: videoRef always exists in mounted component */
-        if (!videoRef.value) {
+        if (isUnmounted) {
             for (const track of mediaStream.getTracks()) {
                 track.stop();
             }
-            stream.value = null;
-            cameraError.value = "Unable to access camera video element.";
             return;
         }
 
-        videoRef.value.srcObject = mediaStream;
-        await videoRef.value.play();
+        stream.value = mediaStream;
+        const video = assertDefined(videoRef.value, "videoRef");
+        video.srcObject = mediaStream;
+        await video.play();
+
+        if (isUnmounted) {
+            return;
+        }
+
         isCameraActive.value = true;
     } catch (err) {
         if (err instanceof Error) {
@@ -74,20 +79,8 @@ const startCamera = async () => {
 };
 
 const captureImage = () => {
-    /* istanbul ignore next -- defensive guard: button is disabled when camera inactive */
-    if (!isCameraActive.value) {
-        emit("error", "Camera is not active. Please wait for the camera to start.");
-        return;
-    }
-
-    /* istanbul ignore next -- defensive guard: refs always exist in mounted component */
-    if (!videoRef.value || !canvasRef.value) {
-        emit("error", "Unable to capture image. Camera elements not available.");
-        return;
-    }
-
-    const video = videoRef.value;
-    const canvas = canvasRef.value;
+    const video = assertDefined(videoRef.value, "videoRef");
+    const canvas = assertDefined(canvasRef.value, "canvasRef");
     const context = canvas.getContext("2d");
 
     if (!context) {
@@ -134,6 +127,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+    isUnmounted = true;
     stopCamera();
 });
 </script>

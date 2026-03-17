@@ -2,6 +2,8 @@
 import {BarcodeDetector} from "barcode-detector";
 import {ref, watch, onMounted, onUnmounted} from "vue";
 
+import {assertDefined} from "@shared/helpers/type-check";
+
 const props = defineProps<{resetKey?: number}>();
 const emit = defineEmits<{detect: [barcode: string]; error: [message: string]}>();
 
@@ -13,6 +15,7 @@ const isCameraActive = ref(false);
 const isStarting = ref(false);
 const detectedCode = ref("");
 let scanInterval: ReturnType<typeof setInterval> | undefined;
+let isUnmounted = false;
 
 const stopCamera = () => {
     if (scanInterval) {
@@ -68,20 +71,22 @@ const startCamera = async () => {
             video: {facingMode: "environment", width: {ideal: 1280}, height: {ideal: 720}},
         });
 
-        stream.value = mediaStream;
-
-        /* istanbul ignore next -- defensive guard: videoRef always exists in mounted component */
-        if (!videoRef.value) {
+        if (isUnmounted) {
             for (const track of mediaStream.getTracks()) {
                 track.stop();
             }
-            stream.value = null;
-            cameraError.value = "Unable to access camera video element.";
             return;
         }
 
-        videoRef.value.srcObject = mediaStream;
-        await videoRef.value.play();
+        stream.value = mediaStream;
+        const video = assertDefined(videoRef.value, "videoRef");
+        video.srcObject = mediaStream;
+        await video.play();
+
+        if (isUnmounted) {
+            return;
+        }
+
         isCameraActive.value = true;
         startScanning();
     } catch (err) {
@@ -125,6 +130,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+    isUnmounted = true;
     stopCamera();
 });
 </script>
