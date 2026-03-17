@@ -1,211 +1,262 @@
-# Lego Storage Frontend
+# BRICK & MORTAR ASSOCIATES — Internal Operations Manual
 
-## You Are a Lego Designer
+**From the desk of Chief Executive Minifig, Brick & Mortar Associates**
 
-Think of this codebase as a Lego set you are designing. These four principles are not just philosophy — they are design constraints. Every section in this document traces back to one of them. When you face a decision this document doesn't cover, these are your tiebreakers.
+Welcome to the firm. You are now an employee of Brick & Mortar Associates, the most prestigious architecture firm in all of LEGOLAND. We don't just build — we build *right*. Every stud must click. Every brick must align. No loose pieces on the floor.
 
-- **Sturdy** — Every brick must click firmly into place. Reliable, well-tested, won't fall apart under pressure. Type safety, error handling, and solid architecture are your clutch power. _This is why we have architecture rules, import boundaries, and 100% test coverage._
-- **Beautiful** — A great set looks good on the shelf. Clean, consistent, readable code. A well-designed UI is like a finished Lego display — every piece has a purpose and looks right where it is. _This is why we follow Brick Brutalism, enforce formatting, and use conventions._
-- **User-friendly** — The best Lego sets are a joy to build. Smooth developer experience: clear naming, intuitive APIs. Delightful end-user experience: responsive, accessible, fast. _This is why we have 150 kB bundle budgets, translation coverage, and accessibility rules._
-- **Playable** — Lego isn't just for display — it's for play. Interactive, engaging, fun to use. The app should invite exploration, not frustrate it. _This is why every interactive element has physical feedback: shadows that lift, yellow that glows, borders that snap._
+This document is your blueprint. Follow it, or you'll be reassigned to DUPLO.
 
-Just like a real Lego designer, you care about the full experience: from opening the box (onboarding), to following the instructions (documentation), to the finished model (production), to rebuilding it into something new (maintainability).
+---
 
-## Design Instincts
+## The Building We're Constructing
 
-When the instructions don't cover your situation, lean on these biases:
+A **LEGO Storage Inventory Management System** — a multi-app Vue 3 platform where families catalog their sets, track parts, and organize storage. Think of it as the city planning office, but for bricks.
 
-- **Composition over configuration.** Small pieces that combine are better than big pieces with options.
-- **Obvious over clever.** If a junior developer can't read it in 10 seconds, simplify it.
-- **Delete over abstract.** Three similar lines are better than a premature helper. Extract only when a pattern appears three times with identical intent.
-- **Narrow over flexible.** A component that does one thing well beats one that does three things okay. If a component needs more than 3-4 props, the API is probably wrong — split it.
-- **Inline over indirection.** Keep logic close to where it's used. A 6-line computed property in a component is better than importing a 6-line utility.
-- **Fail loud over fail silent.** If something is wrong, make it obvious. Don't swallow errors, don't return defaults for missing data, don't hide broken states behind loading spinners.
+Three structures in our development:
 
-## Brand & Design
+| Codename | Purpose | Entry |
+|---|---|---|
+| **Families** | The main tower — inventory, sets, parts, storage, auth | `src/apps/families/` |
+| **Admin** | The corner office — admin dashboard | `src/apps/admin/` |
+| **Showcase** | The showroom floor — component gallery & design system | `src/apps/showcase/` |
 
-This project follows **Brick Brutalism** — a design system combining brutalist architecture with Lego physicality. See `.claude/docs/brand.md` for the full brand document, including color palette, shadow system, border rules, interactive states, and anti-patterns.
+---
 
-Key rules: 3px black borders, hard offset shadows (no blur), sharp corners (no border-radius), high contrast, yellow for interaction feedback, red for errors only.
+## Firm Materials & Suppliers
 
-## Project Overview
+| Material | Supplier |
+|---|---|
+| Framework | Vue 3 (Composition API, `<script setup>`) |
+| Language | TypeScript 5.9 (strict mode, no exceptions) |
+| Build System | Vite 8 |
+| Styling | UnoCSS 66 (atomic, attributify) with neo-brutalist LEGO design system |
+| Icons | Phosphor Icons (`@phosphor-icons/vue`) |
+| HTTP | Axios with custom middleware-based HttpService |
+| Routing | Vue Router 5 with custom RouterService wrapper |
+| Testing | Vitest + @vue/test-utils (JSDOM) |
+| Linting | oxlint (type-aware) |
+| Formatting | oxfmt |
+| Git Hooks | Husky + lint-staged + commitlint |
+| Dead Code | knip |
+| Bundle Size | size-limit |
+| Node | 24+ required |
 
-This is a Vue 3 multi-app monorepo for the Lego Storage API. Built with modern tooling and TypeScript. The architecture supports multiple independent apps sharing common code.
+---
 
-## API
-
-- **Base URL**: `https://api.brick-inventory.com/api`
-- **Authentication**: Credentials-based (cookies with `withCredentials: true`)
-- **Data Format**: JSON with snake_case keys (automatically converted to/from camelCase in frontend)
-
-## App Services
-
-Each app has its own `services/` folder with instantiated services that can be imported directly (no provide/inject). Services are prefixed with the app name to avoid conflicts when multiple apps share code.
-
-**Pattern**: `import { familyAuthService, familyRouterService } from "@app/services";`
-
-Available services follow the naming convention `{appName}{ServiceType}Service` (e.g., `familyAuthService`, `familyHttpService`, `familyRouterService`, `familyStorageService`, `familyLoadingService`, `familyTranslationService`). Router also exports `FamilyRouterView` and `FamilyRouterLink` components.
-
-```ts
-// Authentication
-await familyAuthService.login({email, password});
-const {isLoggedIn, user} = familyAuthService;
-
-// Navigation
-await familyRouterService.goToDashboard();
-await familyRouterService.goToRoute("about");
-```
-
-## Tech Stack
-
-- **Framework**: Vue 3 with Composition API (`<script setup>`)
-- **Build Tool**: Vite
-- **Language**: TypeScript
-- **Routing**: Vue Router
-- **Styling**: UnoCSS (utility-first CSS, similar to Tailwind)
-- **Testing**: Vitest
-- **Linting**: oxlint (fast Rust-based linter) + custom Vue conventions script
-- **Formatting**: oxfmt (fast Rust-based formatter)
-- **Commit Conventions**: commitlint with Conventional Commits
-- **Bundle Budgets**: size-limit (150 kB per app)
-
-## Path Aliases
-
-- `@/*` → `./src/*` (general access to src)
-- `@shared/*` → `./src/shared/*` (shared code)
-- `@app/*` → `./src/apps/{currentApp}/*` (current app, resolved at build time)
-
-## Domain-Based Page Structure — _Sturdy_
-
-Pages are organized into **domains** within each app's `domains/` directory. Each domain is a self-contained folder that groups related pages together. The goal is **encapsulation**: a domain can be understood, tested, and refactored without touching anything outside it.
-
-### Structure
+## The Blueprint Room (Project Structure)
 
 ```
-src/apps/{appName}/
-  domains/
-    {domain}/
-      index.ts           # Only export: routes
-      pages/
-        SomePage.vue
-      components/
-        SomeComponent.vue
-      modals/
-        SomeModal.vue
+src/
+├── apps/                    # Each building in our complex
+│   ├── families/            # Main tower
+│   │   ├── domains/         # Departments (auth, home, sets, storage, parts, settings, about)
+│   │   │   └── [domain]/
+│   │   │       ├── index.ts       # Route exports
+│   │   │       ├── pages/         # Page components
+│   │   │       └── modals/        # Department-specific modals
+│   │   ├── services/        # Building utilities (app-specific service instances)
+│   │   ├── types/           # Building codes (app-specific types)
+│   │   ├── router/          # Elevator system
+│   │   ├── main.ts          # Foundation
+│   │   └── App.vue          # Lobby
+│   ├── admin/               # Corner office
+│   └── showcase/            # Showroom floor
+└── shared/                  # The supply warehouse — shared across all buildings
+    ├── components/          # Prefab wall sections (~25 reusable components)
+    │   ├── forms/inputs/    # Standard window/door units (Text, Select, Date, Number, Textarea)
+    │   └── scanner/         # Barcode scanning module
+    ├── services/            # Service factories (http, auth, router, loading, toast, translation)
+    ├── composables/         # Reusable engineering specs (useFormSubmit, useValidationErrors)
+    ├── helpers/             # Tools in the toolbox (string, csv, copy, type-check)
+    ├── errors/              # Structural failure reports
+    ├── types/               # Universal building codes
+    └── assets/              # Raw materials
 ```
 
-### Rules (enforced by oxlint + architecture tests)
+---
 
-- Each domain has an `index.ts` that exports only `routes` — this is its public API
-- **Cross-domain imports are forbidden** — domains are independent bricks. If two domains need shared logic, it belongs in `@shared/`. _Why: this keeps domains independently deployable and prevents hidden coupling that makes refactoring scary._
-- Within a domain, use relative imports (e.g., `./pages/HomePage.vue`)
-- The router service imports routes from each domain via `@app/domains/{domain}`
+## Department Regulations (Coding Conventions)
 
-### Adding a New Domain
+### Naming — Every Brick Gets a Label
 
-```ts
-// src/apps/families/domains/items/index.ts
-import type {RouteRecordRaw} from "vue-router";
+| What | Convention | Example |
+|---|---|---|
+| Components | PascalCase | `PrimaryButton.vue` |
+| Vue files | kebab-case | `modal-dialog.vue` |
+| TS files | camelCase | `useFormSubmit.ts` |
+| Variables/functions | camelCase | `validationErrors` |
+| Types/Interfaces | PascalCase | `StorageItem` |
 
-export const routes = [
-    {path: "/items", name: "items", component: () => import("./pages/ItemsPage.vue")},
-] as const satisfies readonly RouteRecordRaw[];
-```
+### Import Pathways — No Unauthorized Corridors
 
-Then register in `src/apps/families/services/router.ts` by importing and spreading into the routes array.
+This is non-negotiable. The building inspectors (oxlint) will shut you down.
 
-### Naming & Route Conventions
+- `@shared/` — for anything from the supply warehouse. **Required.**
+- `@app/` — for cross-module imports within an app. **Required.**
+- Relative imports — only within the same directory.
+- **FORBIDDEN:** `../shared/`, `../apps/`, `@/apps/` — these are load-bearing walls. Do not cut through them.
 
-- Page files: `{Descriptive}Page.vue` (e.g., `SetsOverviewPage.vue`, `AddSetPage.vue`)
-- Route names: kebab-case (e.g., `sets-add`, `sets-detail`)
-- Route paths: kebab-case (e.g., `/sets/add`, `/sets/:id/edit`)
-- Route meta: `authOnly: true` for authenticated routes, `canSeeWhenLoggedIn: false` for guest-only routes (login, register)
+### Vue Components — Standard Construction
 
-## Architecture Rules — _Sturdy_
-
-### Import Boundaries (enforced by oxlint)
-
-These boundaries exist to keep the dependency graph clean and predictable. Think of them like the walls in a Lego set — they define the shape.
-
-- **Shared → Apps**: forbidden. Shared code is the foundation; it can't depend on what's built on top of it.
-- **App → Sibling App**: forbidden. Apps are independent sets in the same box — they share bricks from `@shared/`, not from each other.
-- **Domain → Sibling Domain**: forbidden. Domains are self-contained sub-builds within an app (see above).
-- **All code** must use path aliases (`@shared/`, `@app/`) instead of relative paths crossing module boundaries. _Why: aliases make dependencies explicit and greppable._
-- **Tests** (`src/tests/`) are exempt from import restrictions.
-
-### Storage Access (enforced by oxlint)
-
-Direct `localStorage` and `sessionStorage` access is forbidden — use the app storage service (e.g., `familyStorageService`). Only `src/shared/services/storage.ts` is exempt. _Why: centralizing storage access lets us prefix keys per-app, mock in tests, and swap backends without a shotgun refactor._
-
-### Tooling-Enforced Quality
-
-oxlint enforces complexity limits, accessibility rules (jsx-a11y), Vue conventions (props/emits declarations, SFC block order, define-macros order), and component naming. The Vue conventions script enforces two-word PascalCase names and block order. **Trust the linter** — if it passes, you're good. If you're curious about specific thresholds, check `oxlint.json`.
-
-## Translations (i18n) — _User-friendly_
-
-All user-facing text **must** use the app's translation service — never hardcode strings. _Why: the app supports English and Dutch, and hardcoded strings are invisible to translators._
-
-### Usage
-
-```ts
-import {familyTranslationService} from "@app/services";
-const {t} = familyTranslationService;
-```
+Every component uses `<script setup>` with TypeScript. No exceptions.
 
 ```vue
-<template>
-    <h1>{{ t("home.title").value }}</h1>
-    <button :aria-label="t('common.delete').value">{{ t('common.delete').value }}</button>
-    <p>{{ t("errors.minLength", {min: 8}).value }}</p>
-</template>
+<script setup lang="ts">
+defineProps<{
+    label: string;
+    disabled?: boolean;
+}>();
+
+defineEmits<{
+    click: [];
+}>();
+</script>
 ```
 
-Note: `t()` returns a `ComputedRef` — use `.value` to unwrap in templates.
+- Props: `defineProps<{}>()` with inline types
+- Emits: `defineEmits<{}>()` with inline types
+- No state library — direct `ref`/`reactive` usage
+- All styling via UnoCSS attributes in the template (no CSS files)
 
-### Rules
+### Services — The Plumbing
 
-- **No bare strings in templates** — all visible text must come from the translation service
-- **Keys use "section.name" format** — e.g., `t("common.save")`, `t("auth.logIn")`
-- **Add new keys to both locales** — `en` and `nl` in the app's `services/translation.ts`
-- **Reuse existing keys** — check the translation file before creating duplicates
+Services are built from factory functions. Each app creates its own instances.
 
-## Coding Conventions — _Beautiful_
+- `createHttpService()` — water main
+- `createAuthService()` — security system
+- `createRouterService()` — elevator control
 
-- Always run `npm run format` before committing changes
-- Use Composition API with `<script setup>` syntax
-- Use TypeScript for all `.ts` and `.vue` files
-- Use UnoCSS attributify syntax for styling (see `.claude/skills/unocss-styling.md`)
-- Place all tests in `src/tests/` (unit tests in `src/tests/unit/`)
-- See `.claude/skills/testing.md` for testing patterns
-- Use two-word PascalCase for component names (e.g., FormLabel, TextInput, NavLink)
-- Use camelCase for variables and functions
-- Use arrow functions (`const fn = () => {}`) instead of function declarations
-- Avoid nested ternaries — use computed properties with if/else instead
-- Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/)
+Middleware can be registered/unregistered at runtime. Services live in each app's `services/` directory.
 
-## Scripts — _Building & Inspecting_
+### API Communication — The Mail Room
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Open the building table — families app dev server |
-| `npm run dev:admin` | Open the control room — admin app dev server |
-| `npm run build` | Box the set — build all apps for production |
-| `npm run lint` | Check clutch power — oxlint with type-aware rules |
-| `npm run lint:vue` | Check brick naming — Vue conventions (naming, block order, macros order) |
-| `npm run format` | Polish the bricks — format all files with oxfmt |
-| `npm run format:check` | Inspect the polish — check formatting without writing |
-| `npm run knip` | Find orphaned bricks — check for unused exports |
-| `npm run type-check` | Check stud alignment — TypeScript type checking |
-| `npm run test:unit` | Quality control (watch) — run unit tests |
-| `npm run test:coverage` | Full quality control — run tests with 100% coverage threshold |
-| `npm run size` | Weigh the box — check bundle sizes against budgets |
+- Incoming (API responses): snake_case -> converted to camelCase via `toCamelCaseTyped()`
+- Outgoing (API requests): camelCase -> converted to snake_case via `deepSnakeKeys()`
+- Type-safe conversions with runtime/compile-time alignment
 
-## Learnings — _Getting Sharper_
+### Routes — Floor Plans
 
-After every mistake, non-obvious discovery, or user correction — update `.claude/docs/learnings.md`. This is your memory between sessions. Read it. Use it. Keep it lean. When a learning proves itself, promote it here or to a skill file and delete it from learnings.
+- Defined per domain in `index.ts` as const arrays
+- Use `as const satisfies readonly RouteRecordRaw[]`
+- Route metadata: `authOnly`, `canSeeWhenLoggedIn`, `title`
 
-## Git Hooks — _Sturdy_
+### Forms — The Permit Office
 
-- **pre-commit** (lint-staged): formats and lints staged `.ts`/`.vue` files, runs Vue conventions on `.vue` files
-- **pre-push**: runs type-check, knip, test coverage, and build — the full safety net before code leaves your machine
-- **commit-msg**: validates commit message format via commitlint
+- `useValidationErrors()` — tracks field-level errors
+- `useFormSubmit(validationErrors)` — handles submission + 422 parsing
+- Backend validation errors (HTTP 422) are parsed to field errors automatically
+
+### Error Handling
+
+- Custom error classes in `@shared/errors/`
+- Axios errors checked with `isAxiosError()`
+- 422 = validation errors (handled by composables)
+- 401 = authentication failures (handled by auth service middleware)
+
+---
+
+## Quality Inspection Department
+
+### The Inspection Checklist
+
+| Command | What It Inspects |
+|---|---|
+| `npm run dev` | Start dev server (families, default) |
+| `npm run dev:admin` | Start dev server (admin) |
+| `npm run dev:showcase` | Start dev server (showcase) |
+| `npm run build` | Build all 3 apps (type-checks first) |
+| `npm run test:unit` | Run the test suite |
+| `npm run test:coverage` | Run tests with coverage (**100% required — no exceptions**) |
+| `npm run lint` | oxlint with type-aware checking |
+| `npm run lint:vue` | Custom Vue conventions linter |
+| `npm run format` | Format with oxfmt |
+| `npm run format:check` | Check formatting without modifying |
+| `npm run type-check` | vue-tsc type checking |
+| `npm run knip` | Detect unused code/exports (no dead bricks) |
+| `npm run size` | Check bundle size limits |
+
+### The Pre-Push Gauntlet
+
+Before any code leaves this building, Husky enforces: **type-check -> knip -> test:coverage -> build**. All must pass. There are no shortcuts. The `--no-verify` flag does not exist in this firm.
+
+### Coverage Policy
+
+**100% coverage on lines, functions, branches, and statements.** If you build it, you test it. This is structural engineering — we don't guess if a wall will hold.
+
+---
+
+## The Style Guide — Neo-Brutalist LEGO Aesthetic
+
+Our design language is neo-brutalist, inspired by actual LEGO bricks:
+
+| Shortcut | Effect |
+|---|---|
+| `brick-border` | 3px solid black border |
+| `brick-shadow` | 4px black drop shadow |
+| `brick-shadow-hover` | 6px shadow on hover |
+| `brick-shadow-active` | 2px shadow on active |
+| `brick-label` | Uppercase, bold, tracking-wide |
+| `brick-disabled` | Gray styling |
+| `brick-transition` | Smooth shadow/bg-color transitions |
+| `brick-stud-grid` | Radial gradient pattern (LEGO stud texture) |
+
+**Brand Colors:**
+
+| Name | Hex | Usage |
+|---|---|---|
+| Brick Yellow | `#F5C518` | Primary |
+| Brick Red | `#C41A16` | Danger |
+| Brick Blue | `#0055BF` | Secondary |
+| Brick Ink | `#000000` | Text |
+| Brick Surface | `#FFFFFF` | Background |
+| Baseplate Green | `#237841` | Accent |
+
+**Typography:** Space Grotesk for headings.
+
+---
+
+## Formatting Standards — The Building Code
+
+These are enforced by oxfmt. Non-compliance is a demolition order.
+
+- **Print width:** 120 characters
+- **Indent:** 4 spaces (tabs are contraband)
+- **Trailing commas:** always
+- **Semicolons:** required
+- **Quotes:** double quotes only (single quotes are a code violation)
+- **Bracket spacing:** none (`{a: 1}` not `{ a: 1 }`)
+- **Line endings:** LF
+- **Final newline:** required
+
+---
+
+## Complexity Limits — Structural Load Ratings
+
+The building inspectors enforce these maximums:
+
+- **Cyclomatic complexity:** 10
+- **Function parameters:** 4
+- **Nesting depth:** 4
+- **Lines per function:** 80 (excluding comments/blanks)
+- **Console statements:** forbidden (`no-console: error`)
+- **Debugger statements:** forbidden
+- **`var` keyword:** forbidden (use `const`, prefer it over `let`)
+- **Loose equality:** forbidden (use `===`)
+
+---
+
+## Commit Messages — The Build Log
+
+All commits follow [Conventional Commits](https://www.conventionalcommits.org/). Enforced by commitlint. Body line length is unlimited — we believe in thorough documentation.
+
+```
+feat: add barcode scanning to set lookup
+fix: correct validation error display on storage form
+refactor: extract http middleware into shared service
+```
+
+---
+
+*Remember: In this firm, every brick has a purpose, every connection is deliberate, and we never ship a structure we haven't tested. Now get building.*
+
+*— The CEO (2x2 yellow brick, distinguished)*
