@@ -12,11 +12,11 @@ Backend API returns snake_case (`first_name`, `created_at`). Frontend TypeScript
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|---|---|---|---|
-| **Use snake_case in frontend** | No conversion needed | Violates TypeScript naming conventions. Every component that touches API data uses non-standard names. IDE refactoring breaks | Eliminated — the cognitive cost is constant and pervasive |
-| **HTTP interceptor/middleware** (automatic on all requests/responses) | Zero manual work, consistent | Converts everything — including requests/responses that shouldn't be converted (e.g., external APIs, headers). Hard to debug when conversion causes issues. Silent failures on edge cases | Considered but not chosen — too broad, too invisible |
-| **Explicit conversion at service boundaries** | Visible where it happens. Only converts what should be converted. Type-safe — `DeepSnakeKeys<T>` on input, `T` on output | Requires remembering to call it. Repeated at every API boundary | **Chosen** — visibility and control outweigh the repetition |
+| Option                                                                | Pros                                                                                                                     | Cons                                                                                                                                                                                      | Why eliminated / Why chosen                                 |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Use snake_case in frontend**                                        | No conversion needed                                                                                                     | Violates TypeScript naming conventions. Every component that touches API data uses non-standard names. IDE refactoring breaks                                                             | Eliminated — the cognitive cost is constant and pervasive   |
+| **HTTP interceptor/middleware** (automatic on all requests/responses) | Zero manual work, consistent                                                                                             | Converts everything — including requests/responses that shouldn't be converted (e.g., external APIs, headers). Hard to debug when conversion causes issues. Silent failures on edge cases | Considered but not chosen — too broad, too invisible        |
+| **Explicit conversion at service boundaries**                         | Visible where it happens. Only converts what should be converted. Type-safe — `DeepSnakeKeys<T>` on input, `T` on output | Requires remembering to call it. Repeated at every API boundary                                                                                                                           | **Chosen** — visibility and control outweigh the repetition |
 
 ## Decision
 
@@ -31,7 +31,12 @@ Type safety enforced by typing API responses as `DeepSnakeKeys<T>` and immediate
 - **Repetition**: Every service that talks to the API has conversion calls. The resource adapter centralizes most of this, but auth has its own
 - **Correctness**: Unlike automatic middleware, this never converts something that shouldn't be converted
 
-## Open Questions
+## Resolved Questions
 
-- The resource adapter handles conversion for standard CRUD. Auth handles its own. If more services need API access, should conversion move into a shared base service pattern, or is the current explicit approach better despite duplication?
-- `string-ts` handles nested objects and arrays. Are there edge cases (e.g., mixed-case keys, keys that should stay as-is) that could break silently?
+### Should conversion move into a shared base service pattern as more services need API access?
+
+**Resolved 2026-03-17.** No — stay explicit. The resource adapter already centralizes conversion for standard CRUD. Auth is the only non-CRUD service with its own conversion, and its endpoints (login, register, refresh) are inherently non-standard. A shared base service to deduplicate 2 call sites is premature abstraction, and it hides conversion points that are currently greppable (`toCamelCaseTyped`, `deepSnakeKeys`). This aligns with the visibility-over-magic principle from ADR-002. Revisit if a third non-CRUD service needs API access with conversion — that's a real pattern worth extracting.
+
+### Are there string-ts edge cases that could break silently?
+
+**Resolved 2026-03-17.** Non-issue for our stack. The backend is Laravel with standard Eloquent conventions — all API responses use clean snake_case. `string-ts` handles this correctly and `DeepSnakeKeys<T>` enforces it at compile time. If we ever integrate an external API with non-standard casing (acronyms, mixed-case keys), that's handled with a manual mapping at that specific service boundary — the explicit conversion approach already provides this escape hatch.

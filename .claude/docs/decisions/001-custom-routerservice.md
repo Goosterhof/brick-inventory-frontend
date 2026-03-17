@@ -14,11 +14,11 @@ Beyond the shared component problem, Families needed capabilities Vue Router doe
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|---|---|---|---|
-| **Vue Router plugin everywhere** | Standard API, `RouterLink` works in shared components | Forces all apps to install Vue Router even when unnecessary. Shared components become tightly coupled to Vue Router plugin registration | Eliminated — Showcase has zero routing needs, and it creates an invisible coupling that breaks at runtime, not compile time |
-| **RouterService wrapper for all apps** | Consistent API across apps, shared components always safe | Over-engineered for simple apps like Admin | Partially chosen — used where the complexity is justified |
-| **RouterService for Families, raw Vue Router for Admin, nothing for Showcase** | Each app uses only what it needs. Shared components use `<a>` tags so they never depend on any router | Shared nav components can't do SPA navigation on their own — they emit clicks and let the parent handle routing | **Chosen** — matches actual complexity per app |
+| Option                                                                         | Pros                                                                                                  | Cons                                                                                                                                    | Why eliminated / Why chosen                                                                                                 |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Vue Router plugin everywhere**                                               | Standard API, `RouterLink` works in shared components                                                 | Forces all apps to install Vue Router even when unnecessary. Shared components become tightly coupled to Vue Router plugin registration | Eliminated — Showcase has zero routing needs, and it creates an invisible coupling that breaks at runtime, not compile time |
+| **RouterService wrapper for all apps**                                         | Consistent API across apps, shared components always safe                                             | Over-engineered for simple apps like Admin                                                                                              | Partially chosen — used where the complexity is justified                                                                   |
+| **RouterService for Families, raw Vue Router for Admin, nothing for Showcase** | Each app uses only what it needs. Shared components use `<a>` tags so they never depend on any router | Shared nav components can't do SPA navigation on their own — they emit clicks and let the parent handle routing                         | **Chosen** — matches actual complexity per app                                                                              |
 
 ## Decision
 

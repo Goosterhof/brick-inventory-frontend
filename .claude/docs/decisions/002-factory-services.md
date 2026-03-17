@@ -12,11 +12,11 @@ The question wasn't whether to have shared service code (obvious yes), but how a
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|---|---|---|---|
-| **Singleton modules** (export instances directly from shared) | Zero boilerplate, import and use | Apps can't configure independently. Testing requires mocking module-level state. One app's middleware bleeds into another | Eliminated — multi-app platform makes this a hard blocker, not a preference |
-| **Vue provide/inject** | Vue-native DI, composable-friendly | Services must be created inside Vue's setup lifecycle. Can't use services outside components (e.g., in router guards, middleware). Testing requires mounting components to access services | Eliminated — too many service consumers live outside Vue components |
-| **Factory functions** (`createXService()`) | Per-app instances, explicit config, trivially testable, works anywhere | Boilerplate: each app has a `services/` directory with ~7 files of instantiation code | **Chosen** — the boilerplate is small and self-documenting |
+| Option                                                        | Pros                                                                   | Cons                                                                                                                                                                                       | Why eliminated / Why chosen                                                 |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| **Singleton modules** (export instances directly from shared) | Zero boilerplate, import and use                                       | Apps can't configure independently. Testing requires mocking module-level state. One app's middleware bleeds into another                                                                  | Eliminated — multi-app platform makes this a hard blocker, not a preference |
+| **Vue provide/inject**                                        | Vue-native DI, composable-friendly                                     | Services must be created inside Vue's setup lifecycle. Can't use services outside components (e.g., in router guards, middleware). Testing requires mounting components to access services | Eliminated — too many service consumers live outside Vue components         |
+| **Factory functions** (`createXService()`)                    | Per-app instances, explicit config, trivially testable, works anywhere | Boilerplate: each app has a `services/` directory with ~7 files of instantiation code                                                                                                      | **Chosen** — the boilerplate is small and self-documenting                  |
 
 ## Decision
 

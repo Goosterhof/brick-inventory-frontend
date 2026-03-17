@@ -1,40 +1,41 @@
-# Decision: v-show for testable conditional rendering in navigation
+# Decision: Istanbul coverage engine for Vue SFC branch accuracy
 
 **Date**: 2026-03-17
-**Feature**: Navigation component patterns and test coverage
+**Feature**: Test coverage infrastructure
 **Status**: accepted
+**Supersedes**: Previous ADR-005 (v-show for testable conditional rendering — deprecated, workaround no longer needed)
 
 ## Context
 
-The project enforces 100% branch coverage. Vue's `v-if` directive compiles to ternary expressions in the render function, creating branches that V8 tracks. In JSDOM (the test environment), some of these branches can't be reached — particularly responsive breakpoint conditions and certain component lifecycle branches that only occur in a real browser.
+The project enforces 100% coverage on lines, functions, branches, and statements. Vue's compiler transforms template directives like `v-if="foo"` into ternary expressions in the render function: `foo ? _createVNode(...) : _createCommentVNode("")`. Neither coverage engine sees the original `<template>` source — both operate on this compiled JavaScript output.
 
-This creates an impossible requirement: 100% branch coverage with unreachable branches.
+With V8 coverage (`@vitest/coverage-v8`), branch tracking relies on runtime byte-range data remapped to source locations via source maps. Vue's compiler hoists static elements to module scope and shifts byte offsets in ways that break this remapping. The result: false positives (hoisted code reported as covered when it wasn't exercised) and false negatives (unmapped branches silently dropped from reports). Multiple issues remain open as of March 2026. This meant our 100% branch coverage number was unreliable — it could be lying in both directions.
 
-**Important nuance**: This rule applies specifically to conditional rendering where the condition can't be controlled in tests. `v-if` is still used elsewhere in the codebase — for example, `NavHeader.vue` uses `v-if="menuOpen"` for the mobile menu because that condition IS testable (you can toggle `menuOpen` in a test). The rule is narrower than "always use v-show."
+The previous workaround (ADR-005, now deprecated) used `v-show` instead of `v-if` to avoid generating branches that V8 couldn't track. This solved the symptom but misused `v-show` — a rendering performance tool — as a coverage workaround, and forced semantic compromises in templates.
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|---|---|---|---|
-| **Use `v-if` everywhere, istanbul ignore comments** | Standard Vue pattern | Ignore comments mask real coverage gaps. Hard to distinguish "legitimately unreachable" from "we forgot to test this" | Eliminated — coverage ignore comments erode trust in the metric |
-| **Lower coverage target below 100%** | Removes the pressure entirely | Loses the discipline. Where's the new line? 95%? 90%? Every uncovered branch becomes "probably fine" | Eliminated — 100% is a structural commitment, not a target to negotiate |
-| **Use `v-show` for conditions untestable in JSDOM** | Elements always render (CSS hidden), no coverage branches. DOM weight is negligible for nav items | Slightly more DOM output. Doesn't work for components with side effects on mount | **Chosen** — pragmatic, scoped to the actual problem |
+| Option                                              | Pros                                                                                                                                                                           | Cons                                                                                                                                     | Why eliminated / Why chosen                                                 |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **V8 coverage** (`@vitest/coverage-v8`)             | Faster, lower memory, no instrumentation overhead, ships as Vitest default                                                                                                     | Known false positives and false negatives for Vue SFC branches due to source map remapping bugs. 100% branch coverage becomes unreliable | Eliminated — an unreliable coverage number is worse than no coverage number |
+| **Istanbul coverage** (`@vitest/coverage-istanbul`) | Injects explicit counter statements into compiled JS — counters are physically in the code, not dependent on source map remapping. More mechanically reliable branch detection | Slower execution, higher memory usage due to instrumentation overhead. Still instruments compiled output, not original templates         | **Chosen** — reliable branch detection is worth the performance cost        |
+| **Custom coverage provider**                        | Vitest supports custom providers via config                                                                                                                                    | No viable third-party options exist as of March 2026                                                                                     | Eliminated — nothing to evaluate                                            |
+| **v-show workaround** (previous ADR-005)            | Avoids generating untestable branches                                                                                                                                          | Misuses v-show semantics, forces template compromises, doesn't fix the root cause                                                        | Eliminated — treats the symptom, not the disease                            |
 
 ## Decision
 
-Use `v-show` instead of `v-if` for conditional navigation elements where the condition can't be reliably controlled in JSDOM tests. `v-if` remains fine for conditions that tests CAN control (like `menuOpen` toggles, authenticated/unauthenticated states, etc.).
+Use Istanbul (`@vitest/coverage-istanbul`) as the coverage provider. Istanbul injects explicit branch counters into the compiled JavaScript, making branch detection mechanically reliable regardless of source map accuracy. The counters are _in_ the code, so they track actual runtime execution of each branch without depending on post-hoc byte-range remapping.
 
-The rule is: if you can write a test that triggers both branches, use `v-if`. If you can't (responsive breakpoints, browser-only conditions), use `v-show`.
+This eliminates the need for the `v-show` workaround. Use `v-if` and `v-show` based on their intended semantics: `v-if` for conditional rendering (element not in DOM), `v-show` for toggling visibility of frequently switching elements (element stays in DOM, CSS `display: none`).
+
+### What Istanbul does NOT solve
+
+Istanbul still instruments the _compiled_ render function, not the original template. Compiler-generated branches that don't correspond to user-written logic may still appear. If Vue's compiler eventually emits coverage ignore hints (like `/* istanbul ignore next */`) in generated code, this problem goes away upstream. Until then, compiler-generated phantom branches may require targeted ignore comments — but Istanbul makes these visible and countable rather than silently inflating or dropping them.
 
 ## Consequences
 
-- 100% branch coverage is achievable without ignore comments or testing contortions
-- Navigation elements always exist in the DOM when using `v-show` — hidden via `display: none`. Negligible performance impact for navigation-scale DOM
-- `v-if` is still the default for most conditional rendering. This rule only applies to the specific case of untestable conditions
-- Developers need to understand the distinction: it's not "v-show is better" — it's "v-show avoids phantom branches in coverage"
-
-## Open Questions
-
-- As the component library grows, will this rule extend beyond navigation? Other components with responsive behavior might hit the same issue
-- If Vitest/JSDOM improves V8 coverage tracking for compiled Vue templates, this workaround might become unnecessary. Worth checking periodically
-- Should this be enforced by a lint rule, or is documentation sufficient? Currently it's a convention in learnings.md
+- **Reliable 100% branch coverage**: The metric means what it says. No silent false positives or negatives from V8 remapping bugs
+- **Semantic templates**: `v-if` and `v-show` are used for their intended purposes, not as coverage workarounds
+- **Performance cost**: Test suite runs slower due to instrumentation overhead. Acceptable trade-off for a project of this size
+- **Dependency**: Adds `@vitest/coverage-istanbul` (and its Babel instrumentation dependency) to devDependencies
+- **Upstream dependency**: If Vue's compiler adds coverage ignore hints in generated code, both engines benefit — but Istanbul is less dependent on this fix than V8
