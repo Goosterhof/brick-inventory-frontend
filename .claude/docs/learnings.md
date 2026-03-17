@@ -4,6 +4,8 @@ Corrections and discoveries captured during work. Not philosophy — operational
 
 **When to add an entry**: After any mistake, non-obvious discovery, or user correction. If you'd tell your past self "watch out for this" — write it down.
 
+**Ownership**: The architect **proposes** entries during the report-back step. The CEO **approves** what gets committed. No entry lands here without CEO sign-off.
+
 **Format**: Each entry is a rule, not a story. Present tense, imperative mood. Include the _why_ only if it's not obvious.
 
 **Graduation**: When a learning proves itself across multiple sessions, promote it:
