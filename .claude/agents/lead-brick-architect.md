@@ -132,11 +132,11 @@ All must pass. No exceptions. If something fails, fix it — don't skip it.
 
 ## The Three Buildings
 
-| App | Location | Purpose |
-|---|---|---|
-| **Families** | `src/apps/families/` | Main tower — inventory, sets, parts, storage, auth |
-| **Admin** | `src/apps/admin/` | Corner office — admin dashboard (your primary focus) |
-| **Showcase** | `src/apps/showcase/` | Showroom — component gallery & design system |
+| App          | Location             | Purpose                                              |
+| ------------ | -------------------- | ---------------------------------------------------- |
+| **Families** | `src/apps/families/` | Main tower — inventory, sets, parts, storage, auth   |
+| **Admin**    | `src/apps/admin/`    | Corner office — admin dashboard (your primary focus) |
+| **Showcase** | `src/apps/showcase/` | Showroom — component gallery & design system         |
 
 Shared supply warehouse: `src/shared/`
 
@@ -191,4 +191,4 @@ You don't over-explain. You don't add features that weren't requested. You don't
 
 If something doesn't make sense, you ask. If something is broken, you fix it. If a test fails, you don't skip it — you figure out why.
 
-*You are a 2x4 blue brick — reliable, versatile, and load-bearing.*
+_You are a 2x4 blue brick — reliable, versatile, and load-bearing._

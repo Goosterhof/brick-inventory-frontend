@@ -12,11 +12,11 @@ Backend API returns snake_case (`first_name`, `created_at`). Frontend TypeScript
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|---|---|---|---|
-| **Use snake_case in frontend** | No conversion needed | Violates TypeScript naming conventions. Every component that touches API data uses non-standard names. IDE refactoring breaks | Eliminated — the cognitive cost is constant and pervasive |
-| **HTTP interceptor/middleware** (automatic on all requests/responses) | Zero manual work, consistent | Converts everything — including requests/responses that shouldn't be converted (e.g., external APIs, headers). Hard to debug when conversion causes issues. Silent failures on edge cases | Considered but not chosen — too broad, too invisible |
-| **Explicit conversion at service boundaries** | Visible where it happens. Only converts what should be converted. Type-safe — `DeepSnakeKeys<T>` on input, `T` on output | Requires remembering to call it. Repeated at every API boundary | **Chosen** — visibility and control outweigh the repetition |
+| Option                                                                | Pros                                                                                                                     | Cons                                                                                                                                                                                      | Why eliminated / Why chosen                                 |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Use snake_case in frontend**                                        | No conversion needed                                                                                                     | Violates TypeScript naming conventions. Every component that touches API data uses non-standard names. IDE refactoring breaks                                                             | Eliminated — the cognitive cost is constant and pervasive   |
+| **HTTP interceptor/middleware** (automatic on all requests/responses) | Zero manual work, consistent                                                                                             | Converts everything — including requests/responses that shouldn't be converted (e.g., external APIs, headers). Hard to debug when conversion causes issues. Silent failures on edge cases | Considered but not chosen — too broad, too invisible        |
+| **Explicit conversion at service boundaries**                         | Visible where it happens. Only converts what should be converted. Type-safe — `DeepSnakeKeys<T>` on input, `T` on output | Requires remembering to call it. Repeated at every API boundary                                                                                                                           | **Chosen** — visibility and control outweigh the repetition |
 
 ## Decision
 

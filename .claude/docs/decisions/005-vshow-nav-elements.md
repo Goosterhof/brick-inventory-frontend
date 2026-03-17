@@ -15,22 +15,22 @@ The previous workaround (ADR-005, now deprecated) used `v-show` instead of `v-if
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|---|---|---|---|
-| **V8 coverage** (`@vitest/coverage-v8`) | Faster, lower memory, no instrumentation overhead, ships as Vitest default | Known false positives and false negatives for Vue SFC branches due to source map remapping bugs. 100% branch coverage becomes unreliable | Eliminated — an unreliable coverage number is worse than no coverage number |
-| **Istanbul coverage** (`@vitest/coverage-istanbul`) | Injects explicit counter statements into compiled JS — counters are physically in the code, not dependent on source map remapping. More mechanically reliable branch detection | Slower execution, higher memory usage due to instrumentation overhead. Still instruments compiled output, not original templates | **Chosen** — reliable branch detection is worth the performance cost |
-| **Custom coverage provider** | Vitest supports custom providers via config | No viable third-party options exist as of March 2026 | Eliminated — nothing to evaluate |
-| **v-show workaround** (previous ADR-005) | Avoids generating untestable branches | Misuses v-show semantics, forces template compromises, doesn't fix the root cause | Eliminated — treats the symptom, not the disease |
+| Option                                              | Pros                                                                                                                                                                           | Cons                                                                                                                                     | Why eliminated / Why chosen                                                 |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **V8 coverage** (`@vitest/coverage-v8`)             | Faster, lower memory, no instrumentation overhead, ships as Vitest default                                                                                                     | Known false positives and false negatives for Vue SFC branches due to source map remapping bugs. 100% branch coverage becomes unreliable | Eliminated — an unreliable coverage number is worse than no coverage number |
+| **Istanbul coverage** (`@vitest/coverage-istanbul`) | Injects explicit counter statements into compiled JS — counters are physically in the code, not dependent on source map remapping. More mechanically reliable branch detection | Slower execution, higher memory usage due to instrumentation overhead. Still instruments compiled output, not original templates         | **Chosen** — reliable branch detection is worth the performance cost        |
+| **Custom coverage provider**                        | Vitest supports custom providers via config                                                                                                                                    | No viable third-party options exist as of March 2026                                                                                     | Eliminated — nothing to evaluate                                            |
+| **v-show workaround** (previous ADR-005)            | Avoids generating untestable branches                                                                                                                                          | Misuses v-show semantics, forces template compromises, doesn't fix the root cause                                                        | Eliminated — treats the symptom, not the disease                            |
 
 ## Decision
 
-Use Istanbul (`@vitest/coverage-istanbul`) as the coverage provider. Istanbul injects explicit branch counters into the compiled JavaScript, making branch detection mechanically reliable regardless of source map accuracy. The counters are *in* the code, so they track actual runtime execution of each branch without depending on post-hoc byte-range remapping.
+Use Istanbul (`@vitest/coverage-istanbul`) as the coverage provider. Istanbul injects explicit branch counters into the compiled JavaScript, making branch detection mechanically reliable regardless of source map accuracy. The counters are _in_ the code, so they track actual runtime execution of each branch without depending on post-hoc byte-range remapping.
 
 This eliminates the need for the `v-show` workaround. Use `v-if` and `v-show` based on their intended semantics: `v-if` for conditional rendering (element not in DOM), `v-show` for toggling visibility of frequently switching elements (element stays in DOM, CSS `display: none`).
 
 ### What Istanbul does NOT solve
 
-Istanbul still instruments the *compiled* render function, not the original template. Compiler-generated branches that don't correspond to user-written logic may still appear. If Vue's compiler eventually emits coverage ignore hints (like `/* istanbul ignore next */`) in generated code, this problem goes away upstream. Until then, compiler-generated phantom branches may require targeted ignore comments — but Istanbul makes these visible and countable rather than silently inflating or dropping them.
+Istanbul still instruments the _compiled_ render function, not the original template. Compiler-generated branches that don't correspond to user-written logic may still appear. If Vue's compiler eventually emits coverage ignore hints (like `/* istanbul ignore next */`) in generated code, this problem goes away upstream. Until then, compiler-generated phantom branches may require targeted ignore comments — but Istanbul makes these visible and countable rather than silently inflating or dropping them.
 
 ## Consequences
 

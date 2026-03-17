@@ -81,12 +81,12 @@ npm run knip
 
 ## Quick Reference
 
-| Phase   | Lego Analogy        | Key Question              | Key Output       |
-| ------- | ------------------- | ------------------------- | ---------------- |
-| Unbox   | Open the box        | What are we building?     | Feature brief    |
-| Sort    | Sort the bricks     | Where does it go?         | Architecture map |
-| Build   | Follow instructions | How do we build it?       | Code + tests     |
-| Inspect | Check the model     | Is it sturdy & beautiful? | All checks pass  |
+| Phase   | Lego Analogy        | Key Question              | Key Output                   |
+| ------- | ------------------- | ------------------------- | ---------------------------- |
+| Unbox   | Open the box        | What are we building?     | Feature brief                |
+| Sort    | Sort the bricks     | Where does it go?         | Architecture map             |
+| Build   | Follow instructions | How do we build it?       | Code + tests                 |
+| Inspect | Check the model     | Is it sturdy & beautiful? | All checks pass              |
 | Display | Put it on the shelf | Is it ready to show?      | Merged PR + decisions logged |
 
 ## When to Skip Phases

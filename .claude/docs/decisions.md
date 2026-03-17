@@ -11,6 +11,7 @@ Each decision lives in its own file under `decisions/`.
 **Naming**: `decisions/DDD-short-title.md` where DDD is a zero-padded sequence number.
 
 **Ownership**: Three-tier review process:
+
 1. The **architect** proposes decision records in the report-back step — with honest reasoning, not post-hoc justification
 2. The **COO** (main conversation agent) critically reviews: challenges shallow reasoning, asks "what did you actually consider?", flags gaps
 3. The **CEO** (human) gives final approval on what gets committed
@@ -18,6 +19,7 @@ Each decision lives in its own file under `decisions/`.
 No decision record lands here without passing through all three.
 
 **Lifecycle**:
+
 - `accepted` — current and active
 - `superseded` — replaced by a newer decision (link to the replacement)
 - `deprecated` — no longer relevant (explain why)
@@ -26,10 +28,10 @@ No decision record lands here without passing through all three.
 
 ## Index
 
-| # | Decision | Date | Status |
-|---|---|---|---|
-| 001 | [Custom RouterService over Vue Router plugin](./decisions/001-custom-routerservice.md) | 2026-03-17 | accepted |
-| 002 | [Factory pattern for services, no singletons](./decisions/002-factory-services.md) | 2026-03-17 | accepted |
-| 003 | [UnoCSS attributify over CSS files](./decisions/003-unocss-attributify.md) | 2026-03-17 | accepted |
+| #   | Decision                                                                                    | Date       | Status   |
+| --- | ------------------------------------------------------------------------------------------- | ---------- | -------- |
+| 001 | [Custom RouterService over Vue Router plugin](./decisions/001-custom-routerservice.md)      | 2026-03-17 | accepted |
+| 002 | [Factory pattern for services, no singletons](./decisions/002-factory-services.md)          | 2026-03-17 | accepted |
+| 003 | [UnoCSS attributify over CSS files](./decisions/003-unocss-attributify.md)                  | 2026-03-17 | accepted |
 | 004 | [Snake/camel case conversion at HTTP boundary](./decisions/004-case-conversion-boundary.md) | 2026-03-17 | accepted |
-| 005 | [v-show over v-if for navigation elements](./decisions/005-vshow-nav-elements.md) | 2026-03-17 | accepted |
+| 005 | [v-show over v-if for navigation elements](./decisions/005-vshow-nav-elements.md)           | 2026-03-17 | accepted |
