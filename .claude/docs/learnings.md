@@ -6,7 +6,14 @@ Corrections and discoveries captured during work. Not philosophy — operational
 
 **Format**: Each entry is a rule, not a story. Present tense, imperative mood. Include the _why_ only if it's not obvious.
 
-**Graduation**: When a learning proves itself across multiple sessions, promote it to CLAUDE.md or the relevant skill file. Then delete it from here — this file stays lean.
+**Graduation**: When a learning proves itself across multiple sessions, promote it:
+- **Operational rules** → CLAUDE.md or the relevant skill file
+- **Architectural patterns** → [Decision Log](./decisions.md) as a formal decision record
+- **Component-specific rules** → the agent definition's "Key Patterns to Remember" section
+
+Then delete it from here — this file stays lean.
+
+**Relationship to Decision Log**: Learnings are discoveries — things that surprised you. Decisions are choices — things you weighed and picked. A learning might become a decision ("we learned X, so from now on we do Y"), but most learnings stand alone.
 
 ---
 
