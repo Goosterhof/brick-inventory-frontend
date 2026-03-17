@@ -35,7 +35,12 @@ Attributify makes templates readable: `p="x-4 y-2" bg="white hover:brick-yellow"
 - **Trade-off**: Complex conditional styling requires ternaries in template bindings (e.g., `:bg="active ? 'brick-yellow' : 'white'"`) which can get noisy. Accepted because it keeps styling co-located
 - **IDE support**: Attributify has less autocomplete support than class-based Tailwind. Developers need to know the utility names
 
-## Open Questions
+## Resolved Questions
 
-- At what point does attributify ternary styling become too complex for a template? Should there be a complexity threshold where a computed property is preferred?
-- The 8 shortcuts were designed for the current design system. As it evolves (e.g., adding brick-radius for rounded elements beyond studs), how do we evaluate when a new shortcut is justified vs. when inline utilities suffice?
+### When does attributify ternary styling become too complex for a template?
+
+**Resolved 2026-03-17.** Concrete threshold: 1 ternary per attribute is fine inline (e.g., `:bg="active ? 'brick-yellow' : 'white'"`). Extract to a computed property when: 2+ ternaries appear on the same element, a ternary is nested, or a dynamic class object has 3+ conditions. A single ternary reads like a specification — multiple ternaries read like business logic, which belongs in `<script setup>`. This is a judgment-call guideline, not a lint-enforceable rule.
+
+### How do we evaluate when a new shortcut is justified vs. inline utilities?
+
+**Resolved 2026-03-17.** A new shortcut must meet all three criteria: (1) used in 3+ components — one or two usages don't justify abstraction, (2) encodes a design system concept, not just a convenience — `brick-border` defines what "bordered" means in the system, whereas `brick-padding` just aliases utilities, and (3) combines 3+ utilities — a shortcut for a single utility adds indirection for zero readability gain. If any criterion is not met, use inline utilities. This keeps the shortcut list tight and meaningful.
