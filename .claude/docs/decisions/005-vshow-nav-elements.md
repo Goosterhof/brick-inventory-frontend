@@ -1,4 +1,4 @@
-# Decision: Istanbul coverage engine for Vue SFC branch accuracy
+# Decision: Istanbul coverage with zero ignore comments
 
 **Date**: 2026-03-17
 **Feature**: Test coverage infrastructure
@@ -28,14 +28,80 @@ Use Istanbul (`@vitest/coverage-istanbul`) as the coverage provider. Istanbul in
 
 This eliminates the need for the `v-show` workaround. Use `v-if` and `v-show` based on their intended semantics: `v-if` for conditional rendering (element not in DOM), `v-show` for toggling visibility of frequently switching elements (element stays in DOM, CSS `display: none`).
 
+### No coverage ignore comments
+
+Coverage ignore comments (`/* istanbul ignore next */`, `/* v8 ignore */`) are **forbidden**. They create a culture problem at scale: developers copy the pattern for genuinely buggy code, and nobody can tell whether ignored code is dead or silently executing in production. Every line of code must be either tested or removed.
+
+When code appears untestable, the problem is the code, not the coverage tool. Apply these patterns in order:
+
+**1. Lifecycle-aware async: `isUnmounted` flag**
+
+When an async operation (e.g., `getUserMedia`) crosses an `await` boundary, the component may unmount before the promise settles. Instead of checking if a template ref is null (a proxy for "did we unmount?"), check an explicit `isUnmounted` flag — it's testable and states the actual condition.
+
+```ts
+let isUnmounted = false;
+
+onUnmounted(() => {
+    isUnmounted = true;
+    stopCamera();
+});
+
+const startCamera = async () => {
+    const mediaStream = await navigator.mediaDevices.getUserMedia({...});
+
+    if (isUnmounted) {
+        // Clean up the acquired resource — component is gone
+        for (const track of mediaStream.getTracks()) {
+            track.stop();
+        }
+        return;
+    }
+
+    // Safe to use refs — component is still mounted
+    const video = assertDefined(videoRef.value, "videoRef");
+    video.srcObject = mediaStream;
+};
+```
+
+Test by mounting, then unmounting before the promise resolves:
+
+```ts
+it("should clean up stream when component unmounts during getUserMedia", async () => {
+    let resolve;
+    mockGetUserMedia.mockReturnValue(
+        new Promise((r) => {
+            resolve = r;
+        }),
+    );
+    const wrapper = shallowMount(Component);
+    wrapper.unmount();
+    resolve(mockStream);
+    await flushPromises();
+    expect(mockTrack.stop).toHaveBeenCalled();
+});
+```
+
+**2. Type narrowing: `assertDefined` helper**
+
+When TypeScript requires a null check but the runtime condition is guaranteed by prior logic (e.g., `isCameraActive` being true guarantees refs exist), use `assertDefined` from `@shared/helpers/type-check`. It narrows the type and throws with a clear message if the invariant is violated. Its throw path is covered in the helper's own test file — components get 100% coverage on the non-throw path.
+
+```ts
+const video = assertDefined(videoRef.value, "videoRef");
+```
+
+**3. Dead code removal**
+
+If a guard is structurally unreachable (e.g., a click handler protected by `:disabled`, a method sealed by `<script setup>`), remove it. Dead code is not "defensive" — it's a lie that erodes trust in the coverage report.
+
 ### What Istanbul does NOT solve
 
-Istanbul still instruments the _compiled_ render function, not the original template. Compiler-generated branches that don't correspond to user-written logic may still appear. If Vue's compiler eventually emits coverage ignore hints (like `/* istanbul ignore next */`) in generated code, this problem goes away upstream. Until then, compiler-generated phantom branches may require targeted ignore comments — but Istanbul makes these visible and countable rather than silently inflating or dropping them.
+Istanbul still instruments the _compiled_ render function, not the original template. Compiler-generated branches that don't correspond to user-written logic may still appear. If Vue's compiler eventually emits coverage ignore hints in generated code, this problem goes away upstream. Until then, compiler-generated phantom branches are the one exception where targeted ignore comments may be necessary — but only for compiler-generated code, never for developer-written logic.
 
 ## Consequences
 
 - **Reliable 100% branch coverage**: The metric means what it says. No silent false positives or negatives from V8 remapping bugs
+- **Zero ignore comments on developer-written code**: No culture of hiding hard-to-test code behind ignore directives
 - **Semantic templates**: `v-if` and `v-show` are used for their intended purposes, not as coverage workarounds
+- **Testable async lifecycle**: `isUnmounted` pattern makes unmount-during-await a first-class tested scenario, not a silently ignored edge case
 - **Performance cost**: Test suite runs slower due to instrumentation overhead. Acceptable trade-off for a project of this size
 - **Dependency**: Adds `@vitest/coverage-istanbul` (and its Babel instrumentation dependency) to devDependencies
-- **Upstream dependency**: If Vue's compiler adds coverage ignore hints in generated code, both engines benefit — but Istanbul is less dependent on this fix than V8

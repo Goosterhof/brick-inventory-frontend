@@ -198,6 +198,13 @@
                                 "regex": "^@app/",
                                 "message": "Shared code must not import from @app/. Shared modules must remain app-agnostic."
                             }
+                        ],
+                        "paths": [
+                            {
+                                "name": "vue-router",
+                                "importNames": ["RouterLink"],
+                                "message": "RouterLink is forbidden in shared components (ADR-001). Use <a> tags with click emits instead."
+                            }
                         ]
                     }
                 ]

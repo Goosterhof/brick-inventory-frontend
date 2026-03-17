@@ -244,6 +244,57 @@ describe("CameraCapture", () => {
         });
     });
 
+    describe("unmount during async initialization", () => {
+        it("should clean up stream when component unmounts during getUserMedia", async () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            let resolveGetUserMedia: ((value: unknown) => void) | undefined;
+            mockGetUserMedia.mockReturnValue(
+                new Promise((resolve) => {
+                    resolveGetUserMedia = resolve;
+                }),
+            );
+
+            // Act — mount starts camera, then unmount before getUserMedia resolves
+            const wrapper = shallowMount(CameraCapture);
+            wrapper.unmount();
+            resolveGetUserMedia?.(mockStream);
+            await flushPromises();
+
+            // Assert — stream tracks should be stopped (cleanup happened)
+            expect(mockTrack.stop).toHaveBeenCalled();
+        });
+
+        it("should not activate camera when component unmounts during video play", async () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            let resolvePlay: (() => void) | undefined;
+            mockGetUserMedia.mockResolvedValue(mockStream);
+
+            // Act
+            const wrapper = shallowMount(CameraCapture);
+            const videoElement = wrapper.find("video").element as HTMLVideoElement;
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn(
+                    () =>
+                        new Promise<void>((resolve) => {
+                            resolvePlay = resolve;
+                        }),
+                ),
+                writable: true,
+            });
+            await flushPromises();
+            wrapper.unmount();
+            resolvePlay?.();
+            await flushPromises();
+
+            // Assert — camera should not be active after unmount
+            expect(mockTrack.stop).toHaveBeenCalled();
+        });
+    });
+
     describe("race condition prevention", () => {
         it("should prevent concurrent camera starts", async () => {
             // Arrange

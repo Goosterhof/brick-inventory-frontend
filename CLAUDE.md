@@ -187,6 +187,10 @@ Before any code leaves this building, Husky enforces: **type-check -> knip -> te
 
 **100% coverage on lines, functions, branches, and statements.** If you build it, you test it. This is structural engineering — we don't guess if a wall will hold.
 
+### Architectural Decisions
+
+Before building anything non-trivial, check the [Decision Log](/.claude/docs/decisions.md). It records *why* we built things the way we did, what alternatives were rejected, and what the constraints are. Don't relitigate settled decisions — if the context has changed, propose a superseding ADR instead.
+
 ---
 
 ## The Style Guide — Neo-Brutalist LEGO Aesthetic

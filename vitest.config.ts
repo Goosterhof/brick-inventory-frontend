@@ -12,7 +12,7 @@ export default mergeConfig(
             root: fileURLToPath(new URL("./", import.meta.url)),
             setupFiles: ["./src/tests/unit/setup.ts"],
             coverage: {
-                provider: "v8",
+                provider: "istanbul",
                 include: ["src/**/*.ts", "src/**/*.vue"],
                 exclude: [
                     "src/apps/**/main.ts",

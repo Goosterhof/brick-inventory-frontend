@@ -55,7 +55,14 @@ for (const file of files) {
         errors.push(`${file}: defineExpose is forbidden. Use props and emits for parent-child communication instead.`);
     }
 
-    // Check 4: Define-macros order — defineProps before defineEmits before defineSlots
+    // Check 4: No <style> blocks — all styling via UnoCSS attributes (ADR-003)
+    if (styleIndex !== -1) {
+        errors.push(
+            `${file}: <style> blocks are forbidden. Use UnoCSS attributify classes in the template instead (ADR-003).`,
+        );
+    }
+
+    // Check 5: Define-macros order — defineProps before defineEmits before defineSlots
     const propsIndex = content.indexOf("defineProps");
     const emitsIndex = content.indexOf("defineEmits");
     const slotsIndex = content.indexOf("defineSlots");
