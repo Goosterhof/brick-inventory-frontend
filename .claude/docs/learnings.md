@@ -4,9 +4,23 @@ Corrections and discoveries captured during work. Not philosophy — operational
 
 **When to add an entry**: After any mistake, non-obvious discovery, or user correction. If you'd tell your past self "watch out for this" — write it down.
 
+**Ownership**: Three-tier review process:
+1. The **architect** flags candidate learnings in the report-back — stated as observations, not settled rules
+2. The **COO** (main conversation agent) critically evaluates: Is this actually a pattern or a one-off? Is the rule correctly scoped? Does it contradict existing learnings? Presents recommendations to the CEO with commentary
+3. The **CEO** (human) decides what gets committed
+
+No learning lands here without this review. The COO's job is to prevent low-quality entries and challenge sloppy generalizations.
+
 **Format**: Each entry is a rule, not a story. Present tense, imperative mood. Include the _why_ only if it's not obvious.
 
-**Graduation**: When a learning proves itself across multiple sessions, promote it to CLAUDE.md or the relevant skill file. Then delete it from here — this file stays lean.
+**Graduation**: When a learning proves itself across multiple sessions, promote it:
+- **Operational rules** → CLAUDE.md or the relevant skill file
+- **Architectural patterns** → [Decision Log](./decisions.md) as a formal decision record
+- **Component-specific rules** → the agent definition's "Key Patterns to Remember" section
+
+Then delete it from here — this file stays lean.
+
+**Relationship to Decision Log**: Learnings are discoveries — things that surprised you. Decisions are choices — things you weighed and picked. A learning might become a decision ("we learned X, so from now on we do Y"), but most learnings stand alone.
 
 ---
 

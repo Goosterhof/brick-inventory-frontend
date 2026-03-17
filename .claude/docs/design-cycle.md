@@ -21,6 +21,7 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 
 - Consult the [Domain Map](./domain-map.md) — does this fit in an existing domain or need a new one?
 - Check the [Brick Catalog](./brick-catalog.md) — can you reuse existing components?
+- Check the [Decision Log](./decisions.md) — has a similar architectural choice been made before?
 - Identify required pieces: pages, components, modals, API endpoints
 - Create [Component Specs](./.component-spec-template.md) for non-trivial components
 - Update the domain map if adding a new domain
@@ -72,8 +73,11 @@ npm run knip
     - Link to feature brief
 - Update the domain map if new domains were added
 - Update CLAUDE.md if new services or patterns were introduced
+- Architect **proposes** decision records and learnings in the report-back
+- COO **reviews critically** — challenges reasoning, flags gaps, evaluates quality
+- CEO **approves** what gets committed to the [Decision Log](./decisions.md) and [Learnings](./learnings.md)
 
-**Output**: Merged PR, updated documentation.
+**Output**: Merged PR, updated documentation, reviewed decisions recorded.
 
 ## Quick Reference
 
@@ -83,7 +87,7 @@ npm run knip
 | Sort    | Sort the bricks     | Where does it go?         | Architecture map |
 | Build   | Follow instructions | How do we build it?       | Code + tests     |
 | Inspect | Check the model     | Is it sturdy & beautiful? | All checks pass  |
-| Display | Put it on the shelf | Is it ready to show?      | Merged PR        |
+| Display | Put it on the shelf | Is it ready to show?      | Merged PR + decisions logged |
 
 ## When to Skip Phases
 
