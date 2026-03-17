@@ -36,8 +36,16 @@ The RouterService also provides `createRouterLink()` — a component factory tha
 - The cost: shared nav components can't navigate on their own. Navigation logic lives in the consuming page, not the component. This is a deliberate inversion of control
 - `createRouterLink` gives Families the ergonomics of `RouterLink` without the coupling
 
-## Open Questions
+## Resolved Questions
 
-- As Admin grows in complexity, will it eventually need RouterService too? Current threshold is unclear
-- The `createRouterLink` factory duplicates some of what Vue Router's `RouterLink` does. If Vue Router ever supports conditional plugin detection, this becomes unnecessary complexity
-- Should shared components accept a navigation callback prop instead of emitting clicks? That would let them navigate without knowing how
+### When should Admin migrate to RouterService?
+
+**Resolved 2026-03-17.** When Admin hits any two of: 3+ routes, auth guards/middleware, CRUD navigation patterns, or route metadata (`authOnly`, `title`). One route with a guard is still manageable with raw Vue Router. Two qualifying criteria means you're reimplementing RouterService by hand.
+
+### Does createRouterLink duplicate Vue Router's RouterLink?
+
+**Resolved 2026-03-17.** No — it replaces a loosely-typed component with a strictly-typed one. Vue Router's `RouterLink` accepts `RouteLocationRaw`, which allows any string as a route name with no compile-time validation. `createRouterLink` types its `to` prop as `RouteName<Routes>` — a union of literal string types extracted from the actual route definitions. Passing a nonexistent route name is a TypeScript error, not a runtime surprise. Even if Vue Router added conditional plugin detection, `createRouterLink` would still be justified by the type safety alone.
+
+### Should shared components use callback props instead of click emits?
+
+**Resolved 2026-03-17.** No. The emit pattern is the correct choice. Callback props would break Vue 3 `defineEmits<{}>()` conventions used throughout the codebase, make components harder to test (currently verified cleanly via `wrapper.emitted("click")`), and add no value — parents already wire navigation in a single `@click` handler. The emit pattern keeps shared components fully decoupled from all routing implementations, which is exactly right for components running across three apps with three different routing setups.
