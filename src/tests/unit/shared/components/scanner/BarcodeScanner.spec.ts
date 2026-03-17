@@ -373,6 +373,22 @@ describe("BarcodeScanner", () => {
     });
 
     describe("resetKey prop", () => {
+        it("should reset without restarting scanning when camera is not active", async () => {
+            // Arrange
+            const error = new Error("Permission denied");
+            error.name = "NotAllowedError";
+            mockGetUserMedia.mockRejectedValue(error);
+            const wrapper = shallowMount(BarcodeScanner, {props: {resetKey: 0}});
+            await flushPromises();
+
+            // Act
+            await wrapper.setProps({resetKey: 1});
+            await flushPromises();
+
+            // Assert — no crash, no scanning restarted
+            expect(wrapper.emitted("detect")).toBeUndefined();
+        });
+
         it("should clear detected code and resume scanning when resetKey changes", async () => {
             // Arrange
             const mockTrack = {stop: vi.fn()};

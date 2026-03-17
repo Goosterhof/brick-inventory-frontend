@@ -42,7 +42,7 @@ const startCamera = async () => {
 
         stream.value = mediaStream;
 
-        /* v8 ignore start - videoRef always exists in mounted component */
+        /* istanbul ignore next -- defensive guard: videoRef always exists in mounted component */
         if (!videoRef.value) {
             for (const track of mediaStream.getTracks()) {
                 track.stop();
@@ -51,7 +51,6 @@ const startCamera = async () => {
             cameraError.value = "Unable to access camera video element.";
             return;
         }
-        /* v8 ignore end */
 
         videoRef.value.srcObject = mediaStream;
         await videoRef.value.play();
@@ -75,17 +74,17 @@ const startCamera = async () => {
 };
 
 const captureImage = () => {
-    /* v8 ignore start - refs always exist in mounted component, button disabled when inactive */
+    /* istanbul ignore next -- defensive guard: button is disabled when camera inactive */
     if (!isCameraActive.value) {
         emit("error", "Camera is not active. Please wait for the camera to start.");
         return;
     }
 
+    /* istanbul ignore next -- defensive guard: refs always exist in mounted component */
     if (!videoRef.value || !canvasRef.value) {
         emit("error", "Unable to capture image. Camera elements not available.");
         return;
     }
-    /* v8 ignore end */
 
     const video = videoRef.value;
     const canvas = canvasRef.value;

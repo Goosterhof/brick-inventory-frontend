@@ -70,7 +70,7 @@ const startCamera = async () => {
 
         stream.value = mediaStream;
 
-        /* v8 ignore start - videoRef always exists in mounted component */
+        /* istanbul ignore next -- defensive guard: videoRef always exists in mounted component */
         if (!videoRef.value) {
             for (const track of mediaStream.getTracks()) {
                 track.stop();
@@ -79,7 +79,6 @@ const startCamera = async () => {
             cameraError.value = "Unable to access camera video element.";
             return;
         }
-        /* v8 ignore end */
 
         videoRef.value.srcObject = mediaStream;
         await videoRef.value.play();

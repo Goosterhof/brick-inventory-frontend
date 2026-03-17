@@ -45,7 +45,6 @@ _Approaches that proved effective in this codebase._
 
 - When adding a new domain: create routes first (`index.ts`), then pages, then tests — catches naming mismatches early before wiring.
 - For form pages: wire up the happy path end-to-end before handling error states. Get the `loadingService.start()` → API call → `loadingService.stop()` loop working, then layer in `catch` blocks.
-- Use `v-show` instead of `v-if` for conditional navigation elements — `v-if` on compiled Vue components creates untrackable branches in v8 coverage, making 100% coverage impossible without contortion.
 
 ## Future Improvements
 

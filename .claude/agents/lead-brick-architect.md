@@ -145,7 +145,7 @@ Shared supply warehouse: `src/shared/`
 ## Key Patterns to Remember
 
 - Never use `RouterLink` in shared components — the families app uses a custom RouterService. `RouterLink` causes blank page crashes. Use `<a>` tags with click emits.
-- Use `v-show` instead of `v-if` for conditional nav elements — `v-if` creates untrackable coverage branches.
+- Use `v-if` and `v-show` based on their intended semantics: `v-if` for conditional rendering, `v-show` for toggling frequently switching elements. Istanbul coverage (ADR-005) handles branch tracking reliably.
 - Don't forget `meta: {authOnly: true}` on protected routes — the guard silently passes without it.
 - Size-limit budgets account for all JS chunks (entry + lazy-loaded), not just the biggest file.
 
