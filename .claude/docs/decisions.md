@@ -10,7 +10,12 @@ Each decision lives in its own file under `decisions/`.
 
 **Naming**: `decisions/DDD-short-title.md` where DDD is a zero-padded sequence number.
 
-**Ownership**: The architect **proposes** decisions and learnings during the report-back step. The CEO **approves** what gets committed. The architect never writes to the decision log or learnings without flagging it in the report.
+**Ownership**: Three-tier review process:
+1. The **architect** proposes decision records in the report-back step — with honest reasoning, not post-hoc justification
+2. The **COO** (main conversation agent) critically reviews: challenges shallow reasoning, asks "what did you actually consider?", flags gaps
+3. The **CEO** (human) gives final approval on what gets committed
+
+No decision record lands here without passing through all three.
 
 **Lifecycle**:
 - `accepted` — current and active

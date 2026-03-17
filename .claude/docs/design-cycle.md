@@ -73,10 +73,11 @@ npm run knip
     - Link to feature brief
 - Update the domain map if new domains were added
 - Update CLAUDE.md if new services or patterns were introduced
-- Log non-trivial decisions to the [Decision Log](./decisions.md) — use the [template](./.decision-record-template.md)
-- Capture new gotchas or discoveries in [Learnings](./learnings.md)
+- Architect **proposes** decision records and learnings in the report-back
+- COO **reviews critically** — challenges reasoning, flags gaps, evaluates quality
+- CEO **approves** what gets committed to the [Decision Log](./decisions.md) and [Learnings](./learnings.md)
 
-**Output**: Merged PR, updated documentation, decisions recorded.
+**Output**: Merged PR, updated documentation, reviewed decisions recorded.
 
 ## Quick Reference
 
