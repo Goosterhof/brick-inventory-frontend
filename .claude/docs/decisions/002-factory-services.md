@@ -32,7 +32,12 @@ This means there's no hidden coupling. You can read an app's `services/` directo
 - **Boilerplate cost**: Each Families service file is ~5-10 lines. 7 files totaling ~50 lines. Acceptable for the isolation gained
 - **Middleware composition**: Services like loading middleware are registered explicitly (`registerLoadingMiddleware(httpService, loadingService)`) rather than auto-discovered. This is more code but impossible to misconfigure silently
 
-## Open Questions
+## Resolved Questions
 
-- As the number of services grows, the `services/` directory could become noisy. Is there a point where a service registry pattern would reduce boilerplate without sacrificing isolation?
-- Some services have a natural dependency order (auth depends on HTTP, loading middleware connects HTTP and loading). Should this be documented per-app or is the code self-evident enough?
+### Should a service registry pattern replace direct factory instantiation as services grow?
+
+**Resolved 2026-03-17.** No. Families has 8 files in `services/` totaling ~50 lines. Admin and Showcase have zero. A service registry would add indirection (reading a config object instead of the files themselves), require a generic resolution mechanism that fights TypeScript's type inference, and solve for a scale we'll likely never hit — we have 3 apps, one of which uses zero services. The `services/` directory as-is is a manifest: you open it, you see exactly what the app uses. Revisit only if a single app hits 15+ services where the wiring logic itself becomes error-prone, not just verbose. At 8, this is a non-problem.
+
+### Should service dependency order be documented separately?
+
+**Resolved 2026-03-17.** No — the code is self-evident. Each service file is 5-10 lines, and the dependency is right there in the function call: `createAuthService(httpService)` tells you auth needs HTTP. A separate dependency document would go stale the moment someone adds a service and forgets to update it, duplicate what the type signatures already enforce (you literally can't pass the wrong thing), and add maintenance burden for zero safety gain. TypeScript is the documentation — if you wire it wrong, `tsc` catches it before the code runs.
