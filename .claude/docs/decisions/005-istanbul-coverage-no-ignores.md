@@ -1,6 +1,6 @@
 # Decision: Istanbul coverage with zero ignore comments
 
-**Date**: 2026-03-17
+**Date**: 2026-03-17 (revised 2026-03-18)
 **Feature**: Test coverage infrastructure
 **Status**: accepted
 **Transferability**: universal
@@ -96,7 +96,9 @@ If a guard is structurally unreachable (e.g., a click handler protected by `:dis
 
 ### What Istanbul does NOT solve
 
-Istanbul still instruments the _compiled_ render function, not the original template. Compiler-generated branches that don't correspond to user-written logic may still appear. If Vue's compiler eventually emits coverage ignore hints in generated code, this problem goes away upstream. Until then, compiler-generated phantom branches are the one exception where targeted ignore comments may be necessary — but only for compiler-generated code, never for developer-written logic.
+Istanbul still instruments the _compiled_ render function, not the original template. Compiler-generated branches that don't correspond to user-written logic may appear as uncovered. This is a known limitation of all JavaScript coverage tools operating on Vue SFCs.
+
+**The rule still holds: no ignore comments.** If a phantom branch causes a coverage gap, escalate it as a Vitest or Vue compiler issue rather than papering over it with an ignore directive. Ignore comments are the slippery slope — once one exists, juniors copy the pattern for real code. The cost of chasing a phantom branch is a one-time annoyance; the cost of a culture of ignore comments compounds forever.
 
 ## Consequences
 
