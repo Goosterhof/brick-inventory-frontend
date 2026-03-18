@@ -18,8 +18,10 @@
         "no-template-curly-in-string": "error",
         "no-unreachable": "error",
         "no-unsafe-negation": "error",
-        "no-return-await": "error",
+        "no-return-await": "off", // superseded by typescript/return-await (type-aware)
         "no-throw-literal": "error",
+        "no-unneeded-ternary": "warn",
+        "prefer-template": "warn",
         "radix": "error",
         "no-restricted-imports": [
             "error",
@@ -65,7 +67,7 @@
         "@typescript-eslint/no-non-null-assertion": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-unused-vars": "error",
-        "@typescript-eslint/no-empty-interface": "error",
+        "@typescript-eslint/no-empty-interface": "off", // superseded by typescript/no-empty-object-type
         "@typescript-eslint/prefer-as-const": "error",
         "@typescript-eslint/ban-ts-comment": "error",
         "@typescript-eslint/no-duplicate-enum-values": "error",
@@ -90,6 +92,15 @@
         "typescript/no-import-type-side-effects": "error",
         // Use the type-aware version of require-await; the core rule was removed from the general rules to avoid duplicate configuration.
         "typescript/require-await": "warn",
+        "typescript/return-await": "error",
+        "typescript/consistent-type-exports": "error",
+        "typescript/no-empty-object-type": "error",
+        "typescript/no-confusing-non-null-assertion": "error",
+        "typescript/no-deprecated": "warn",
+        "typescript/no-unnecessary-condition": "warn",
+        "typescript/no-unnecessary-template-expression": "warn",
+        "typescript/no-unnecessary-type-constraint": "warn",
+        "typescript/no-unnecessary-type-arguments": "warn",
 
         // Import rules
         "import/no-duplicates": "error",
@@ -100,6 +111,7 @@
         "import/no-named-default": "error",
         "import/no-default-export": "off", // Vue components use default exports
         "import/no-named-as-default": "warn",
+        "import/no-empty-named-blocks": "error",
 
         // Unicorn rules - modern JS best practices
         "unicorn/no-array-for-each": "error",
@@ -121,12 +133,19 @@
         "unicorn/no-lonely-if": "warn",
         "unicorn/no-abusive-eslint-disable": "error",
         "unicorn/prefer-event-target": "warn",
+        "unicorn/prefer-string-replace-all": "off", // disabled: oxlint type-aware resolves replaceAll() as any, causing no-unsafe-call cascades
+        "unicorn/prefer-structured-clone": "warn",
+        "unicorn/error-message": "error",
+        "unicorn/no-negation-in-equality-check": "error",
+        "unicorn/no-useless-promise-resolve-reject": "warn",
+        "unicorn/consistent-function-scoping": "warn",
 
         // Promise rules
         "promise/no-return-wrap": "error",
         "promise/catch-or-return": "error",
         "promise/no-nesting": "error",
         "promise/param-names": "error",
+        "promise/no-multiple-resolved": "error",
 
         // Vue rules
         "vue/no-arrow-functions-in-watch": "error",
@@ -313,6 +332,7 @@
                 ]
             }
         },
-        {"files": ["src/**/*.ts"], "rules": {"import/no-default-export": "error"}}
+        {"files": ["src/**/*.ts"], "rules": {"import/no-default-export": "error"}},
+        {"files": ["uno.config.ts"], "rules": {"typescript/no-deprecated": "off"}}
     ]
 }

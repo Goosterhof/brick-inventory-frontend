@@ -61,7 +61,7 @@ describe("router routes", () => {
             const result = createStandardRouteConfig("", "overview-route", lazyComponent);
 
             // Assert
-            expect(result?.path).toBe("");
+            expect(result.path).toBe("");
         });
 
         it("should handle path with params", () => {
@@ -69,7 +69,7 @@ describe("router routes", () => {
             const result = createStandardRouteConfig(":id/edit", "edit-route", lazyComponent);
 
             // Assert
-            expect(result?.path).toBe(":id/edit");
+            expect(result.path).toBe(":id/edit");
         });
     });
 
@@ -327,7 +327,7 @@ describe("router routes", () => {
             );
 
             // Assert
-            const overviewRoute = result.children.find((r) => r.name?.toString().includes(".overview"));
+            const overviewRoute = result.children.find((r) => r.name.toString().includes(".overview"));
             expect(overviewRoute).toBeUndefined();
         });
 

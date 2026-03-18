@@ -1,14 +1,14 @@
 /**
  * Generate a CSV string from rows of data.
  */
-export const toCsv = (headers: string[], rows: string[][]): string => {
-    const escape = (value: string): string => {
-        if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-            return `"${value.replace(/"/g, '""')}"`;
-        }
-        return value;
-    };
+const escape = (value: string): string => {
+    if (value.includes(",") || value.includes('"') || value.includes("\n")) {
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
+};
 
+export const toCsv = (headers: string[], rows: string[][]): string => {
     const lines = [headers.map(escape).join(","), ...rows.map((row) => row.map(escape).join(","))];
 
     return lines.join("\n");

@@ -28,19 +28,19 @@ export interface TranslationService<TSchema extends TranslationSchema, TLocale e
     locale: Ref<TLocale>;
 }
 
+const getCacheKey = (key: string, params?: Record<string, string>): string => {
+    if (!params) {
+        return key;
+    }
+    return `${key}:${JSON.stringify(params)}`;
+};
+
 export const createTranslationService = <const TSchema extends TranslationSchema, const TLocale extends string>(
     translations: Record<TLocale, TSchema>,
     defaultLocale: NoInfer<TLocale>,
 ): TranslationService<TSchema, TLocale> => {
     const locale = ref(defaultLocale) as Ref<TLocale>;
     const cache = new Map<string, ComputedRef<string>>();
-
-    const getCacheKey = (key: string, params?: Record<string, string>): string => {
-        if (!params) {
-            return key;
-        }
-        return `${key}:${JSON.stringify(params)}`;
-    };
 
     const createTranslationComputed = (key: string, params?: Record<string, string>): ComputedRef<string> => {
         return computed(() => {

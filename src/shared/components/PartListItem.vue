@@ -11,7 +11,7 @@ const props = defineProps<{
     spare?: boolean;
 }>();
 
-const colorStyle = computed(() => (props.colorRgb ? {backgroundColor: "#" + props.colorRgb} : undefined));
+const colorStyle = computed(() => (props.colorRgb ? {backgroundColor: `#${props.colorRgb}`} : undefined));
 const partDescription = computed(() => (props.colorName ? `${props.partNum} · ${props.colorName}` : props.partNum));
 </script>
 
