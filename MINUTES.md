@@ -5,6 +5,28 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-18 — ADR-001 Revision: Universal RouterService
+
+### Decisions
+
+- **ADR-001 rewritten as universal**: The multi-app routing pattern (shared components decoupled from router plugins, all routed apps using RouterService) is used across multiple Script projects — not project-specific. Transferability changed from `project-specific` to `universal`.
+- **No exceptions for "simple" apps**: The previous three-tier hybrid (RouterService for Families, raw Vue Router for Admin, nothing for Showcase) was eliminated. New rule: every routed app uses `createRouterService()`. An app with one or two routes barely qualifies as routed — and the migration cost when it grows is unnecessary friction.
+- **Admin migrated to RouterService**: Admin's raw Vue Router usage (`createRouter`, `useRouter`, `RouterView`) replaced with `createRouterService`, `adminRouterService`, and `AdminRouterView`. Tests rewritten to mock the service instead of creating a raw router.
+- **`useRouter`/`useRoute` ban extended to all apps**: oxlint `no-restricted-imports` rule now covers `src/apps/**` instead of just Families. Admin exclusion removed.
+
+### Notes
+
+- The Admin migration question ("when should Admin adopt RouterService?") was dropped as moot — there's no longer a threshold; you use it or you don't have routing
+- The decision now leads with the universal principle (shared code must not depend on framework plugin registration) and presents the RouterService as the solution, rather than leading with the LEGO-specific three-app setup
+- `AdminRouterLink` and `AdminAppRoutes` exports removed (knip flagged as unused) — can be added back when Admin needs them
+
+### Action Items
+
+- [ ] CFO: Continue reviewing remaining ADRs (002–005) through ADR-000 lens
+- [ ] CFO: Commit ADR-001 revision and Admin migration
+
+---
+
 ## 2026-03-18 — ADR-000: Foundation Document & Decision Framework
 
 ### Decisions

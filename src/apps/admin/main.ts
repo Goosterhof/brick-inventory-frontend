@@ -4,7 +4,7 @@ import "@shared/assets/icons.css";
 import {createApp} from "vue";
 
 import App from "./App.vue";
-import {router} from "./router";
+import {adminRouterService} from "./router";
 
 const app = createApp(App);
 
@@ -12,6 +12,6 @@ app.provide("weight", "bold");
 app.provide("size", "1.25em");
 app.provide("color", "currentColor");
 
-app.use(router);
+adminRouterService.install();
 
 app.mount("#app");

@@ -243,7 +243,7 @@
                             {
                                 "name": "vue-router",
                                 "importNames": ["useRouter", "useRoute"],
-                                "message": "Direct useRouter/useRoute is forbidden in the Families app (ADR-001). Use RouterService instead."
+                                "message": "Direct useRouter/useRoute is forbidden in apps (ADR-001). Use RouterService instead."
                             }
                         ]
                     }
@@ -272,6 +272,13 @@
                             {
                                 "regex": "(\\.\\./)+families(/|$)",
                                 "message": "Cannot import from the families app. Apps must remain independent; use @shared/ for shared code."
+                            }
+                        ],
+                        "paths": [
+                            {
+                                "name": "vue-router",
+                                "importNames": ["useRouter", "useRoute"],
+                                "message": "Direct useRouter/useRoute is forbidden in apps (ADR-001). Use RouterService instead."
                             }
                         ]
                     }

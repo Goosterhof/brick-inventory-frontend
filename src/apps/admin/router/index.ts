@@ -1,6 +1,11 @@
+import type {RouteRecordRaw} from "vue-router";
+
 import {routes as homeRoutes} from "@app/domains/home";
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouterService} from "@shared/services/router";
 
-const router = createRouter({history: createWebHistory(import.meta.env.BASE_URL), routes: [...homeRoutes]});
+const routes = [...homeRoutes] as const satisfies readonly RouteRecordRaw[];
 
-export {router};
+const routerService = createRouterService([...routes], "home", import.meta.env.BASE_URL);
+
+export const adminRouterService = routerService;
+export const AdminRouterView = routerService.RouterView;
