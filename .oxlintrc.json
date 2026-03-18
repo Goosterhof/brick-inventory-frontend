@@ -204,6 +204,11 @@
                                 "name": "vue-router",
                                 "importNames": ["RouterLink"],
                                 "message": "RouterLink is forbidden in shared components (ADR-001). Use <a> tags with click emits instead."
+                            },
+                            {
+                                "name": "vue-router",
+                                "importNames": ["useRouter", "useRoute"],
+                                "message": "Direct useRouter/useRoute is forbidden in shared code (ADR-001). Shared modules must remain router-agnostic."
                             }
                         ]
                     }
@@ -232,6 +237,13 @@
                             {
                                 "regex": "(\\.\\./)+admin(/|$)",
                                 "message": "Cannot import from the admin app. Apps must remain independent; use @shared/ for shared code."
+                            }
+                        ],
+                        "paths": [
+                            {
+                                "name": "vue-router",
+                                "importNames": ["useRouter", "useRoute"],
+                                "message": "Direct useRouter/useRoute is forbidden in the Families app (ADR-001). Use RouterService instead."
                             }
                         ]
                     }
