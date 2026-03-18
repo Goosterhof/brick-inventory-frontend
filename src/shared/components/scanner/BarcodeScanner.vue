@@ -2,7 +2,7 @@
 import {BarcodeDetector} from "barcode-detector";
 import {ref, watch, onMounted, onUnmounted} from "vue";
 
-import {assertDefined} from "@shared/helpers/type-check";
+import {ensureRefValueExists} from "@shared/helpers/type-check";
 
 const props = defineProps<{resetKey?: number}>();
 const emit = defineEmits<{detect: [barcode: string]; error: [message: string]}>();
@@ -79,7 +79,7 @@ const startCamera = async () => {
         }
 
         stream.value = mediaStream;
-        const video = assertDefined(videoRef.value, "videoRef");
+        const video = ensureRefValueExists(videoRef);
         video.srcObject = mediaStream;
         await video.play();
 

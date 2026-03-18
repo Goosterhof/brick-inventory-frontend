@@ -1,11 +1,14 @@
+import type {Ref} from "vue";
+
 import type {Updatable} from "@shared/types/generics";
 import type {Item} from "@shared/types/item";
 
+import {MissingRefValueError} from "@shared/errors/missing-ref-value";
+
 export const isExisting = <T extends Item>(obj: Updatable<T>): obj is T => "id" in obj;
 
-export const assertDefined = <T>(value: T | null | undefined, name: string): T => {
-    if (value === null || value === undefined) {
-        throw new Error(`Expected ${name} to be defined but received ${String(value)}.`);
-    }
-    return value;
+export const ensureRefValueExists = <T>(refVariable: Ref<T | undefined | null>): T => {
+    if (refVariable.value !== undefined && refVariable.value !== null) return refVariable.value;
+
+    throw new MissingRefValueError();
 };

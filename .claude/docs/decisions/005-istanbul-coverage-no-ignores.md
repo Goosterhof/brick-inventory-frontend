@@ -59,7 +59,7 @@ const startCamera = async () => {
     }
 
     // Safe to use refs — component is still mounted
-    const video = assertDefined(videoRef.value, "videoRef");
+    const video = ensureRefValueExists(videoRef);
     video.srcObject = mediaStream;
 };
 ```
@@ -82,13 +82,15 @@ it("should clean up stream when component unmounts during getUserMedia", async (
 });
 ```
 
-**2. Type narrowing: `assertDefined` helper**
+**2. Type narrowing: `ensureRefValueExists` helper**
 
-When TypeScript requires a null check but the runtime condition is guaranteed by prior logic (e.g., `isCameraActive` being true guarantees refs exist), use `assertDefined` from `@shared/helpers/type-check`. It narrows the type and throws with a clear message if the invariant is violated. Its throw path is covered in the helper's own test file — components get 100% coverage on the non-throw path.
+When TypeScript requires a null check on a template ref but the runtime condition is guaranteed by prior logic (e.g., `isCameraActive` being true guarantees refs exist), use `ensureRefValueExists` from `@shared/helpers/type-check`. It takes a `Ref<T | undefined | null>`, returns `T` if the value exists, and throws a `MissingRefValueError` if it doesn't. Its throw path is covered in the helper's own test file — components get 100% coverage on the non-throw path.
 
 ```ts
-const video = assertDefined(videoRef.value, "videoRef");
+const video = ensureRefValueExists(videoRef);
 ```
+
+The function is deliberately scoped to Vue refs — not a generic assertion. This prevents misuse on arbitrary values and makes the intent clear: "I expect this ref to have a value at this point in the lifecycle."
 
 **3. Dead code removal**
 

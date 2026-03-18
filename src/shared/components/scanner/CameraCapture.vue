@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted} from "vue";
 
-import {assertDefined} from "@shared/helpers/type-check";
+import {ensureRefValueExists} from "@shared/helpers/type-check";
 
 const emit = defineEmits<{capture: [imageData: Blob]; error: [message: string]}>();
 
@@ -51,7 +51,7 @@ const startCamera = async () => {
         }
 
         stream.value = mediaStream;
-        const video = assertDefined(videoRef.value, "videoRef");
+        const video = ensureRefValueExists(videoRef);
         video.srcObject = mediaStream;
         await video.play();
 
@@ -79,8 +79,8 @@ const startCamera = async () => {
 };
 
 const captureImage = () => {
-    const video = assertDefined(videoRef.value, "videoRef");
-    const canvas = assertDefined(canvasRef.value, "canvasRef");
+    const video = ensureRefValueExists(videoRef);
+    const canvas = ensureRefValueExists(canvasRef);
     const context = canvas.getContext("2d");
 
     if (!context) {
