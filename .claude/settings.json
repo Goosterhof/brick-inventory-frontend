@@ -1,5 +1,18 @@
 {
     "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash .claude/hooks/catalog-nudge.sh",
+                        "timeout": 5,
+                        "statusMessage": "Checking catalog freshness..."
+                    }
+                ]
+            }
+        ],
         "Stop": [
             {
                 "hooks": [
