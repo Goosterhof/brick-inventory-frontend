@@ -97,7 +97,7 @@
         "typescript/no-empty-object-type": "error",
         "typescript/no-confusing-non-null-assertion": "error",
         "typescript/no-deprecated": "warn",
-        "typescript/no-unnecessary-condition": "warn",
+        "typescript/no-unnecessary-condition": "error",
         "typescript/no-unnecessary-template-expression": "warn",
         "typescript/no-unnecessary-type-constraint": "warn",
         "typescript/no-unnecessary-type-arguments": "warn",
