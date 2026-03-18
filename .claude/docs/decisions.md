@@ -1,5 +1,7 @@
 # Decision Log — _Why We Built It That Way_
 
+Before reading any decision, start with **[ADR-000: Why This Project Exists and How Decisions Are Made](./ADR-000.md)**. It explains the audience, purpose, and evaluation criteria behind every decision in this log.
+
 Architectural decisions made during development. Not what was built — the domain map covers that. This is **why** it was built that way, and what alternatives were rejected.
 
 Each decision lives in its own file under `decisions/`.

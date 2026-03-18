@@ -3,6 +3,7 @@
 **Date**: 2026-03-17
 **Feature**: Test coverage infrastructure
 **Status**: accepted
+**Transferability**: universal
 **Supersedes**: Previous ADR-005 (v-show for testable conditional rendering — deprecated, workaround no longer needed)
 
 ## Context

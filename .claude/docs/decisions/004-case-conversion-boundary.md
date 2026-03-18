@@ -3,6 +3,7 @@
 **Date**: 2026-03-17
 **Feature**: API communication layer
 **Status**: accepted
+**Transferability**: universal
 
 ## Context
 

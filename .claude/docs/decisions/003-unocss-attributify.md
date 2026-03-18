@@ -3,6 +3,7 @@
 **Date**: 2026-03-17
 **Feature**: Styling approach and design system enforcement
 **Status**: accepted
+**Transferability**: project-specific
 
 ## Context
 

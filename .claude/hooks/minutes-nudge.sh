@@ -2,14 +2,10 @@
 # Stop hook: nudge the CFO to suggest /minutes if the session has been
 # running for a while without logging minutes.
 #
-# Logic:
-#   - If MINUTES.md doesn't exist, this is a fresh project — nudge after
-#     a few exchanges so the CEO knows the feature exists.
-#   - If MINUTES.md exists and was updated recently (last 10 min), stay quiet.
-#   - If MINUTES.md exists but is stale (>10 min since last write), nudge.
-#
-# Output: JSON that either does nothing (continue: true) or blocks with
-# a reason that gets injected into Claude's context.
+# IMPORTANT: This hook must ALWAYS return {"continue": true}.
+# Using "block" on a Stop hook creates an infinite loop: block → response → stop → block.
+# The actual nudge behavior is handled via Claude's memory system instead.
+# This hook only logs a reminder to stderr for debugging purposes.
 
 MINUTES_FILE="${CWD:-$(pwd)}/MINUTES.md"
 NUDGE_INTERVAL=600  # 10 minutes in seconds
@@ -17,7 +13,6 @@ NUDGE_INTERVAL=600  # 10 minutes in seconds
 now=$(date +%s)
 
 if [ ! -f "$MINUTES_FILE" ]; then
-    # No minutes file yet — only nudge occasionally by checking a sentinel
     sentinel="/tmp/.claude-minutes-nudge-$$"
     if [ ! -f "$sentinel" ]; then
         touch "$sentinel"
@@ -31,7 +26,8 @@ if [ ! -f "$MINUTES_FILE" ]; then
         exit 0
     fi
     touch "$sentinel"
-    echo '{"decision": "block", "reason": "If substantive decisions, architecture choices, or action items were discussed in the last exchange, suggest running /minutes to the CEO. If nothing notable happened, do not mention minutes — just continue normally."}'
+    >&2 echo "[minutes-nudge] No MINUTES.md found and interval elapsed — relying on memory-based nudge"
+    echo '{"continue": true}'
     exit 0
 fi
 
@@ -40,11 +36,10 @@ last_modified=$(stat -c %Y "$MINUTES_FILE" 2>/dev/null || echo 0)
 elapsed=$((now - last_modified))
 
 if [ "$elapsed" -lt "$NUDGE_INTERVAL" ]; then
-    # Recently updated, stay quiet
     echo '{"continue": true}'
     exit 0
 fi
 
-# Stale — nudge
-echo '{"decision": "block", "reason": "If substantive decisions, architecture choices, or action items were discussed in the last exchange, suggest running /minutes to the CEO. If nothing notable happened, do not mention minutes — just continue normally."}'
+>&2 echo "[minutes-nudge] MINUTES.md is stale (${elapsed}s) — relying on memory-based nudge"
+echo '{"continue": true}'
 exit 0

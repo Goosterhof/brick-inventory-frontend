@@ -3,6 +3,7 @@
 **Date**: 2026-03-17
 **Feature**: Core routing architecture for multi-app platform
 **Status**: accepted
+**Transferability**: project-specific
 
 ## Context
 

@@ -3,6 +3,7 @@
 **Date**: 2026-03-17
 **Feature**: Service architecture across multi-app platform
 **Status**: accepted
+**Transferability**: universal
 
 ## Context
 
