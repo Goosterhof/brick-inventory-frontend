@@ -4,7 +4,7 @@ import {ref, watch, onMounted, onUnmounted} from "vue";
 
 import {ensureRefValueExists} from "@shared/helpers/type-check";
 
-const props = defineProps<{resetKey?: number}>();
+const {resetKey} = defineProps<{resetKey?: number}>();
 const emit = defineEmits<{detect: [barcode: string]; error: [message: string]}>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -119,7 +119,7 @@ const resetScanner = () => {
 };
 
 watch(
-    () => props.resetKey,
+    () => resetKey,
     () => {
         resetScanner();
     },

@@ -162,6 +162,7 @@
         "vue/no-template-shadow": "warn",
         "vue/define-emits-declaration": "error",
         "vue/define-props-declaration": "error",
+        "vue/define-props-destructuring": "error",
         "vue/no-import-compiler-macros": "error",
 
         // Accessibility (a11y) rules
