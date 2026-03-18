@@ -33,13 +33,11 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 **Goal**: Write the code, following established patterns.
 
 - Work domain-by-domain, component-by-component
-- Use the relevant skills as guides:
-    - `vue-component` for component patterns
-    - `unocss-styling` for Brick Brutalism styling (see also `.claude/docs/brand.md`)
-    - `api` for HTTP requests, resource adapters, and loading/error patterns
-    - `new-modal` for modal templates
-- Write tests alongside code (not after):
-    - `testing` for both Vue component and TypeScript tests
+- Consult reference docs before building:
+    - [Brand Guide](./brand.md) for Brick Brutalism styling, colors, and UnoCSS shortcuts
+    - [Brick Catalog](./brick-catalog.md) for existing shared components and their APIs
+    - [Learnings](./learnings.md) for known gotchas and patterns that work
+- Write tests alongside code (not after)
 - Commit early and often with conventional commit messages
 
 **Output**: Working implementation with tests.
@@ -48,7 +46,7 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 
 **Goal**: Verify the build meets standards.
 
-Run the [Design Review Checklist](../skills/design-review.md):
+Run the full quality gauntlet:
 
 ```bash
 npm run format:check
@@ -95,14 +93,12 @@ npm run knip
 - **Tiny changes** (copy, config): Skip Unbox and Sort. Start at Build.
 - **Refactors**: Skip Display PR ceremony if internal-only. Still do Inspect.
 
-## Skills Reference
+## Reference Documents
 
-| Skill            | Used In                    |
-| ---------------- | -------------------------- |
-| `vue-component`  | Build (component patterns) |
-| `unocss-styling` | Build (styling)            |
-| `api`            | Build (HTTP & resources)   |
-| `new-modal`      | Build (modal templates)    |
-| `testing`        | Build (all tests)          |
-| `design-review`  | Inspect (quality check)    |
-| `brick-audit`    | Inspect (component health) |
+| Document | Used In | Purpose |
+| -------- | ------- | ------- |
+| [Brand Guide](./brand.md) | Build | Brick Brutalism styling, colors, UnoCSS shortcuts |
+| [Brick Catalog](./brick-catalog.md) | Sort, Build | Existing shared components and their APIs |
+| [Domain Map](./domain-map.md) | Sort | Routes, pages, components per domain |
+| [Decision Log](./decisions.md) | Sort | Prior architectural choices |
+| [Learnings](./learnings.md) | Build | Gotchas, patterns, mistakes not to repeat |
