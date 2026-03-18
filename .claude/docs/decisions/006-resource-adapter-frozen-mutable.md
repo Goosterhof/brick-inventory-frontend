@@ -1,15 +1,15 @@
 # Decision: Resource adapter with frozen base and mutable ref
 
-**Date**: 2026-03-18
+**Date**: 2026-03-18 (revised 2026-03-18)
 **Feature**: Domain entity state management and CRUD operations
 **Status**: accepted
 **Transferability**: universal
 
 ## Context
 
-Domain entities in a CRUD application have two modes: display (read-only) and editing (mutable). A set detail page shows the set's name as text, but an edit form needs two-way binding to a reactive copy. These two modes create a recurring problem: how do you let a form mutate data without accidentally corrupting the canonical state?
+Domain entities in a CRUD application have two modes: display (read-only) and editing (mutable). A detail page shows an entity's name as text, but an edit form needs two-way binding to a reactive copy. These two modes create a recurring problem: how do you let a form mutate data without accidentally corrupting the canonical state?
 
-Vue's reactivity system makes this worse. If you pass a reactive object to a form and the user types into an input, the original object mutates immediately — there's no "draft" layer. Cancelling an edit means manually restoring every field. With nested objects (arrays of parts, nested storage locations), manual restoration is error-prone.
+Vue's reactivity system makes this worse. If you pass a reactive object to a form and the user types into an input, the original object mutates immediately — there's no "draft" layer. Cancelling an edit means manually restoring every field. With nested objects (arrays of related entities, nested hierarchies), manual restoration is error-prone.
 
 The forces pulling in different directions:
 
@@ -18,14 +18,20 @@ The forces pulling in different directions:
 - **CRUD operations should live close to the data** — calling `update()` on an entity is more discoverable than dispatching an action to a store that calls an API that updates another store
 - **snake_case/camelCase conversion must happen consistently** — every HTTP boundary needs conversion (ADR-004), and doing it per-component is a bug magnet
 
+### Scope
+
+The resource adapter is for **domain entities with CRUD lifecycles** — things that are created, read, updated, and deleted via a REST API. It is not a general-purpose HTTP wrapper. Non-CRUD operations (search endpoints, batch actions, aggregation queries, authentication flows) should use the HTTP service directly.
+
+A good test: if the API resource has an `id` and supports standard REST verbs (`GET /resources`, `POST /resources`, `PUT /resources/:id`, `DELETE /resources/:id`), it belongs in the adapter. If it doesn't, it doesn't.
+
 ## Options Considered
 
 | Option | Pros | Cons | Why eliminated / Why chosen |
 | --- | --- | --- | --- |
 | **Pinia stores with separate form state in components** | Conventional Vue pattern. Well-documented. Large ecosystem of plugins | Each component manually copies store data into local refs, manually converts case on submit, manually updates store after API response. Lots of glue code that varies per domain | Eliminated — the glue code is the same every time, which means it should be abstracted, not copy-pasted |
-| **Class-based models (ActiveRecord pattern)** | Familiar to Laravel/Rails developers. `set.save()` is intuitive | Classes and Vue's `reactive()` have known conflicts (proxy traps on class instances). Inheritance hierarchies grow complex. Doesn't solve the mutable/immutable split | Eliminated — fights Vue's reactivity model instead of working with it |
-| **Immer-style immutable updates** | Structural sharing, efficient for large state trees | External dependency. Requires learning a new mutation API (`produce(draft => ...)`). Overkill for the dataset sizes in a LEGO inventory app | Eliminated — adds complexity for a problem that `Object.freeze` + `deepCopy` solves more simply |
-| **Resource adapter with frozen base + mutable ref** | One object serves both display and edit. CRUD methods are attached. Case conversion is handled internally. `reset()` restores original state. Type system enforces which methods exist (create vs update/patch/delete) | Non-standard pattern — team must learn the adapter API. Adapted objects are recreated on every computed access (no memoization) | **Chosen** — the adapter is the API surface for all domain entity interactions, eliminating per-component glue code |
+| **Class-based models (ActiveRecord pattern)** | Familiar to Laravel/Rails developers. `entity.save()` is intuitive | Classes and Vue's `reactive()` have known conflicts (proxy traps on class instances). Inheritance hierarchies grow complex. Doesn't solve the mutable/immutable split | Eliminated — fights Vue's reactivity model instead of working with it |
+| **Immer-style immutable updates** | Structural sharing, efficient for large state trees | External dependency. Requires learning a new mutation API (`produce(draft => ...)`). Overkill for typical CRUD dataset sizes | Eliminated — adds complexity for a problem that `Object.freeze` + `deepCopy` solves more simply |
+| **Resource adapter with frozen base + mutable ref** | One object serves both display and edit. CRUD methods are attached. Case conversion is handled internally. `reset()` restores original state. Type system enforces which methods exist (create vs update/patch/delete) | Non-standard pattern — team must learn the adapter API | **Chosen** — the adapter is the API surface for all domain entity interactions, eliminating per-component glue code |
 
 ## Decision
 
@@ -44,16 +50,27 @@ This is enforced at both the type level (function overloads with `Adapted<T>` vs
 
 The internal `adapterRepositoryFactory` handles all HTTP communication: snake_case conversion outbound, camelCase conversion inbound, response validation, and store synchronization. Domain code never touches HTTP directly through the adapter — it calls `adapted.update()` and the pipeline handles the rest.
 
+### Memoization
+
+The adapter store caches adapted objects keyed by entity ID. Because canonical state is `Object.freeze()`-d, reference equality (`===`) reliably detects whether an entity has changed. When the store state updates:
+
+- **Unchanged entities** return the cached adapted object — no recreation
+- **Changed entities** get a new adapted object, and the cache entry is replaced
+- **Deleted entities** have their cache entry removed proactively
+
+This means updating one entity in a collection of 100 only recreates the adapted object for that one entity. The `getAll` computed still recomputes (it must, since the state ref changed), but the `map` call returns cached objects for all unchanged items.
+
+`getById` computed refs are also cached — multiple components requesting the same entity ID share a single computed ref, not one per call site.
+
 ## Consequences
 
 - **Forms are simple**: bind to `adapted.mutable.value`, call `adapted.update()` on submit, call `adapted.reset()` on cancel. No manual state copying or restoration
 - **Canonical state is protected**: `Object.freeze` prevents accidental mutation. The frozen properties are the source of truth for display
 - **Case conversion is invisible**: handled inside the repository factory, consistent with ADR-004
 - **Type safety narrows the API**: impossible to call `delete()` on a new resource or `create()` on an existing one
-- **No memoization**: adapted objects are recreated on every computed access from the store. For the dataset sizes in a LEGO inventory app (tens to low hundreds of items), this is negligible. For large collections it could matter — monitor if domains grow
+- **Memoization is cheap and correct**: `Object.freeze` gives us reference equality for free. Cache invalidation is deterministic — the only way a frozen reference changes is through `setById` or `retrieveAll`
 - **The `Ref` type assertion**: Vue's `UnwrapRef` widens generic `T` to `unknown`, requiring a cast. This is safe for POJOs but would break if someone passed a resource with nested Vue refs. The adapter is designed for API-sourced data, not arbitrary reactive objects
 
 ## Open Questions
 
-- The adapter pattern is built and fully tested but not yet consumed by any domain. First real integration will validate whether the API surface holds up under actual usage patterns or needs adjustment.
 - Should `reset()` emit a signal that the form was cancelled, or is that the consuming component's responsibility?

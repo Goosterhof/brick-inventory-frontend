@@ -5,6 +5,25 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-18 — Full ADR Review Through ADR-000 Lens
+
+### Decisions
+
+- **ADR-002 revised**: Added one-liner defining services (state/config/dependencies) vs helpers (pure functions). Dropped the service registry suggestion — not relevant, and planted ideas that could mislead juniors. Added custom linter check 8 to prevent singleton exports in shared services.
+- **ADR-003 rewritten as universal**: UnoCSS attributify is used across Script projects, not project-specific. Removed all LEGO/Brick Brutalism specifics — the ADR now covers the pattern (atomic CSS + named design system shortcuts), not this project's specific shortcuts. Each project defines its own in UnoCSS config.
+- **`<style scoped>` allowed as escape hatch**: Blanket `<style>` ban relaxed — unscoped `<style>` still forbidden, but `<style scoped>` is now permitted for third-party CSS overrides and CSS edge cases. Linter check 4 updated.
+- **ADR-004 unchanged**: Reviewed and passed all five criteria as-is. No revisions needed.
+- **ADR-005 revised and renamed**: File renamed from `005-vshow-nav-elements.md` to `005-istanbul-coverage-no-ignores.md`. Phantom branch ignore comment loophole removed — rule is now absolute: no ignore comments, escalate phantom branches as Vitest/Vue issues.
+- **`assertDefined` replaced with `ensureRefValueExists`**: Generic `assertDefined(value, name)` replaced with ref-scoped `ensureRefValueExists(ref)`. Three improvements: no misleading name parameter (stack trace is sufficient), custom `MissingRefValueError` instead of generic `Error`, scoped to Vue refs to prevent misuse. Pattern aligned with Script's other projects.
+
+### Notes
+
+- Transferability changes: ADR-003 moved from project-specific to universal. ADR-001, 002, 004, 005 were already universal or moved in prior session.
+- All five original ADRs now reviewed through ADR-000's five evaluation criteria: junior understanding, literal-rule safety, scale, automated enforcement, transferability
+- The `ensureRefValueExists` pattern is what Script's other projects already use — this aligns the LEGO project with established team conventions
+
+---
+
 ## 2026-03-18 — Extracting ADRs 006–008 from Codebase Patterns
 
 ### Decisions

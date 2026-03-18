@@ -508,6 +508,273 @@ describe("createAdapterStoreModule", () => {
         });
     });
 
+    describe("memoization", () => {
+        it("should return the same adapted object reference when state has not changed", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: createTestAdapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+
+            // Act
+            const firstAccess = store.getAll.value[0];
+            const secondAccess = store.getAll.value[0];
+
+            // Assert
+            expect(firstAccess).toBe(secondAccess);
+        });
+
+        it("should return a new adapted object after setById changes the item", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const {adapter, getCapturedStoreModule} = createCapturingAdapter();
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+            const beforeUpdate = store.getById(1).value;
+
+            // Act
+            const storeModule = getCapturedStoreModule() as unknown as AdapterStoreModule<TestItem>;
+            storeModule.setById({
+                id: 1,
+                name: "Updated",
+                createdAt: "2024-01-01T00:00:00Z",
+                updatedAt: "2024-01-02T00:00:00Z",
+            });
+            const afterUpdate = store.getById(1).value;
+
+            // Assert
+            expect(beforeUpdate).not.toBe(afterUpdate);
+            expect(afterUpdate?.name).toBe("Updated");
+        });
+
+        it("should clear adapted cache on deleteById", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const {adapter, getCapturedStoreModule} = createCapturingAdapter();
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+
+            // Access to populate cache and capture storeModule
+            expect(store.getById(1).value).toBeDefined();
+
+            // Act
+            const storeModule = getCapturedStoreModule() as unknown as AdapterStoreModule<TestItem>;
+            storeModule.deleteById(1);
+
+            // Assert
+            expect(store.getById(1).value).toBeUndefined();
+        });
+
+        it("should clear all caches on retrieveAll", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: createTestAdapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+            const beforeRetrieve = store.getAll.value[0];
+
+            // Act
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            await store.retrieveAll();
+            const afterRetrieve = store.getAll.value[0];
+
+            // Assert — new frozen references, so adapted objects must be new
+            expect(beforeRetrieve).not.toBe(afterRetrieve);
+        });
+
+        it("should return the same computed ref for the same id across multiple getById calls", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: createTestAdapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+
+            // Act
+            const firstRef = store.getById(1);
+            const secondRef = store.getById(1);
+
+            // Assert
+            expect(firstRef).toBe(secondRef);
+        });
+
+        it("should return different computed refs for different ids", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: createTestAdapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+                {id: 2, name: "Item 2", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+
+            // Act
+            const ref1 = store.getById(1);
+            const ref2 = store.getById(2);
+
+            // Assert
+            expect(ref1).not.toBe(ref2);
+        });
+
+        it("should create a new computed ref for same id after retrieveAll clears cache", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: createTestAdapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+            const refBefore = store.getById(1);
+
+            // Act
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            await store.retrieveAll();
+            const refAfter = store.getById(1);
+
+            // Assert
+            expect(refBefore).not.toBe(refAfter);
+        });
+
+        it("should create a new computed ref for same id after deleteById clears cache", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const {adapter, getCapturedStoreModule} = createCapturingAdapter();
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+            const refBefore = store.getById(1);
+            expect(refBefore.value).toBeDefined();
+
+            // Act
+            const storeModule = getCapturedStoreModule() as unknown as AdapterStoreModule<TestItem>;
+            storeModule.deleteById(1);
+            const refAfter = store.getById(1);
+
+            // Assert
+            expect(refBefore).not.toBe(refAfter);
+        });
+
+        it("should return cached adapted object via getById when state has not changed", async () => {
+            // Arrange
+            const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
+            const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
+            const loadingService: TestLoadingService = {ensureLoadingFinished: vi.fn().mockResolvedValue(undefined)};
+            const config: AdapterStoreConfig<TestItem, TestAdapted, TestNewAdapted> = {
+                domainName: "test-items",
+                adapter: createTestAdapter,
+                httpService,
+                storageService,
+                loadingService,
+            };
+            const items: TestItem[] = [
+                {id: 1, name: "Item 1", createdAt: "2024-01-01T00:00:00Z", updatedAt: "2024-01-01T00:00:00Z"},
+            ];
+            vi.mocked(httpService.getRequest).mockResolvedValue({data: items} as AxiosResponse<TestItem[]>);
+            const store = createAdapterStoreModule(config);
+            await store.retrieveAll();
+
+            // Act
+            const firstValue = store.getById(1).value;
+            const secondValue = store.getById(1).value;
+
+            // Assert
+            expect(firstValue).toBe(secondValue);
+        });
+    });
+
     describe("storeModule methods", () => {
         it("should update state and persist when setById is called via adapter", () => {
             // Arrange

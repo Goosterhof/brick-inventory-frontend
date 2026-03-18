@@ -50,9 +50,23 @@ export const createAdapterStoreModule = <
 
     const state: Ref<{[id: number]: Readonly<T>}> = ref(frozenStoredItems);
 
+    const adaptedCache = new Map<number, {source: Readonly<T>; adapted: E}>();
+    const getByIdComputedCache = new Map<number, ComputedRef<E | undefined>>();
+
+    const getAdapted = (item: Readonly<T>): E => {
+        const cached = adaptedCache.get(item.id);
+        if (cached && cached.source === item) {
+            return cached.adapted;
+        }
+        const adapted = adapter(storeModule, item);
+        adaptedCache.set(item.id, {source: item, adapted});
+        return adapted;
+    };
+
     const setById = (item: T) => {
         state.value = {...state.value, [item.id]: Object.freeze(item)};
         storageService.put(domainName, state.value);
+        adaptedCache.delete(item.id);
     };
 
     const deleteById = (id: number) => {
@@ -60,15 +74,24 @@ export const createAdapterStoreModule = <
             [id: number]: Readonly<T>;
         };
         storageService.put(domainName, state.value);
+        adaptedCache.delete(id);
+        getByIdComputedCache.delete(id);
     };
 
     const storeModule: AdapterStoreModule<T> = {setById, deleteById};
 
-    const getById = (id: number) =>
-        computed(() => (state.value[id] ? adapter(storeModule, state.value[id]) : undefined));
+    const getById = (id: number): ComputedRef<E | undefined> => {
+        const cached = getByIdComputedCache.get(id);
+        if (cached) {
+            return cached;
+        }
+        const computedRef = computed(() => (state.value[id] ? getAdapted(state.value[id]) : undefined));
+        getByIdComputedCache.set(id, computedRef);
+        return computedRef;
+    };
 
     return {
-        getAll: computed(() => Object.values(state.value).map((item) => adapter(storeModule, item))),
+        getAll: computed(() => Object.values(state.value).map((item) => getAdapted(item))),
         getById,
         getOrFailById: async (id: number) => {
             await loadingService.ensureLoadingFinished();
@@ -84,6 +107,8 @@ export const createAdapterStoreModule = <
                 return acc;
             }, {});
             storageService.put(domainName, state.value);
+            adaptedCache.clear();
+            getByIdComputedCache.clear();
         },
     };
 };
