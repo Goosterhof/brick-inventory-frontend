@@ -101,6 +101,7 @@
         "typescript/no-unnecessary-template-expression": "warn",
         "typescript/no-unnecessary-type-constraint": "warn",
         "typescript/no-unnecessary-type-arguments": "warn",
+        "typescript/strict-boolean-expressions": "off", // too aggressive — idiomatic TS/Vue uses truthy/falsy checks extensively; explicit comparisons add verbosity without meaningful safety gains
 
         // Import rules
         "import/no-duplicates": "error",
