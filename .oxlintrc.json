@@ -140,6 +140,7 @@
         "unicorn/no-negation-in-equality-check": "error",
         "unicorn/no-useless-promise-resolve-reject": "warn",
         "unicorn/consistent-function-scoping": "warn",
+        "unicorn/prefer-at": "error",
 
         // Promise rules
         "promise/no-return-wrap": "error",
