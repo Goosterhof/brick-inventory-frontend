@@ -5,6 +5,40 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-18 — Reactive Resource Adapter & Sets Domain Integration (PR #110)
+
+### Decisions
+
+- **Adapter display properties made reactive via `Object.defineProperty` getters**: Five options evaluated (re-fetch after mutation, getById computed, adapter returns updated object, separate getReactiveById method, reactive getters). `defineProperty` chosen — same adapted object automatically reflects store changes after CRUD operations without recreation.
+- **`Object.defineProperty` over `Proxy`**: Both achieve reactive delegation; `defineProperty` chosen for explicitness at entity-scale property counts.
+- **`reset()` restores to current server state**: After store updates via `patch()`, `reset()` gives the latest server data via the getter, not the stale snapshot from adapter creation.
+- **Memoization simplified**: Adapted cache reduced from `Map<number, {source, adapted}>` to `Map<number, E>`. `setById` no longer invalidates the adapted cache — reactive getters read the latest state. Only `deleteById` and `retrieveAll` clear caches.
+- **Sets domain integrated with adapter store**: SetsOverviewPage, AddSetPage, EditSetPage, SetDetailPage migrated from direct HTTP to adapter CRUD methods. ScanSetPage left as-is (specialized barcode workflow). IdentifyBrickPage and AssignPartModal out of scope (not FamilySet CRUD).
+- **Validation via `useFormSubmit` wrapping adapter calls**: Adapter handles success (store sync, case conversion), `useFormSubmit` handles errors (422 parsing). No changes to adapter or composables needed.
+- **Lead-brick-architect used for implementation**: Three-step delegation — ADR update (CEO+CFO), memoization implementation (architect), sets domain integration (architect). ADR decisions made before architect received briefs.
+- **`assertDefined` replaced with `ensureRefValueExists`**: Ref-scoped, no name parameter, custom `MissingRefValueError`. Aligned with Script's other projects.
+
+### Action Items
+
+- [ ] CEO: Manual test Vue template reactivity through defineProperty getters (SetDetailPage inline status update)
+- [ ] CFO: Review ADR-007 and ADR-008 through ADR-000 lens (deferred from this session)
+
+### Notes
+
+- ADR-006 scope clarified: adapter is for CRUD entities with REST verbs only. Non-CRUD operations use HTTP service directly.
+- Vue auto-unwrap behavior: `ref<Adapted<T>>` deep-unwraps nested `mutable` Ref, so access is `adapted.value.mutable.fieldName` (no `.value` after `.mutable`). `ComputedRef` values auto-unwrap in templates.
+- `FamilySet` type modified: `set` made optional (`set?: SetSummary`), `setNum` added at top level — needed for adapter create flow where `set` isn't available yet.
+- Pre-push gauntlet caught type errors and test failures before they shipped — all resolved before merge.
+- PR #110 merged to main via squash merge. All checks green: 916 tests, 100% coverage, type-check, knip, three apps build.
+
+### Open Questions
+
+- Vue template reactivity through `defineProperty` getters reading from a `Ref` — unit tests confirm mechanism works, manual verification still needed
+- `setNum` on `FamilySet` and extra fields in create payload (`setId: 0`) — need API contract validation
+- `set` optional on `FamilySet` — confirm matches actual API response shape
+
+---
+
 ## 2026-03-18 — Full ADR Review Through ADR-000 Lens
 
 ### Decisions
