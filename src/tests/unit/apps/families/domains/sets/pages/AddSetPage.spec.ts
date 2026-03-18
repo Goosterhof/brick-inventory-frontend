@@ -8,13 +8,14 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {ref} from "vue";
 
-const {mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({mockPostRequest: vi.fn(), mockGoToRoute: vi.fn()}));
+const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
 
 vi.mock("@app/services", () => ({
     familyHttpService: {
         getRequest: vi.fn(),
-        postRequest: mockPostRequest,
+        postRequest: vi.fn(),
         putRequest: vi.fn(),
         patchRequest: vi.fn(),
         deleteRequest: vi.fn(),
@@ -35,6 +36,23 @@ vi.mock("@app/services", () => ({
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
     familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
+    familySetStoreModule: {
+        getAll: {value: []},
+        retrieveAll: vi.fn(),
+        getById: vi.fn(),
+        getOrFailById: vi.fn(),
+        generateNew: () => ({
+            setNum: "",
+            quantity: 1,
+            status: "sealed",
+            purchaseDate: null,
+            notes: null,
+            mutable: ref({setNum: "", quantity: 1, status: "sealed", purchaseDate: null, notes: null}),
+            reset: vi.fn(),
+            create: mockCreate,
+        }),
+    },
+    familyLoadingService: {isLoading: {value: false}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
@@ -81,11 +99,9 @@ describe("AddSetPage", () => {
         expect(button.text()).toBe("sets.add");
     });
 
-    it("should submit correct payload on form submit", async () => {
+    it("should call create on form submit", async () => {
         // Arrange
-        mockPostRequest.mockResolvedValue({
-            data: {id: 1, set_id: 10, quantity: 1, status: "sealed", purchase_date: null, notes: null, set: {}},
-        });
+        mockCreate.mockResolvedValue({id: 1, setNum: "75192-1", quantity: 1, status: "sealed"});
         const wrapper = shallowMount(AddSetPage);
 
         const textInput = wrapper.findComponent(TextInput);
@@ -97,20 +113,12 @@ describe("AddSetPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockPostRequest).toHaveBeenCalledWith("/family-sets", {
-            set_num: "75192-1",
-            quantity: 1,
-            status: "sealed",
-            purchase_date: null,
-            notes: null,
-        });
+        expect(mockCreate).toHaveBeenCalled();
     });
 
     it("should navigate to detail page on successful create", async () => {
         // Arrange
-        mockPostRequest.mockResolvedValue({
-            data: {id: 42, set_id: 10, quantity: 1, status: "sealed", purchase_date: null, notes: null, set: {}},
-        });
+        mockCreate.mockResolvedValue({id: 42, setNum: "75192-1", quantity: 1, status: "sealed"});
         const wrapper = shallowMount(AddSetPage);
 
         // Act
@@ -125,7 +133,7 @@ describe("AddSetPage", () => {
         // Arrange
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPostRequest.mockRejectedValue(axiosError);
+        mockCreate.mockRejectedValue(axiosError);
         const wrapper = shallowMount(AddSetPage);
 
         // Act
@@ -140,7 +148,7 @@ describe("AddSetPage", () => {
         // Arrange
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPostRequest.mockRejectedValue(axiosError);
+        mockCreate.mockRejectedValue(axiosError);
         const wrapper = shallowMount(AddSetPage);
 
         // Act
