@@ -8,7 +8,6 @@ import type {Ref} from "vue";
 import {MissingResponseDataError} from "@shared/errors/missing-response-data";
 import {deepCopy} from "@shared/helpers/copy";
 import {toCamelCaseTyped} from "@shared/helpers/string";
-import {isExisting} from "@shared/helpers/type-check";
 import {deepSnakeKeys} from "string-ts";
 import {ref} from "vue";
 
@@ -122,7 +121,7 @@ const adapterRepositoryFactory = <T extends Item>(
  * @returns An adapter with mutable state and CRUD methods
  */
 export function resourceAdapter<T extends Item>(
-    resource: T,
+    resourceGetter: () => T,
     domainName: string,
     storeModule: AdapterStoreModule<T>,
     httpService: ResourceHttpService,
@@ -134,27 +133,63 @@ export function resourceAdapter<T extends Item>(
     httpService: ResourceHttpService,
 ): NewAdapted<T>;
 export function resourceAdapter<T extends Item>(
-    resource: T | New<T>,
+    resource: (() => T) | New<T>,
     domainName: string,
     storeModule: AdapterStoreModule<T>,
     httpService: ResourceHttpService,
 ): Adapted<T> | NewAdapted<T> {
     const repository = adapterRepositoryFactory<T>(domainName, storeModule, httpService);
 
-    if (isExisting(resource)) {
+    if (typeof resource === "function") {
+        const resourceGetter = resource;
         // Assertion: UnwrapRef widens to unknown for generic T; object is a plain POJO so this is safe.
-        const mutable = <Ref<Writable<T>>>ref(deepCopy(resource));
+        const mutable = <Ref<Writable<T>>>ref(deepCopy(resourceGetter()));
 
-        return {
-            // existing resource is a proxy, so we unwrap it to avoid issues with Object.freeze
-            ...Object.freeze({...resource}),
-            mutable,
-            reset: () => (mutable.value = deepCopy(resource)),
-            update: () => repository.update(resource.id, mutable.value as Updatable<T>),
-            patch: (partialItem: Partial<New<T>>) => repository.patch(resource.id, partialItem),
-            delete: () => repository.delete(resource.id),
-        };
+        const adapted = {} as Adapted<T>;
+        const source = resourceGetter();
+
+        for (const key of Object.keys(source)) {
+            Object.defineProperty(adapted, key, {
+                get: () => resourceGetter()[key as keyof T],
+                enumerable: true,
+                configurable: false,
+            });
+        }
+
+        Object.defineProperty(adapted, "mutable", {
+            value: mutable,
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "reset", {
+            value: () => (mutable.value = deepCopy(resourceGetter())),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "update", {
+            value: () => repository.update(resourceGetter().id, mutable.value as Updatable<T>),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "patch", {
+            value: (partialItem: Partial<New<T>>) => repository.patch(resourceGetter().id, partialItem),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "delete", {
+            value: () => repository.delete(resourceGetter().id),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+
+        return adapted;
     }
+
     // Assertion: UnwrapRef widens to unknown for generic T; object is a plain POJO so this is safe.
     const mutable = <Ref<Writable<New<T>>>>ref(deepCopy(resource));
 
