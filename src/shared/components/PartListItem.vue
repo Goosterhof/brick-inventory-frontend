@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 
-const props = defineProps<{
+const {name, partNum, quantity, imageUrl, colorName, colorRgb, spare} = defineProps<{
     name: string;
     partNum: string;
     quantity: number;
@@ -11,8 +11,8 @@ const props = defineProps<{
     spare?: boolean;
 }>();
 
-const colorStyle = computed(() => (props.colorRgb ? {backgroundColor: "#" + props.colorRgb} : undefined));
-const partDescription = computed(() => (props.colorName ? `${props.partNum} · ${props.colorName}` : props.partNum));
+const colorStyle = computed(() => (colorRgb ? {backgroundColor: `#${colorRgb}`} : undefined));
+const partDescription = computed(() => (colorName ? `${partNum} · ${colorName}` : partNum));
 </script>
 
 <template>
