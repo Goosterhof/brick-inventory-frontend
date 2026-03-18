@@ -63,11 +63,14 @@ for (const file of vueFiles) {
         errors.push(`${file}: defineExpose is forbidden. Use props and emits for parent-child communication instead.`);
     }
 
-    // Check 4: No <style> blocks — all styling via UnoCSS attributes (ADR-003)
+    // Check 4: No unscoped <style> blocks — only <style scoped> allowed for third-party overrides (ADR-003)
     if (styleIndex !== -1) {
-        errors.push(
-            `${file}: <style> blocks are forbidden. Use UnoCSS attributify classes in the template instead (ADR-003).`,
-        );
+        const hasUnscopedStyle = /<style(?![^>]*\bscoped\b)[^>]*>/.test(content);
+        if (hasUnscopedStyle) {
+            errors.push(
+                `${file}: Unscoped <style> blocks are forbidden (ADR-003). Use UnoCSS attributify for styling. If overriding third-party CSS, use <style scoped> instead.`,
+            );
+        }
     }
 
     // Check 5: Define-macros order — defineProps before defineEmits before defineSlots
