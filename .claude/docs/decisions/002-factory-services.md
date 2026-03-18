@@ -37,10 +37,10 @@ This means there's no hidden coupling. You can read an app's `services/` directo
 
 ## Enforcement
 
-| What | Mechanism | Scope |
-| --- | --- | --- |
+| What                                    | Mechanism                                                                                                                        | Scope                         |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
 | No singleton exports in shared services | Custom linter (`scripts/lint-vue-conventions.mjs`, check 8) — flags `export const x = createX(...)` and `export default new X()` | `src/shared/services/**/*.ts` |
-| No cross-app service imports | oxlint `no-restricted-imports` patterns banning relative paths to other apps | `src/apps/**` |
+| No cross-app service imports            | oxlint `no-restricted-imports` patterns banning relative paths to other apps                                                     | `src/apps/**`                 |
 
 The singleton check catches the most likely mistake: a developer calling a factory at the top level of a shared service file and exporting the result. String constants and function exports are unaffected.
 

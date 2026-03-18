@@ -19,11 +19,11 @@ Beyond the coupling problem, Vue Router's API has gaps for applications with non
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-| --- | --- | --- | --- |
-| **Vue Router plugin in every app** | Standard API, `RouterLink` works in shared components | Forces all apps to install Vue Router. Shared components crash at runtime (not compile time) in any app that doesn't. Team must remember an invisible dependency | Eliminated — coupling breaks at runtime, which is the worst kind of failure for a team of juniors |
-| **Direct Vue Router usage per app, shared components use `<a>` tags** | No coupling. Simple. Each app decides independently | No middleware system, no type-safe route names, no CRUD navigation helpers. Every app reinvents the same patterns | Eliminated — solves coupling but ignores the API gaps. Teams will build ad-hoc wrappers that diverge across projects |
-| **RouterService wrapper for all routed apps** | One API for routing. Shared components stay decoupled. Type-safe route names, runtime middleware, convenience methods — built once, used everywhere | Adds an abstraction layer over Vue Router. Team must learn RouterService API, not Vue Router's | **Chosen** — the abstraction pays for itself across projects |
+| Option                                                                | Pros                                                                                                                                                | Cons                                                                                                                                                             | Why eliminated / Why chosen                                                                                          |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Vue Router plugin in every app**                                    | Standard API, `RouterLink` works in shared components                                                                                               | Forces all apps to install Vue Router. Shared components crash at runtime (not compile time) in any app that doesn't. Team must remember an invisible dependency | Eliminated — coupling breaks at runtime, which is the worst kind of failure for a team of juniors                    |
+| **Direct Vue Router usage per app, shared components use `<a>` tags** | No coupling. Simple. Each app decides independently                                                                                                 | No middleware system, no type-safe route names, no CRUD navigation helpers. Every app reinvents the same patterns                                                | Eliminated — solves coupling but ignores the API gaps. Teams will build ad-hoc wrappers that diverge across projects |
+| **RouterService wrapper for all routed apps**                         | One API for routing. Shared components stay decoupled. Type-safe route names, runtime middleware, convenience methods — built once, used everywhere | Adds an abstraction layer over Vue Router. Team must learn RouterService API, not Vue Router's                                                                   | **Chosen** — the abstraction pays for itself across projects                                                         |
 
 ## Decision
 
@@ -50,12 +50,12 @@ Two rules:
 
 ## Enforcement
 
-| What | Mechanism | Scope |
-| --- | --- | --- |
-| `RouterLink` import banned in shared | oxlint `no-restricted-imports` (`paths` with `importNames: ["RouterLink"]`) | `src/shared/**` |
-| `useRouter`/`useRoute` import banned in shared | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/shared/**` |
-| `useRouter`/`useRoute` import banned in all apps | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/apps/**` |
-| `<RouterLink>`/`<router-link>` template usage banned in shared | Custom linter (`scripts/lint-vue-conventions.mjs`, check 6) | `src/shared/**/*.vue` |
+| What                                                           | Mechanism                                                                              | Scope                 |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------- |
+| `RouterLink` import banned in shared                           | oxlint `no-restricted-imports` (`paths` with `importNames: ["RouterLink"]`)            | `src/shared/**`       |
+| `useRouter`/`useRoute` import banned in shared                 | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/shared/**`       |
+| `useRouter`/`useRoute` import banned in all apps               | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/apps/**`         |
+| `<RouterLink>`/`<router-link>` template usage banned in shared | Custom linter (`scripts/lint-vue-conventions.mjs`, check 6)                            | `src/shared/**/*.vue` |
 
 The oxlint rules live in `.oxlintrc.json` under the respective file overrides. The template check catches globally registered component usage that wouldn't trigger an import-level ban.
 
