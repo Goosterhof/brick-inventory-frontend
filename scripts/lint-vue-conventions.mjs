@@ -21,8 +21,7 @@ const findFiles = (dir, extensions) => {
 
 // Accept file paths as arguments (for lint-staged) or scan all source files
 const argFiles = process.argv.length > 2 ? process.argv.slice(2) : [];
-const vueFiles =
-    argFiles.length > 0 ? argFiles.filter((f) => f.endsWith(".vue")) : findFiles("src", [".vue"]);
+const vueFiles = argFiles.length > 0 ? argFiles.filter((f) => f.endsWith(".vue")) : findFiles("src", [".vue"]);
 const allSourceFiles =
     argFiles.length > 0
         ? argFiles.filter((f) => f.endsWith(".vue") || f.endsWith(".ts"))

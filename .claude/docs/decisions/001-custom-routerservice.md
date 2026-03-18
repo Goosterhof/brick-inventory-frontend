@@ -40,12 +40,12 @@ The RouterService also provides `createRouterLink()` — a component factory tha
 
 This decision is enforced by three automated checks:
 
-| What | Mechanism | Scope |
-|---|---|---|
-| `RouterLink` import banned in shared | oxlint `no-restricted-imports` (`paths` with `importNames: ["RouterLink"]`) | `src/shared/**` |
-| `useRouter`/`useRoute` import banned in shared | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/shared/**` |
-| `useRouter`/`useRoute` import banned in Families | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/apps/families/**` |
-| `<RouterLink>`/`<router-link>` template usage banned in shared | Custom linter (`scripts/lint-vue-conventions.mjs`, check 6) | `src/shared/**/*.vue` |
+| What                                                           | Mechanism                                                                              | Scope                  |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------- |
+| `RouterLink` import banned in shared                           | oxlint `no-restricted-imports` (`paths` with `importNames: ["RouterLink"]`)            | `src/shared/**`        |
+| `useRouter`/`useRoute` import banned in shared                 | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/shared/**`        |
+| `useRouter`/`useRoute` import banned in Families               | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/apps/families/**` |
+| `<RouterLink>`/`<router-link>` template usage banned in shared | Custom linter (`scripts/lint-vue-conventions.mjs`, check 6)                            | `src/shared/**/*.vue`  |
 
 The oxlint rules live in `.oxlintrc.json` under the respective file overrides. The template check catches globally registered component usage that wouldn't trigger an import-level ban.
 
