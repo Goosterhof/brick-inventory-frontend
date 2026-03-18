@@ -4,9 +4,7 @@ import {describe, expect, it, vi} from "vitest";
 
 import App from "../../../../apps/admin/App.vue";
 
-const {mockGoToRoute} = vi.hoisted(() => ({
-    mockGoToRoute: vi.fn(),
-}));
+const {mockGoToRoute} = vi.hoisted(() => ({mockGoToRoute: vi.fn()}));
 
 vi.mock("../../../../apps/admin/router", () => ({
     AdminRouterView: {name: "AdminRouterView", template: "<div><slot /></div>"},

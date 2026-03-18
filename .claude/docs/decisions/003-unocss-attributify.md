@@ -13,12 +13,12 @@ A second concern: dead CSS. Traditional `<style>` blocks accumulate unused rules
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-| --- | --- | --- | --- |
-| **Scoped CSS / SCSS in `<style>` blocks** | Familiar, full CSS power, component-scoped | Dead CSS accumulates silently. Design system compliance is convention-only — nothing stops arbitrary values. Two places to read per component (template + style block) | Eliminated — doesn't enforce the design system, creates maintenance debt |
-| **CSS Modules** | Scoped by default, composable | Same dead CSS problem. More indirection (class name imports). Still doesn't enforce design constraints | Eliminated — solves scoping but not the core problem |
-| **UnoCSS class-based** (standard Tailwind-style) | Atomic, tree-shaken, co-located | Class strings get very long and hard to read | Eliminated in favor of attributify, but could have worked |
-| **UnoCSS attributify + design system shortcuts** | Atomic + readable attributes (`p="x-4 y-2"`). Shortcuts encode design system constraints. Zero dead CSS | Learning curve. IDE support less mature than class-based. Some HTML attributes look unusual | **Chosen** — shortcuts turn the design system into an enforceable vocabulary |
+| Option                                           | Pros                                                                                                    | Cons                                                                                                                                                                   | Why eliminated / Why chosen                                                  |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Scoped CSS / SCSS in `<style>` blocks**        | Familiar, full CSS power, component-scoped                                                              | Dead CSS accumulates silently. Design system compliance is convention-only — nothing stops arbitrary values. Two places to read per component (template + style block) | Eliminated — doesn't enforce the design system, creates maintenance debt     |
+| **CSS Modules**                                  | Scoped by default, composable                                                                           | Same dead CSS problem. More indirection (class name imports). Still doesn't enforce design constraints                                                                 | Eliminated — solves scoping but not the core problem                         |
+| **UnoCSS class-based** (standard Tailwind-style) | Atomic, tree-shaken, co-located                                                                         | Class strings get very long and hard to read                                                                                                                           | Eliminated in favor of attributify, but could have worked                    |
+| **UnoCSS attributify + design system shortcuts** | Atomic + readable attributes (`p="x-4 y-2"`). Shortcuts encode design system constraints. Zero dead CSS | Learning curve. IDE support less mature than class-based. Some HTML attributes look unusual                                                                            | **Chosen** — shortcuts turn the design system into an enforceable vocabulary |
 
 ## Decision
 
@@ -26,7 +26,7 @@ Three rules:
 
 1. **UnoCSS attributify is the primary styling mechanism.** All styling lives in the template via attributes and shortcut classes. Attributify makes templates readable: `p="x-4 y-2" bg="white hover:yellow" font="bold"` reads like a specification, not a class string.
 
-2. **Design system constraints are encoded as named shortcuts.** Shortcuts aren't aliases for convenience — they define what the design system *means*. A shortcut for "standard border" enforces consistency: if someone needs a different border, they have to explicitly break from the system rather than accidentally diverging. Each project defines its own shortcuts in the UnoCSS config.
+2. **Design system constraints are encoded as named shortcuts.** Shortcuts aren't aliases for convenience — they define what the design system _means_. A shortcut for "standard border" enforces consistency: if someone needs a different border, they have to explicitly break from the system rather than accidentally diverging. Each project defines its own shortcuts in the UnoCSS config.
 
 3. **`<style scoped>` is allowed only for third-party CSS overrides and CSS edge cases.** Unscoped `<style>` blocks are banned. The vast majority of components should have zero `<style>` blocks. When overriding third-party components (date pickers, rich text editors, etc.) or handling genuine CSS edge cases that UnoCSS can't express, `<style scoped>` is the intentional escape hatch. The `scoped` requirement signals to reviewers: "this is a deliberate override, not casual CSS."
 
@@ -55,8 +55,8 @@ If any criterion is not met, use inline utilities.
 
 ## Enforcement
 
-| What | Mechanism | Scope |
-| --- | --- | --- |
+| What                             | Mechanism                                                                                 | Scope            |
+| -------------------------------- | ----------------------------------------------------------------------------------------- | ---------------- |
 | Unscoped `<style>` blocks banned | Custom linter (`scripts/lint-vue-conventions.mjs`, check 4) — `<style scoped>` is allowed | All `.vue` files |
 
 The shortcut criteria and ternary threshold are judgment-call guidelines documented here, not lint-enforceable rules.
