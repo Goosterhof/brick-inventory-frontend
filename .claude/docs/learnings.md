@@ -7,10 +7,10 @@ Corrections and discoveries captured during work. Not philosophy — operational
 **Ownership**: Three-tier review process:
 
 1. The **architect** flags candidate learnings in the report-back — stated as observations, not settled rules
-2. The **COO** (main conversation agent) critically evaluates: Is this actually a pattern or a one-off? Is the rule correctly scoped? Does it contradict existing learnings? Presents recommendations to the CEO with commentary
+2. The **CFO** (main conversation agent) critically evaluates: Is this actually a pattern or a one-off? Is the rule correctly scoped? Does it contradict existing learnings? Presents recommendations to the CEO with commentary
 3. The **CEO** (human) decides what gets committed
 
-No learning lands here without this review. The COO's job is to prevent low-quality entries and challenge sloppy generalizations.
+No learning lands here without this review. The CFO's job is to prevent low-quality entries and challenge sloppy generalizations.
 
 **Format**: Each entry is a rule, not a story. Present tense, imperative mood. Include the _why_ only if it's not obvious.
 

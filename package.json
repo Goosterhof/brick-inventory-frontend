@@ -90,7 +90,7 @@
         "*.vue": [
             "node scripts/lint-vue-conventions.mjs"
         ],
-        "*.{json,html,css}": [
+        "*.{html,css}": [
             "oxfmt --write"
         ]
     },

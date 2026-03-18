@@ -15,7 +15,7 @@ Each decision lives in its own file under `decisions/`.
 **Ownership**: Three-tier review process:
 
 1. The **architect** proposes decision records in the report-back step — with honest reasoning, not post-hoc justification
-2. The **COO** (main conversation agent) critically reviews: challenges shallow reasoning, asks "what did you actually consider?", flags gaps
+2. The **CFO** (main conversation agent) critically reviews: challenges shallow reasoning, asks "what did you actually consider?", flags gaps
 3. The **CEO** (human) gives final approval on what gets committed
 
 No decision record lands here without passing through all three.

@@ -1,6 +1,6 @@
 # Territory Pulse — _Where Things Stand_
 
-A consolidated, current-state assessment of the frontend codebase. Updated by the COO at end-of-session. Not chronological (that's MINUTES.md) — this is the **living snapshot** the architect reads before touching code.
+A consolidated, current-state assessment of the frontend codebase. Updated by the CFO at end-of-session. Not chronological (that's MINUTES.md) — this is the **living snapshot** the architect reads before touching code.
 
 **Rules:**
 
@@ -75,7 +75,7 @@ Ideas planted but deferred — revisit when the trigger condition is met. Seeds 
 | Seed                                 | Trigger                                                                              | What It Means                                                                                                                                                                                                          |
 | ------------------------------------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Territory briefing for architect     | When 3+ domains have been migrated to adapter-store                                  | Consolidated intel doc so the architect doesn't read 5 docs before starting. The pulse partially fills this role, but a briefing would include directory structure, key conventions, and known deviations in one place |
-| Escalate to Level 3 debrief          | When Level 2 debriefs prove shallow (COO judges 3+ debriefs as low-signal)           | Separate invocation for self-assessment, with the agent receiving its own report. More expensive but forces genuine reflection instead of perfunctory self-assessment                                                  |
+| Escalate to Level 3 debrief          | When Level 2 debriefs prove shallow (CFO judges 3+ debriefs as low-signal)           | Separate invocation for self-assessment, with the agent receiving its own report. More expensive but forces genuine reflection instead of perfunctory self-assessment                                                  |
 | Third agent type (domain specialist) | When domain count exceeds 10, or when cross-domain patterns need dedicated attention | A domain-scoped agent that understands one vertical slice deeply. Currently unnecessary — 7 domains is manageable for a generalist architect                                                                           |
 | Inspector memory file                | After 3+ inspector missions                                                          | Persistent assessment file (like spy memory) so the inspector tracks quality trends across missions instead of starting fresh each time                                                                                |
 | Blind spot compensation              | After first inspector mission reveals actual blind spots                             | Documented known weaknesses with active counter-measures built into SOPs. Can't write these until the inspector has run and failed at something                                                                        |
