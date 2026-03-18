@@ -155,6 +155,21 @@ All use `v-model` (not prop + emit). All compose FormField → FormLabel → inp
 
 ## Layout
 
+### LegoBrick
+
+Decorative LEGO brick with configurable grid of studs. Pure visual element.
+
+| Prop      | Type      | Default     | Description                   |
+| --------- | --------- | ----------- | ----------------------------- |
+| `color`   | `string`  | `"#DC2626"` | Brick background color (hex)  |
+| `shadow`  | `boolean` | `true`      | Show neo-brutalist drop shadow |
+| `columns` | `number`  | `4`         | Stud columns                  |
+| `rows`    | `number`  | `2`         | Stud rows                     |
+
+### SectionDivider
+
+Horizontal rule with 3px black top border. No props, no slots — just a line.
+
 ### PageHeader
 
 Page title bar with optional right-side content (e.g., action buttons).
@@ -182,6 +197,29 @@ Message shown when a list or section has no content.
 ---
 
 ## Feedback
+
+### ConfirmDialog
+
+Confirmation modal built on ModalDialog. Red confirm button, yellow cancel button. For destructive actions.
+
+| Prop      | Type      | Required | Description         |
+| --------- | --------- | -------- | ------------------- |
+| `open`    | `boolean` | yes      | Controls visibility |
+| `title`   | `string`  | yes      | Modal heading       |
+| `message` | `string`  | yes      | Confirmation prompt |
+
+**Emits**: `confirm`, `cancel`
+**Slots**: `confirm` (confirm button label, default "Confirm"), `cancel` (cancel button label, default "Cancel")
+
+### LoadingState
+
+Animated loading indicator with bouncing bricks and customizable message.
+
+| Prop      | Type     | Default        | Description        |
+| --------- | -------- | -------------- | ------------------ |
+| `message` | `string` | `"Loading..."` | Loading status text |
+
+**Uses**: `role="status"` for accessibility.
 
 ### ModalDialog
 
@@ -228,6 +266,18 @@ Displays a single Lego part with image, color swatch, and quantity.
 ---
 
 ## Scanner
+
+### BarcodeScanner
+
+Live camera viewfinder that detects EAN/UPC/QR barcodes in real time. Handles camera lifecycle, error states, and retry. Scans every 250ms.
+
+| Prop       | Type     | Required | Description                          |
+| ---------- | -------- | -------- | ------------------------------------ |
+| `resetKey` | `number` | no       | Change to reset scanner for next scan |
+
+**Emits**: `detect` (`string` — the barcode value), `error` (`string`)
+**Slots**: `loading` (loading overlay text, default "Starting camera..."), `retry` (retry button label, default "Retry")
+**Uses**: `barcode-detector` package, `navigator.mediaDevices`.
 
 ### CameraCapture
 
@@ -291,9 +341,9 @@ Compact label badge for status tags and location indicators.
 | Navigation        | 3      | NavHeader, NavLink, NavMobileLink                             |
 | Form primitives   | 3      | FormField, FormLabel, FormError                               |
 | Form inputs       | 5      | TextInput, NumberInput, DateInput, TextareaInput, SelectInput |
-| Layout            | 3      | PageHeader, CardContainer, EmptyState                         |
-| Feedback          | 2      | ModalDialog, ToastMessage                                     |
+| Layout            | 5      | PageHeader, CardContainer, EmptyState, LegoBrick, SectionDivider |
+| Feedback          | 4      | ConfirmDialog, LoadingState, ModalDialog, ToastMessage        |
 | Data display      | 1      | PartListItem                                                  |
 | Data presentation | 4      | DetailRow, StatCard, FilterChip, BadgeLabel                   |
-| Scanner           | 1      | CameraCapture                                                 |
-| **Total**         | **26** |                                                               |
+| Scanner           | 2      | BarcodeScanner, CameraCapture                                 |
+| **Total**         | **31** |                                                               |
