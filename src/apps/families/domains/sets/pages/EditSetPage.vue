@@ -25,7 +25,10 @@ const validationErrors = useValidationErrors<EditSetField>(familyHttpService);
 const {errors} = validationErrors;
 const {handleSubmit} = useFormSubmit(validationErrors);
 
-const statusOptions: {value: FamilySetStatus; key: string}[] = [
+const statusOptions: {
+    value: FamilySetStatus;
+    key: "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist";
+}[] = [
     {value: "sealed", key: "sets.sealed"},
     {value: "built", key: "sets.built"},
     {value: "in_progress", key: "sets.inProgress"},
@@ -44,10 +47,10 @@ const onSubmit = () =>
         if (!adapted.value) return;
 
         await adapted.value.patch({
-            quantity: adapted.value.mutable.value.quantity,
-            status: adapted.value.mutable.value.status,
-            purchaseDate: adapted.value.mutable.value.purchaseDate,
-            notes: adapted.value.mutable.value.notes,
+            quantity: adapted.value.mutable.quantity,
+            status: adapted.value.mutable.status,
+            purchaseDate: adapted.value.mutable.purchaseDate,
+            notes: adapted.value.mutable.notes,
         });
         await familyRouterService.goToRoute("sets-detail", adapted.value.id);
     });
@@ -70,29 +73,21 @@ const handleDelete = async () => {
 
             <form flex="~ col" gap="4" @submit.prevent="onSubmit">
                 <NumberInput
-                    v-model="adapted.mutable.value.quantity"
+                    v-model="adapted.mutable.quantity"
                     :label="t('sets.quantity').value"
                     :error="errors.quantity"
                     :min="1"
                 />
 
-                <SelectInput
-                    v-model="adapted.mutable.value.status"
-                    :label="t('sets.status').value"
-                    :error="errors.status"
-                >
+                <SelectInput v-model="adapted.mutable.status" :label="t('sets.status').value" :error="errors.status">
                     <option v-for="option in statusOptions" :key="option.value" :value="option.value">
                         {{ t(option.key).value }}
                     </option>
                 </SelectInput>
 
-                <DateInput
-                    v-model="adapted.mutable.value.purchaseDate"
-                    :label="t('sets.purchaseDate').value"
-                    optional
-                />
+                <DateInput v-model="adapted.mutable.purchaseDate" :label="t('sets.purchaseDate').value" optional />
 
-                <TextareaInput v-model="adapted.mutable.value.notes" :label="t('sets.notes').value" optional />
+                <TextareaInput v-model="adapted.mutable.notes" :label="t('sets.notes').value" optional />
 
                 <div flex gap="4">
                     <PrimaryButton type="submit">{{ t("sets.save").value }}</PrimaryButton>

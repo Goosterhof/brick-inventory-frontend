@@ -99,15 +99,15 @@ const exportCsv = () => {
             <div flex gap="2" flex-wrap="wrap">
                 <PrimaryButton @click="goToScan">{{ t("sets.scanSet").value }}</PrimaryButton>
                 <PrimaryButton @click="goToAdd">{{ t("sets.addSet").value }}</PrimaryButton>
-                <PrimaryButton v-if="getAll.value.length > 0" @click="exportCsv">{{
+                <PrimaryButton v-if="getAll.length > 0" @click="exportCsv">{{
                     t("common.export").value
                 }}</PrimaryButton>
             </div>
         </PageHeader>
 
-        <p v-if="isLoading.value" text="gray-600">{{ t("common.loading").value }}</p>
+        <p v-if="isLoading" text="gray-600">{{ t("common.loading").value }}</p>
 
-        <EmptyState v-else-if="getAll.value.length === 0" :message="t('sets.noSets').value" />
+        <EmptyState v-else-if="getAll.length === 0" :message="t('sets.noSets').value" />
 
         <template v-else>
             <div flex="~ col" gap="4" m="b-4">

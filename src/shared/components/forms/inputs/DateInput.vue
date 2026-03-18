@@ -11,7 +11,7 @@ const {
     error = "",
 } = defineProps<{label: string; disabled?: boolean; optional?: boolean; error?: string}>();
 
-const model = defineModel<string>({required: true});
+const model = defineModel<string | null>({required: true});
 
 const inputId = useId();
 const errorId = `${inputId}-error`;

@@ -19,7 +19,10 @@ const validationErrors = useValidationErrors<AddSetField>(familyHttpService);
 const {errors} = validationErrors;
 const {handleSubmit} = useFormSubmit(validationErrors);
 
-const statusOptions: {value: FamilySetStatus; key: string}[] = [
+const statusOptions: {
+    value: FamilySetStatus;
+    key: "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist";
+}[] = [
     {value: "sealed", key: "sets.sealed"},
     {value: "built", key: "sets.built"},
     {value: "in_progress", key: "sets.inProgress"},
