@@ -13,9 +13,10 @@ export interface SetSummary {
 export interface FamilySet {
     id: number;
     setId: number;
+    setNum: string;
     quantity: number;
     status: FamilySetStatus;
     purchaseDate: string | null;
     notes: string | null;
-    set: SetSummary;
+    set?: SetSummary;
 }

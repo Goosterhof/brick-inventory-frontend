@@ -213,22 +213,22 @@ Training proposals from debriefs are tracked here. A proposal must prove itself 
 
 _Proposals observed once. Need a second confirming session before graduation._
 
-| Proposal | First Observed | Session Context |
-|----------|---------------|-----------------|
-| _(none yet)_ | | |
+| Proposal     | First Observed | Session Context |
+| ------------ | -------------- | --------------- |
+| _(none yet)_ |                |                 |
 
 ### Graduated
 
 _Proposals confirmed across 2+ sessions. Promoted into training above._
 
-| Proposal | Graduated | Promoted To |
-|----------|-----------|-------------|
-| _(none yet)_ | | |
+| Proposal     | Graduated | Promoted To |
+| ------------ | --------- | ----------- |
+| _(none yet)_ |           |             |
 
 ### Dropped
 
 _Proposals evaluated and rejected. Kept for institutional memory._
 
-| Proposal | Dropped | Reason |
-|----------|---------|--------|
-| _(none yet)_ | | |
+| Proposal     | Dropped | Reason |
+| ------------ | ------- | ------ |
+| _(none yet)_ |         |        |

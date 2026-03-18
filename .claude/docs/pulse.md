@@ -72,13 +72,13 @@ Strong architectural foundation. 100% test coverage enforced. 8 ADRs documented.
 
 Ideas planted but deferred — revisit when the trigger condition is met. Seeds are not tech debt (known problems) or active concerns (things needing attention now). They're **future improvements** that aren't worth the cost today but will be when the codebase grows.
 
-| Seed | Trigger | What It Means |
-|------|---------|---------------|
-| Territory briefing for architect | When 3+ domains have been migrated to adapter-store | Consolidated intel doc so the architect doesn't read 5 docs before starting. The pulse partially fills this role, but a briefing would include directory structure, key conventions, and known deviations in one place |
-| Escalate to Level 3 debrief | When Level 2 debriefs prove shallow (COO judges 3+ debriefs as low-signal) | Separate invocation for self-assessment, with the agent receiving its own report. More expensive but forces genuine reflection instead of perfunctory self-assessment |
-| Third agent type (domain specialist) | When domain count exceeds 10, or when cross-domain patterns need dedicated attention | A domain-scoped agent that understands one vertical slice deeply. Currently unnecessary — 7 domains is manageable for a generalist architect |
-| Inspector memory file | After 3+ inspector missions | Persistent assessment file (like spy memory) so the inspector tracks quality trends across missions instead of starting fresh each time |
-| Blind spot compensation | After first inspector mission reveals actual blind spots | Documented known weaknesses with active counter-measures built into SOPs. Can't write these until the inspector has run and failed at something |
+| Seed                                 | Trigger                                                                              | What It Means                                                                                                                                                                                                          |
+| ------------------------------------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Territory briefing for architect     | When 3+ domains have been migrated to adapter-store                                  | Consolidated intel doc so the architect doesn't read 5 docs before starting. The pulse partially fills this role, but a briefing would include directory structure, key conventions, and known deviations in one place |
+| Escalate to Level 3 debrief          | When Level 2 debriefs prove shallow (COO judges 3+ debriefs as low-signal)           | Separate invocation for self-assessment, with the agent receiving its own report. More expensive but forces genuine reflection instead of perfunctory self-assessment                                                  |
+| Third agent type (domain specialist) | When domain count exceeds 10, or when cross-domain patterns need dedicated attention | A domain-scoped agent that understands one vertical slice deeply. Currently unnecessary — 7 domains is manageable for a generalist architect                                                                           |
+| Inspector memory file                | After 3+ inspector missions                                                          | Persistent assessment file (like spy memory) so the inspector tracks quality trends across missions instead of starting fresh each time                                                                                |
+| Blind spot compensation              | After first inspector mission reveals actual blind spots                             | Documented known weaknesses with active counter-measures built into SOPs. Can't write these until the inspector has run and failed at something                                                                        |
 
 ## Quality Metrics
 

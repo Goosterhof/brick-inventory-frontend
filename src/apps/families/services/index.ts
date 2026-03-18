@@ -6,3 +6,4 @@ export {familyStorageService} from "./storage";
 export {familyLoadingService} from "./loading";
 export {familySoundService} from "./sound";
 export {familyTranslationService, type Locale, type TranslationSchema} from "./translation";
+export {familySetStoreModule} from "./familySetStore";

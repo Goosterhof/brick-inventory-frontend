@@ -33,21 +33,61 @@ type TestNewAdapted = NewAdapted<TestItem> & {testMethod: () => string};
  * is stateless and does not affect test isolation.
  */
 function createTestAdapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-function createTestAdapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
+function createTestAdapter(storeModule: AdapterStoreModule<TestItem>, resourceGetter: () => TestItem): TestAdapted;
 function createTestAdapter(
     storeModule: AdapterStoreModule<TestItem>,
-    resource?: TestItem,
+    resourceGetter?: () => TestItem,
 ): TestAdapted | TestNewAdapted {
-    if (resource) {
-        return {
-            ...resource,
-            mutable: ref({...resource}) as Ref<New<TestItem>>,
-            reset: vi.fn(),
-            update: vi.fn(),
-            patch: vi.fn(),
-            delete: vi.fn(),
-            testMethod: () => `adapted-${resource.id}`,
-        } as unknown as TestAdapted;
+    if (resourceGetter) {
+        const adapted = {} as TestAdapted;
+        const source = resourceGetter();
+
+        for (const key of Object.keys(source)) {
+            Object.defineProperty(adapted, key, {
+                get: () => resourceGetter()[key as keyof TestItem],
+                enumerable: true,
+                configurable: false,
+            });
+        }
+
+        Object.defineProperty(adapted, "mutable", {
+            value: ref({...resourceGetter()}) as Ref<New<TestItem>>,
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "reset", {
+            value: vi.fn(),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "update", {
+            value: vi.fn(),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "patch", {
+            value: vi.fn(),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "delete", {
+            value: vi.fn(),
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+        Object.defineProperty(adapted, "testMethod", {
+            value: () => `adapted-${resourceGetter().id}`,
+            enumerable: true,
+            configurable: false,
+            writable: false,
+        });
+
+        return adapted;
     }
     return {
         name: "",
@@ -72,19 +112,62 @@ function createCapturingAdapter(): {
     let capturedStoreModule: AdapterStoreModule<TestItem> | null = null;
 
     function adapter(storeModule: AdapterStoreModule<TestItem>): TestNewAdapted;
-    function adapter(storeModule: AdapterStoreModule<TestItem>, resource: TestItem): TestAdapted;
-    function adapter(storeModule: AdapterStoreModule<TestItem>, resource?: TestItem): TestAdapted | TestNewAdapted {
+    function adapter(storeModule: AdapterStoreModule<TestItem>, resourceGetter: () => TestItem): TestAdapted;
+    function adapter(
+        storeModule: AdapterStoreModule<TestItem>,
+        resourceGetter?: () => TestItem,
+    ): TestAdapted | TestNewAdapted {
         capturedStoreModule = storeModule;
-        if (resource) {
-            return {
-                ...resource,
-                mutable: ref({...resource}) as Ref<New<TestItem>>,
-                reset: vi.fn(),
-                update: vi.fn(),
-                patch: vi.fn(),
-                delete: vi.fn(),
-                testMethod: () => `adapted-${resource.id}`,
-            } as unknown as TestAdapted;
+        if (resourceGetter) {
+            const adapted = {} as TestAdapted;
+            const source = resourceGetter();
+
+            for (const key of Object.keys(source)) {
+                Object.defineProperty(adapted, key, {
+                    get: () => resourceGetter()[key as keyof TestItem],
+                    enumerable: true,
+                    configurable: false,
+                });
+            }
+
+            Object.defineProperty(adapted, "mutable", {
+                value: ref({...resourceGetter()}) as Ref<New<TestItem>>,
+                enumerable: true,
+                configurable: false,
+                writable: false,
+            });
+            Object.defineProperty(adapted, "reset", {
+                value: vi.fn(),
+                enumerable: true,
+                configurable: false,
+                writable: false,
+            });
+            Object.defineProperty(adapted, "update", {
+                value: vi.fn(),
+                enumerable: true,
+                configurable: false,
+                writable: false,
+            });
+            Object.defineProperty(adapted, "patch", {
+                value: vi.fn(),
+                enumerable: true,
+                configurable: false,
+                writable: false,
+            });
+            Object.defineProperty(adapted, "delete", {
+                value: vi.fn(),
+                enumerable: true,
+                configurable: false,
+                writable: false,
+            });
+            Object.defineProperty(adapted, "testMethod", {
+                value: () => `adapted-${resourceGetter().id}`,
+                enumerable: true,
+                configurable: false,
+                writable: false,
+            });
+
+            return adapted;
         }
         return {
             name: "",
@@ -536,7 +619,7 @@ describe("createAdapterStoreModule", () => {
             expect(firstAccess).toBe(secondAccess);
         });
 
-        it("should return a new adapted object after setById changes the item", async () => {
+        it("should return the same adapted object after setById, with reactive properties reflecting the update", async () => {
             // Arrange
             const httpService: Pick<HttpService, "getRequest"> = {getRequest: vi.fn()};
             const storageService: TestStorageService = {put: vi.fn(), get: vi.fn().mockReturnValue({})};
@@ -567,8 +650,9 @@ describe("createAdapterStoreModule", () => {
             });
             const afterUpdate = store.getById(1).value;
 
-            // Assert
-            expect(beforeUpdate).not.toBe(afterUpdate);
+            // Assert — same adapted object reference (reactive getters, no cache invalidation)
+            expect(beforeUpdate).toBe(afterUpdate);
+            // Display properties reflect the updated store data via getter
             expect(afterUpdate?.name).toBe("Updated");
         });
 

@@ -8,22 +8,23 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {ref} from "vue";
 
-const {mockGetRequest, mockPatchRequest, mockDeleteRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
-    mockGetRequest: vi.fn(),
-    mockPatchRequest: vi.fn(),
-    mockDeleteRequest: vi.fn(),
+const {mockGetOrFailById, mockGoToRoute, mockCurrentRouteId, mockPatch, mockDelete} = vi.hoisted(() => ({
+    mockGetOrFailById: vi.fn(),
     mockGoToRoute: vi.fn(),
     mockCurrentRouteId: {value: 42},
+    mockPatch: vi.fn(),
+    mockDelete: vi.fn(),
 }));
 
 vi.mock("@app/services", () => ({
     familyHttpService: {
-        getRequest: mockGetRequest,
+        getRequest: vi.fn(),
         postRequest: vi.fn(),
         putRequest: vi.fn(),
-        patchRequest: mockPatchRequest,
-        deleteRequest: mockDeleteRequest,
+        patchRequest: vi.fn(),
+        deleteRequest: vi.fn(),
         registerRequestMiddleware: vi.fn(() => vi.fn()),
         registerResponseMiddleware: vi.fn(() => vi.fn()),
         registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
@@ -41,27 +42,48 @@ vi.mock("@app/services", () => ({
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
     familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
+    familySetStoreModule: {
+        getAll: {value: []},
+        retrieveAll: vi.fn(),
+        getById: vi.fn(),
+        getOrFailById: mockGetOrFailById,
+        generateNew: vi.fn(),
+    },
+    familyLoadingService: {isLoading: {value: false}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-const mockFamilySetResponse = {
+const createMockAdapted = () => ({
     id: 42,
-    set_id: 10,
+    setId: 10,
+    setNum: "75192-1",
     quantity: 2,
-    status: "built",
-    purchase_date: "2024-01-15",
+    status: "built" as const,
+    purchaseDate: "2024-01-15",
     notes: "Birthday gift",
     set: {
         id: 10,
-        set_num: "75192-1",
+        setNum: "75192-1",
         name: "Millennium Falcon",
         year: 2017,
         theme: "Star Wars",
-        num_parts: 7541,
-        image_url: "https://example.com/75192.jpg",
+        numParts: 7541,
+        imageUrl: "https://example.com/75192.jpg",
     },
-};
+    mutable: ref({
+        setId: 10,
+        setNum: "75192-1",
+        quantity: 2,
+        status: "built" as const,
+        purchaseDate: "2024-01-15",
+        notes: "Birthday gift",
+    }),
+    reset: vi.fn(),
+    update: vi.fn(),
+    patch: mockPatch,
+    delete: mockDelete,
+});
 
 describe("EditSetPage", () => {
     beforeEach(() => {
@@ -71,19 +93,19 @@ describe("EditSetPage", () => {
 
     it("should fetch set on mount", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         shallowMount(EditSetPage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/family-sets/42");
+        expect(mockGetOrFailById).toHaveBeenCalledWith(42);
     });
 
     it("should render page title with set name", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(EditSetPage);
@@ -97,7 +119,7 @@ describe("EditSetPage", () => {
 
     it("should populate form with existing data", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(EditSetPage);
@@ -113,7 +135,7 @@ describe("EditSetPage", () => {
 
     it("should show loading state initially", () => {
         // Arrange
-        mockGetRequest.mockReturnValue(new Promise(() => {}));
+        mockGetOrFailById.mockReturnValue(new Promise(() => {}));
 
         // Act
         const wrapper = shallowMount(EditSetPage);
@@ -124,8 +146,8 @@ describe("EditSetPage", () => {
 
     it("should submit update with correct payload", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        mockPatchRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockPatch.mockResolvedValue({});
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
@@ -134,18 +156,18 @@ describe("EditSetPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockPatchRequest).toHaveBeenCalledWith("/family-sets/42", {
+        expect(mockPatch).toHaveBeenCalledWith({
             quantity: 2,
             status: "built",
-            purchase_date: "2024-01-15",
+            purchaseDate: "2024-01-15",
             notes: "Birthday gift",
         });
     });
 
     it("should navigate to detail page on successful update", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        mockPatchRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockPatch.mockResolvedValue({});
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
@@ -159,10 +181,10 @@ describe("EditSetPage", () => {
 
     it("should not navigate on 422 validation error", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPatchRequest.mockRejectedValue(axiosError);
+        mockPatch.mockRejectedValue(axiosError);
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
@@ -176,10 +198,10 @@ describe("EditSetPage", () => {
 
     it("should rethrow non-422 errors", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPatchRequest.mockRejectedValue(axiosError);
+        mockPatch.mockRejectedValue(axiosError);
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
@@ -197,7 +219,7 @@ describe("EditSetPage", () => {
 
     it("should open confirm dialog when delete button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
@@ -211,8 +233,8 @@ describe("EditSetPage", () => {
 
     it("should delete set and navigate to overview on confirm", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        mockDeleteRequest.mockResolvedValue({});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockDelete.mockResolvedValue(undefined);
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
@@ -223,13 +245,13 @@ describe("EditSetPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockDeleteRequest).toHaveBeenCalledWith("/family-sets/42");
+        expect(mockDelete).toHaveBeenCalled();
         expect(mockGoToRoute).toHaveBeenCalledWith("sets");
     });
 
     it("should close dialog when user cancels confirmation", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const wrapper = shallowMount(EditSetPage);
         await flushPromises();
 
@@ -240,13 +262,13 @@ describe("EditSetPage", () => {
         await wrapper.vm.$nextTick();
 
         // Assert
-        expect(mockDeleteRequest).not.toHaveBeenCalled();
+        expect(mockDelete).not.toHaveBeenCalled();
         expect(wrapper.findComponent(ConfirmDialog).props("open")).toBe(false);
     });
 
     it("should render save and delete buttons", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(EditSetPage);

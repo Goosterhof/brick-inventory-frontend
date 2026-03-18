@@ -14,7 +14,7 @@ export type {AdapterStoreModule};
 
 export type Adapter<T extends Item, E extends Adapted<T>, N extends NewAdapted<T>> = {
     (storeModule: AdapterStoreModule<T>): N;
-    (storeModule: AdapterStoreModule<T>, resource: T): E;
+    (storeModule: AdapterStoreModule<T>, resourceGetter: () => T): E;
 };
 
 export interface AdapterStoreConfig<T extends Item, E extends Adapted<T>, N extends NewAdapted<T>> {
@@ -50,23 +50,22 @@ export const createAdapterStoreModule = <
 
     const state: Ref<{[id: number]: Readonly<T>}> = ref(frozenStoredItems);
 
-    const adaptedCache = new Map<number, {source: Readonly<T>; adapted: E}>();
+    const adaptedCache = new Map<number, E>();
     const getByIdComputedCache = new Map<number, ComputedRef<E | undefined>>();
 
     const getAdapted = (item: Readonly<T>): E => {
         const cached = adaptedCache.get(item.id);
-        if (cached && cached.source === item) {
-            return cached.adapted;
+        if (cached) {
+            return cached;
         }
-        const adapted = adapter(storeModule, item);
-        adaptedCache.set(item.id, {source: item, adapted});
+        const adapted = adapter(storeModule, () => state.value[item.id] as T);
+        adaptedCache.set(item.id, adapted);
         return adapted;
     };
 
     const setById = (item: T) => {
         state.value = {...state.value, [item.id]: Object.freeze(item)};
         storageService.put(domainName, state.value);
-        adaptedCache.delete(item.id);
     };
 
     const deleteById = (id: number) => {

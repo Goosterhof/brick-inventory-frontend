@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type {FamilySet} from "@app/types/familySet";
 import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
+import type {Adapted} from "@shared/services/resource-adapter";
 
-import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familyHttpService, familyRouterService, familySetStoreModule, familyTranslationService} from "@app/services";
 import BackButton from "@shared/components/BackButton.vue";
 import LoadingState from "@shared/components/LoadingState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
@@ -14,7 +15,7 @@ import {computed, onMounted, ref} from "vue";
 import AssignPartModal from "../modals/AssignPartModal.vue";
 
 const {t} = familyTranslationService;
-const familySet = ref<FamilySet | null>(null);
+const adapted = ref<Adapted<FamilySet> | null>(null);
 const setWithParts = ref<SetWithParts | null>(null);
 const storageMap = ref<StorageMapEntry[]>([]);
 const loading = ref(true);
@@ -56,7 +57,7 @@ const getAvailableQuantity = (setPart: SetPart): number => {
 
 const buildStats = computed(() => {
     if (!setWithParts.value || storageMap.value.length === 0) return null;
-    if (familySet.value?.status === "wishlist") return null;
+    if (adapted.value?.status === "wishlist") return null;
 
     const regularParts = setWithParts.value.parts.filter((p) => !p.isSpare);
     let partsComplete = 0;
@@ -113,8 +114,7 @@ const loadParts = async (setNum: string) => {
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
-    const response = await familyHttpService.getRequest<FamilySet>(`/family-sets/${id}`);
-    familySet.value = toCamelCaseTyped(response.data);
+    adapted.value = await familySetStoreModule.getOrFailById(id);
     loading.value = false;
 });
 
@@ -122,20 +122,19 @@ const ownedStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", 
 const statusUpdating = ref(false);
 
 const updateStatus = async (newStatus: FamilySet["status"]) => {
-    if (!familySet.value || familySet.value.status === newStatus) return;
+    if (!adapted.value || adapted.value.status === newStatus) return;
 
     statusUpdating.value = true;
     try {
-        await familyHttpService.patchRequest(`/family-sets/${familySet.value.id}`, {status: newStatus});
-        familySet.value.status = newStatus;
+        await adapted.value.patch({status: newStatus});
     } finally {
         statusUpdating.value = false;
     }
 };
 
 const goToEdit = async () => {
-    if (!familySet.value) return;
-    await familyRouterService.goToRoute("sets-edit", familySet.value.id);
+    if (!adapted.value) return;
+    await familyRouterService.goToRoute("sets-edit", adapted.value.id);
 };
 
 const goBack = async () => {
@@ -155,8 +154,8 @@ const closeAssignModal = () => {
 const handleAssigned = () => {
     showAssignModal.value = false;
     selectedPart.value = null;
-    if (familySet.value) {
-        loadParts(familySet.value.set.setNum);
+    if (adapted.value) {
+        loadParts(adapted.value.set?.setNum ?? adapted.value.setNum);
     }
 };
 </script>
@@ -165,7 +164,7 @@ const handleAssigned = () => {
     <div max-w="6xl" m="x-auto">
         <LoadingState v-if="loading" :message="t('common.loading').value" />
 
-        <template v-else-if="familySet">
+        <template v-else-if="adapted">
             <div m="b-6">
                 <BackButton @click="goBack">&larr; {{ t("sets.backToOverview").value }}</BackButton>
             </div>
@@ -173,9 +172,9 @@ const handleAssigned = () => {
             <div flex="~ col md:row" gap="6">
                 <div shrink="0">
                     <img
-                        v-if="familySet.set.imageUrl"
-                        :src="familySet.set.imageUrl"
-                        :alt="familySet.set.name"
+                        v-if="adapted.set?.imageUrl"
+                        :src="adapted.set.imageUrl"
+                        :alt="adapted.set.name"
                         w="48"
                         h="48"
                         object="contain"
@@ -186,27 +185,29 @@ const handleAssigned = () => {
                 </div>
 
                 <div flex="1 ~ col" gap="3">
-                    <h1 text="2xl" font="bold" uppercase tracking="wide">{{ familySet.set.name }}</h1>
-                    <p text="gray-600">{{ familySet.set.setNum }}</p>
+                    <h1 text="2xl" font="bold" uppercase tracking="wide">
+                        {{ adapted.set?.name ?? adapted.setNum }}
+                    </h1>
+                    <p text="gray-600">{{ adapted.set?.setNum ?? adapted.setNum }}</p>
 
                     <div flex="~ col" gap="2" m="t-2">
                         <div flex gap="2">
                             <span font="bold">{{ t("sets.year").value }}:</span>
-                            <span>{{ familySet.set.year ?? t("sets.unknown").value }}</span>
+                            <span>{{ adapted.set?.year ?? t("sets.unknown").value }}</span>
                         </div>
                         <div flex gap="2">
                             <span font="bold">{{ t("sets.theme").value }}:</span>
-                            <span>{{ familySet.set.theme ?? t("sets.unknown").value }}</span>
+                            <span>{{ adapted.set?.theme ?? t("sets.unknown").value }}</span>
                         </div>
                         <div flex gap="2">
                             <span font="bold">{{ t("sets.numParts").value }}:</span>
-                            <span>{{ familySet.set.numParts }}</span>
+                            <span>{{ adapted.set?.numParts ?? t("sets.unknown").value }}</span>
                         </div>
                         <div flex gap="2">
                             <span font="bold">{{ t("sets.quantity").value }}:</span>
-                            <span>{{ familySet.quantity }}x</span>
+                            <span>{{ adapted.quantity }}x</span>
                         </div>
-                        <div v-if="familySet.status !== 'wishlist'" flex="~ col" gap="2">
+                        <div v-if="adapted.status !== 'wishlist'" flex="~ col" gap="2">
                             <span font="bold">{{ t("sets.status").value }}:</span>
                             <div flex gap="2" flex-wrap="wrap">
                                 <button
@@ -221,7 +222,7 @@ const handleAssigned = () => {
                                     cursor="pointer"
                                     outline="none"
                                     class="brick-border brick-transition"
-                                    :bg="familySet.status === status ? 'yellow-300' : 'white hover:yellow-100'"
+                                    :bg="adapted.status === status ? 'yellow-300' : 'white hover:yellow-100'"
                                     :disabled="statusUpdating"
                                     @click="updateStatus(status)"
                                 >
@@ -229,26 +230,26 @@ const handleAssigned = () => {
                                 </button>
                             </div>
                         </div>
-                        <div v-if="familySet.status === 'wishlist'">
+                        <div v-if="adapted.status === 'wishlist'">
                             <PrimaryButton :disabled="statusUpdating" @click="updateStatus('sealed')">
                                 {{ t("sets.addToCollection").value }}
                             </PrimaryButton>
                         </div>
-                        <div v-if="familySet.purchaseDate" flex gap="2">
+                        <div v-if="adapted.purchaseDate" flex gap="2">
                             <span font="bold">{{ t("sets.purchaseDate").value }}:</span>
-                            <span>{{ familySet.purchaseDate }}</span>
+                            <span>{{ adapted.purchaseDate }}</span>
                         </div>
-                        <div v-if="familySet.notes" flex gap="2">
+                        <div v-if="adapted.notes" flex gap="2">
                             <span font="bold">{{ t("sets.notes").value }}:</span>
-                            <span>{{ familySet.notes }}</span>
+                            <span>{{ adapted.notes }}</span>
                         </div>
                     </div>
 
                     <div flex gap="4" m="t-4">
                         <PrimaryButton @click="goToEdit">{{ t("sets.edit").value }}</PrimaryButton>
                         <PrimaryButton
-                            v-if="!setWithParts && familySet.status !== 'wishlist'"
-                            @click="loadParts(familySet.set.setNum)"
+                            v-if="!setWithParts && adapted.status !== 'wishlist'"
+                            @click="loadParts(adapted.set?.setNum ?? adapted.setNum)"
                         >
                             {{ t("sets.loadParts").value }}
                         </PrimaryButton>
@@ -305,7 +306,7 @@ const handleAssigned = () => {
                             class="brick-transition"
                             @click="showMissingParts = !showMissingParts"
                         >
-                            {{ showMissingParts ? "▾" : "▸" }}
+                            {{ showMissingParts ? "&#9662;" : "&#9656;" }}
                             {{ t("sets.missingBricks").value }} ({{ missingParts.length }})
                         </button>
 

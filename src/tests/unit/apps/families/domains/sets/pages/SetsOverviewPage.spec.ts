@@ -8,64 +8,85 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockGetRequest, mockGoToRoute} = vi.hoisted(() => ({mockGetRequest: vi.fn(), mockGoToRoute: vi.fn()}));
+const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
+    const {ref} = await import("vue");
+    return {
+        mockRetrieveAll: vi.fn(),
+        mockGoToRoute: vi.fn(),
+        mockAllItems: ref<unknown[]>([]),
+        mockIsLoading: ref(false),
+    };
+});
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("@app/services", async () => {
+    const {computed} = await import("vue");
 
-const mockFamilySet = {
+    return {
+        familyHttpService: {
+            getRequest: vi.fn(),
+            postRequest: vi.fn(),
+            putRequest: vi.fn(),
+            patchRequest: vi.fn(),
+            deleteRequest: vi.fn(),
+            registerRequestMiddleware: vi.fn(() => vi.fn()),
+            registerResponseMiddleware: vi.fn(() => vi.fn()),
+            registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
+        },
+        familyAuthService: {
+            isLoggedIn: {value: true},
+            user: {value: null},
+            userId: vi.fn(),
+            register: vi.fn(),
+            login: vi.fn(),
+            logout: vi.fn(),
+            checkIfLoggedIn: vi.fn(),
+            sendEmailResetPassword: vi.fn(),
+            resetPassword: vi.fn(),
+        },
+        familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
+        familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
+        familyLoadingService: {isLoading: computed(() => mockIsLoading.value)},
+        familySetStoreModule: {
+            getAll: computed(() => mockAllItems.value),
+            retrieveAll: mockRetrieveAll,
+            getById: vi.fn(),
+            getOrFailById: vi.fn(),
+            generateNew: vi.fn(),
+        },
+        FamilyRouterView: {template: "<div><slot /></div>"},
+        FamilyRouterLink: {template: "<a><slot /></a>"},
+    };
+});
+
+const mockAdaptedSet = {
     id: 1,
-    set_id: 10,
+    setId: 10,
+    setNum: "75192-1",
     quantity: 2,
-    status: "built",
-    purchase_date: "2024-01-15",
+    status: "built" as const,
+    purchaseDate: "2024-01-15",
     notes: "Test notes",
     set: {
         id: 10,
-        set_num: "75192-1",
+        setNum: "75192-1",
         name: "Millennium Falcon",
         year: 2017,
         theme: "Star Wars",
-        num_parts: 7541,
-        image_url: "https://example.com/75192.jpg",
+        numParts: 7541,
+        imageUrl: "https://example.com/75192.jpg",
     },
 };
 
 describe("SetsOverviewPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockAllItems.value = [];
+        mockIsLoading.value = false;
+        mockRetrieveAll.mockResolvedValue(undefined);
     });
 
     it("should render page title", async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
-
-        // Act
+        // Arrange & Act
         const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
@@ -73,21 +94,18 @@ describe("SetsOverviewPage", () => {
         expect(wrapper.findComponent(PageHeader).props("title")).toBe("sets.title");
     });
 
-    it("should fetch sets on mount", async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
-
-        // Act
+    it("should call retrieveAll on mount", async () => {
+        // Arrange & Act
         shallowMount(SetsOverviewPage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/family-sets");
+        expect(mockRetrieveAll).toHaveBeenCalled();
     });
 
     it("should render set cards when sets exist", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
+        mockAllItems.value = [mockAdaptedSet];
 
         // Act
         const wrapper = shallowMount(SetsOverviewPage);
@@ -102,7 +120,7 @@ describe("SetsOverviewPage", () => {
 
     it("should show empty state when no sets exist", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockAllItems.value = [];
 
         // Act
         const wrapper = shallowMount(SetsOverviewPage);
@@ -114,7 +132,7 @@ describe("SetsOverviewPage", () => {
 
     it("should show loading state initially", () => {
         // Arrange
-        mockGetRequest.mockReturnValue(new Promise(() => {}));
+        mockIsLoading.value = true;
 
         // Act
         const wrapper = shallowMount(SetsOverviewPage);
@@ -125,7 +143,7 @@ describe("SetsOverviewPage", () => {
 
     it("should navigate to scan page when scan button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockAllItems.value = [];
         const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
@@ -140,7 +158,7 @@ describe("SetsOverviewPage", () => {
 
     it("should navigate to add page when add button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockAllItems.value = [];
         const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
@@ -155,7 +173,7 @@ describe("SetsOverviewPage", () => {
 
     it("should navigate to detail page when a set card is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
+        mockAllItems.value = [mockAdaptedSet];
         const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
@@ -169,7 +187,7 @@ describe("SetsOverviewPage", () => {
 
     it("should render set image when available", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
+        mockAllItems.value = [mockAdaptedSet];
 
         // Act
         const wrapper = shallowMount(SetsOverviewPage);
@@ -184,8 +202,8 @@ describe("SetsOverviewPage", () => {
 
     it("should render placeholder when image is not available", async () => {
         // Arrange
-        const setWithoutImage = {...mockFamilySet, set: {...mockFamilySet.set, image_url: null}};
-        mockGetRequest.mockResolvedValue({data: [setWithoutImage]});
+        const setWithoutImage = {...mockAdaptedSet, set: {...mockAdaptedSet.set, imageUrl: null}};
+        mockAllItems.value = [setWithoutImage];
 
         // Act
         const wrapper = shallowMount(SetsOverviewPage);
@@ -199,25 +217,26 @@ describe("SetsOverviewPage", () => {
     describe("search and filter", () => {
         const mockSealedSet = {
             id: 2,
-            set_id: 20,
+            setId: 20,
+            setNum: "10294-1",
             quantity: 1,
-            status: "sealed",
-            purchase_date: null,
+            status: "sealed" as const,
+            purchaseDate: null,
             notes: null,
             set: {
                 id: 20,
-                set_num: "10294-1",
+                setNum: "10294-1",
                 name: "Titanic",
                 year: 2021,
                 theme: "Creator Expert",
-                num_parts: 9090,
-                image_url: null,
+                numParts: 9090,
+                imageUrl: null,
             },
         };
 
         it("should filter sets by search query", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            mockAllItems.value = [mockAdaptedSet, mockSealedSet];
             const wrapper = shallowMount(SetsOverviewPage);
             await flushPromises();
 
@@ -232,7 +251,7 @@ describe("SetsOverviewPage", () => {
 
         it("should filter sets by set number", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            mockAllItems.value = [mockAdaptedSet, mockSealedSet];
             const wrapper = shallowMount(SetsOverviewPage);
             await flushPromises();
 
@@ -247,7 +266,7 @@ describe("SetsOverviewPage", () => {
 
         it("should filter sets by status", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            mockAllItems.value = [mockAdaptedSet, mockSealedSet];
             const wrapper = shallowMount(SetsOverviewPage);
             await flushPromises();
 
@@ -263,7 +282,7 @@ describe("SetsOverviewPage", () => {
 
         it("should toggle status filter off when clicked again", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockFamilySet, mockSealedSet]});
+            mockAllItems.value = [mockAdaptedSet, mockSealedSet];
             const wrapper = shallowMount(SetsOverviewPage);
             await flushPromises();
 
@@ -280,7 +299,7 @@ describe("SetsOverviewPage", () => {
 
         it("should show no results when search matches nothing", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockFamilySet]});
+            mockAllItems.value = [mockAdaptedSet];
             const wrapper = shallowMount(SetsOverviewPage);
             await flushPromises();
 
@@ -293,5 +312,31 @@ describe("SetsOverviewPage", () => {
             const noResults = emptyStates.find((e) => e.props("message") === "common.noResults");
             expect(noResults?.exists()).toBe(true);
         });
+    });
+
+    it("should show export button when sets exist", async () => {
+        // Arrange
+        mockAllItems.value = [mockAdaptedSet];
+
+        // Act
+        const wrapper = shallowMount(SetsOverviewPage);
+        await flushPromises();
+
+        // Assert
+        const exportButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "common.export");
+        expect(exportButton?.exists()).toBe(true);
+    });
+
+    it("should not show export button when no sets exist", async () => {
+        // Arrange
+        mockAllItems.value = [];
+
+        // Act
+        const wrapper = shallowMount(SetsOverviewPage);
+        await flushPromises();
+
+        // Assert
+        const exportButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "common.export");
+        expect(exportButton).toBeUndefined();
     });
 });

@@ -6,12 +6,14 @@ import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {ref} from "vue";
 
-const {mockGetRequest, mockPatchRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
+const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockPatch} = vi.hoisted(() => ({
+    mockGetOrFailById: vi.fn(),
     mockGetRequest: vi.fn(),
-    mockPatchRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
     mockCurrentRouteId: {value: 42},
+    mockPatch: vi.fn(),
 }));
 
 vi.mock("@app/services", () => ({
@@ -19,7 +21,7 @@ vi.mock("@app/services", () => ({
         getRequest: mockGetRequest,
         postRequest: vi.fn(),
         putRequest: vi.fn(),
-        patchRequest: mockPatchRequest,
+        patchRequest: vi.fn(),
         deleteRequest: vi.fn(),
         registerRequestMiddleware: vi.fn(() => vi.fn()),
         registerResponseMiddleware: vi.fn(() => vi.fn()),
@@ -38,27 +40,50 @@ vi.mock("@app/services", () => ({
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
     familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
+    familySetStoreModule: {
+        getAll: {value: []},
+        retrieveAll: vi.fn(),
+        getById: vi.fn(),
+        getOrFailById: mockGetOrFailById,
+        generateNew: vi.fn(),
+    },
+    familyLoadingService: {isLoading: {value: false}},
     FamilyRouterView: {template: "<div><slot /></div>"},
     FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
-const mockFamilySetResponse = {
+const createMockAdapted = (
+    overrides?: Partial<{status: string; purchaseDate: string | null; notes: string | null}>,
+) => ({
     id: 42,
-    set_id: 10,
+    setId: 10,
+    setNum: "75192-1",
     quantity: 2,
-    status: "built",
-    purchase_date: "2024-01-15",
-    notes: "Birthday gift",
+    status: overrides?.status ?? ("built" as const),
+    purchaseDate: overrides?.purchaseDate !== undefined ? overrides.purchaseDate : "2024-01-15",
+    notes: overrides?.notes !== undefined ? overrides.notes : "Birthday gift",
     set: {
         id: 10,
-        set_num: "75192-1",
+        setNum: "75192-1",
         name: "Millennium Falcon",
         year: 2017,
         theme: "Star Wars",
-        num_parts: 7541,
-        image_url: "https://example.com/75192.jpg",
+        numParts: 7541,
+        imageUrl: "https://example.com/75192.jpg",
     },
-};
+    mutable: ref({
+        setId: 10,
+        setNum: "75192-1",
+        quantity: 2,
+        status: overrides?.status ?? ("built" as const),
+        purchaseDate: overrides?.purchaseDate !== undefined ? overrides.purchaseDate : "2024-01-15",
+        notes: overrides?.notes !== undefined ? overrides.notes : "Birthday gift",
+    }),
+    reset: vi.fn(),
+    update: vi.fn(),
+    patch: mockPatch,
+    delete: vi.fn(),
+});
 
 const mockSetWithPartsResponse = {
     id: 10,
@@ -102,19 +127,19 @@ describe("SetDetailPage", () => {
 
     it("should fetch set by route id on mount", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         shallowMount(SetDetailPage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/family-sets/42");
+        expect(mockGetOrFailById).toHaveBeenCalledWith(42);
     });
 
     it("should render set details", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(SetDetailPage);
@@ -134,7 +159,7 @@ describe("SetDetailPage", () => {
 
     it("should render set image when available", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(SetDetailPage);
@@ -149,7 +174,7 @@ describe("SetDetailPage", () => {
 
     it("should show loading state initially", () => {
         // Arrange
-        mockGetRequest.mockReturnValue(new Promise(() => {}));
+        mockGetOrFailById.mockReturnValue(new Promise(() => {}));
 
         // Act
         const wrapper = shallowMount(SetDetailPage);
@@ -160,7 +185,7 @@ describe("SetDetailPage", () => {
 
     it("should navigate to edit page when edit button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -176,7 +201,7 @@ describe("SetDetailPage", () => {
 
     it("should navigate back to overview when back button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -190,8 +215,7 @@ describe("SetDetailPage", () => {
 
     it("should not show purchase date when null", async () => {
         // Arrange
-        const responseWithoutDate = {...mockFamilySetResponse, purchase_date: null};
-        mockGetRequest.mockResolvedValue({data: responseWithoutDate});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted({purchaseDate: null}));
 
         // Act
         const wrapper = shallowMount(SetDetailPage);
@@ -203,8 +227,7 @@ describe("SetDetailPage", () => {
 
     it("should not show notes when null", async () => {
         // Arrange
-        const responseWithoutNotes = {...mockFamilySetResponse, notes: null};
-        mockGetRequest.mockResolvedValue({data: responseWithoutNotes});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted({notes: null}));
 
         // Act
         const wrapper = shallowMount(SetDetailPage);
@@ -216,7 +239,7 @@ describe("SetDetailPage", () => {
 
     it("should render status buttons with current status highlighted", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(SetDetailPage);
@@ -232,8 +255,8 @@ describe("SetDetailPage", () => {
 
     it("should update status when a status button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
-        mockPatchRequest.mockResolvedValue({data: {}});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockPatch.mockResolvedValue({});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -243,27 +266,27 @@ describe("SetDetailPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockPatchRequest).toHaveBeenCalledWith("/family-sets/42", {status: "sealed"});
+        expect(mockPatch).toHaveBeenCalledWith({status: "sealed"});
     });
 
     it("should not call API when clicking the current status", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
-        // Act — mockFamilySetResponse has status "built"
+        // Act — mockAdapted has status "built"
         const builtButton = wrapper.findAll("button").find((btn) => btn.text() === "sets.built");
         await builtButton?.trigger("click");
         await flushPromises();
 
         // Assert
-        expect(mockPatchRequest).not.toHaveBeenCalled();
+        expect(mockPatch).not.toHaveBeenCalled();
     });
 
     it("should show load parts button initially", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockFamilySetResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(SetDetailPage);
@@ -277,10 +300,8 @@ describe("SetDetailPage", () => {
 
     it("should fetch and display parts when load parts button is clicked", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -303,10 +324,8 @@ describe("SetDetailPage", () => {
 
     it("should display spare parts in separate section", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -327,10 +346,8 @@ describe("SetDetailPage", () => {
 
     it("should hide load parts button after parts are loaded", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -348,10 +365,8 @@ describe("SetDetailPage", () => {
 
     it("should render color swatches for parts", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -369,10 +384,8 @@ describe("SetDetailPage", () => {
 
     it("should render part images when available", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -389,10 +402,8 @@ describe("SetDetailPage", () => {
 
     it("should fetch storage map after loading parts", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -411,8 +422,8 @@ describe("SetDetailPage", () => {
         const storageMapData = [
             {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 8},
         ];
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse})
             .mockResolvedValueOnce({data: storageMapData});
         const wrapper = shallowMount(SetDetailPage);
@@ -430,10 +441,8 @@ describe("SetDetailPage", () => {
 
     it("should not display storage badges when no storage map data", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -452,8 +461,8 @@ describe("SetDetailPage", () => {
         const storageMapData = [
             {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 10},
         ];
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse})
             .mockResolvedValueOnce({data: storageMapData});
         const wrapper = shallowMount(SetDetailPage);
@@ -477,8 +486,8 @@ describe("SetDetailPage", () => {
         const storageMapData = [
             {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 3},
         ];
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
             .mockResolvedValueOnce({data: mockSetWithPartsResponse})
             .mockResolvedValueOnce({data: storageMapData});
         const wrapper = shallowMount(SetDetailPage);
@@ -498,10 +507,8 @@ describe("SetDetailPage", () => {
 
     it("should not show build check when no storage map data", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -517,10 +524,8 @@ describe("SetDetailPage", () => {
 
     it("should open assign modal when a part is clicked", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
         const primaryButtons = wrapper.findAllComponents(PrimaryButton);
@@ -542,10 +547,8 @@ describe("SetDetailPage", () => {
 
     it("should close assign modal on close event", async () => {
         // Arrange
-        mockGetRequest
-            .mockResolvedValueOnce({data: mockFamilySetResponse})
-            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
-            .mockResolvedValueOnce({data: []});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
         const primaryButtons = wrapper.findAllComponents(PrimaryButton);
