@@ -36,6 +36,21 @@ The RouterService also provides `createRouterLink()` — a component factory tha
 - The cost: shared nav components can't navigate on their own. Navigation logic lives in the consuming page, not the component. This is a deliberate inversion of control
 - `createRouterLink` gives Families the ergonomics of `RouterLink` without the coupling
 
+## Enforcement
+
+This decision is enforced by three automated checks:
+
+| What                                                           | Mechanism                                                                              | Scope                  |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------- |
+| `RouterLink` import banned in shared                           | oxlint `no-restricted-imports` (`paths` with `importNames: ["RouterLink"]`)            | `src/shared/**`        |
+| `useRouter`/`useRoute` import banned in shared                 | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/shared/**`        |
+| `useRouter`/`useRoute` import banned in Families               | oxlint `no-restricted-imports` (`paths` with `importNames: ["useRouter", "useRoute"]`) | `src/apps/families/**` |
+| `<RouterLink>`/`<router-link>` template usage banned in shared | Custom linter (`scripts/lint-vue-conventions.mjs`, check 6)                            | `src/shared/**/*.vue`  |
+
+The oxlint rules live in `.oxlintrc.json` under the respective file overrides. The template check catches globally registered component usage that wouldn't trigger an import-level ban.
+
+Admin is deliberately excluded from the `useRouter`/`useRoute` ban — it uses Vue Router directly per this decision.
+
 ## Resolved Questions
 
 ### When should Admin migrate to RouterService?

@@ -21,16 +21,17 @@ Analyze the recent conversation (focused on "$ARGUMENTS" if provided, otherwise 
 
 ## What to Capture
 
-| Category | What to Log | Example |
-|---|---|---|
-| **Decisions** | Choices made and their rationale | "Chose factory pattern over singletons for testability" |
-| **Action Items** | Next steps, with owner if known | "CEO: approve storage domain API contract" |
-| **Architecture Notes** | Structural patterns, boundaries, conventions | "Scanner module lives in shared, not families" |
-| **Rejected Alternatives** | Options considered and why they were dropped | "Considered Pinia, rejected — too heavy for our needs" |
-| **Open Questions** | Unresolved items that need follow-up | "How should we handle offline barcode scanning?" |
-| **Context** | Important background that future sessions need | "API uses snake_case, frontend uses camelCase" |
+| Category                  | What to Log                                    | Example                                                 |
+| ------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
+| **Decisions**             | Choices made and their rationale               | "Chose factory pattern over singletons for testability" |
+| **Action Items**          | Next steps, with owner if known                | "CEO: approve storage domain API contract"              |
+| **Architecture Notes**    | Structural patterns, boundaries, conventions   | "Scanner module lives in shared, not families"          |
+| **Rejected Alternatives** | Options considered and why they were dropped   | "Considered Pinia, rejected — too heavy for our needs"  |
+| **Open Questions**        | Unresolved items that need follow-up           | "How should we handle offline barcode scanning?"        |
+| **Context**               | Important background that future sessions need | "API uses snake_case, frontend uses camelCase"          |
 
 **Do NOT log:**
+
 - Routine implementation details (file edits, test fixes)
 - Obvious choices already covered by CLAUDE.md
 - Greetings, small talk, or meta-discussion about the tool itself
@@ -56,21 +57,26 @@ Then append entries in this format:
 ## [DATE] — [TOPIC]
 
 ### Decisions
+
 - **[Short title]**: [What was decided and why]
 
 ### Action Items
+
 - [ ] [Owner]: [What needs to happen]
 
 ### Notes
+
 - [Any architecture notes, context, or rejected alternatives worth recording]
 
 ### Open Questions
+
 - [Unresolved items]
 
 ---
 ```
 
 **Rules:**
+
 - Use ISO 8601 date format (YYYY-MM-DD)
 - If no topic is provided via arguments, infer the main topic from the conversation
 - Omit empty sections (if no action items, don't include the Action Items heading)

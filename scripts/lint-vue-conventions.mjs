@@ -2,26 +2,34 @@ import {readdirSync, readFileSync, statSync} from "node:fs";
 import {basename, join} from "node:path";
 
 const errors = [];
+const IGNORED_DIRS = ["node_modules", "dist", "coverage"];
 
-const findVueFiles = (dir) => {
+const findFiles = (dir, extensions) => {
     const files = [];
     for (const entry of readdirSync(dir)) {
         const path = join(dir, entry);
         if (statSync(path).isDirectory()) {
-            if (!["node_modules", "dist", "coverage"].includes(entry)) {
-                files.push(...findVueFiles(path));
+            if (!IGNORED_DIRS.includes(entry)) {
+                files.push(...findFiles(path, extensions));
             }
-        } else if (entry.endsWith(".vue")) {
+        } else if (extensions.some((ext) => entry.endsWith(ext))) {
             files.push(path);
         }
     }
     return files;
 };
 
-// Accept file paths as arguments (for lint-staged) or scan all Vue files
-const files = process.argv.length > 2 ? process.argv.slice(2).filter((f) => f.endsWith(".vue")) : findVueFiles("src");
+// Accept file paths as arguments (for lint-staged) or scan all source files
+const argFiles = process.argv.length > 2 ? process.argv.slice(2) : [];
+const vueFiles = argFiles.length > 0 ? argFiles.filter((f) => f.endsWith(".vue")) : findFiles("src", [".vue"]);
+const allSourceFiles =
+    argFiles.length > 0
+        ? argFiles.filter((f) => f.endsWith(".vue") || f.endsWith(".ts"))
+        : findFiles("src", [".vue", ".ts"]);
 
-for (const file of files) {
+// ── Vue-specific checks ────────────────────────────────────────────────────────
+
+for (const file of vueFiles) {
     const name = basename(file, ".vue");
     const content = readFileSync(file, "utf-8");
 
@@ -76,15 +84,55 @@ for (const file of files) {
     if (propsIndex !== -1 && slotsIndex !== -1 && propsIndex > slotsIndex) {
         errors.push(`${file}: defineProps must come before defineSlots`);
     }
+
+    // Check 6: No <RouterLink> or <router-link> in shared components (ADR-001)
+    // The oxlint import ban catches JS imports, but globally registered components can be used without import
+    if (file.startsWith("src/shared/") || file.includes("/shared/")) {
+        const templateMatch = content.match(/<template[\s\S]*$/);
+        if (templateMatch) {
+            const template = templateMatch[0];
+            if (/<RouterLink[\s/>]/.test(template) || /<router-link[\s/>]/.test(template)) {
+                errors.push(
+                    `${file}: <RouterLink>/<router-link> is forbidden in shared components (ADR-001). Use <a> tags with click emits instead.`,
+                );
+            }
+        }
+    }
 }
 
+// ── Cross-file checks (all .vue and .ts files) ─────────────────────────────────
+
+// Check 7: No coverage ignore comments (ADR-005)
+// istanbul ignore, v8 ignore, c8 ignore are all banned — every line must be tested or removed
+const COVERAGE_IGNORE_PATTERN = /\/\*\s*(istanbul|v8|c8)\s+ignore\b/;
+
+for (const file of allSourceFiles) {
+    // Skip test files — they aren't subject to coverage ignore bans
+    if (file.includes("/tests/") || file.endsWith(".spec.ts")) {
+        continue;
+    }
+
+    const content = readFileSync(file, "utf-8");
+    const lines = content.split("\n");
+
+    for (let i = 0; i < lines.length; i++) {
+        if (COVERAGE_IGNORE_PATTERN.test(lines[i])) {
+            errors.push(
+                `${file}:${i + 1}: Coverage ignore comments are forbidden (ADR-005). Restructure the code to be testable instead.`,
+            );
+        }
+    }
+}
+
+// ── Report ──────────────────────────────────────────────────────────────────────
+
 if (errors.length > 0) {
-    console.error("Vue convention violations found:\n");
+    console.error("Convention violations found:\n");
     for (const error of errors) {
         console.error(`  ${error}`);
     }
     console.error(`\n${errors.length} violation(s) found.`);
     process.exit(1);
 } else {
-    console.log("All Vue conventions passed.");
+    console.log("All conventions passed.");
 }
