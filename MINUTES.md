@@ -5,6 +5,23 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-18 — Extracting ADRs 006–008 from Codebase Patterns
+
+### Decisions
+
+- **Three new ADRs extracted from implicit codebase patterns**: CFO audited 15 undocumented architectural decisions in the codebase, ranked them by teaching value for juniors, and recommended the top 3. CEO approved.
+- **ADR-006: Resource adapter with frozen base and mutable ref**: Documents the `Object.freeze` + `deepCopy` pattern giving entities an immutable display view and a reactive mutable copy for forms. Type-safe CRUD method narrowing via function overloads (`Adapted<T>` vs `NewAdapted<T>`).
+- **ADR-007: Adapter store module over Pinia/Vuex**: Documents why a custom store factory was chosen over Pinia. The adapter, localStorage persistence, and loading coordination are so tightly coupled that Pinia would be substrate buried under project-specific glue.
+- **ADR-008: Domain isolation via lint rules and architecture tests**: Documents the hard ban on cross-domain imports with four-layer enforcement (two oxlint rules, two architecture spec tests, pre-push hooks).
+
+### Notes
+
+- All three ADRs honestly note that the adapter/store pattern (006, 007) is built and tested but not yet consumed by any domain — open questions reflect this
+- 12 additional implicit decisions were identified but deprioritized: multi-app APP_NAME routing, HTTP middleware lifecycle, route naming conventions, deep copy over structuredClone, sound service synthesis, loading middleware WeakSet, and others. The lower-tier items were judged as implementation choices rather than architectural decisions worth ADR treatment.
+- Transferability for all three marked as `universal` — the patterns apply to any large Vue/TS project, not just this one
+
+---
+
 ## 2026-03-18 — ADR-001 Revision: Universal RouterService
 
 ### Decisions

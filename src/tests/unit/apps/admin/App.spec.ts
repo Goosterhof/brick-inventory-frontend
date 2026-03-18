@@ -1,3 +1,4 @@
+import NavLink from "@shared/components/NavLink.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 
@@ -9,7 +10,6 @@ const {mockGoToRoute} = vi.hoisted(() => ({
 
 vi.mock("../../../../apps/admin/router", () => ({
     AdminRouterView: {name: "AdminRouterView", template: "<div><slot /></div>"},
-    AdminRouterLink: {name: "AdminRouterLink", props: ["to"], template: "<a><slot /></a>"},
     adminRouterService: {goToRoute: mockGoToRoute},
 }));
 
@@ -29,7 +29,7 @@ describe("App", () => {
         const wrapper = shallowMount(App);
 
         // Assert
-        const navLink = wrapper.findComponent({name: "NavLink"});
+        const navLink = wrapper.findComponent(NavLink);
         expect(navLink.exists()).toBe(true);
         expect(navLink.props("to")).toBe("/");
         expect(navLink.text()).toBe("Dashboard");
@@ -51,7 +51,7 @@ describe("App", () => {
         const wrapper = shallowMount(App);
 
         // Act
-        wrapper.findComponent({name: "NavLink"}).vm.$emit("click");
+        wrapper.findComponent(NavLink).vm.$emit("click");
 
         // Assert
         expect(mockGoToRoute).toHaveBeenCalledWith("home");

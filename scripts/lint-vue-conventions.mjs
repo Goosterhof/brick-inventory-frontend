@@ -124,6 +124,40 @@ for (const file of allSourceFiles) {
     }
 }
 
+// Check 8: No singleton exports in shared services (ADR-002)
+// Shared services must export factory functions, not pre-instantiated instances.
+// Detects: export const x = createSomething(...), export const x = new Something(), export default new Something()
+const SINGLETON_CALL_PATTERN = /^export\s+(?:const|let|var)\s+\w+\s*=\s*(?:new\s+\w|create\w*\()/;
+const EXPORT_DEFAULT_INSTANCE_PATTERN = /^export\s+default\s+(?:new\s+\w|create\w*\()/;
+
+for (const file of allSourceFiles) {
+    if (!file.includes("shared/services/")) {
+        continue;
+    }
+    // Skip type declaration files
+    if (file.endsWith(".d.ts")) {
+        continue;
+    }
+
+    const content = readFileSync(file, "utf-8");
+    const lines = content.split("\n");
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        if (SINGLETON_CALL_PATTERN.test(line)) {
+            errors.push(
+                `${file}:${i + 1}: Shared services must not export pre-instantiated instances (ADR-002). Export a factory function and let each app call it.`,
+            );
+        }
+        if (EXPORT_DEFAULT_INSTANCE_PATTERN.test(line)) {
+            errors.push(
+                `${file}:${i + 1}: Shared services must not export pre-instantiated instances (ADR-002). Export a factory function and let each app call it.`,
+            );
+        }
+    }
+}
+
 // ── Report ──────────────────────────────────────────────────────────────────────
 
 if (errors.length > 0) {
