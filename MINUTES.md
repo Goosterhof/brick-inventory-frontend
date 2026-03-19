@@ -5,26 +5,36 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
-## 2026-03-19 — ADR-009: Component Catalog Health Metrics Strategy
+## 2026-03-19 — ADR-009 Revision: Five-Metric Component Health Registry
 
 ### Decisions
 
-- **Tier 1 metrics chosen over full observability suite**: Three metrics selected — consumer map, adoption breadth, API surface — answering "who breaks?", "truly shared?", and "getting bloated?". Full suite (8+ metrics) eliminated as over-engineered for 31 components. Manual tracking eliminated as guaranteed to drift.
-- **Tiered approach with forward-compatible schema**: Tier 2 (dependency depth, churn, duplication) designed for but not built — registry JSON schema includes placeholder fields. Tier 3 (age, per-component bundle size, per-component coverage) explicitly out of scope as redundant with existing tooling.
-- **Static analysis implementation**: Consumer map built from import scanning, API surface from AST extraction of `defineProps`/`defineEmits`/`<slot>`. Single generated JSON registry file.
-- **Third-party tools rejected**: Storybook analytics requires Storybook (we use Showcase), Chromatic is visual not structural, Webpack plugins don't apply (Vite). None answer monorepo adoption questions.
+- **Tier system killed, replaced with five concrete metrics**: Original ADR had 3 Tier 1 metrics with Tier 2/3 placeholders. After interrogation, the tier framing was rejected — churn and dependency depth aren't "nice-to-haves," they answer qualitatively different questions. Five metrics now in scope: consumer map, adoption breadth, API surface, churn, dependency depth.
+- **Churn scoped precisely**: 30-day fixed rolling window. Two dimensions tracked — commit count (indecisiveness signal) and lines changed (redesign signal). Lifetime churn rejected as uninformative.
+- **Dependency depth justified through combination with consumer count**: Deep nesting + low consumers = candidate for removal. Deep nesting + high consumers = legitimate architecture. Neither metric is useful alone for this question.
+- **Duplication detection deferred to its own ADR**: Three distinct analysis problems identified (props similarity, template similarity at 80% threshold, function extraction candidates) — each needs different tooling. Too complex to bundle with the registry.
+- **All three original open questions resolved**: (1) Both CI check AND pre-commit hook — CI is the gate, pre-commit is convenience. (2) Showcase app is the primary consumer — grouped by app, collapsible. (3) No adoption breadth thresholds — if it's not enforced, it doesn't exist. Automated warnings are future scope.
+- **Performance constraint set**: Registry generation must complete in under 3 seconds, brute-force full scan. No incremental analysis until proven necessary.
+- **Transferability narrowed**: Changed from "universal" to "Vue 3 monorepos with shared component libraries" — honest about the Vue `defineProps`/`defineEmits` dependency.
+- **Bundle size, component age, test coverage confirmed out of scope**: Redundant with size-limit, trivial git query, and Istanbul respectively.
 
 ### Action Items
 
-- [ ] CFO: Implement Tier 1 registry generation script
-- [ ] CEO/CFO: Decide CI check vs pre-commit hook for registry staleness
-- [ ] CEO/CFO: Set adoption breadth threshold for relocation warnings (needs real data first)
+- [ ] CFO: Implement five-metric registry generation script (under 3 seconds)
+- [ ] CFO: Add CI freshness check for registry
+- [ ] CFO: Add pre-commit hook for registry regeneration
+- [ ] CFO: Build Showcase app registry view (grouped by app, collapsible)
+- [ ] CEO: Future ADR for duplication detection (three flavors)
 
-### Open Questions
+### Strategic Alignment
 
-- CI check (fail if stale) vs pre-commit hook (auto-regenerate) — trade-off between safety and friction
-- Should Showcase app display health metrics alongside component demos?
-- What adoption breadth threshold triggers "consider relocating" — one app? one domain?
+- The ADR itself is part of the portfolio showcase — the reasoning behind metric selection (what's in, what's out, and why) demonstrates architectural decision-making to reviewers. The value isn't just the tool, it's the thinking.
+
+### Notes
+
+- Interrogation revealed the original "over-engineered" dismissal of churn/depth contradicted the strategic context — the firm is absorbing a large existing project where scale is imminent, not hypothetical
+- Merge conflict concern addressed: registry is regenerated like `package-lock.json` — same workflow developers already know
+- The "no soft conventions" stance was a key insight: documenting a threshold without enforcement is equivalent to not having one
 
 ---
 

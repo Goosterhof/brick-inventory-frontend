@@ -30,14 +30,14 @@ No decision record lands here without passing through all three.
 
 ## Index
 
-| #   | Decision                                                                                                | Date       | Status   |
-| --- | ------------------------------------------------------------------------------------------------------- | ---------- | -------- |
-| 001 | [Custom RouterService over Vue Router plugin](./decisions/001-custom-routerservice.md)                  | 2026-03-17 | accepted |
-| 002 | [Factory pattern for services, no singletons](./decisions/002-factory-services.md)                      | 2026-03-17 | accepted |
-| 003 | [UnoCSS attributify over CSS files](./decisions/003-unocss-attributify.md)                              | 2026-03-17 | accepted |
-| 004 | [Snake/camel case conversion at HTTP boundary](./decisions/004-case-conversion-boundary.md)             | 2026-03-17 | accepted |
-| 005 | [Istanbul coverage with zero ignore comments](./decisions/005-istanbul-coverage-no-ignores.md)          | 2026-03-17 | accepted |
-| 006 | [Resource adapter with frozen base and mutable ref](./decisions/006-resource-adapter-frozen-mutable.md) | 2026-03-18 | accepted |
-| 007 | [Adapter store module over Pinia/Vuex](./decisions/007-adapter-store-no-pinia.md)                       | 2026-03-18 | accepted |
-| 008 | [Domain isolation via lint rules and architecture tests](./decisions/008-domain-isolation.md)           | 2026-03-18 | accepted |
-| 009 | [Component catalog health metrics — consumer map, adoption, API surface](./decisions/009-brick-catalog-health-metrics.md) | 2026-03-19 | accepted |
+| #   | Decision                                                                                                                  | Date       | Status   |
+| --- | ------------------------------------------------------------------------------------------------------------------------- | ---------- | -------- |
+| 001 | [Custom RouterService over Vue Router plugin](./decisions/001-custom-routerservice.md)                                    | 2026-03-17 | accepted |
+| 002 | [Factory pattern for services, no singletons](./decisions/002-factory-services.md)                                        | 2026-03-17 | accepted |
+| 003 | [UnoCSS attributify over CSS files](./decisions/003-unocss-attributify.md)                                                | 2026-03-17 | accepted |
+| 004 | [Snake/camel case conversion at HTTP boundary](./decisions/004-case-conversion-boundary.md)                               | 2026-03-17 | accepted |
+| 005 | [Istanbul coverage with zero ignore comments](./decisions/005-istanbul-coverage-no-ignores.md)                            | 2026-03-17 | accepted |
+| 006 | [Resource adapter with frozen base and mutable ref](./decisions/006-resource-adapter-frozen-mutable.md)                   | 2026-03-18 | accepted |
+| 007 | [Adapter store module over Pinia/Vuex](./decisions/007-adapter-store-no-pinia.md)                                         | 2026-03-18 | accepted |
+| 008 | [Domain isolation via lint rules and architecture tests](./decisions/008-domain-isolation.md)                             | 2026-03-18 | accepted |
+| 009 | [Component health registry — five metrics powering the Showcase app](./decisions/009-brick-catalog-health-metrics.md) | 2026-03-19 | accepted |
