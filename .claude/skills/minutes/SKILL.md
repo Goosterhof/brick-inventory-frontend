@@ -21,15 +21,15 @@ Analyze the recent conversation (focused on "$ARGUMENTS" if provided, otherwise 
 
 ## What to Capture
 
-| Category                  | What to Log                                    | Example                                                 |
-| ------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
-| **Decisions**             | Choices made and their rationale               | "Chose factory pattern over singletons for testability" |
-| **Action Items**          | Next steps, with owner if known                | "CEO: approve storage domain API contract"              |
-| **Architecture Notes**    | Structural patterns, boundaries, conventions   | "Scanner module lives in shared, not families"          |
-| **Rejected Alternatives** | Options considered and why they were dropped   | "Considered Pinia, rejected — too heavy for our needs"  |
-| **Open Questions**        | Unresolved items that need follow-up           | "How should we handle offline barcode scanning?"        |
-| **Strategic Alignment**   | How decisions serve the showcase/scaling mission | "Chose factory pattern because it demos to clients"    |
-| **Context**               | Important background that future sessions need | "API uses snake_case, frontend uses camelCase"          |
+| Category                  | What to Log                                      | Example                                                 |
+| ------------------------- | ------------------------------------------------ | ------------------------------------------------------- |
+| **Decisions**             | Choices made and their rationale                 | "Chose factory pattern over singletons for testability" |
+| **Action Items**          | Next steps, with owner if known                  | "CEO: approve storage domain API contract"              |
+| **Architecture Notes**    | Structural patterns, boundaries, conventions     | "Scanner module lives in shared, not families"          |
+| **Rejected Alternatives** | Options considered and why they were dropped     | "Considered Pinia, rejected — too heavy for our needs"  |
+| **Open Questions**        | Unresolved items that need follow-up             | "How should we handle offline barcode scanning?"        |
+| **Strategic Alignment**   | How decisions serve the showcase/scaling mission | "Chose factory pattern because it demos to clients"     |
+| **Context**               | Important background that future sessions need   | "API uses snake_case, frontend uses camelCase"          |
 
 **Do NOT log:**
 
