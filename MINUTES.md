@@ -155,6 +155,24 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-19 — "Building for Size" Strategic Context Propagation
+
+### Decisions
+
+- **Strategic mission codified in CLAUDE.md**: New "Strategic Mission — Building for Size" section added. Every architectural decision must answer two questions: (1) Does this scale to enterprise complexity? (2) Does this demonstrate mastery to a senior engineer reviewing the repo? This is the firm's portfolio piece for landing large client engagements.
+- **All agents and skills updated with strategic context**: Lead Brick Architect gained a Strategic Context section, a "build for showcase" responsibility, and a "showcase readiness" debrief section. Building Inspector gained a new SOP 6 (Audit Showcase Readiness) with a three-tier rating: portfolio-ready / needs polish / not ready. ADR Interrogator gained a new Step 6 (The Showcase Test) asking whether a client would be impressed or concerned. Minutes Secretary gained a Strategic Alignment capture category.
+
+### Strategic Alignment
+
+- This decision itself is the foundational strategic alignment act — it ensures that "building for size" is not just understood by the CEO and CFO, but is structurally embedded in every agent's operating instructions and evaluation criteria. No agent in the firm can claim they didn't know the mission.
+
+### Notes
+
+- The dual strategic lens (scales AND demonstrates mastery) was explicitly discussed — these can conflict (over-engineering looks impressive but doesn't scale well; quick hacks scale but look amateur). Both must hold.
+- The repo serves a dual purpose: portfolio showcase for clients AND decision laboratory for team ADR adoption. These are complementary, not competing.
+
+---
+
 ## 2026-03-19 — ADR Interrogator Skill
 
 ### Decisions
