@@ -40,3 +40,4 @@ No decision record lands here without passing through all three.
 | 006 | [Resource adapter with frozen base and mutable ref](./decisions/006-resource-adapter-frozen-mutable.md) | 2026-03-18 | accepted |
 | 007 | [Adapter store module over Pinia/Vuex](./decisions/007-adapter-store-no-pinia.md)                       | 2026-03-18 | accepted |
 | 008 | [Domain isolation via lint rules and architecture tests](./decisions/008-domain-isolation.md)           | 2026-03-18 | accepted |
+| 009 | [Component catalog health metrics — consumer map, adoption, API surface](./decisions/009-brick-catalog-health-metrics.md) | 2026-03-19 | accepted |
