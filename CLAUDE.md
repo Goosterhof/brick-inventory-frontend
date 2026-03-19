@@ -204,6 +204,8 @@ Before any code leaves this building, Husky enforces: **type-check -> knip -> te
 
 Before building anything non-trivial, check the [Decision Log](/.claude/docs/decisions.md). It records *why* we built things the way we did, what alternatives were rejected, and what the constraints are. Don't relitigate settled decisions — if the context has changed, propose a superseding ADR instead.
 
+This territory is also governed by war-room ADRs: **0009** (ResourceData Pattern), **0014** (Domain-Driven Frontend Structure). Canonical source: `adrs.script.nl`.
+
 ---
 
 ## The Style Guide — Neo-Brutalist LEGO Aesthetic
