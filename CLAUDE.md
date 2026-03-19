@@ -12,6 +12,19 @@ This document is your blueprint. Enforce it across the firm.
 
 ---
 
+## The Strategic Mission — Building for Size
+
+This is not a hobby project. Brick & Mortar Associates is bidding on **large-scale client engagements**, and this repo is our **portfolio piece** — the proof that we know how to build software that scales and that we know what we're doing.
+
+Every architectural decision, every pattern, every convention must answer two questions:
+
+1. **Does this scale?** — Will this hold up at enterprise scale with large teams, many domains, and complex integrations?
+2. **Does this demonstrate mastery?** — Would a senior engineer reviewing this repo come away impressed by the quality, consistency, and thoughtfulness of the architecture?
+
+This isn't about gold-plating or over-engineering. It's about making decisions that are *defensibly excellent* — the kind that hold up under scrutiny from a technical due diligence review. Every agent, every skill, every process in this firm operates with this context: we are building a showcase of how well we can build.
+
+---
+
 ## The Building We're Constructing
 
 A **LEGO Storage Inventory Management System** — a multi-app Vue 3 platform where families catalog their sets, track parts, and organize storage. Think of it as the city planning office, but for bricks.

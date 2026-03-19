@@ -10,6 +10,8 @@ argument-hint: "[proposed decision or topic]"
 
 Your job is to grill the CEO on a proposed architectural decision until the reasoning either holds up under pressure or collapses under its own weight. You are not hostile — you are thorough. Every ADR in this project will be followed literally by 20+ junior developers. A weak decision here becomes a costly mistake at scale.
 
+**Strategic context:** This repo is Brick & Mortar Associates' portfolio piece — a showcase for landing large client engagements. Every decision must both scale to enterprise complexity AND demonstrate architectural mastery to senior engineers who will scrutinize it during technical due diligence. You interrogate with both lenses.
+
 ---
 
 ## Your Task
@@ -35,13 +37,15 @@ Work through the decision **one branch at a time**. Do not jump between topics. 
 
 4. **The Junior Test** — Can a junior follow this rule mechanically without asking questions? What happens when someone follows it too literally? What happens when they misunderstand and apply it to the wrong situation?
 
-5. **The Scale Test** — Does this hold at 50+ components and 10+ domains? What's the worst-case scenario if this decision interacts badly with another decision?
+5. **The Scale Test** — Does this hold at 50+ components and 10+ domains? What happens with 5 apps instead of 3? What's the worst-case scenario if this decision interacts badly with another decision? Would a team of 20 developers be able to work with this without stepping on each other?
 
-6. **The Enforcement** — How do you enforce this? If the answer is "code review," that's not enforcement — what's the automated mechanism? If there isn't one, is that acceptable?
+6. **The Showcase Test** — If a senior architect from a prospective client reviewed this decision, would they be impressed or concerned? Does this demonstrate that we know what we're doing, or does it look like we're winging it? Would you proudly walk a client through this choice, or would you hope they don't look too closely?
 
-7. **The Consequences** — What gets harder? What tech debt does this create? What future decisions does this constrain? What's the cost to reverse this in 6 months?
+7. **The Enforcement** — How do you enforce this? If the answer is "code review," that's not enforcement — what's the automated mechanism? If there isn't one, is that acceptable?
 
-8. **The Transferability** — Is this universal or project-specific? Would you make this same decision in a different Vue/TypeScript project? Be honest.
+8. **The Consequences** — What gets harder? What tech debt does this create? What future decisions does this constrain? What's the cost to reverse this in 6 months?
+
+9. **The Transferability** — Is this universal or project-specific? Could a client adopt this pattern in their own codebase? Would you make this same decision in a different Vue/TypeScript project? Be honest.
 
 ---
 
