@@ -132,6 +132,21 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-19 — ADR Interrogator Skill
+
+### Decisions
+
+- **ADR interrogator skill added**: Inspired by mattpocock/skills `grill-me` pattern. A `/adr-interrogator` skill that stress-tests proposed architectural decisions through structured one-at-a-time questioning before they get formalized as ADRs. Walks eight branches: problem, alternatives, decision, junior test, scale test, enforcement, consequences, transferability — directly mapped to ADR-000's evaluation criteria.
+- **Interrogator is not a decision-maker**: It pressure-tests reasoning and hands back to the CEO. The CFO handles actual ADR drafting. Clear separation of roles.
+
+### Notes
+
+- Skill follows the same `.claude/skills/[name]/SKILL.md` convention as the minutes secretary
+- The interrogation sequence mirrors the ADR template sections and ADR-000's five evaluation lenses, ensuring the output maps directly to a draftable ADR
+- Character: "the 1x1 red brick with the magnifying glass" — small, sharp, finds the gap in the wall
+
+---
+
 ## 2026-03-17 — Meeting Minutes Secretary Setup
 
 ### Decisions
