@@ -5,6 +5,33 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-19 — ADR-009 Showcase Implementation: Component Health Section
+
+### Decisions
+
+- **ComponentHealth.vue added as Showcase section 08**: Implements the ADR-009 requirement that the Showcase app renders registry data alongside component demos. All five metrics visualized: consumer map, adoption breadth, API surface, churn, and dependency depth.
+- **Collapsible per-component detail view**: Each of the 31 components rendered as an expandable row with inline metric badges. Expanding reveals full API surface breakdown (props/emits/slots/models with required indicators) and consumer map grouped by app and domain — matching the ADR's "grouped by app with collapsible detail views" spec.
+- **Visual health signals via color highlighting**: Multi-app adoption highlighted yellow, highest-churn and highest-API-surface components highlighted red. No automated thresholds or warnings (per ADR-009's explicit out-of-scope), just visibility.
+- **Registry data consumed via JSON import**: `ComponentHealth.vue` imports `component-registry.json` directly — Vite resolves it at build time. Types defined inline in the component (no shared type file needed since the Showcase is the sole consumer).
+- **No tests required for Showcase**: `vitest.config.ts` excludes `src/apps/showcase/**` from coverage. Consistent with zero existing Showcase tests — the Showcase is a visual artifact, not business logic.
+
+### Action Items
+
+- [x] CFO: Build Showcase app registry view (grouped by app, collapsible) — completed this session
+- [ ] CEO: Review the Component Health section visually in the Showcase dev server
+
+### Strategic Alignment
+
+- The Showcase app now demonstrates not just the design system but the engineering practices behind it — component health metrics visible to the entire team without reading raw JSON. A reviewer sees both the components and the rigor behind maintaining them.
+
+### Notes
+
+- Registry regenerated after adding ComponentHealth.vue (it's a new consumer of SectionHeading)
+- Formatter (oxfmt) touched several unrelated files — committed alongside the feature as formatting hygiene
+- Full gauntlet passed before push: type-check, lint, lint:vue, format, knip, test:coverage (100%), build, size
+
+---
+
 ## 2026-03-19 — ADR-009 Revision: Five-Metric Component Health Registry
 
 ### Decisions
