@@ -5,6 +5,29 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-19 — ADR-009: Component Catalog Health Metrics Strategy
+
+### Decisions
+
+- **Tier 1 metrics chosen over full observability suite**: Three metrics selected — consumer map, adoption breadth, API surface — answering "who breaks?", "truly shared?", and "getting bloated?". Full suite (8+ metrics) eliminated as over-engineered for 31 components. Manual tracking eliminated as guaranteed to drift.
+- **Tiered approach with forward-compatible schema**: Tier 2 (dependency depth, churn, duplication) designed for but not built — registry JSON schema includes placeholder fields. Tier 3 (age, per-component bundle size, per-component coverage) explicitly out of scope as redundant with existing tooling.
+- **Static analysis implementation**: Consumer map built from import scanning, API surface from AST extraction of `defineProps`/`defineEmits`/`<slot>`. Single generated JSON registry file.
+- **Third-party tools rejected**: Storybook analytics requires Storybook (we use Showcase), Chromatic is visual not structural, Webpack plugins don't apply (Vite). None answer monorepo adoption questions.
+
+### Action Items
+
+- [ ] CFO: Implement Tier 1 registry generation script
+- [ ] CEO/CFO: Decide CI check vs pre-commit hook for registry staleness
+- [ ] CEO/CFO: Set adoption breadth threshold for relocation warnings (needs real data first)
+
+### Open Questions
+
+- CI check (fail if stale) vs pre-commit hook (auto-regenerate) — trade-off between safety and friction
+- Should Showcase app display health metrics alongside component demos?
+- What adoption breadth threshold triggers "consider relocating" — one app? one domain?
+
+---
+
 ## 2026-03-18 — Reactive Resource Adapter & Sets Domain Integration (PR #110)
 
 ### Decisions
