@@ -159,12 +159,12 @@ All use `v-model` (not prop + emit). All compose FormField → FormLabel → inp
 
 Decorative LEGO brick with configurable grid of studs. Pure visual element.
 
-| Prop      | Type      | Default     | Description                   |
-| --------- | --------- | ----------- | ----------------------------- |
-| `color`   | `string`  | `"#DC2626"` | Brick background color (hex)  |
+| Prop      | Type      | Default     | Description                    |
+| --------- | --------- | ----------- | ------------------------------ |
+| `color`   | `string`  | `"#DC2626"` | Brick background color (hex)   |
 | `shadow`  | `boolean` | `true`      | Show neo-brutalist drop shadow |
-| `columns` | `number`  | `4`         | Stud columns                  |
-| `rows`    | `number`  | `2`         | Stud rows                     |
+| `columns` | `number`  | `4`         | Stud columns                   |
+| `rows`    | `number`  | `2`         | Stud rows                      |
 
 ### SectionDivider
 
@@ -215,8 +215,8 @@ Confirmation modal built on ModalDialog. Red confirm button, yellow cancel butto
 
 Animated loading indicator with bouncing bricks and customizable message.
 
-| Prop      | Type     | Default        | Description        |
-| --------- | -------- | -------------- | ------------------ |
+| Prop      | Type     | Default        | Description         |
+| --------- | -------- | -------------- | ------------------- |
 | `message` | `string` | `"Loading..."` | Loading status text |
 
 **Uses**: `role="status"` for accessibility.
@@ -271,8 +271,8 @@ Displays a single Lego part with image, color swatch, and quantity.
 
 Live camera viewfinder that detects EAN/UPC/QR barcodes in real time. Handles camera lifecycle, error states, and retry. Scans every 250ms.
 
-| Prop       | Type     | Required | Description                          |
-| ---------- | -------- | -------- | ------------------------------------ |
+| Prop       | Type     | Required | Description                           |
+| ---------- | -------- | -------- | ------------------------------------- |
 | `resetKey` | `number` | no       | Change to reset scanner for next scan |
 
 **Emits**: `detect` (`string` — the barcode value), `error` (`string`)
@@ -335,15 +335,15 @@ Compact label badge for status tags and location indicators.
 
 ## Component Count
 
-| Category          | Count  | Components                                                    |
-| ----------------- | ------ | ------------------------------------------------------------- |
-| Buttons           | 4      | PrimaryButton, DangerButton, BackButton, ListItemButton       |
-| Navigation        | 3      | NavHeader, NavLink, NavMobileLink                             |
-| Form primitives   | 3      | FormField, FormLabel, FormError                               |
-| Form inputs       | 5      | TextInput, NumberInput, DateInput, TextareaInput, SelectInput |
+| Category          | Count  | Components                                                       |
+| ----------------- | ------ | ---------------------------------------------------------------- |
+| Buttons           | 4      | PrimaryButton, DangerButton, BackButton, ListItemButton          |
+| Navigation        | 3      | NavHeader, NavLink, NavMobileLink                                |
+| Form primitives   | 3      | FormField, FormLabel, FormError                                  |
+| Form inputs       | 5      | TextInput, NumberInput, DateInput, TextareaInput, SelectInput    |
 | Layout            | 5      | PageHeader, CardContainer, EmptyState, LegoBrick, SectionDivider |
-| Feedback          | 4      | ConfirmDialog, LoadingState, ModalDialog, ToastMessage        |
-| Data display      | 1      | PartListItem                                                  |
-| Data presentation | 4      | DetailRow, StatCard, FilterChip, BadgeLabel                   |
-| Scanner           | 2      | BarcodeScanner, CameraCapture                                 |
-| **Total**         | **31** |                                                               |
+| Feedback          | 4      | ConfirmDialog, LoadingState, ModalDialog, ToastMessage           |
+| Data display      | 1      | PartListItem                                                     |
+| Data presentation | 4      | DetailRow, StatCard, FilterChip, BadgeLabel                      |
+| Scanner           | 2      | BarcodeScanner, CameraCapture                                    |
+| **Total**         | **31** |                                                                  |
