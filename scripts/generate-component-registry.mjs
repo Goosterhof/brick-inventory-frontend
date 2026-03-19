@@ -15,9 +15,9 @@
  *   node scripts/generate-component-registry.mjs --check   # Check if registry is stale
  */
 
+import {execSync} from "node:child_process";
 import {existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync} from "node:fs";
 import {basename, dirname, join, relative, resolve} from "node:path";
-import {execSync} from "node:child_process";
 
 const ROOT = process.cwd();
 const SHARED_COMPONENTS_DIR = join(ROOT, "src/shared/components");
@@ -190,10 +190,7 @@ const parseModels = (content) => {
     const modelRegex = /defineModel<[^>]+>\(\s*(?:"([^"]+)"[,\s]*)?(?:\{([^}]*)\})?\s*\)/g;
     let m;
     while ((m = modelRegex.exec(content)) !== null) {
-        models.push({
-            name: m[1] || "modelValue",
-            required: (m[2] || "").includes("required"),
-        });
+        models.push({name: m[1] || "modelValue", required: (m[2] || "").includes("required")});
     }
     return models;
 };
@@ -349,13 +346,7 @@ const generateRegistry = (components, sourceFiles) => {
     const depGraph = buildDependencyGraph(components);
     const depths = calculateDepths(depGraph);
 
-    const registry = {
-        meta: {
-            componentCount: components.length,
-            churnWindowDays: CHURN_WINDOW_DAYS,
-        },
-        components: {},
-    };
+    const registry = {meta: {componentCount: components.length, churnWindowDays: CHURN_WINDOW_DAYS}, components: {}};
 
     for (const comp of components) {
         const consumers = consumerMap[comp.name];

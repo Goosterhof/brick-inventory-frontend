@@ -108,6 +108,7 @@ Evaluate the codebase through the lens of a senior architect performing technica
 - **Red flags** — Anything a reviewer might point to as evidence of inexperience: inconsistent error handling, copy-paste patterns across domains, shallow tests, missing abstractions, or over-abstractions.
 
 Rate showcase readiness on a scale:
+
 - **Portfolio-ready** — would confidently show to a prospective client
 - **Needs polish** — solid foundation but rough edges that undermine the impression
 - **Not ready** — structural issues that would raise concerns in due diligence
