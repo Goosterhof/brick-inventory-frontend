@@ -8,6 +8,12 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
+vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
+
+vi.mock("@app/domains/sets/modals/AssignPartModal.vue", () => ({
+    default: {name: "AssignPartModal", template: "<div />", props: ["open", "part", "existingLocations"]},
+}));
+
 const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockPatch} = vi.hoisted(() => ({
     mockGetOrFailById: vi.fn(),
     mockGetRequest: vi.fn(),

@@ -1,7 +1,9 @@
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import ModalDialog from "@shared/components/ModalDialog.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
 const mountDialog = (open = false, slots?: Record<string, string>) =>
     shallowMount(ConfirmDialog, {

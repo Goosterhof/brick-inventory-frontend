@@ -10,6 +10,20 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
+
+vi.mock("@shared/components/forms/FormError.vue", () => ({
+    default: {name: "FormError", template: "<span />", props: ["error"]},
+}));
+
+vi.mock("@shared/components/forms/FormField.vue", () => ({
+    default: {name: "FormField", template: "<div><slot /></div>"},
+}));
+
+vi.mock("@shared/components/forms/FormLabel.vue", () => ({
+    default: {name: "FormLabel", template: "<label><slot /></label>", props: ["for"]},
+}));
+
 const {mockGetRequest, mockPatchRequest, mockDeleteRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
     mockPatchRequest: vi.fn(),

@@ -1,6 +1,11 @@
 import NavHeader from "@shared/components/NavHeader.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+vi.mock("@phosphor-icons/vue", () => ({
+    PhList: {name: "PhList", template: "<i />"},
+    PhX: {name: "PhX", template: "<i />"},
+}));
 
 const mountNavHeader = (slots?: Record<string, string>) =>
     shallowMount(NavHeader, {

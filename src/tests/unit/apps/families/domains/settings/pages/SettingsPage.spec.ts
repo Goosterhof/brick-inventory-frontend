@@ -6,6 +6,20 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("@shared/components/forms/FormError.vue", () => ({
+    default: {name: "FormError", template: "<span />", props: ["error"]},
+}));
+
+vi.mock("@shared/components/forms/FormField.vue", () => ({
+    default: {name: "FormField", template: "<div><slot /></div>"},
+}));
+
+vi.mock("@shared/components/forms/FormLabel.vue", () => ({
+    default: {name: "FormLabel", template: "<label><slot /></label>", props: ["for"]},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockGetRequest, mockPutRequest, mockPostRequest} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
     mockPutRequest: vi.fn(),
@@ -45,8 +59,8 @@ describe("SettingsPage", () => {
         vi.clearAllMocks();
         mockGetRequest.mockResolvedValue({
             data: [
-                {id: 1, name: "Jan", email: "jan@example.com", is_head: true},
-                {id: 2, name: "Maria", email: "maria@example.com", is_head: false},
+                {id: 1, name: "Jan", email: "jan@example.com", isHead: true},
+                {id: 2, name: "Maria", email: "maria@example.com", isHead: false},
             ],
         });
     });

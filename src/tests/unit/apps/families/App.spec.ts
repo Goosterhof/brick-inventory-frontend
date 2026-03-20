@@ -4,6 +4,12 @@ import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("@phosphor-icons/vue", () => ({
+    PhSignOut: {template: "<i />"},
+    PhList: {template: "<i />"},
+    PhX: {template: "<i />"},
+}));
+
 const {mockLogout, mockGoToRoute, mockIsLoggedIn, mockCurrentRouteRef} = vi.hoisted(() => ({
     mockLogout: vi.fn(),
     mockGoToRoute: vi.fn(),
