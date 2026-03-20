@@ -25,6 +25,7 @@ export default mergeConfig(
                     "src/apps/**/types/**",
                     "src/apps/showcase/**",
                     "src/shared/services/auth/types.ts",
+                    "src/tests/**",
                 ],
                 thresholds: {lines: 100, functions: 100, branches: 100, statements: 100},
             },
