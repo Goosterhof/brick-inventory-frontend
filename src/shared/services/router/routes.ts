@@ -34,7 +34,7 @@ export const createCrudRoutes = <
     baseComponent: LazyRouteComponent | RouteComponent,
     components: {overview: OverviewComponent; create: CreateComponent; edit: EditComponent; show: ShowComponent},
 ): ParentCrudRoute<N, OverviewComponent, CreateComponent, EditComponent, ShowComponent> => {
-    // @ts-expect-error it does what we want, but the type is somehow not the same
+    // @ts-expect-error FilterUndefined is a compile-time tuple filter, but .filter() produces a generic array — TypeScript can't prove runtime filtering matches the conditional tuple type
     const children: ParentCrudRoute<N, OverviewComponent, CreateComponent, EditComponent, ShowComponent>["children"] = [
         createStandardRouteConfig("", `${baseRouteName}${OVERVIEW_PAGE_NAME}`, components.overview),
         createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, components.create),
@@ -56,7 +56,7 @@ export const createNestedCrudRoutes = <
     baseComponent: RouteComponent,
     components: {create: CreateComponent; edit: EditComponent; show: ShowComponent},
 ): NestedParentCrudRoute<N, CreateComponent, EditComponent, ShowComponent> => {
-    // @ts-expect-error it does what we want, but the type is somehow not the same
+    // @ts-expect-error FilterUndefined is a compile-time tuple filter, but .filter() produces a generic array — TypeScript can't prove runtime filtering matches the conditional tuple type
     const children: NestedParentCrudRoute<N, CreateComponent, EditComponent, ShowComponent>["children"] = [
         createStandardRouteConfig("create", `${baseRouteName}${CREATE_PAGE_NAME}`, components.create),
         createStandardRouteConfig(":id/edit", `${baseRouteName}${EDIT_PAGE_NAME}`, components.edit),
