@@ -41,3 +41,4 @@ No decision record lands here without passing through all three.
 | 007 | [Adapter store module over Pinia/Vuex](./decisions/007-adapter-store-no-pinia.md)                                     | 2026-03-18 | accepted |
 | 008 | [Domain isolation via lint rules and architecture tests](./decisions/008-domain-isolation.md)                         | 2026-03-18 | accepted |
 | 009 | [Component health registry — five metrics powering the Showcase app](./decisions/009-brick-catalog-health-metrics.md) | 2026-03-19 | accepted |
+| 010 | [Test isolation via auto-mocking and collect-duration guard](./decisions/010-test-isolation-collect-guard.md)         | 2026-03-20 | accepted |
