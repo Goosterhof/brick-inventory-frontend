@@ -432,7 +432,9 @@ describe("Architecture", () => {
                 (file) => file.endsWith(".ts") && !file.endsWith(".d.ts"),
             );
 
-            const testFiles = allFiles.filter((file) => !file.endsWith("setup.ts") && !file.includes("/helpers/"));
+            const testFiles = allFiles.filter(
+                (file) => !file.endsWith("setup.ts") && !file.endsWith("-reporter.ts") && !file.includes("/helpers/"),
+            );
             const violations: string[] = [];
 
             for (const file of testFiles) {
