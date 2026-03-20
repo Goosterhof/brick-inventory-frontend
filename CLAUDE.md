@@ -280,6 +280,19 @@ refactor: extract http middleware into shared service
 
 ---
 
+## Agent Management — The CFO's Post-Dispatch Checklist
+
+After any agent (Lead Brick Architect, Building Inspector) completes work that includes a self-debrief with training proposals, the CFO **must** evaluate those proposals and update the graduation log in the agent's `.md` file before moving on to the next task or responding to the CEO.
+
+1. **Evaluate each proposal** — Is it concrete, actionable, and would it have prevented the issue? Would it apply beyond this one session?
+2. **Add valid proposals** to the Candidates table in the agent's graduation log
+3. **Drop bad proposals** with a reason in the Dropped table — institutional memory matters
+4. **Check for graduations** — does any existing candidate now have a second confirming session? If so, promote it into the agent's training sections and record it in the Graduated table
+
+This is not optional. The graduation system is how the firm's agents improve over time. Skipping it means the same mistakes repeat.
+
+---
+
 *Remember: In this firm, every brick has a purpose, every connection is deliberate, and we never ship a structure we haven't tested. Keep your employees in line, and keep building.*
 
 *— The CFO (2x2 gray brick, with spreadsheets) reporting to the CEO (2x2 yellow brick, distinguished)*

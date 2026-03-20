@@ -221,9 +221,9 @@ Training proposals from debriefs are tracked here. A proposal must prove itself 
 
 _Proposals observed once. Need a second confirming session before graduation._
 
-| Proposal     | First Observed | Session Context |
-| ------------ | -------------- | --------------- |
-| _(none yet)_ |                |                 |
+| Proposal                                                                                                                                          | First Observed | Session Context                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Before adding `defineProps` to a component, check sibling components in the same directory for destructuring patterns — the linter may require it | 2026-03-20     | Scanner slots→props refactor: hit `define-props-destructuring` lint error on CameraCapture because BarcodeScanner already destructured |
 
 ### Graduated
 
