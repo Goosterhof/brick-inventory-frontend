@@ -2,6 +2,8 @@ import CameraCapture from "@shared/components/scanner/CameraCapture.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
+const defaultProps = {loadingText: "Starting camera...", retryText: "Retry", captureText: "Capture Photo"};
+
 describe("CameraCapture", () => {
     let mockGetUserMedia: ReturnType<typeof vi.fn>;
 
@@ -27,7 +29,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
 
             // Assert
             expect(wrapper.find("video").exists()).toBe(true);
@@ -42,7 +44,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
 
             // Assert
             expect(wrapper.text()).toContain("Starting camera...");
@@ -55,7 +57,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -69,7 +71,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
 
             // Assert
             expect(wrapper.find("video").classes()).toContain("opacity-0");
@@ -84,7 +86,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            shallowMount(CameraCapture);
+            shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -98,7 +100,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
@@ -122,7 +124,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
@@ -145,7 +147,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -159,7 +161,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -173,7 +175,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -185,7 +187,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue("string error");
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -199,7 +201,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -216,7 +218,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -231,7 +233,7 @@ describe("CameraCapture", () => {
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia.mockRejectedValueOnce(error).mockResolvedValueOnce(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Act
@@ -257,7 +259,7 @@ describe("CameraCapture", () => {
             );
 
             // Act — mount starts camera, then unmount before getUserMedia resolves
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             wrapper.unmount();
             resolveGetUserMedia?.(mockStream);
             await flushPromises();
@@ -274,7 +276,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {
                 value: vi.fn(
@@ -318,7 +320,7 @@ describe("CameraCapture", () => {
                 writable: true,
                 configurable: true,
             });
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
             const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
 
@@ -344,7 +346,7 @@ describe("CameraCapture", () => {
                 .mockRejectedValueOnce(error)
                 .mockResolvedValueOnce(firstStream)
                 .mockResolvedValueOnce(secondStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
@@ -369,7 +371,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
@@ -404,7 +406,7 @@ describe("CameraCapture", () => {
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia.mockRejectedValue(error);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Act
@@ -421,7 +423,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
@@ -456,7 +458,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
@@ -483,7 +485,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 0, writable: true});
@@ -511,7 +513,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 0, writable: true});
@@ -540,7 +542,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             let videoWidth = 0;
@@ -584,6 +586,92 @@ describe("CameraCapture", () => {
         });
     });
 
+    describe("props rendering", () => {
+        it("should render loading text from prop", () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+
+            // Act
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
+
+            // Assert
+            expect(wrapper.find("[role='status'] span").text()).toBe("Starting camera...");
+        });
+
+        it("should render custom loading text from prop", () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+
+            // Act
+            const wrapper = shallowMount(CameraCapture, {props: {...defaultProps, loadingText: "Camera starten..."}});
+
+            // Assert
+            expect(wrapper.find("[role='status'] span").text()).toBe("Camera starten...");
+        });
+
+        it("should render retry text from prop", async () => {
+            // Arrange
+            const error = new Error("Permission denied");
+            error.name = "NotAllowedError";
+            mockGetUserMedia.mockRejectedValue(error);
+
+            // Act
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
+            await flushPromises();
+
+            // Assert
+            const retryButton = wrapper.find("[role='alert'] button");
+            expect(retryButton.text()).toBe("Retry");
+        });
+
+        it("should render custom retry text from prop", async () => {
+            // Arrange
+            const error = new Error("Permission denied");
+            error.name = "NotAllowedError";
+            mockGetUserMedia.mockRejectedValue(error);
+
+            // Act
+            const wrapper = shallowMount(CameraCapture, {props: {...defaultProps, retryText: "Opnieuw proberen"}});
+            await flushPromises();
+
+            // Assert
+            const retryButton = wrapper.find("[role='alert'] button");
+            expect(retryButton.text()).toBe("Opnieuw proberen");
+        });
+
+        it("should render capture text from prop", () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+
+            // Act
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
+
+            // Assert
+            const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Capture Photo");
+            expect(captureButton?.exists()).toBe(true);
+        });
+
+        it("should render custom capture text from prop", () => {
+            // Arrange
+            const mockTrack = {stop: vi.fn()};
+            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            mockGetUserMedia.mockResolvedValue(mockStream);
+
+            // Act
+            const wrapper = shallowMount(CameraCapture, {props: {...defaultProps, captureText: "Foto maken"}});
+
+            // Assert
+            const captureButton = wrapper.findAll("button").find((btn) => btn.text() === "Foto maken");
+            expect(captureButton?.exists()).toBe(true);
+        });
+    });
+
     describe("accessibility", () => {
         it("should have aria-label on video element", () => {
             // Arrange
@@ -592,7 +680,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
 
             // Assert
             const video = wrapper.find("video");
@@ -606,7 +694,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
 
             // Assert
             const loadingDiv = wrapper.find("[role='status']");
@@ -621,7 +709,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -637,7 +725,7 @@ describe("CameraCapture", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -650,7 +738,7 @@ describe("CameraCapture", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(CameraCapture);
+            const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});

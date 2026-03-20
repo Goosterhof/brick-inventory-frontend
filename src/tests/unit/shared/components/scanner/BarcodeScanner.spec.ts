@@ -12,6 +12,8 @@ const {mockDetect, MockBarcodeDetector} = vi.hoisted(() => {
 
 vi.mock("barcode-detector", () => ({BarcodeDetector: MockBarcodeDetector}));
 
+const defaultProps = {loadingText: "Starting camera...", retryText: "Retry"};
+
 describe("BarcodeScanner", () => {
     let mockGetUserMedia: ReturnType<typeof vi.fn>;
 
@@ -41,7 +43,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
 
             // Assert
             expect(wrapper.find("video").exists()).toBe(true);
@@ -54,7 +56,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
 
             // Assert
             expect(wrapper.text()).toContain("Starting camera...");
@@ -67,7 +69,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -81,7 +83,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
 
             // Assert
             expect(wrapper.find("video").classes()).toContain("opacity-0");
@@ -96,7 +98,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            shallowMount(BarcodeScanner);
+            shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -110,7 +112,7 @@ describe("BarcodeScanner", () => {
             const mockTrack = {stop: vi.fn()};
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -131,7 +133,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -145,7 +147,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -159,7 +161,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -171,7 +173,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockRejectedValue("string error");
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -187,7 +189,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -202,7 +204,7 @@ describe("BarcodeScanner", () => {
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia.mockRejectedValueOnce(error).mockResolvedValueOnce(mockStream);
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Act
@@ -228,7 +230,7 @@ describe("BarcodeScanner", () => {
             );
 
             // Act — mount starts camera, then unmount before getUserMedia resolves
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             wrapper.unmount();
             resolveGetUserMedia?.(mockStream);
             await flushPromises();
@@ -245,7 +247,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {
                 value: vi.fn(
@@ -291,7 +293,7 @@ describe("BarcodeScanner", () => {
                 writable: true,
                 configurable: true,
             });
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
             const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
 
@@ -313,7 +315,7 @@ describe("BarcodeScanner", () => {
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -334,7 +336,7 @@ describe("BarcodeScanner", () => {
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([]);
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -353,7 +355,7 @@ describe("BarcodeScanner", () => {
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -375,7 +377,7 @@ describe("BarcodeScanner", () => {
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -394,7 +396,7 @@ describe("BarcodeScanner", () => {
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockRejectedValue(new Error("Detection failed"));
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -413,7 +415,7 @@ describe("BarcodeScanner", () => {
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia.mockRejectedValue(error);
-            shallowMount(BarcodeScanner);
+            shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Act
@@ -431,7 +433,7 @@ describe("BarcodeScanner", () => {
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia.mockRejectedValue(error);
-            const wrapper = shallowMount(BarcodeScanner, {props: {resetKey: 0}});
+            const wrapper = shallowMount(BarcodeScanner, {props: {...defaultProps, resetKey: 0}});
             await flushPromises();
 
             // Act
@@ -448,7 +450,7 @@ describe("BarcodeScanner", () => {
             const mockStream = {getTracks: vi.fn(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = shallowMount(BarcodeScanner, {props: {resetKey: 0}});
+            const wrapper = shallowMount(BarcodeScanner, {props: {...defaultProps, resetKey: 0}});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
             await flushPromises();
@@ -474,7 +476,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
 
             // Assert
             const video = wrapper.find("video");
@@ -488,7 +490,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
 
             // Assert
             const loadingDiv = wrapper.find("[role='status']");
@@ -503,7 +505,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             await flushPromises();
 
             // Assert
@@ -519,7 +521,7 @@ describe("BarcodeScanner", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = shallowMount(BarcodeScanner);
+            const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
 
             // Assert
             const region = wrapper.find("[role='region']");

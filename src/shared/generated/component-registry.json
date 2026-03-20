@@ -1,8 +1,5 @@
 {
-    "meta": {
-        "componentCount": 31,
-        "churnWindowDays": 30
-    },
+    "meta": {"componentCount": 31, "churnWindowDays": 30},
     "components": {
         "BackButton": {
             "path": "src/shared/components/BackButton.vue",
@@ -14,38 +11,13 @@
                         "src/apps/families/domains/sets/pages/ScanSetPage.vue",
                         "src/apps/families/domains/sets/pages/SetDetailPage.vue"
                     ],
-                    "storage": [
-                        "src/apps/families/domains/storage/pages/StorageDetailPage.vue"
-                    ]
+                    "storage": ["src/apps/families/domains/storage/pages/StorageDetailPage.vue"]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
-            "apiSurface": {
-                "props": [],
-                "emits": [
-                    {
-                        "name": "click"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
-                "models": []
-            },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 17
-            },
+            "adoption": {"apps": 2, "domains": 2},
+            "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
+            "churn": {"commits": 1, "linesChanged": 17},
             "dependencyDepth": 0
         },
         "BadgeLabel": {
@@ -53,155 +25,54 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
-                    ],
-                    "settings": [
-                        "src/apps/families/domains/settings/pages/SettingsPage.vue"
-                    ]
+                    "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"],
+                    "settings": ["src/apps/families/domains/settings/pages/SettingsPage.vue"]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
+            "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {
-                "props": [
-                    {
-                        "name": "variant",
-                        "required": false
-                    }
-                ],
+                "props": [{"name": "variant", "required": false}],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 2,
-                "linesChanged": 24
-            },
+            "churn": {"commits": 2, "linesChanged": 24},
             "dependencyDepth": 0
         },
         "BarcodeScanner": {
             "path": "src/shared/components/scanner/BarcodeScanner.vue",
             "category": "scanner",
-            "consumers": {
-                "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/ScanSetPage.vue"
-                    ]
-                }
-            },
-            "adoption": {
-                "apps": 1,
-                "domains": 1
-            },
+            "consumers": {"families": {"sets": ["src/apps/families/domains/sets/pages/ScanSetPage.vue"]}},
+            "adoption": {"apps": 1, "domains": 1},
             "apiSurface": {
-                "props": [
-                    {
-                        "name": "resetKey",
-                        "required": false
-                    }
-                ],
-                "emits": [
-                    {
-                        "name": "detect"
-                    },
-                    {
-                        "name": "error"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "loading"
-                    },
-                    {
-                        "name": "retry"
-                    }
-                ],
+                "props": [{"name": "resetKey", "required": false}],
+                "emits": [{"name": "detect"}, {"name": "error"}],
+                "slots": [{"name": "loading"}, {"name": "retry"}],
                 "models": []
             },
-            "churn": {
-                "commits": 4,
-                "linesChanged": 247
-            },
+            "churn": {"commits": 4, "linesChanged": 247},
             "dependencyDepth": 0
         },
         "CameraCapture": {
             "path": "src/shared/components/scanner/CameraCapture.vue",
             "category": "scanner",
-            "consumers": {
-                "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/IdentifyBrickPage.vue"
-                    ]
-                }
-            },
-            "adoption": {
-                "apps": 1,
-                "domains": 1
-            },
-            "apiSurface": {
-                "props": [],
-                "emits": [
-                    {
-                        "name": "capture"
-                    },
-                    {
-                        "name": "error"
-                    }
-                ],
-                "slots": [],
-                "models": []
-            },
-            "churn": {
-                "commits": 3,
-                "linesChanged": 278
-            },
+            "consumers": {"families": {"sets": ["src/apps/families/domains/sets/pages/IdentifyBrickPage.vue"]}},
+            "adoption": {"apps": 1, "domains": 1},
+            "apiSurface": {"props": [], "emits": [{"name": "capture"}, {"name": "error"}], "slots": [], "models": []},
+            "churn": {"commits": 3, "linesChanged": 278},
             "dependencyDepth": 0
         },
         "CardContainer": {
             "path": "src/shared/components/CardContainer.vue",
             "category": null,
             "consumers": {
-                "families": {
-                    "home": [
-                        "src/apps/families/domains/home/pages/HomePage.vue"
-                    ]
-                },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "families": {"home": ["src/apps/families/domains/home/pages/HomePage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
-            "apiSurface": {
-                "props": [],
-                "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
-                "models": []
-            },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 5
-            },
+            "adoption": {"apps": 2, "domains": 1},
+            "apiSurface": {"props": [], "emits": [], "slots": [{"name": "default"}], "models": []},
+            "churn": {"commits": 1, "linesChanged": 5},
             "dependencyDepth": 0
         },
         "ConfirmDialog": {
@@ -209,60 +80,23 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/EditSetPage.vue"
-                    ],
-                    "storage": [
-                        "src/apps/families/domains/storage/pages/EditStoragePage.vue"
-                    ]
+                    "sets": ["src/apps/families/domains/sets/pages/EditSetPage.vue"],
+                    "storage": ["src/apps/families/domains/storage/pages/EditStoragePage.vue"]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
+            "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "open",
-                        "required": true
-                    },
-                    {
-                        "name": "title",
-                        "required": true
-                    },
-                    {
-                        "name": "message",
-                        "required": true
-                    }
+                    {"name": "open", "required": true},
+                    {"name": "title", "required": true},
+                    {"name": "message", "required": true}
                 ],
-                "emits": [
-                    {
-                        "name": "confirm"
-                    },
-                    {
-                        "name": "cancel"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "confirm"
-                    },
-                    {
-                        "name": "cancel"
-                    }
-                ],
+                "emits": [{"name": "confirm"}, {"name": "cancel"}],
+                "slots": [{"name": "confirm"}, {"name": "cancel"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 43
-            },
+            "churn": {"commits": 1, "linesChanged": 43},
             "dependencyDepth": 1
         },
         "DangerButton": {
@@ -270,46 +104,22 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/EditSetPage.vue"
-                    ],
-                    "storage": [
-                        "src/apps/families/domains/storage/pages/EditStoragePage.vue"
-                    ]
+                    "sets": ["src/apps/families/domains/sets/pages/EditSetPage.vue"],
+                    "storage": ["src/apps/families/domains/storage/pages/EditStoragePage.vue"]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
+            "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "type",
-                        "required": false
-                    },
-                    {
-                        "name": "disabled",
-                        "required": false
-                    }
+                    {"name": "type", "required": false},
+                    {"name": "disabled", "required": false}
                 ],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 22
-            },
+            "churn": {"commits": 1, "linesChanged": 22},
             "dependencyDepth": 0
         },
         "DateInput": {
@@ -322,88 +132,38 @@
                         "src/apps/families/domains/sets/pages/EditSetPage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "label",
-                        "required": true
-                    },
-                    {
-                        "name": "disabled",
-                        "required": false
-                    },
-                    {
-                        "name": "optional",
-                        "required": false
-                    },
-                    {
-                        "name": "error",
-                        "required": false
-                    }
+                    {"name": "label", "required": true},
+                    {"name": "disabled", "required": false},
+                    {"name": "optional", "required": false},
+                    {"name": "error", "required": false}
                 ],
                 "emits": [],
                 "slots": [],
-                "models": [
-                    {
-                        "name": "modelValue",
-                        "required": true
-                    }
-                ]
+                "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {
-                "commits": 2,
-                "linesChanged": 52
-            },
+            "churn": {"commits": 2, "linesChanged": 52},
             "dependencyDepth": 1
         },
         "DetailRow": {
             "path": "src/shared/components/DetailRow.vue",
             "category": null,
             "consumers": {
-                "families": {
-                    "storage": [
-                        "src/apps/families/domains/storage/pages/StorageDetailPage.vue"
-                    ]
-                },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "families": {"storage": ["src/apps/families/domains/storage/pages/StorageDetailPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
-                "props": [
-                    {
-                        "name": "label",
-                        "required": true
-                    }
-                ],
+                "props": [{"name": "label", "required": true}],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 10
-            },
+            "churn": {"commits": 1, "linesChanged": 10},
             "dependencyDepth": 0
         },
         "EmptyState": {
@@ -411,97 +171,42 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "parts": [
-                        "src/apps/families/domains/parts/pages/PartsPage.vue"
-                    ],
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
-                    ],
+                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"],
                     "storage": [
                         "src/apps/families/domains/storage/pages/StorageDetailPage.vue",
                         "src/apps/families/domains/storage/pages/StorageOverviewPage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 3
-            },
-            "apiSurface": {
-                "props": [
-                    {
-                        "name": "message",
-                        "required": true
-                    }
-                ],
-                "emits": [],
-                "slots": [],
-                "models": []
-            },
-            "churn": {
-                "commits": 2,
-                "linesChanged": 9
-            },
+            "adoption": {"apps": 2, "domains": 3},
+            "apiSurface": {"props": [{"name": "message", "required": true}], "emits": [], "slots": [], "models": []},
+            "churn": {"commits": 2, "linesChanged": 9},
             "dependencyDepth": 0
         },
         "FilterChip": {
             "path": "src/shared/components/FilterChip.vue",
             "category": null,
             "consumers": {
-                "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
-                    ]
-                },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "families": {"sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
-                "props": [
-                    {
-                        "name": "active",
-                        "required": false
-                    }
-                ],
-                "emits": [
-                    {
-                        "name": "click"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "props": [{"name": "active", "required": false}],
+                "emits": [{"name": "click"}],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 22
-            },
+            "churn": {"commits": 1, "linesChanged": 22},
             "dependencyDepth": 0
         },
         "FormError": {
             "path": "src/shared/components/forms/FormError.vue",
             "category": "forms",
             "consumers": {
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                },
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]},
                 "shared": {
                     "_root": [
                         "src/shared/components/forms/inputs/DateInput.vue",
@@ -512,40 +217,24 @@
                     ]
                 }
             },
-            "adoption": {
-                "apps": 1,
-                "domains": 0
-            },
+            "adoption": {"apps": 1, "domains": 0},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "id",
-                        "required": true
-                    },
-                    {
-                        "name": "message",
-                        "required": true
-                    }
+                    {"name": "id", "required": true},
+                    {"name": "message", "required": true}
                 ],
                 "emits": [],
                 "slots": [],
                 "models": []
             },
-            "churn": {
-                "commits": 2,
-                "linesChanged": 11
-            },
+            "churn": {"commits": 2, "linesChanged": 11},
             "dependencyDepth": 0
         },
         "FormField": {
             "path": "src/shared/components/forms/FormField.vue",
             "category": "forms",
             "consumers": {
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                },
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]},
                 "shared": {
                     "_root": [
                         "src/shared/components/forms/inputs/DateInput.vue",
@@ -556,35 +245,16 @@
                     ]
                 }
             },
-            "adoption": {
-                "apps": 1,
-                "domains": 0
-            },
-            "apiSurface": {
-                "props": [],
-                "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
-                "models": []
-            },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 5
-            },
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {"props": [], "emits": [], "slots": [{"name": "default"}], "models": []},
+            "churn": {"commits": 1, "linesChanged": 5},
             "dependencyDepth": 0
         },
         "FormLabel": {
             "path": "src/shared/components/forms/FormLabel.vue",
             "category": "forms",
             "consumers": {
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                },
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]},
                 "shared": {
                     "_root": [
                         "src/shared/components/forms/inputs/DateInput.vue",
@@ -595,81 +265,39 @@
                     ]
                 }
             },
-            "adoption": {
-                "apps": 1,
-                "domains": 0
-            },
+            "adoption": {"apps": 1, "domains": 0},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "for",
-                        "required": true
-                    },
-                    {
-                        "name": "optional",
-                        "required": true
-                    }
+                    {"name": "for", "required": true},
+                    {"name": "optional", "required": true}
                 ],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 10
-            },
+            "churn": {"commits": 1, "linesChanged": 10},
             "dependencyDepth": 0
         },
         "LegoBrick": {
             "path": "src/shared/components/LegoBrick.vue",
             "category": null,
             "consumers": {
-                "families": {
-                    "about": [
-                        "src/apps/families/domains/about/pages/AboutPage.vue"
-                    ]
-                },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/BrickDimensions.vue"
-                    ]
-                }
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickDimensions.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "color",
-                        "required": false
-                    },
-                    {
-                        "name": "shadow",
-                        "required": false
-                    },
-                    {
-                        "name": "columns",
-                        "required": false
-                    },
-                    {
-                        "name": "rows",
-                        "required": false
-                    }
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false},
+                    {"name": "columns", "required": false},
+                    {"name": "rows", "required": false}
                 ],
                 "emits": [],
                 "slots": [],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 34
-            },
+            "churn": {"commits": 1, "linesChanged": 34},
             "dependencyDepth": 0
         },
         "ListItemButton": {
@@ -677,41 +305,14 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
-                    ],
-                    "storage": [
-                        "src/apps/families/domains/storage/pages/StorageOverviewPage.vue"
-                    ]
+                    "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"],
+                    "storage": ["src/apps/families/domains/storage/pages/StorageOverviewPage.vue"]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
-            "apiSurface": {
-                "props": [],
-                "emits": [
-                    {
-                        "name": "click"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
-                "models": []
-            },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 20
-            },
+            "adoption": {"apps": 2, "domains": 2},
+            "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
+            "churn": {"commits": 1, "linesChanged": 20},
             "dependencyDepth": 0
         },
         "LoadingState": {
@@ -728,206 +329,77 @@
                         "src/apps/families/domains/storage/pages/StorageDetailPage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
-            "apiSurface": {
-                "props": [
-                    {
-                        "name": "message",
-                        "required": false
-                    }
-                ],
-                "emits": [],
-                "slots": [],
-                "models": []
-            },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 32
-            },
+            "adoption": {"apps": 2, "domains": 2},
+            "apiSurface": {"props": [{"name": "message", "required": false}], "emits": [], "slots": [], "models": []},
+            "churn": {"commits": 1, "linesChanged": 32},
             "dependencyDepth": 0
         },
         "ModalDialog": {
             "path": "src/shared/components/ModalDialog.vue",
             "category": null,
             "consumers": {
-                "families": {
-                    "sets": [
-                        "src/apps/families/domains/sets/modals/AssignPartModal.vue"
-                    ]
-                },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                },
-                "shared": {
-                    "_root": [
-                        "src/shared/components/ConfirmDialog.vue"
-                    ]
-                }
+                "families": {"sets": ["src/apps/families/domains/sets/modals/AssignPartModal.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]},
+                "shared": {"_root": ["src/shared/components/ConfirmDialog.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
-                "props": [
-                    {
-                        "name": "open",
-                        "required": true
-                    }
-                ],
-                "emits": [
-                    {
-                        "name": "close"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "title"
-                    },
-                    {
-                        "name": "default"
-                    }
-                ],
+                "props": [{"name": "open", "required": true}],
+                "emits": [{"name": "close"}],
+                "slots": [{"name": "title"}, {"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 63
-            },
+            "churn": {"commits": 1, "linesChanged": 63},
             "dependencyDepth": 0
         },
         "NavHeader": {
             "path": "src/shared/components/NavHeader.vue",
             "category": null,
-            "consumers": {
-                "families": {
-                    "_root": [
-                        "src/apps/families/App.vue"
-                    ]
-                }
-            },
-            "adoption": {
-                "apps": 1,
-                "domains": 0
-            },
+            "consumers": {"families": {"_root": ["src/apps/families/App.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
             "apiSurface": {
                 "props": [],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "links"
-                    },
-                    {
-                        "name": "actions"
-                    },
-                    {
-                        "name": "mobile-links"
-                    }
-                ],
+                "slots": [{"name": "links"}, {"name": "actions"}, {"name": "mobile-links"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 66
-            },
+            "churn": {"commits": 1, "linesChanged": 66},
             "dependencyDepth": 0
         },
         "NavLink": {
             "path": "src/shared/components/NavLink.vue",
             "category": null,
             "consumers": {
-                "admin": {
-                    "_root": [
-                        "src/apps/admin/App.vue"
-                    ]
-                },
-                "families": {
-                    "home": [
-                        "src/apps/families/domains/home/pages/HomePage.vue"
-                    ]
-                }
+                "admin": {"_root": ["src/apps/admin/App.vue"]},
+                "families": {"home": ["src/apps/families/domains/home/pages/HomePage.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
-                "props": [
-                    {
-                        "name": "to",
-                        "required": true
-                    }
-                ],
-                "emits": [
-                    {
-                        "name": "click"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "props": [{"name": "to", "required": true}],
+                "emits": [{"name": "click"}],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 26
-            },
+            "churn": {"commits": 1, "linesChanged": 26},
             "dependencyDepth": 0
         },
         "NavMobileLink": {
             "path": "src/shared/components/NavMobileLink.vue",
             "category": null,
-            "consumers": {
-                "families": {
-                    "_root": [
-                        "src/apps/families/App.vue"
-                    ]
-                }
-            },
-            "adoption": {
-                "apps": 1,
-                "domains": 0
-            },
+            "consumers": {"families": {"_root": ["src/apps/families/App.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "to",
-                        "required": true
-                    },
-                    {
-                        "name": "active",
-                        "required": true
-                    }
+                    {"name": "to", "required": true},
+                    {"name": "active", "required": true}
                 ],
-                "emits": [
-                    {
-                        "name": "click"
-                    }
-                ],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "emits": [{"name": "click"}],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 28
-            },
+            "churn": {"commits": 1, "linesChanged": 28},
             "dependencyDepth": 0
         },
         "NumberInput": {
@@ -945,64 +417,25 @@
                         "src/apps/families/domains/storage/pages/EditStoragePage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
+            "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "label",
-                        "required": true
-                    },
-                    {
-                        "name": "placeholder",
-                        "required": false
-                    },
-                    {
-                        "name": "disabled",
-                        "required": false
-                    },
-                    {
-                        "name": "optional",
-                        "required": false
-                    },
-                    {
-                        "name": "error",
-                        "required": false
-                    },
-                    {
-                        "name": "min",
-                        "required": false
-                    },
-                    {
-                        "name": "max",
-                        "required": false
-                    },
-                    {
-                        "name": "step",
-                        "required": false
-                    }
+                    {"name": "label", "required": true},
+                    {"name": "placeholder", "required": false},
+                    {"name": "disabled", "required": false},
+                    {"name": "optional", "required": false},
+                    {"name": "error", "required": false},
+                    {"name": "min", "required": false},
+                    {"name": "max", "required": false},
+                    {"name": "step", "required": false}
                 ],
                 "emits": [],
                 "slots": [],
-                "models": [
-                    {
-                        "name": "modelValue",
-                        "required": true
-                    }
-                ]
+                "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 74
-            },
+            "churn": {"commits": 1, "linesChanged": 74},
             "dependencyDepth": 1
         },
         "PageHeader": {
@@ -1010,53 +443,26 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "home": [
-                        "src/apps/families/domains/home/pages/HomePage.vue"
-                    ],
-                    "parts": [
-                        "src/apps/families/domains/parts/pages/PartsPage.vue"
-                    ],
+                    "home": ["src/apps/families/domains/home/pages/HomePage.vue"],
+                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
                     "sets": [
                         "src/apps/families/domains/sets/pages/IdentifyBrickPage.vue",
                         "src/apps/families/domains/sets/pages/ScanSetPage.vue",
                         "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
                     ],
-                    "settings": [
-                        "src/apps/families/domains/settings/pages/SettingsPage.vue"
-                    ],
-                    "storage": [
-                        "src/apps/families/domains/storage/pages/StorageOverviewPage.vue"
-                    ]
+                    "settings": ["src/apps/families/domains/settings/pages/SettingsPage.vue"],
+                    "storage": ["src/apps/families/domains/storage/pages/StorageOverviewPage.vue"]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 5
-            },
+            "adoption": {"apps": 2, "domains": 5},
             "apiSurface": {
-                "props": [
-                    {
-                        "name": "title",
-                        "required": true
-                    }
-                ],
+                "props": [{"name": "title", "required": true}],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 2,
-                "linesChanged": 12
-            },
+            "churn": {"commits": 2, "linesChanged": 12},
             "dependencyDepth": 0
         },
         "PartListItem": {
@@ -1064,69 +470,28 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "parts": [
-                        "src/apps/families/domains/parts/pages/PartsPage.vue"
-                    ],
-                    "sets": [
-                        "src/apps/families/domains/sets/pages/SetDetailPage.vue"
-                    ],
-                    "storage": [
-                        "src/apps/families/domains/storage/pages/StorageDetailPage.vue"
-                    ]
+                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "sets": ["src/apps/families/domains/sets/pages/SetDetailPage.vue"],
+                    "storage": ["src/apps/families/domains/storage/pages/StorageDetailPage.vue"]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 3
-            },
+            "adoption": {"apps": 2, "domains": 3},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "name",
-                        "required": true
-                    },
-                    {
-                        "name": "partNum",
-                        "required": true
-                    },
-                    {
-                        "name": "quantity",
-                        "required": true
-                    },
-                    {
-                        "name": "imageUrl",
-                        "required": false
-                    },
-                    {
-                        "name": "colorName",
-                        "required": true
-                    },
-                    {
-                        "name": "colorRgb",
-                        "required": true
-                    },
-                    {
-                        "name": "spare",
-                        "required": false
-                    }
+                    {"name": "name", "required": true},
+                    {"name": "partNum", "required": true},
+                    {"name": "quantity", "required": true},
+                    {"name": "imageUrl", "required": false},
+                    {"name": "colorName", "required": true},
+                    {"name": "colorRgb", "required": true},
+                    {"name": "spare", "required": false}
                 ],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 2,
-                "linesChanged": 35
-            },
+            "churn": {"commits": 2, "linesChanged": 35},
             "dependencyDepth": 0
         },
         "PrimaryButton": {
@@ -1138,9 +503,7 @@
                         "src/apps/families/domains/auth/pages/LoginPage.vue",
                         "src/apps/families/domains/auth/pages/RegisterPage.vue"
                     ],
-                    "parts": [
-                        "src/apps/families/domains/parts/pages/PartsPage.vue"
-                    ],
+                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
                     "sets": [
                         "src/apps/families/domains/sets/modals/AssignPartModal.vue",
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
@@ -1150,9 +513,7 @@
                         "src/apps/families/domains/sets/pages/SetDetailPage.vue",
                         "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
                     ],
-                    "settings": [
-                        "src/apps/families/domains/settings/pages/SettingsPage.vue"
-                    ],
+                    "settings": ["src/apps/families/domains/settings/pages/SettingsPage.vue"],
                     "storage": [
                         "src/apps/families/domains/storage/pages/AddStoragePage.vue",
                         "src/apps/families/domains/storage/pages/EditStoragePage.vue",
@@ -1160,65 +521,28 @@
                         "src/apps/families/domains/storage/pages/StorageOverviewPage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 5
-            },
+            "adoption": {"apps": 2, "domains": 5},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "type",
-                        "required": false
-                    },
-                    {
-                        "name": "disabled",
-                        "required": false
-                    }
+                    {"name": "type", "required": false},
+                    {"name": "disabled", "required": false}
                 ],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 21
-            },
+            "churn": {"commits": 1, "linesChanged": 21},
             "dependencyDepth": 0
         },
         "SectionDivider": {
             "path": "src/shared/components/SectionDivider.vue",
             "category": null,
-            "consumers": {
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
-            },
-            "adoption": {
-                "apps": 1,
-                "domains": 0
-            },
-            "apiSurface": {
-                "props": [],
-                "emits": [],
-                "slots": [],
-                "models": []
-            },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 3
-            },
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {"props": [], "emits": [], "slots": [], "models": []},
+            "churn": {"commits": 1, "linesChanged": 3},
             "dependencyDepth": 0
         },
         "SelectInput": {
@@ -1232,96 +556,41 @@
                         "src/apps/families/domains/sets/pages/EditSetPage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "label",
-                        "required": true
-                    },
-                    {
-                        "name": "disabled",
-                        "required": false
-                    },
-                    {
-                        "name": "optional",
-                        "required": false
-                    },
-                    {
-                        "name": "error",
-                        "required": false
-                    }
+                    {"name": "label", "required": true},
+                    {"name": "disabled", "required": false},
+                    {"name": "optional", "required": false},
+                    {"name": "error", "required": false}
                 ],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
-                "models": [
-                    {
-                        "name": "modelValue",
-                        "required": true
-                    }
-                ]
+                "slots": [{"name": "default"}],
+                "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 51
-            },
+            "churn": {"commits": 1, "linesChanged": 51},
             "dependencyDepth": 1
         },
         "StatCard": {
             "path": "src/shared/components/StatCard.vue",
             "category": null,
             "consumers": {
-                "families": {
-                    "home": [
-                        "src/apps/families/domains/home/pages/HomePage.vue"
-                    ]
-                },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "families": {"home": ["src/apps/families/domains/home/pages/HomePage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 1
-            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "label",
-                        "required": true
-                    },
-                    {
-                        "name": "value",
-                        "required": true
-                    }
+                    {"name": "label", "required": true},
+                    {"name": "value", "required": true}
                 ],
                 "emits": [],
-                "slots": [
-                    {
-                        "name": "default"
-                    }
-                ],
+                "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 11
-            },
+            "churn": {"commits": 1, "linesChanged": 11},
             "dependencyDepth": 0
         },
         "TextareaInput": {
@@ -1338,52 +607,22 @@
                         "src/apps/families/domains/storage/pages/EditStoragePage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 2
-            },
+            "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "label",
-                        "required": true
-                    },
-                    {
-                        "name": "rows",
-                        "required": false
-                    },
-                    {
-                        "name": "disabled",
-                        "required": false
-                    },
-                    {
-                        "name": "optional",
-                        "required": false
-                    },
-                    {
-                        "name": "error",
-                        "required": false
-                    }
+                    {"name": "label", "required": true},
+                    {"name": "rows", "required": false},
+                    {"name": "disabled", "required": false},
+                    {"name": "optional", "required": false},
+                    {"name": "error", "required": false}
                 ],
                 "emits": [],
                 "slots": [],
-                "models": [
-                    {
-                        "name": "modelValue",
-                        "required": true
-                    }
-                ]
+                "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {
-                "commits": 2,
-                "linesChanged": 53
-            },
+            "churn": {"commits": 2, "linesChanged": 53},
             "dependencyDepth": 1
         },
         "TextInput": {
@@ -1399,104 +638,47 @@
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
                         "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
                     ],
-                    "settings": [
-                        "src/apps/families/domains/settings/pages/SettingsPage.vue"
-                    ],
+                    "settings": ["src/apps/families/domains/settings/pages/SettingsPage.vue"],
                     "storage": [
                         "src/apps/families/domains/storage/pages/AddStoragePage.vue",
                         "src/apps/families/domains/storage/pages/EditStoragePage.vue",
                         "src/apps/families/domains/storage/pages/StorageOverviewPage.vue"
                     ]
                 },
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {
-                "apps": 2,
-                "domains": 4
-            },
+            "adoption": {"apps": 2, "domains": 4},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "label",
-                        "required": true
-                    },
-                    {
-                        "name": "type",
-                        "required": false
-                    },
-                    {
-                        "name": "placeholder",
-                        "required": false
-                    },
-                    {
-                        "name": "disabled",
-                        "required": false
-                    },
-                    {
-                        "name": "optional",
-                        "required": false
-                    },
-                    {
-                        "name": "error",
-                        "required": false
-                    }
+                    {"name": "label", "required": true},
+                    {"name": "type", "required": false},
+                    {"name": "placeholder", "required": false},
+                    {"name": "disabled", "required": false},
+                    {"name": "optional", "required": false},
+                    {"name": "error", "required": false}
                 ],
                 "emits": [],
                 "slots": [],
-                "models": [
-                    {
-                        "name": "modelValue",
-                        "required": true
-                    }
-                ]
+                "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 60
-            },
+            "churn": {"commits": 1, "linesChanged": 60},
             "dependencyDepth": 1
         },
         "ToastMessage": {
             "path": "src/shared/components/ToastMessage.vue",
             "category": null,
-            "consumers": {
-                "showcase": {
-                    "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
-                    ]
-                }
-            },
-            "adoption": {
-                "apps": 1,
-                "domains": 0
-            },
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
             "apiSurface": {
                 "props": [
-                    {
-                        "name": "message",
-                        "required": true
-                    },
-                    {
-                        "name": "variant",
-                        "required": false
-                    }
+                    {"name": "message", "required": true},
+                    {"name": "variant", "required": false}
                 ],
-                "emits": [
-                    {
-                        "name": "close"
-                    }
-                ],
+                "emits": [{"name": "close"}],
                 "slots": [],
                 "models": []
             },
-            "churn": {
-                "commits": 1,
-                "linesChanged": 32
-            },
+            "churn": {"commits": 1, "linesChanged": 32},
             "dependencyDepth": 0
         }
     }
