@@ -75,7 +75,13 @@ const goBack = async () => {
             <BackButton @click="goBack">{{ t("sets.backToOverview").value }}</BackButton>
         </PageHeader>
 
-        <BarcodeScanner :reset-key="resetKey" @detect="onDetect" @error="() => {}" />
+        <BarcodeScanner
+            :reset-key="resetKey"
+            loading-text="Starting camera..."
+            retry-text="Retry"
+            @detect="onDetect"
+            @error="() => {}"
+        />
 
         <div v-if="scannedCode" m="t-6" flex="~ col" gap="4">
             <p font="bold" text="lg">{{ t("sets.scannedCode").value }}: {{ scannedCode }}</p>

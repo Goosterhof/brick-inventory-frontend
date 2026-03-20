@@ -5,6 +5,38 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-20 — Building Inspector Maiden Voyage: Shared Components Audit
+
+### Decisions
+
+- **Building Inspector deployed on `src/shared/` as first target**: CFO recommended shared components over Families app or full repo — the supply warehouse is the foundation everything else sits on, and a contained scope for calibrating the inspector's first run.
+- **Slots replaced with required string props on scanner components**: CameraCapture had hardcoded English strings with no translation mechanism. BarcodeScanner used slots with defaults. CEO challenged the slot approach — defaults mean nothing enforces translation. Both components refactored to required props (`loadingText`, `retryText`, `captureText`), giving compile-time enforcement via TypeScript.
+- **Inline button extraction rejected as premature abstraction**: Inspector flagged duplicate retry buttons across CameraCapture and BarcodeScanner. CFO pushed back — two consumers doesn't justify extraction. CEO agreed. Extract when a third scanner component appears.
+- **`@vue/test-utils` removed from production types**: `types.d.ts` imported `RouterLinkStub` for the `RouterService.RouterLink` type union. Replaced with Vue's native `Component` type. Test dependencies must not leak into production type definitions.
+- **CFO post-dispatch checklist added to CLAUDE.md**: Graduation log evaluations were being skipped after agent runs. New standing section requires the CFO to evaluate training proposals and update graduation logs before moving on to the next task.
+
+### Action Items
+
+- [ ] CEO: Review and merge PR #117
+- [ ] CEO: Visually verify scanner components still render correctly after props refactor
+
+### Notes
+
+- Inspector reported `@vitest/coverage-istanbul` as missing from `package.json` (high severity) — confirmed false positive, dependency was present all along. The real issue was non-executable husky hooks (committed as `100644`). Fixed in the same PR.
+- Inspector rated shared layer 8/10 overall. Commendations: factory service pattern, zero-`any` policy, 100% coverage (931 tests), 10 architecture test groups. The architecture is genuinely strong — findings were polish, not structural.
+- Three inspector training proposals evaluated: 2 added as candidates (cross-reference source↔spec files, compare sibling components), 1 dropped (verify devDependencies — false positive methodology).
+- One architect training proposal added as candidate: check sibling component destructuring patterns before writing `defineProps`.
+
+### Strategic Alignment
+
+- The inspector audit process itself is showcase-worthy — demonstrating that the firm has automated quality gates AND human review processes. The graduation log system shows continuous improvement methodology.
+
+### Open Questions
+
+- Remaining low-severity inspector findings (3 `@ts-expect-error` suppressions, TODO in router service, missing `MissingResponseDataError` spec) — track as known debt or address in a follow-up session?
+
+---
+
 ## 2026-03-19 — ADR-009 Showcase Implementation: Component Health Section
 
 ### Decisions

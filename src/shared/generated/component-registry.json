@@ -43,8 +43,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 17
+                "commits": 2,
+                "linesChanged": 19
             },
             "dependencyDepth": 0
         },
@@ -110,6 +110,14 @@
                     {
                         "name": "resetKey",
                         "required": false
+                    },
+                    {
+                        "name": "loadingText",
+                        "required": true
+                    },
+                    {
+                        "name": "retryText",
+                        "required": true
                     }
                 ],
                 "emits": [
@@ -120,19 +128,12 @@
                         "name": "error"
                     }
                 ],
-                "slots": [
-                    {
-                        "name": "loading"
-                    },
-                    {
-                        "name": "retry"
-                    }
-                ],
+                "slots": [],
                 "models": []
             },
             "churn": {
-                "commits": 4,
-                "linesChanged": 247
+                "commits": 6,
+                "linesChanged": 255
             },
             "dependencyDepth": 0
         },
@@ -151,7 +152,20 @@
                 "domains": 1
             },
             "apiSurface": {
-                "props": [],
+                "props": [
+                    {
+                        "name": "loadingText",
+                        "required": true
+                    },
+                    {
+                        "name": "retryText",
+                        "required": true
+                    },
+                    {
+                        "name": "captureText",
+                        "required": true
+                    }
+                ],
                 "emits": [
                     {
                         "name": "capture"
@@ -164,8 +178,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
-                "linesChanged": 278
+                "commits": 7,
+                "linesChanged": 90
             },
             "dependencyDepth": 0
         },
@@ -307,8 +321,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 22
+                "commits": 2,
+                "linesChanged": 30
             },
             "dependencyDepth": 0
         },
@@ -361,8 +375,8 @@
                 ]
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 52
+                "commits": 4,
+                "linesChanged": 60
             },
             "dependencyDepth": 1
         },
@@ -444,8 +458,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 9
+                "commits": 3,
+                "linesChanged": 11
             },
             "dependencyDepth": 0
         },
@@ -532,8 +546,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 11
+                "commits": 3,
+                "linesChanged": 6
             },
             "dependencyDepth": 0
         },
@@ -571,8 +585,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 5
+                "commits": 0,
+                "linesChanged": 0
             },
             "dependencyDepth": 0
         },
@@ -619,8 +633,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 10
+                "commits": 3,
+                "linesChanged": 8
             },
             "dependencyDepth": 0
         },
@@ -709,8 +723,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 20
+                "commits": 2,
+                "linesChanged": 22
             },
             "dependencyDepth": 0
         },
@@ -802,8 +816,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 63
+                "commits": 3,
+                "linesChanged": 67
             },
             "dependencyDepth": 0
         },
@@ -838,8 +852,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 66
+                "commits": 3,
+                "linesChanged": 72
             },
             "dependencyDepth": 0
         },
@@ -882,8 +896,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 26
+                "commits": 4,
+                "linesChanged": 25
             },
             "dependencyDepth": 0
         },
@@ -925,8 +939,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 28
+                "commits": 4,
+                "linesChanged": 42
             },
             "dependencyDepth": 0
         },
@@ -1000,8 +1014,8 @@
                 ]
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 74
+                "commits": 4,
+                "linesChanged": 38
             },
             "dependencyDepth": 1
         },
@@ -1124,8 +1138,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 35
+                "commits": 5,
+                "linesChanged": 53
             },
             "dependencyDepth": 0
         },
@@ -1190,8 +1204,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 21
+                "commits": 3,
+                "linesChanged": 15
             },
             "dependencyDepth": 0
         },
@@ -1275,8 +1289,8 @@
                 ]
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 51
+                "commits": 3,
+                "linesChanged": 59
             },
             "dependencyDepth": 1
         },
@@ -1381,8 +1395,8 @@
                 ]
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 53
+                "commits": 4,
+                "linesChanged": 61
             },
             "dependencyDepth": 1
         },
@@ -1455,8 +1469,8 @@
                 ]
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 60
+                "commits": 4,
+                "linesChanged": 38
             },
             "dependencyDepth": 1
         },
@@ -1494,8 +1508,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 32
+                "commits": 3,
+                "linesChanged": 44
             },
             "dependencyDepth": 0
         }

@@ -3,6 +3,12 @@ import {ref, onMounted, onUnmounted} from "vue";
 
 import {ensureRefValueExists} from "@shared/helpers/type-check";
 
+const {loadingText, retryText, captureText} = defineProps<{
+    loadingText: string;
+    retryText: string;
+    captureText: string;
+}>();
+
 const emit = defineEmits<{capture: [imageData: Blob]; error: [message: string]}>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -167,7 +173,7 @@ onUnmounted(() => {
                 role="status"
                 aria-live="polite"
             >
-                <span font="bold">Starting camera...</span>
+                <span font="bold">{{ loadingText }}</span>
             </div>
 
             <div
@@ -198,7 +204,7 @@ onUnmounted(() => {
                     class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     @click="startCamera"
                 >
-                    Retry
+                    {{ retryText }}
                 </button>
             </div>
         </div>
@@ -218,7 +224,7 @@ onUnmounted(() => {
             class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px] disabled:brick-disabled"
             @click="captureImage"
         >
-            Capture Photo
+            {{ captureText }}
         </button>
     </div>
 </template>

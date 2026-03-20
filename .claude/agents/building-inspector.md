@@ -207,9 +207,10 @@ The CFO evaluates proposals. Good ones graduate into the SOPs above after provin
 
 ### Candidates
 
-| Proposal     | First Observed | Inspection Context |
-| ------------ | -------------- | ------------------ |
-| _(none yet)_ |                |                    |
+| Proposal                                                                                                                                                              | First Observed | Inspection Context                                                                                                             |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
+| SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
 
 ### Graduated
 
@@ -219,6 +220,6 @@ The CFO evaluates proposals. Good ones graduate into the SOPs above after provin
 
 ### Dropped
 
-| Proposal     | Dropped | Reason |
-| ------------ | ------- | ------ |
-| _(none yet)_ |         |        |
+| Proposal                                                                         | Dropped    | Reason                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SOP 1 should verify all devDependencies are installed before running npm scripts | 2026-03-20 | The "missing dependency" was a false positive — `@vitest/coverage-istanbul` was in `package.json` all along. The real issue was non-executable husky hooks. This check would add noise without catching the actual problem class. |
