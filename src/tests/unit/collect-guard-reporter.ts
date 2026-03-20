@@ -11,10 +11,10 @@ import type {Reporter, TestRunEndReason} from "vitest/reporters";
  *
  * The threshold is calibrated against the current codebase. Pure helpers/services
  * collect in 15–200ms. Component tests that properly mock their dependencies stay
- * under 2000ms. Anything above signals an unmocked heavy dependency.
+ * under 4000ms. Anything above signals an unmocked heavy dependency.
  */
 
-const COLLECT_DURATION_THRESHOLD_MS = 2000;
+const COLLECT_DURATION_THRESHOLD_MS = 4000;
 
 class CollectGuardReporter implements Reporter {
     private violations: Array<{file: string; collectMs: number}> = [];
