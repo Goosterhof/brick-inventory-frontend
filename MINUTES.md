@@ -5,6 +5,20 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-22 — Dispatch Report Process: Replacing the Post-Dispatch Checklist
+
+### Decisions
+
+- **Structured Dispatch Report replaces checklist**: CEO caught the CFO skipping graduation log evaluations across four consecutive architect dispatches. Root cause: the checklist was a "you must do this" instruction with no visible artifact — easy to skip because nothing was visibly missing. Fix modeled after the war room's campaign report: a structured document the CEO sees, with Training Evaluation and Graduation Check as required sections. If the sections are missing, the CEO sees they're missing.
+- **Process fix over memory fix**: CFO initially saved a feedback memory. CEO pushed back — memory is per-workstation, the process should work everywhere. The war room project (`/home/goosterhof/code/war-room`) was referenced as the working model.
+
+### Notes
+
+- The war room's key insight: evaluation works when it's a section of a required output document, not a separate step to remember. The Dispatch Report makes graduation evaluation visible, not just mandatory.
+- CLAUDE.md updated with the Dispatch Report format template and rationale for why structured reports beat checklists.
+
+---
+
 ## 2026-03-22 — ADR-011: Domain-Based Vitest Project Split
 
 ### Decisions
