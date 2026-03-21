@@ -352,6 +352,8 @@ _Proposals observed once. Need a second confirming session before graduation._
 | Proposal                                                                                                                                          | First Observed | Session Context                                                                                                                        |
 | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | Before adding `defineProps` to a component, check sibling components in the same directory for destructuring patterns — the linter may require it | 2026-03-20     | Scanner slots→props refactor: hit `define-props-destructuring` lint error on CameraCapture because BarcodeScanner already destructured |
+| When implementing config-only changes affecting test organization, verify isolation with `--project=X` for representative projects, not just the full suite | 2026-03-22 | ADR-011 implementation: ran `--project=families/sets` and `--project=shared/components` to confirm project boundaries |
+| Before classifying a test as pure TS for node environment, grep for DOM globals (`localStorage`, `document.`, `window.`, `AudioContext`, `navigator.`, `HTMLMediaElement`) | 2026-03-21 | Happy-dom migration: initially misclassified `sound.spec.ts` and `storage.spec.ts` as unit/node when they need DOM globals |
 
 ### Graduated
 
@@ -365,6 +367,8 @@ _Proposals confirmed across 2+ sessions. Promoted into training above._
 
 _Proposals evaluated and rejected. Kept for institutional memory._
 
-| Proposal     | Dropped | Reason |
-| ------------ | ------- | ------ |
-| _(none yet)_ |         |        |
+| Proposal | Dropped | Reason |
+| --- | --- | --- |
+| happy-dom localStorage/srcObject/addEventListener workarounds as training | 2026-03-22 | Too specific to a one-time migration. These are happy-dom quirks, not recurring architectural decisions. The fixes are in the code — no need to train on them. |
+| "Per-project baselines require threshold recalibration" | 2026-03-22 | Moot — the execution-time guard replaced collect-duration as the primary enforcer, making baseline calibration irrelevant. The architect's observation was correct at the time but the problem was solved differently. |
+| "Factory variants beat parameterized factories for small divergences" | 2026-03-22 | Too generic to be actionable training. This is standard programming judgment, not an architect-specific lesson. The decision was good but doesn't need to be codified. |

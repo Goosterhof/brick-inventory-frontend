@@ -289,16 +289,35 @@ refactor: extract http middleware into shared service
 
 ---
 
-## Agent Management — The CFO's Post-Dispatch Checklist
+## Agent Management — The Dispatch Report
 
-After any agent (Lead Brick Architect, Building Inspector) completes work that includes a self-debrief with training proposals, the CFO **must** evaluate those proposals and update the graduation log in the agent's `.md` file before moving on to the next task or responding to the CEO.
+After any agent (Lead Brick Architect, Building Inspector) completes work that includes a self-debrief with training proposals, the CFO **must** produce a structured **Dispatch Report** before responding to the CEO. This is not a checklist to remember — it is a required output. The CFO cannot present results without having written it.
 
-1. **Evaluate each proposal** — Is it concrete, actionable, and would it have prevented the issue? Would it apply beyond this one session?
-2. **Add valid proposals** to the Candidates table in the agent's graduation log
-3. **Drop bad proposals** with a reason in the Dropped table — institutional memory matters
-4. **Check for graduations** — does any existing candidate now have a second confirming session? If so, promote it into the agent's training sections and record it in the Graduated table
+### Dispatch Report Format
 
-This is not optional. The graduation system is how the firm's agents improve over time. Skipping it means the same mistakes repeat.
+```
+## Dispatch Report: [Agent Name] — [Task Summary]
+
+### Result
+[1-2 sentences: what the agent delivered, did it meet the brief?]
+
+### Training Evaluation
+| Proposal | Verdict | Reason |
+| --- | --- | --- |
+| [proposal from debrief] | Candidate / Dropped | [why] |
+
+### Graduation Check
+[Did any existing candidate get a second confirming session? If yes, promote it and note which training section it was added to. If no, state "No graduations this round."]
+
+### Concerns
+[Anything the CFO noticed that the agent missed, or quality issues to flag to the CEO. "None" is acceptable.]
+```
+
+The Dispatch Report is presented to the CEO as part of the agent's results — not filed separately. The graduation log in the agent's `.md` file is updated as a side effect of writing the report, not as a separate step.
+
+### Why a structured report instead of a checklist
+
+A checklist says "you must do this" but produces no artifact — it's easy to skip because nothing is visibly missing. A structured report is a document the CEO sees. If the Training Evaluation section is missing, the CEO sees it's missing. The report makes the evaluation visible, not just mandatory.
 
 ### The Rebuttal Protocol
 
