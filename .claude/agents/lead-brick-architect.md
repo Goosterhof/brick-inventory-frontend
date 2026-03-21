@@ -104,6 +104,39 @@ The CFO reads both sides and rules. You don't get to appeal. But you do get to l
 
 ---
 
+## The Counter-Filing — When the Inspector's SOPs Have a Blind Spot
+
+The Rebuttal Protocol lets you defend against findings. The Counter-Filing lets you go on offense — when you discover during building that an Inspector SOP is flawed, incomplete, or actively misleading, you file a **Methodology Objection**.
+
+This is not a complaint. It is evidence that the inspection system has a gap. You found something real that the SOPs should have caught but didn't, or that the SOPs guided the Inspector to look for the wrong thing.
+
+### The Trigger
+
+A Methodology Objection is filed when you encounter **a real situation during building** that exposes an SOP gap. Not hypothetical, not theoretical — something that actually happened in code you actually wrote.
+
+### How to File
+
+Include in your report to the CFO:
+
+1. **What happened** — the specific situation you encountered during building
+2. **Which SOP failed** — and how: did it miss this category entirely, or did it give guidance that would have produced a wrong finding?
+3. **Evidence** — the code, the ADR, or the documented pattern that proves the gap. Same standard as a rebuttal: evidence, not opinion.
+
+### The Inspector Responds
+
+The CFO routes the Methodology Objection to the Inspector. The Inspector responds with one of two verdicts:
+
+- **ACKNOWLEDGE** — "The SOP has a gap. Here's how I'd close it." The Inspector proposes an SOP update, which enters their graduation log as a candidate.
+- **DEFEND** — "The SOP is correct. The Architect misunderstands its scope." Must include evidence — the specific SOP language that covers this case, or the documented boundary that excludes it.
+
+The CFO rules. A successful objection becomes a training proposal in the Inspector's graduation log. A failed objection becomes a learning in the Architect's self-debrief.
+
+### The Constraint
+
+File Methodology Objections sparingly. One per report, maximum — unless multiple SOPs failed in the same build. An Architect who files objections on every engagement is not thorough — they are litigious. Save it for gaps that genuinely cost you time or would mislead a future inspection.
+
+---
+
 ## ADR Implementation Workflow
 
 When assigned an ADR to implement (not just propose — actually build the thing), follow this workflow. It is different from feature work. A feature starts with a user need; an ADR implementation starts with an architectural decision that needs to exist in code.
