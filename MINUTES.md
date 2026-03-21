@@ -5,6 +5,36 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-22 — ADR-011: Domain-Based Vitest Project Split
+
+### Decisions
+
+- **Domain-based projects replace test-type split**: The unit/components/apps split was motivated by collect-duration baselines that are no longer the primary enforcer. Replaced with one project per domain (`families/sets`, `shared/components`, etc.). Classification rule for juniors: follow the source file path, no judgment calls about environments or test-utils.
+- **Two-part project naming convention**: Every project named `{scope}/{area}` — e.g., `families/sets`, `shared/components`, `admin/root`. Prevents confusion between app domains and shared directories.
+- **Factory function for project config**: A factory generates project definitions from a name and path. Config becomes a scannable manifest — one line per project. Scales to 50+ projects without verbosity.
+- **One global setup file, no mocks — ever**: `setup.ts` contains only environment config (`renderStubDefaultSlot`). All mocks live in test files (per ADR-010). Happy-dom polyfills stay in the test files that need them until used in 3+ files, then extract to a helper. This rule exists because of recurring incidents where setup-file mocks caused invisible test failures across projects.
+- **App root projects named `{app}-root`**: `families-root`, `admin-root` — not `app-roots` (too generic) or `families-app` (implies testing the whole app).
+- **Mock patterns added to ADR-010**: Standard patterns for Vue component mocks (`{name, props, template}` with `findComponent({name})`) and third-party library mocks (axios, string-ts) now documented in ADR-010 remediation section.
+
+### Rejected Alternatives
+
+- **Keep test-type split**: Solved a problem (collect-duration baselines) that no longer exists. Fragile include/exclude lists, misclassification issues.
+- **Per-domain setup files with pre-configured mocks**: CEO has seen this fail repeatedly — mocks in setup cause invisible breakage in other tests. Explicit per-file mocking is more boilerplate but eliminates the failure mode entirely.
+- **Single flat project**: No structural organization at 700+ files.
+
+### Notes
+
+- The interrogation challenged small domains (about, home, settings have 1 test file each). CEO's position: current sizes aren't representative, realistic minimum is ~4 testable files per domain. The ceremony of a project entry signals the domain exists and needs coverage.
+- Architecture test enforcement: `architecture.spec.ts` will verify every `*.spec.ts` is covered by exactly one project, and compare domain directories against the project list.
+- CEO flagged that "what is a domain and what goes where" is a separate ADR concern from project organization.
+
+### Open Questions
+
+- Automated detection of new domains missing from the project list — architecture test catches orphaned tests, but a domain with no tests yet won't be flagged
+- Mocking patterns may warrant their own ADR rather than living as a section in ADR-010
+
+---
+
 ## 2026-03-21 — Execution-Time Test Guard: Replacing Collect Duration as Primary Enforcer
 
 ### Decisions
