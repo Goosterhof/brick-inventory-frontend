@@ -30,7 +30,11 @@ export default mergeConfig(
         test: {
             exclude: [...configDefaults.exclude, "e2e/**"],
             root: fileURLToPath(new URL("./", import.meta.url)),
-            reporters: ["default", "./src/tests/unit/collect-guard-reporter.ts"],
+            reporters: [
+                "default",
+                "./src/tests/unit/collect-guard-reporter.ts",
+                "./src/tests/unit/test-guard-reporter.ts",
+            ],
             coverage: {
                 provider: "istanbul",
                 include: ["src/**/*.ts", "src/**/*.vue"],

@@ -1,4 +1,4 @@
-# Decision: Test isolation via collect-duration guard and per-file factory mocking
+# Decision: Test isolation via execution-time guard, collect-duration guard, and per-file factory mocking
 
 **Date**: 2026-03-20 (revised 2026-03-21)
 **Feature**: Test suite performance and isolation infrastructure
@@ -30,9 +30,34 @@ The question: how do we prevent transitive import chains from degrading test per
 
 ## Decision
 
-Two enforcement mechanisms working together:
+Three mechanisms working together: an execution-time guard (blocking), a collect-duration guard (informational), and a lint rule (blocking).
 
-### Collect-duration guard reporter
+### Execution-time guard reporter (primary enforcer)
+
+A custom Vitest reporter (`test-guard-reporter.ts`) measures the execution duration of every test file using `diagnostic().duration` — the accumulated time of all tests and hooks in the module.
+
+**Why execution time over collect duration:** Collect duration (`collectDuration`) measures how long Vitest spends importing a file's dependency tree. This metric is heavily polluted by thread pool contention, Vite transform caching, and coverage instrumentation — making it unreliable as an enforcement mechanism without complex baseline calculations. Execution time measures how long the tests themselves take to run. It is deterministic, does not vary with worker pool size or coverage mode, and directly captures the developer experience.
+
+**What execution time catches:**
+- **Insufficient mocking** — real I/O, heavy dependencies not stubbed, expensive DOM operations
+- **File too large** — too many tests in one file, cumulative runtime adds up
+- **Expensive setup/teardown** — heavy `beforeEach`/`afterEach` hooks
+
+**Two tiers:**
+
+- **300–1000ms: warning** — test file getting slow, printed to console but does not fail the suite.
+- **1000ms+: failure** — fails the suite with exit code 1. The file needs mocking, splitting, or setup optimization.
+
+**Threshold calibration:** Pure helper/service tests execute in 2–10ms. Simple component tests in 10–50ms. Page component tests with proper mocking in 100–200ms. The heaviest well-structured file (SetsOverviewPage, 17 tests with search/filter interactions) runs in ~550ms. The 1000ms failure threshold provides headroom while catching genuinely problematic files. The 300ms warning threshold flags files trending toward trouble.
+
+**Output format:** Each line shows `[project] durationMs | testCount tests | file`.
+
+**Remediation when a test file exceeds the threshold:**
+1. Check if heavy dependencies are unmocked — add `vi.mock()` with factory functions
+2. If the file has many tests, consider splitting into focused test files
+3. If setup/teardown is expensive, reduce per-test overhead (share setup where safe)
+
+### Collect-duration guard reporter (informational diagnostics)
 
 A custom Vitest reporter (`collect-guard-reporter.ts`) measures the collect duration of every test file using **baseline-relative measurement**.
 
@@ -80,8 +105,7 @@ Every `vi.mock()` call lives in the test file that needs it. No global mocks in 
 
 ### What this does NOT cover
 
-- **Test execution time** — only collect (import) duration is guarded. A test with a slow `setTimeout` or expensive computation won't trigger the guard
-- **Total suite duration** — no aggregate time budget. The baseline-relative approach reduces overall suite time as a side effect of per-file enforcement, but there is no explicit total time budget
+- **Total suite duration** — no aggregate time budget. Per-file enforcement reduces overall suite time as a side effect, but there is no explicit total time budget
 - **Mock correctness** — factory-based mocks are handwritten fakes that don't reference the real module. If an upstream dependency changes its export shape, mocks won't break. This false safety gap is accepted and will be mitigated by integration/e2e tests and potentially by factory helpers or `__mocks__` directories in the future
 
 ## Consequences
@@ -97,15 +121,24 @@ Every `vi.mock()` call lives in the test file that needs it. No global mocks in 
 
 | What                                   | Mechanism                                                            | Scope                                                            |
 | -------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Import chain duration limit (delta)    | `collect-guard-reporter.ts` custom Vitest reporter                   | Every `.spec.ts` file — warn at 200ms delta, violation at 500ms delta (informational, does not block) |
-| Import chain duration limit (hard cap) | `collect-guard-reporter.ts` custom Vitest reporter                   | Every `.spec.ts` file — violation at 5000ms raw regardless of delta (informational, does not block)   |
-| Coverage mode threshold scaling        | `collect-guard-reporter.ts` detects `coverage.enabled` via `onInit`  | All thresholds doubled when running with `--coverage` to account for Istanbul instrumentation overhead |
+| Test execution time limit              | `test-guard-reporter.ts` custom Vitest reporter                      | Every `.spec.ts` file — warn at 300ms, **fail at 1000ms** (blocks pipeline) |
+| Import chain duration (delta)          | `collect-guard-reporter.ts` custom Vitest reporter                   | Every `.spec.ts` file — warn at 200ms delta, violation at 500ms delta (informational, does not block) |
+| Import chain duration (hard cap)       | `collect-guard-reporter.ts` custom Vitest reporter                   | Every `.spec.ts` file — violation at 5000ms raw regardless of delta (informational, does not block)   |
+| Coverage mode threshold scaling        | `collect-guard-reporter.ts` detects `coverage.enabled` via `onInit`  | Collect guard thresholds doubled when running with `--coverage` (test guard unaffected — execution time is coverage-stable) |
 | Factory required on `vi.mock()`        | Custom lint rule in `scripts/lint-vue-conventions.mjs`               | Every `.spec.ts` file                                            |
-| Reporter registered in config          | `vitest.config.ts` reporters array                                   | Suite-wide                                                       |
+| Reporters registered in config         | `vitest.config.ts` reporters array                                   | Suite-wide (both reporters)                                      |
 | Lint runs on commit                    | lint-staged in Husky pre-commit hook                                 | All staged `.spec.ts` files                                      |
-| Pre-push gate                          | Husky pre-push hook runs `test:coverage` which includes the reporter | All pushes                                                       |
+| Pre-push gate                          | Husky pre-push hook runs `test:coverage` which includes both reporters | All pushes                                                     |
 
 ## Resolved Questions
+
+### Why execution time as the primary enforcer instead of collect duration?
+
+**Resolved 2026-03-21.** Collect duration (`collectDuration`) measures import chain resolution time, but this metric is heavily polluted by Vitest internals: thread pool contention adds ~800-1000ms in multi-worker runs, Vite transform caching varies between runs, and coverage instrumentation inflates numbers by ~300-400ms. Making collect duration reliable required per-project median baselines, coverage detection with 2x multipliers, and single-file exceptions — and even then, irreducible SFC compilation overhead (~700-900ms) forced the guard to be informational only.
+
+Execution time (`diagnostic().duration`) measures how long tests and hooks actually run. It is deterministic — the same numbers whether you run 1 file or 76, with or without coverage, single-worker or multi-worker. It directly captures what developers experience and maps cleanly to actionable fixes (mock more, split files, reduce setup). No baselines, no multipliers, no exceptions needed. Simple absolute thresholds work.
+
+The collect guard remains as informational diagnostics for developers who want to investigate import chain costs. The test guard is the blocking enforcer.
 
 ### Why not percentile-based thresholds (flag statistical outliers)?
 
@@ -133,5 +166,5 @@ Every `vi.mock()` call lives in the test file that needs it. No global mocks in 
 
 ## Open Questions
 
-- **Baseline drift monitoring** — if false signals appear in CI but not locally (or vice versa), we may need to revisit whether a single set of thresholds works across all environments. No evidence of this yet.
-- **Switching back to blocking** — if Vite/Vitest improve SFC compilation caching or the irreducible overhead drops below 500ms, the guard should be reconsidered as a blocking check.
+- **Collect guard baseline drift** — if false signals appear in CI but not locally (or vice versa), we may need to revisit whether a single set of collect-duration thresholds works across all environments. No evidence of this yet. Less critical now that the collect guard is informational only.
+- **Test guard threshold calibration at scale** — the 300ms/1000ms thresholds are calibrated against 76 test files. At 700+ files, the distribution may shift. Monitor and adjust if needed.
