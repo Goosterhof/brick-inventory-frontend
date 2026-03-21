@@ -79,6 +79,76 @@ All must pass. No exceptions. If something fails, fix it — don't skip it.
 
 ---
 
+## ADR Implementation Workflow
+
+When assigned an ADR to implement (not just propose — actually build the thing), follow this workflow. It is different from feature work. A feature starts with a user need; an ADR implementation starts with an architectural decision that needs to exist in code.
+
+### 1. Read the Full ADR
+
+Not just the Decision section — the entire document. Each section tells you something different:
+
+| Section | What It Tells You |
+|---|---|
+| **Context** | The forces that created this need — understand *why* before you build *what* |
+| **Options Considered** | What was rejected and why — so you don't accidentally reintroduce a rejected approach |
+| **Decision** | The chosen pattern and its boundaries |
+| **Consequences** | What gets harder — these are your edge cases and integration risks |
+| **Enforcement** | Your implementation task list — what tooling, rules, or tests must exist |
+| **Open Questions** | Potential blockers — flag these to the CFO before building around assumptions |
+
+### 2. Extract the Task List from Enforcement
+
+The Enforcement section is your spec. Each row in the enforcement table is a concrete deliverable:
+
+- A lint rule that needs configuring or writing
+- A test that needs to exist
+- A vitest setup change
+- A CI check
+- A structural convention that needs a guard
+
+If the Enforcement section says "not yet automated" or "manual review" — that's a gap. Part of your job is closing it.
+
+### 3. Audit Before You Build
+
+Before writing new code, check what already exists:
+
+- **Grep the codebase** for patterns the ADR describes — is it partially implemented? Fully implemented but undocumented? Implemented inconsistently?
+- **Check for violations** — if the ADR says "never do X," find out if X exists anywhere today
+- **Map the blast radius** — which files, domains, and apps are affected?
+
+Report the audit findings before starting implementation. The CFO needs to know the scope.
+
+### 4. Build Enforcement First
+
+This is counterintuitive but critical: **build the guard before you build the thing it guards.**
+
+- Write the lint rule, test, or structural check first
+- Watch it fail against the current codebase (confirms it detects violations)
+- Then fix the violations to make it pass
+
+This order ensures the enforcement actually works. Building the "correct" code first and then writing enforcement that only sees green tells you nothing.
+
+### 5. Verify Against ADR-000 Criteria
+
+Before declaring implementation complete, run it through the five evaluation lenses from ADR-000:
+
+1. **Junior test** — could a developer with no context follow this enforcement mechanically?
+2. **Literal compliance test** — what happens if someone follows the rule too strictly? Does the enforcement have false positives?
+3. **Scale test** — will this hold at 50+ components and 10+ domains?
+4. **Automation test** — is everything enforced by tooling, or does something still rely on human review?
+5. **Transferability check** — does the implementation match the ADR's transferability label?
+
+### 6. Report Back with ADR-Specific Context
+
+In addition to the standard report sections, include:
+
+- **ADR compliance summary** — which enforcement rows are now automated, which remain manual
+- **Violations found and fixed** — what existing code didn't comply
+- **Consequences encountered** — did the "what gets harder" predictions from the ADR prove accurate?
+- **Open questions resolved or discovered** — update proposals for the ADR's Open Questions section
+
+---
+
 ## Technical Standards You Follow
 
 ### Vue Components
