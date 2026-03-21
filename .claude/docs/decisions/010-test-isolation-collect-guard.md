@@ -57,6 +57,39 @@ A custom Vitest reporter (`test-guard-reporter.ts`) measures the execution durat
 2. If the file has many tests, consider splitting into focused test files
 3. If setup/teardown is expensive, reduce per-test overhead (share setup where safe)
 
+**Standard mock patterns:**
+
+For Vue components that are dependencies (not the component under test):
+
+```ts
+vi.mock("@shared/components/forms/FormLabel.vue", () => ({
+    default: {name: "FormLabel", props: ["for", "optional"], template: "<label><slot /></label>"},
+}));
+```
+
+Then find mocked components by name instead of import reference:
+
+```ts
+const label = wrapper.findComponent({name: "FormLabel"});
+```
+
+For third-party libraries (axios, string-ts):
+
+```ts
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({
+    deepCamelKeys: <T>(obj: T): T => obj,
+    deepSnakeKeys: <T>(obj: T): T => obj,
+}));
+```
+
+When mocking `string-ts` with a passthrough, fixture data must already be in camelCase since `deepCamelKeys` won't convert it.
+
 ### Collect-duration guard reporter (informational diagnostics)
 
 A custom Vitest reporter (`collect-guard-reporter.ts`) measures the collect duration of every test file using **baseline-relative measurement**.

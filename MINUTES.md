@@ -5,6 +5,31 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-21 — Execution-Time Test Guard: Replacing Collect Duration as Primary Enforcer
+
+### Decisions
+
+- **Execution time replaces collect duration as the blocking enforcer**: CEO questioned whether collect duration was the right metric at all — Vitest already shows per-file execution time, which directly captures insufficient mocking, file size problems, and expensive setup. CFO prototyped `test-guard-reporter.ts` using `diagnostic().duration`. Result: deterministic numbers, no baselines, no coverage multipliers, simple absolute thresholds. Collect guard demoted to informational diagnostics.
+- **Thresholds: 300ms warn, 1000ms fail**: Calibrated against 76 test files. Pure TS tests run in 2-10ms, simple components 10-50ms, page components 100-200ms. Heaviest well-structured file (SetsOverviewPage, 17 search/filter tests) runs ~550ms. The 1000ms fail threshold provides headroom while catching genuinely broken files.
+- **No coverage multiplier needed for execution time**: Coverage instrumentation affects collect/import phase, not test execution. Confirmed empirically — SetsOverviewPage: 554ms without coverage, 427ms with coverage. The metric is coverage-stable.
+- **Collect guard stays as informational**: Still useful for developers investigating import chain costs. Per-project median baselines with coverage 2x multiplier. Does not block the pipeline.
+
+### Rejected Alternatives
+
+- **Collect duration as primary enforcer**: Required per-project median baselines, coverage detection with 2x multiplier, single-file exceptions, and still had irreducible SFC overhead (~700-900ms) that forced it to be informational. Too much complexity for a metric that doesn't directly capture the developer experience.
+- **Removing the collect guard entirely**: Considered but rejected — import chain data is still valuable for diagnostics even if it can't reliably enforce thresholds.
+
+### Notes
+
+- The CEO's key insight: "vitest itself is giving nice feedback about how long a test takes, that's almost always a nice case of how much is mocked or if the file is too big" — this reframed the entire approach from measuring infrastructure overhead (collect) to measuring test quality (execution).
+- PR #120 merged to main. Full gauntlet passed.
+
+### Strategic Alignment
+
+- The two-guard architecture (blocking execution-time + informational collect-duration) demonstrates engineering judgment — knowing when to enforce vs when to inform. A senior reviewer would appreciate that the team tried collect-duration enforcement, discovered its limitations empirically, and pivoted to a simpler, more reliable metric rather than adding complexity to make a flawed approach work.
+
+---
+
 ## 2026-03-21 — ADR-010 Implementation: Per-Project Baselines, Happy-DOM, & Informational Guard
 
 ### Decisions
