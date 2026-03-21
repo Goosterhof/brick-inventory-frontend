@@ -2,6 +2,8 @@ import ModalDialog from "@shared/components/ModalDialog.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 
+vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
+
 const mountModal = (open = false) =>
     shallowMount(ModalDialog, {
         props: {open},

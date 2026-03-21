@@ -6,6 +6,7 @@ const defaultProps = {loadingText: "Starting camera...", retryText: "Retry", cap
 
 describe("CameraCapture", () => {
     let mockGetUserMedia: ReturnType<typeof vi.fn>;
+    let restoreSrcObject: (() => void) | undefined;
 
     beforeEach(() => {
         mockGetUserMedia = vi.fn();
@@ -15,9 +16,29 @@ describe("CameraCapture", () => {
             writable: true,
             configurable: true,
         });
+
+        // happy-dom validates srcObject type strictly (must be MediaStream instance).
+        // Override at the prototype level so mock objects are accepted.
+        const proto = HTMLMediaElement.prototype;
+        const originalDescriptor = Object.getOwnPropertyDescriptor(proto, "srcObject");
+        Object.defineProperty(proto, "srcObject", {
+            set(val: MediaProvider | null) {
+                (this as unknown as {_srcObject: MediaProvider | null})._srcObject = val;
+            },
+            get(): MediaProvider | null {
+                return (this as unknown as {_srcObject: MediaProvider | null})._srcObject ?? null;
+            },
+            configurable: true,
+        });
+        restoreSrcObject = () => {
+            if (originalDescriptor) {
+                Object.defineProperty(proto, "srcObject", originalDescriptor);
+            }
+        };
     });
 
     afterEach(() => {
+        restoreSrcObject?.();
         vi.restoreAllMocks();
     });
 
@@ -519,7 +540,18 @@ describe("CameraCapture", () => {
             Object.defineProperty(videoElement, "videoWidth", {value: 0, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 0, writable: true});
             Object.defineProperty(videoElement, "readyState", {value: 0, writable: true});
-            const addEventListenerSpy = vi.spyOn(videoElement, "addEventListener");
+            // happy-dom's addEventListener is not spyable via vi.spyOn on element instances.
+            // Override via defineProperty to intercept calls.
+            const addEventListenerCalls: Array<{event: string; options: unknown}> = [];
+            const originalAddEventListener = videoElement.addEventListener.bind(videoElement);
+            Object.defineProperty(videoElement, "addEventListener", {
+                value: (event: string, callback: EventListenerOrEventListenerObject, options?: unknown) => {
+                    addEventListenerCalls.push({event, options});
+                    originalAddEventListener(event, callback, options as AddEventListenerOptions);
+                },
+                writable: true,
+                configurable: true,
+            });
             const mockContext = {drawImage: vi.fn()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
             Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
@@ -533,7 +565,9 @@ describe("CameraCapture", () => {
             await captureButton?.trigger("click");
 
             // Assert
-            expect(addEventListenerSpy).toHaveBeenCalledWith("loadedmetadata", expect.any(Function), {once: true});
+            const metadataCall = addEventListenerCalls.find((c) => c.event === "loadedmetadata");
+            expect(metadataCall).toBeDefined();
+            expect(metadataCall?.options).toEqual({once: true});
             expect(wrapper.emitted("capture")).toBeUndefined();
         });
 
@@ -550,14 +584,18 @@ describe("CameraCapture", () => {
             Object.defineProperty(videoElement, "videoWidth", {get: () => videoWidth, configurable: true});
             Object.defineProperty(videoElement, "videoHeight", {get: () => videoHeight, configurable: true});
             Object.defineProperty(videoElement, "readyState", {value: 0, writable: true});
+            // happy-dom's addEventListener is not spyable via vi.spyOn on element instances.
+            // Override via defineProperty to capture the loadedmetadata callback.
             const callbacks: {metadata: EventListener | null} = {metadata: null};
-            vi.spyOn(videoElement, "addEventListener").mockImplementation(
-                (event: string, callback: EventListenerOrEventListenerObject) => {
+            Object.defineProperty(videoElement, "addEventListener", {
+                value: (event: string, callback: EventListenerOrEventListenerObject) => {
                     if (event === "loadedmetadata") {
                         callbacks.metadata = callback as EventListener;
                     }
                 },
-            );
+                writable: true,
+                configurable: true,
+            });
             const mockContext = {drawImage: vi.fn()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
             Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});

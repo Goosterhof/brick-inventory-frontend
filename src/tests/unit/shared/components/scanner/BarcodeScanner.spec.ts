@@ -16,6 +16,7 @@ const defaultProps = {loadingText: "Starting camera...", retryText: "Retry"};
 
 describe("BarcodeScanner", () => {
     let mockGetUserMedia: ReturnType<typeof vi.fn>;
+    let restoreSrcObject: (() => void) | undefined;
 
     beforeEach(() => {
         mockGetUserMedia = vi.fn();
@@ -27,10 +28,30 @@ describe("BarcodeScanner", () => {
             configurable: true,
         });
 
+        // happy-dom validates srcObject type strictly (must be MediaStream instance).
+        // Override at the prototype level so mock objects are accepted.
+        const proto = HTMLMediaElement.prototype;
+        const originalDescriptor = Object.getOwnPropertyDescriptor(proto, "srcObject");
+        Object.defineProperty(proto, "srcObject", {
+            set(val: MediaProvider | null) {
+                (this as unknown as {_srcObject: MediaProvider | null})._srcObject = val;
+            },
+            get(): MediaProvider | null {
+                return (this as unknown as {_srcObject: MediaProvider | null})._srcObject ?? null;
+            },
+            configurable: true,
+        });
+        restoreSrcObject = () => {
+            if (originalDescriptor) {
+                Object.defineProperty(proto, "srcObject", originalDescriptor);
+            }
+        };
+
         vi.useFakeTimers();
     });
 
     afterEach(() => {
+        restoreSrcObject?.();
         vi.restoreAllMocks();
         vi.useRealTimers();
     });

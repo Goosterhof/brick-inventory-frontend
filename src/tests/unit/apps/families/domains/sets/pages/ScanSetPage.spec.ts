@@ -6,6 +6,14 @@ import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockGetRequest, mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
     mockPostRequest: vi.fn(),
@@ -44,12 +52,12 @@ vi.mock("@app/services", () => ({
 
 const mockSetResponse = {
     id: 10,
-    set_num: "75192-1",
+    setNum: "75192-1",
     name: "Millennium Falcon",
     year: 2017,
     theme: "Star Wars",
-    num_parts: 7541,
-    image_url: "https://example.com/75192.jpg",
+    numParts: 7541,
+    imageUrl: "https://example.com/75192.jpg",
 };
 
 describe("ScanSetPage", () => {

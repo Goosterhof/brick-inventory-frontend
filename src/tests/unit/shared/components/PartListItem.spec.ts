@@ -28,8 +28,8 @@ describe("PartListItem", () => {
 
         // Assert
         const swatch = wrapper.find("[w='6']");
-        expect(swatch.isVisible()).toBe(true);
-        expect(swatch.attributes("style")).toContain("background-color: rgb(255, 0, 0)");
+        expect(swatch.attributes("style")).not.toContain("display: none");
+        expect(swatch.attributes("style")).toContain("background-color: #FF0000");
     });
 
     it("should hide color swatch when colorRgb is not provided", () => {
@@ -37,7 +37,7 @@ describe("PartListItem", () => {
         const wrapper = mount(PartListItem, {props: defaultProps});
 
         // Assert
-        expect(wrapper.find("[w='6']").isVisible()).toBe(false);
+        expect(wrapper.find("[w='6']").attributes("style")).toContain("display: none");
     });
 
     it("should show image when imageUrl is provided", () => {
@@ -46,7 +46,7 @@ describe("PartListItem", () => {
 
         // Assert
         const img = wrapper.find("img");
-        expect(img.isVisible()).toBe(true);
+        expect(img.attributes("style") ?? "").not.toContain("display: none");
         expect(img.attributes("src")).toBe("https://example.com/img.png");
         expect(img.attributes("alt")).toBe("Brick 2x4");
     });
@@ -56,7 +56,7 @@ describe("PartListItem", () => {
         const wrapper = mount(PartListItem, {props: defaultProps});
 
         // Assert
-        expect(wrapper.find("img").isVisible()).toBe(false);
+        expect(wrapper.find("img").attributes("style")).toContain("display: none");
     });
 
     it("should render color name in description when provided", () => {

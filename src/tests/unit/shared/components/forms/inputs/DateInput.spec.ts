@@ -1,9 +1,16 @@
-import FormError from "@shared/components/forms/FormError.vue";
-import FormField from "@shared/components/forms/FormField.vue";
-import FormLabel from "@shared/components/forms/FormLabel.vue";
 import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+vi.mock("@shared/components/forms/FormError.vue", () => ({
+    default: {name: "FormError", props: ["error", "id", "message"], template: "<span />"},
+}));
+vi.mock("@shared/components/forms/FormField.vue", () => ({
+    default: {name: "FormField", template: "<div><slot /></div>"},
+}));
+vi.mock("@shared/components/forms/FormLabel.vue", () => ({
+    default: {name: "FormLabel", props: ["for", "optional"], template: "<label><slot /></label>"},
+}));
 
 describe("DateInput", () => {
     it("should render label and date input", () => {
@@ -11,7 +18,7 @@ describe("DateInput", () => {
         const wrapper = shallowMount(DateInput, {props: {label: "Date", modelValue: ""}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.text()).toContain("Date");
         expect(wrapper.find("input").exists()).toBe(true);
         expect(wrapper.find("input").attributes("type")).toBe("date");
@@ -21,7 +28,7 @@ describe("DateInput", () => {
         // Arrange
         const wrapper = shallowMount(DateInput, {props: {label: "Date", modelValue: ""}});
         const input = wrapper.find("input");
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
 
         // Assert
         expect(input.attributes("id")).toBeTruthy();
@@ -46,7 +53,7 @@ describe("DateInput", () => {
         const wrapper = shallowMount(DateInput, {props: {label: "Date", modelValue: ""}});
 
         // Assert
-        expect(wrapper.findComponent(FormLabel).props("optional")).toBe(false);
+        expect(wrapper.findComponent({name: "FormLabel"}).props("optional")).toBe(false);
         expect(wrapper.find("input").attributes("required")).toBeDefined();
     });
 
@@ -55,7 +62,7 @@ describe("DateInput", () => {
         const wrapper = shallowMount(DateInput, {props: {label: "Date", modelValue: "", optional: true}});
 
         // Assert
-        expect(wrapper.findComponent(FormLabel).props("optional")).toBe(true);
+        expect(wrapper.findComponent({name: "FormLabel"}).props("optional")).toBe(true);
         expect(wrapper.find("input").attributes("required")).toBeUndefined();
     });
 
@@ -64,7 +71,7 @@ describe("DateInput", () => {
         const wrapper = shallowMount(DateInput, {props: {label: "Date", modelValue: "", error: "Invalid date"}});
 
         // Assert
-        expect(wrapper.findComponent(FormError).props("message")).toBe("Invalid date");
+        expect(wrapper.findComponent({name: "FormError"}).props("message")).toBe("Invalid date");
         expect(wrapper.find("input").attributes("aria-invalid")).toBe("true");
     });
 
@@ -73,7 +80,7 @@ describe("DateInput", () => {
         const wrapper = shallowMount(DateInput, {props: {label: "Date", modelValue: ""}});
 
         // Assert
-        expect(wrapper.findComponent(FormField).exists()).toBe(true);
+        expect(wrapper.findComponent({name: "FormField"}).exists()).toBe(true);
     });
 
     it("should apply error styling when error is present", () => {

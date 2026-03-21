@@ -1,10 +1,30 @@
 import {createStorageService} from "@shared/services/storage";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+/**
+ * Overrides a localStorage method using Object.defineProperty.
+ *
+ * Direct assignment (e.g. `localStorage.setItem = fn`) does not work in
+ * happy-dom because the Storage proxy intercepts property writes as storage
+ * key operations per the Web Storage spec. Object.defineProperty bypasses
+ * the proxy and replaces the actual method on the instance.
+ *
+ * Returns a cleanup function that restores the original method.
+ */
+const overrideStorageMethod = <K extends "setItem" | "getItem" | "removeItem">(
+    method: K,
+    implementation: Storage[K],
+): (() => void) => {
+    const original = localStorage[method];
+    Object.defineProperty(localStorage, method, {value: implementation, writable: true, configurable: true});
+    return () => {
+        Object.defineProperty(localStorage, method, {value: original, writable: true, configurable: true});
+    };
+};
+
 describe("storage service", () => {
     beforeEach(() => {
         localStorage.clear();
-        vi.restoreAllMocks();
     });
 
     describe("createStorageService", () => {
@@ -93,7 +113,7 @@ describe("storage service", () => {
             const storage = createStorageService("test");
             const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
             const quotaError = new DOMException("Quota exceeded", "QuotaExceededError");
-            vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+            const restore = overrideStorageMethod("setItem", () => {
                 throw quotaError;
             });
 
@@ -102,6 +122,10 @@ describe("storage service", () => {
 
             // Assert
             expect(consoleSpy).toHaveBeenCalledWith("localStorage quota exceeded");
+
+            // Cleanup
+            restore();
+            consoleSpy.mockRestore();
         });
 
         it("should log other errors", () => {
@@ -109,7 +133,7 @@ describe("storage service", () => {
             const storage = createStorageService("test");
             const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
             const genericError = new Error("Some error");
-            vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+            const restore = overrideStorageMethod("setItem", () => {
                 throw genericError;
             });
 
@@ -118,6 +142,10 @@ describe("storage service", () => {
 
             // Assert
             expect(consoleSpy).toHaveBeenCalledWith(genericError);
+
+            // Cleanup
+            restore();
+            consoleSpy.mockRestore();
         });
     });
 
@@ -234,7 +262,7 @@ describe("storage service", () => {
             const storage = createStorageService("test");
             const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
             const securityError = new DOMException("Access denied", "SecurityError");
-            vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+            const restore = overrideStorageMethod("getItem", () => {
                 throw securityError;
             });
 
@@ -244,6 +272,10 @@ describe("storage service", () => {
             // Assert
             expect(result).toBe("fallback");
             expect(consoleSpy).toHaveBeenCalledWith(securityError);
+
+            // Cleanup
+            restore();
+            consoleSpy.mockRestore();
         });
     });
 
@@ -273,7 +305,7 @@ describe("storage service", () => {
             const genericError = new Error("Removal failed");
             localStorage.setItem("app:key1", "value1");
             localStorage.setItem("app:key2", "value2");
-            vi.spyOn(Storage.prototype, "removeItem").mockImplementation(() => {
+            const restore = overrideStorageMethod("removeItem", () => {
                 throw genericError;
             });
 
@@ -283,6 +315,10 @@ describe("storage service", () => {
             // Assert
             expect(consoleSpy).toHaveBeenCalledWith(genericError);
             expect(consoleSpy).toHaveBeenCalledTimes(2);
+
+            // Cleanup
+            restore();
+            consoleSpy.mockRestore();
         });
     });
 
@@ -328,7 +364,7 @@ describe("storage service", () => {
             const storage = createStorageService("test");
             const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
             const genericError = new Error("Removal failed");
-            vi.spyOn(Storage.prototype, "removeItem").mockImplementation(() => {
+            const restore = overrideStorageMethod("removeItem", () => {
                 throw genericError;
             });
 
@@ -337,6 +373,10 @@ describe("storage service", () => {
 
             // Assert
             expect(consoleSpy).toHaveBeenCalledWith(genericError);
+
+            // Cleanup
+            restore();
+            consoleSpy.mockRestore();
         });
     });
 

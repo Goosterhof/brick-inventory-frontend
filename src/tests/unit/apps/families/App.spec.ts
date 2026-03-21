@@ -4,6 +4,20 @@ import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
+vi.mock("@phosphor-icons/vue", () => ({
+    PhSignOut: {template: "<i />"},
+    PhList: {template: "<i />"},
+    PhX: {template: "<i />"},
+}));
+
 const {mockLogout, mockGoToRoute, mockIsLoggedIn, mockCurrentRouteRef} = vi.hoisted(() => ({
     mockLogout: vi.fn(),
     mockGoToRoute: vi.fn(),

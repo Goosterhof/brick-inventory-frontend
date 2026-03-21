@@ -5,6 +5,21 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {MockAxiosError} = vi.hoisted(() => {
+    class MockAxiosError extends Error {
+        response?: {status: number; data: unknown; statusText: string; headers: unknown; config: unknown};
+    }
+    return {MockAxiosError};
+});
+
+vi.mock("axios", () => ({
+    isAxiosError: (e: unknown): boolean => e instanceof MockAxiosError,
+    AxiosError: MockAxiosError,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({mockLogin: vi.fn(), mockGoToDashboard: vi.fn()}));
 
 vi.mock("@app/services", () => ({

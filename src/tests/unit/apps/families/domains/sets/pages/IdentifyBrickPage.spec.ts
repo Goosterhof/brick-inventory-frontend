@@ -6,6 +6,14 @@ import CameraCapture from "@shared/components/scanner/CameraCapture.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({mockPostRequest: vi.fn(), mockGoToRoute: vi.fn()}));
 
 vi.mock("@app/services", () => ({
@@ -80,7 +88,7 @@ describe("IdentifyBrickPage", () => {
     it("should send image to identify endpoint on capture", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null},
+            data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null},
         });
         const wrapper = shallowMount(IdentifyBrickPage);
         const blob = new Blob(["image"], {type: "image/jpeg"});
@@ -98,10 +106,10 @@ describe("IdentifyBrickPage", () => {
         mockPostRequest.mockResolvedValue({
             data: {
                 id: 42,
-                part_num: "3001",
+                partNum: "3001",
                 name: "Brick 2 x 4",
                 category: null,
-                image_url: "https://example.com/3001.jpg",
+                imageUrl: "https://example.com/3001.jpg",
             },
         });
         const wrapper = shallowMount(IdentifyBrickPage);
@@ -119,7 +127,7 @@ describe("IdentifyBrickPage", () => {
     it("should hide camera after capture", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null},
+            data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null},
         });
         const wrapper = shallowMount(IdentifyBrickPage);
         const blob = new Blob(["image"], {type: "image/jpeg"});
@@ -163,13 +171,13 @@ describe("IdentifyBrickPage", () => {
 
         // Assert
         expect(wrapper.text()).toContain("sets.identifying");
-        resolveRequest?.({data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null}});
+        resolveRequest?.({data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null}});
     });
 
     it("should reset state when try again is clicked after success", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null},
+            data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null},
         });
         const wrapper = shallowMount(IdentifyBrickPage);
         const blob = new Blob(["image"], {type: "image/jpeg"});

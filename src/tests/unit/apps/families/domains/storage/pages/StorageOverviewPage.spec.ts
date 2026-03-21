@@ -7,6 +7,14 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockGetRequest, mockGoToRoute} = vi.hoisted(() => ({mockGetRequest: vi.fn(), mockGoToRoute: vi.fn()}));
 
 vi.mock("@app/services", () => ({
@@ -41,20 +49,20 @@ const mockStorageOption = {
     id: 1,
     name: "Lade A",
     description: "Linkerla op plank 1",
-    parent_id: null,
+    parentId: null,
     row: 1,
     column: 2,
-    child_ids: [2],
+    childIds: [2],
 };
 
 const mockChildOption = {
     id: 2,
     name: "Lade A - Vak 1",
     description: null,
-    parent_id: 1,
+    parentId: 1,
     row: null,
     column: null,
-    child_ids: [],
+    childIds: [],
 };
 
 describe("StorageOverviewPage", () => {
@@ -154,7 +162,7 @@ describe("StorageOverviewPage", () => {
 
     it("should not show sub-locations badge when no children", async () => {
         // Arrange
-        const optionWithoutChildren = {...mockStorageOption, child_ids: []};
+        const optionWithoutChildren = {...mockStorageOption, childIds: []};
         mockGetRequest.mockResolvedValue({data: [optionWithoutChildren]});
 
         // Act
@@ -226,10 +234,10 @@ describe("StorageOverviewPage", () => {
             id: 2,
             name: "Lade B",
             description: "Rechterla op plank 1",
-            parent_id: null,
+            parentId: null,
             row: 1,
             column: 3,
-            child_ids: [],
+            childIds: [],
         };
 
         it("should filter storage by name", async () => {

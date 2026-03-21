@@ -1,6 +1,12 @@
 import ToastMessage from "@shared/components/ToastMessage.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+vi.mock("@phosphor-icons/vue", () => ({
+    PhCheckCircle: {name: "PhCheckCircle", template: "<i />"},
+    PhWarningCircle: {name: "PhWarningCircle", template: "<i />"},
+    PhX: {name: "PhX", template: "<i />"},
+}));
 
 const mountToast = (props: {message: string; variant?: "success" | "error"}) =>
     shallowMount(ToastMessage, {

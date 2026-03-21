@@ -10,6 +10,21 @@ import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
+const {MockAxiosError} = vi.hoisted(() => {
+    class MockAxiosError extends Error {
+        response?: {status: number; data: unknown; statusText: string; headers: unknown; config: unknown};
+    }
+    return {MockAxiosError};
+});
+
+vi.mock("axios", () => ({
+    isAxiosError: (e: unknown): boolean => e instanceof MockAxiosError,
+    AxiosError: MockAxiosError,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
 
 vi.mock("@app/services", () => ({

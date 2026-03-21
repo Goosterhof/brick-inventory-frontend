@@ -1,9 +1,16 @@
-import FormError from "@shared/components/forms/FormError.vue";
-import FormField from "@shared/components/forms/FormField.vue";
-import FormLabel from "@shared/components/forms/FormLabel.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+vi.mock("@shared/components/forms/FormError.vue", () => ({
+    default: {name: "FormError", props: ["error", "id", "message"], template: "<span />"},
+}));
+vi.mock("@shared/components/forms/FormField.vue", () => ({
+    default: {name: "FormField", template: "<div><slot /></div>"},
+}));
+vi.mock("@shared/components/forms/FormLabel.vue", () => ({
+    default: {name: "FormLabel", props: ["for", "optional"], template: "<label><slot /></label>"},
+}));
 
 describe("NumberInput", () => {
     it("should render label and input", () => {
@@ -11,7 +18,7 @@ describe("NumberInput", () => {
         const wrapper = shallowMount(NumberInput, {props: {label: "Quantity", modelValue: null}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.text()).toContain("Quantity");
         expect(wrapper.find("input").exists()).toBe(true);
         expect(wrapper.find("input").attributes("type")).toBe("number");
@@ -21,7 +28,7 @@ describe("NumberInput", () => {
         // Arrange
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
         const input = wrapper.find("input");
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         const inputId = input.attributes("id");
 
         // Assert
@@ -60,7 +67,7 @@ describe("NumberInput", () => {
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.props("optional")).toBe(false);
         expect(wrapper.find("input").attributes("required")).toBeDefined();
     });
@@ -70,7 +77,7 @@ describe("NumberInput", () => {
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null, optional: true}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.props("optional")).toBe(true);
         expect(wrapper.find("input").attributes("required")).toBeUndefined();
     });
@@ -81,7 +88,7 @@ describe("NumberInput", () => {
             props: {label: "Amount", modelValue: null, error: "Must be a positive number"},
         });
         const input = wrapper.find("input");
-        const errorComponent = wrapper.findComponent(FormError);
+        const errorComponent = wrapper.findComponent({name: "FormError"});
 
         // Assert
         expect(errorComponent.props("message")).toBe("Must be a positive number");
@@ -156,7 +163,7 @@ describe("NumberInput", () => {
         const wrapper = shallowMount(NumberInput, {props: {label: "Amount", modelValue: null}});
 
         // Assert
-        expect(wrapper.findComponent(FormField).exists()).toBe(true);
+        expect(wrapper.findComponent({name: "FormField"}).exists()).toBe(true);
     });
 
     it("should apply normal styling when not disabled and no error", () => {
@@ -175,7 +182,7 @@ describe("NumberInput", () => {
 
         // Assert
         expect(input.classes()).toContain("bg-brick-red-light");
-        expect(wrapper.findComponent(FormError).props("message")).toBe("Invalid");
+        expect(wrapper.findComponent({name: "FormError"}).props("message")).toBe("Invalid");
     });
 
     it("should not render FormError when no error", () => {
@@ -184,7 +191,7 @@ describe("NumberInput", () => {
         const input = wrapper.find("input");
 
         // Assert
-        expect(wrapper.findComponent(FormError).exists()).toBe(false);
+        expect(wrapper.findComponent({name: "FormError"}).exists()).toBe(false);
         expect(input.attributes("aria-invalid")).toBeUndefined();
         expect(input.attributes("aria-describedby")).toBeUndefined();
     });

@@ -6,6 +6,28 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
+
+vi.mock("@shared/components/forms/FormError.vue", () => ({
+    default: {name: "FormError", template: "<span />", props: ["error"]},
+}));
+
+vi.mock("@shared/components/forms/FormField.vue", () => ({
+    default: {name: "FormField", template: "<div><slot /></div>"},
+}));
+
+vi.mock("@shared/components/forms/FormLabel.vue", () => ({
+    default: {name: "FormLabel", template: "<label><slot /></label>", props: ["for"]},
+}));
+
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockGetRequest, mockPostRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn(), mockPostRequest: vi.fn()}));
 
 vi.mock("@app/services", () => ({
@@ -46,8 +68,8 @@ const mockPart = {
 };
 
 const mockStorageOptions = [
-    {id: 1, name: "Drawer A", description: null, parent_id: null, row: null, column: null, child_ids: []},
-    {id: 2, name: "Drawer B", description: null, parent_id: null, row: null, column: null, child_ids: []},
+    {id: 1, name: "Drawer A", description: null, parentId: null, row: null, column: null, childIds: []},
+    {id: 2, name: "Drawer B", description: null, parentId: null, row: null, column: null, childIds: []},
 ];
 
 const mountModal = () => shallowMount(AssignPartModal, {props: {open: true, part: mockPart}});
