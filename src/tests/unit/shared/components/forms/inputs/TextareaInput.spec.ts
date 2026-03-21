@@ -1,9 +1,16 @@
-import FormError from "@shared/components/forms/FormError.vue";
-import FormField from "@shared/components/forms/FormField.vue";
-import FormLabel from "@shared/components/forms/FormLabel.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+vi.mock("@shared/components/forms/FormError.vue", () => ({
+    default: {name: "FormError", props: ["error", "id", "message"], template: "<span />"},
+}));
+vi.mock("@shared/components/forms/FormField.vue", () => ({
+    default: {name: "FormField", template: "<div><slot /></div>"},
+}));
+vi.mock("@shared/components/forms/FormLabel.vue", () => ({
+    default: {name: "FormLabel", props: ["for", "optional"], template: "<label><slot /></label>"},
+}));
 
 describe("TextareaInput", () => {
     it("should render label and textarea", () => {
@@ -11,7 +18,7 @@ describe("TextareaInput", () => {
         const wrapper = shallowMount(TextareaInput, {props: {label: "Description", modelValue: ""}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.text()).toContain("Description");
         expect(wrapper.find("textarea").exists()).toBe(true);
     });
@@ -20,7 +27,7 @@ describe("TextareaInput", () => {
         // Arrange
         const wrapper = shallowMount(TextareaInput, {props: {label: "Notes", modelValue: ""}});
         const textarea = wrapper.find("textarea");
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
 
         // Assert
         expect(textarea.attributes("id")).toBeTruthy();
@@ -45,7 +52,7 @@ describe("TextareaInput", () => {
         const wrapper = shallowMount(TextareaInput, {props: {label: "Notes", modelValue: ""}});
 
         // Assert
-        expect(wrapper.findComponent(FormLabel).props("optional")).toBe(false);
+        expect(wrapper.findComponent({name: "FormLabel"}).props("optional")).toBe(false);
         expect(wrapper.find("textarea").attributes("required")).toBeDefined();
     });
 
@@ -54,7 +61,7 @@ describe("TextareaInput", () => {
         const wrapper = shallowMount(TextareaInput, {props: {label: "Notes", modelValue: "", optional: true}});
 
         // Assert
-        expect(wrapper.findComponent(FormLabel).props("optional")).toBe(true);
+        expect(wrapper.findComponent({name: "FormLabel"}).props("optional")).toBe(true);
         expect(wrapper.find("textarea").attributes("required")).toBeUndefined();
     });
 
@@ -63,7 +70,7 @@ describe("TextareaInput", () => {
         const wrapper = shallowMount(TextareaInput, {props: {label: "Notes", modelValue: "", error: "Too long"}});
 
         // Assert
-        expect(wrapper.findComponent(FormError).props("message")).toBe("Too long");
+        expect(wrapper.findComponent({name: "FormError"}).props("message")).toBe("Too long");
         expect(wrapper.find("textarea").attributes("aria-invalid")).toBe("true");
     });
 
@@ -80,7 +87,7 @@ describe("TextareaInput", () => {
         const wrapper = shallowMount(TextareaInput, {props: {label: "Notes", modelValue: ""}});
 
         // Assert
-        expect(wrapper.findComponent(FormField).exists()).toBe(true);
+        expect(wrapper.findComponent({name: "FormField"}).exists()).toBe(true);
     });
 
     it("should default rows to 3", () => {

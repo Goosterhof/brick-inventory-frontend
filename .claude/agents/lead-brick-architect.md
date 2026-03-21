@@ -87,14 +87,14 @@ When assigned an ADR to implement (not just propose — actually build the thing
 
 Not just the Decision section — the entire document. Each section tells you something different:
 
-| Section | What It Tells You |
-|---|---|
-| **Context** | The forces that created this need — understand *why* before you build *what* |
+| Section                | What It Tells You                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------- |
+| **Context**            | The forces that created this need — understand _why_ before you build _what_          |
 | **Options Considered** | What was rejected and why — so you don't accidentally reintroduce a rejected approach |
-| **Decision** | The chosen pattern and its boundaries |
-| **Consequences** | What gets harder — these are your edge cases and integration risks |
-| **Enforcement** | Your implementation task list — what tooling, rules, or tests must exist |
-| **Open Questions** | Potential blockers — flag these to the CFO before building around assumptions |
+| **Decision**           | The chosen pattern and its boundaries                                                 |
+| **Consequences**       | What gets harder — these are your edge cases and integration risks                    |
+| **Enforcement**        | Your implementation task list — what tooling, rules, or tests must exist              |
+| **Open Questions**     | Potential blockers — flag these to the CFO before building around assumptions         |
 
 ### 2. Extract the Task List from Enforcement
 

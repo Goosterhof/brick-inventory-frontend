@@ -5,6 +5,14 @@ import StatCard from "@shared/components/StatCard.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockGetRequest, mockGoToRoute, mockIsLoggedIn} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
@@ -40,12 +48,12 @@ vi.mock("@app/services", () => ({
 }));
 
 const mockStatsResponse = {
-    total_sets: 5,
-    total_set_quantity: 8,
-    sets_by_status: {sealed: 2, built: 3},
-    total_storage_locations: 3,
-    total_unique_parts: 12,
-    total_parts_quantity: 150,
+    totalSets: 5,
+    totalSetQuantity: 8,
+    setsByStatus: {sealed: 2, built: 3},
+    totalStorageLocations: 3,
+    totalUniqueParts: 12,
+    totalPartsQuantity: 150,
 };
 
 describe("HomePage", () => {
@@ -146,7 +154,7 @@ describe("HomePage", () => {
 
         it("should not show total quantity when equal to total sets", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: {...mockStatsResponse, total_sets: 5, total_set_quantity: 5}});
+            mockGetRequest.mockResolvedValue({data: {...mockStatsResponse, totalSets: 5, totalSetQuantity: 5}});
 
             // Act
             const wrapper = shallowMount(HomePage);
@@ -227,12 +235,12 @@ describe("HomePage", () => {
             // Arrange
             mockGetRequest.mockResolvedValue({
                 data: {
-                    total_sets: 0,
-                    total_set_quantity: 0,
-                    sets_by_status: {},
-                    total_storage_locations: 0,
-                    total_unique_parts: 0,
-                    total_parts_quantity: 0,
+                    totalSets: 0,
+                    totalSetQuantity: 0,
+                    setsByStatus: {},
+                    totalStorageLocations: 0,
+                    totalUniqueParts: 0,
+                    totalPartsQuantity: 0,
                 },
             });
 

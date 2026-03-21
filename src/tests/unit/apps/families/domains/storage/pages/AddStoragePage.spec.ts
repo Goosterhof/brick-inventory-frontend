@@ -7,6 +7,21 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {MockAxiosError} = vi.hoisted(() => {
+    class MockAxiosError extends Error {
+        response?: {status: number; data: unknown; statusText: string; headers: unknown; config: unknown};
+    }
+    return {MockAxiosError};
+});
+
+vi.mock("axios", () => ({
+    isAxiosError: (e: unknown): boolean => e instanceof MockAxiosError,
+    AxiosError: MockAxiosError,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({mockPostRequest: vi.fn(), mockGoToRoute: vi.fn()}));
 
 vi.mock("@app/services", () => ({
@@ -81,7 +96,7 @@ describe("AddStoragePage", () => {
     it("should submit correct payload on form submit", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 1, name: "Lade A", description: null, parent_id: null, row: null, column: null, child_ids: []},
+            data: {id: 1, name: "Lade A", description: null, parentId: null, row: null, column: null, childIds: []},
         });
         const wrapper = shallowMount(AddStoragePage);
 
@@ -97,7 +112,7 @@ describe("AddStoragePage", () => {
         expect(mockPostRequest).toHaveBeenCalledWith("/storage-options", {
             name: "Lade A",
             description: null,
-            parent_id: null,
+            parentId: null,
             row: null,
             column: null,
         });
@@ -106,7 +121,7 @@ describe("AddStoragePage", () => {
     it("should navigate to detail page on successful create", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 7, name: "Lade A", description: null, parent_id: null, row: null, column: null, child_ids: []},
+            data: {id: 7, name: "Lade A", description: null, parentId: null, row: null, column: null, childIds: []},
         });
         const wrapper = shallowMount(AddStoragePage);
 

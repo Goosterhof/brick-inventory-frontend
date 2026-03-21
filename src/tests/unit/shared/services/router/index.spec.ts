@@ -2,8 +2,21 @@ import type {RouteRecordRaw} from "vue-router";
 
 import {createRouterService} from "@shared/services/router";
 import {flushPromises} from "@vue/test-utils";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import {afterEach, describe, expect, it, vi} from "vitest";
 import {defineComponent, h} from "vue";
+
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({
+    deepCamelKeys: <T>(obj: T): T => obj,
+    deepSnakeKeys: <T>(obj: T): T => obj,
+    replace: (str: string, from: string, to: string) => str.replace(from, to),
+    replaceAll: (str: string, from: string, to: string) => str.replace(new RegExp(from, "g"), to),
+}));
 
 const HomeComponent = defineComponent({name: "Home", render: () => h("div", "Home")});
 const AboutComponent = defineComponent({name: "About", render: () => h("div", "About")});
@@ -27,11 +40,6 @@ const createTestRoutes = (): RouteRecordRaw[] => [
 ];
 
 describe("router service", () => {
-    beforeEach(() => {
-        // Reset location for each test
-        Object.defineProperty(window, "location", {value: {pathname: "/", search: ""}, writable: true});
-    });
-
     afterEach(() => {
         vi.restoreAllMocks();
     });

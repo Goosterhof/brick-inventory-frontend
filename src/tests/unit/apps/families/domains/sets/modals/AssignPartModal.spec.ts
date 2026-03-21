@@ -20,6 +20,12 @@ vi.mock("@shared/components/forms/FormLabel.vue", () => ({
     default: {name: "FormLabel", template: "<label><slot /></label>", props: ["for"]},
 }));
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
 vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
 
 const {mockGetRequest, mockPostRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn(), mockPostRequest: vi.fn()}));
@@ -62,8 +68,8 @@ const mockPart = {
 };
 
 const mockStorageOptions = [
-    {id: 1, name: "Drawer A", description: null, parent_id: null, row: null, column: null, child_ids: []},
-    {id: 2, name: "Drawer B", description: null, parent_id: null, row: null, column: null, child_ids: []},
+    {id: 1, name: "Drawer A", description: null, parentId: null, row: null, column: null, childIds: []},
+    {id: 2, name: "Drawer B", description: null, parentId: null, row: null, column: null, childIds: []},
 ];
 
 const mountModal = () => shallowMount(AssignPartModal, {props: {open: true, part: mockPart}});

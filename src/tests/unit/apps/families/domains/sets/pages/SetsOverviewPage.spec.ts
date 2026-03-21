@@ -8,6 +8,14 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 vi.mock("@shared/components/forms/FormError.vue", () => ({
     default: {name: "FormError", template: "<span />", props: ["error"]},
 }));
@@ -23,6 +31,40 @@ vi.mock("@shared/components/forms/FormLabel.vue", () => ({
 vi.mock("@shared/components/BadgeLabel.vue", () => ({
     default: {name: "BadgeLabel", template: "<span><slot /></span>", props: ["variant"]},
 }));
+
+vi.mock("@shared/components/EmptyState.vue", () => ({
+    default: {name: "EmptyState", template: "<span><slot /></span>", props: ["message"]},
+}));
+
+vi.mock("@shared/components/FilterChip.vue", () => ({
+    default: {name: "FilterChip", template: "<button @click='$emit(\"click\")'><slot /></button>", props: ["selected"]},
+}));
+
+vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({
+    default: {
+        name: "TextInput",
+        template: "<input @input='$emit(\"update:modelValue\", $event.target.value)' />",
+        props: ["modelValue"],
+    },
+}));
+
+vi.mock("@shared/components/ListItemButton.vue", () => ({
+    default: {name: "ListItemButton", template: "<div @click='$emit(\"click\")'><slot /></div>", props: ["variant"]},
+}));
+
+vi.mock("@shared/components/PageHeader.vue", () => ({
+    default: {name: "PageHeader", template: "<header><h1>{{ title }}</h1><slot /></header>", props: ["title"]},
+}));
+
+vi.mock("@shared/components/PrimaryButton.vue", () => ({
+    default: {
+        name: "PrimaryButton",
+        template: "<button @click='$emit(\"click\")'><slot /></button>",
+        props: ["variant"],
+    },
+}));
+
+vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn(), toCsv: vi.fn()}));
 
 const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
     const {ref} = await import("vue");

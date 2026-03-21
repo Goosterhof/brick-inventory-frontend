@@ -10,6 +10,26 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {MockAxiosError} = vi.hoisted(() => {
+    class MockAxiosError extends Error {
+        response?: {status: number; data: unknown; statusText: string; headers: unknown; config: unknown};
+    }
+    return {MockAxiosError};
+});
+
+vi.mock("axios", () => ({
+    isAxiosError: (e: unknown): boolean => e instanceof MockAxiosError,
+    AxiosError: MockAxiosError,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({
+    deepCamelKeys: <T>(obj: T): T => obj,
+    deepSnakeKeys: <T>(obj: T): T => obj,
+    replace: (str: string) => str,
+    replaceAll: (str: string) => str,
+}));
+
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
 vi.mock("@shared/components/forms/FormError.vue", () => ({
@@ -64,10 +84,10 @@ const mockStorageOptionResponse = {
     id: 5,
     name: "Lade A",
     description: "Linkerla op plank 1",
-    parent_id: null,
+    parentId: null,
     row: 1,
     column: 2,
-    child_ids: [6, 7],
+    childIds: [6, 7],
 };
 
 describe("EditStoragePage", () => {
@@ -147,7 +167,7 @@ describe("EditStoragePage", () => {
         expect(mockPatchRequest).toHaveBeenCalledWith("/storage-options/5", {
             name: "Lade A",
             description: "Linkerla op plank 1",
-            parent_id: null,
+            parentId: null,
             row: 1,
             column: 2,
         });

@@ -18,6 +18,12 @@ vi.mock("@shared/components/forms/FormLabel.vue", () => ({
     default: {name: "FormLabel", template: "<label><slot /></label>", props: ["for"]},
 }));
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
 vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
 
 const {mockGetRequest, mockPutRequest, mockPostRequest} = vi.hoisted(() => ({

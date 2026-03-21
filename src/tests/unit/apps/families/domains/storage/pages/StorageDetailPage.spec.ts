@@ -8,6 +8,14 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+vi.mock("axios", () => ({
+    isAxiosError: (_e: unknown): boolean => false,
+    AxiosError: Error,
+    default: {create: vi.fn()},
+}));
+
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+
 const {mockGetRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
@@ -46,31 +54,25 @@ const mockStorageOptionResponse = {
     id: 5,
     name: "Lade A",
     description: "Linkerla op plank 1",
-    parent_id: null,
+    parentId: null,
     row: 1,
     column: 2,
-    child_ids: [6, 7],
+    childIds: [6, 7],
 };
 
 const mockStoragePartsResponse = [
     {
         id: 1,
-        storage_option_id: 5,
+        storageOptionId: 5,
         quantity: 12,
-        part: {
-            id: 10,
-            part_num: "3001",
-            name: "Brick 2 x 4",
-            category: null,
-            image_url: "https://example.com/3001.jpg",
-        },
-        color: {id: 1, name: "Red", rgb: "CC0000", is_transparent: false},
+        part: {id: 10, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: "https://example.com/3001.jpg"},
+        color: {id: 1, name: "Red", rgb: "CC0000", isTransparent: false},
     },
     {
         id: 2,
-        storage_option_id: 5,
+        storageOptionId: 5,
         quantity: 8,
-        part: {id: 20, part_num: "3002", name: "Brick 2 x 3", category: null, image_url: null},
+        part: {id: 20, partNum: "3002", name: "Brick 2 x 3", category: null, imageUrl: null},
         color: null,
     },
 ];
@@ -179,7 +181,7 @@ describe("StorageDetailPage", () => {
 
     it("should not show sub-locations when no children", async () => {
         // Arrange & Act
-        const wrapper = mountWithResponses({...mockStorageOptionResponse, child_ids: []});
+        const wrapper = mountWithResponses({...mockStorageOptionResponse, childIds: []});
         await flushPromises();
 
         // Assert
