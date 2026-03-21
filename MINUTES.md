@@ -5,6 +5,51 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-21 — ADR-010 Implementation: Per-Project Baselines, Happy-DOM, & Informational Guard
+
+### Decisions
+
+- **Baseline-relative measurement with median, not minimum**: Minimum only captures best-case thread pool scheduling (~11ms observed). Median represents typical overhead per file. Confirmed by testing: min-based baselines left 23 violations, median-based reduced violations to files with genuinely heavy import chains.
+- **Per-project baselines over global baseline**: Test suite split into 3 Vitest projects (unit/node, components/happy-dom, apps/happy-dom). Each project computes its own median baseline. Global baseline was meaningless — mixing pure TS tests with SFC component tests produced a median that helped neither group.
+- **Percentile-based thresholds rejected**: Considered flagging files >2x median. Rejected — defining "statistical outlier" introduces complexity (sample size, bimodal distributions) while arriving at the same conclusion as baseline subtraction.
+- **Happy-DOM over jsdom**: Switched test environment. Required compatibility fixes in 5 test files (PartListItem color format, v-show visibility, localStorage mocking, srcObject typing, addEventListener spying). jsdom dependency removed.
+- **Collect guard made informational, not blocking**: SFC compilation overhead (~700-900ms delta) is irreducible for component tests that must import their own `.vue` file. Blocking the pipeline for costs that can't be reduced through mocking would force meaningless threshold inflation. Guard surfaces data without creating false blockers.
+- **Coverage mode detection with 2x threshold multiplier**: Istanbul instrumentation adds ~300-400ms overhead per file. Reporter detects `coverage.enabled` via `onInit(vitest)` and doubles all thresholds (400/1000/10000ms). Fixed multiplier chosen over fixed offset because coverage overhead is proportional to file/chain size.
+- **Form sub-component mocking pattern**: `vi.mock("@shared/components/forms/FormError.vue", () => ({default: {name: "FormError", props: [...], template: "<span />"}}))` with `findComponent({name: "FormError"})`. Applied to all 5 form input test files. CEO's preferred pattern: minimal factory with `{default: {}}` where `findComponent` isn't needed.
+- **Thresholds kept at 200ms warn / 500ms fail**: Original ADR-010 values preserved. Architect had raised to 800/1500 — CFO reverted, arguing per-project baselines were supposed to make the original thresholds work. Remaining violations are irreducible SFC cost, hence informational guard.
+
+### Rejected Alternatives
+
+- **Absolute thresholds (original approach)**: Vitest's `collectDuration` includes pool/transform overhead that varies by environment and suite size. Absolute thresholds either false-fail (too tight) or catch nothing (too loose).
+- **Minimum-based baseline**: Only captures best-case scheduling. Pool overhead isn't uniform — files scheduled later experience more contention.
+- **Raising thresholds to accommodate SFC compilation**: Moving goalposts instead of solving the problem. Per-project baselines + informational guard is the honest answer.
+- **Single global baseline across all projects**: Mixes fundamentally different workloads (pure TS vs SFC compilation). Median of mixed population is meaningless.
+- **Two-project split (node vs happy-dom)**: Considered but three-way split (unit/components/apps) gives more precise baselines within each group.
+
+### Action Items
+
+- [x] Lead Brick Architect: Implement Vitest project split, reporter rewrite, happy-dom migration — completed with CFO corrections
+- [ ] CEO: Review and merge branch `fix/adr-010-collect-guard-thresholds`
+- [ ] CFO: Monitor CI baseline drift after merge — if false signals appear, revisit thresholds
+
+### Notes
+
+- The architect was dispatched three times during this session. First attempt: only completed 1/23 files before being interrupted (too slow). Second attempt: had the CFO's playbook (mock axios + string-ts) but the mocks had no effect on full-suite collect times — revealed the pool overhead theory was wrong. Third attempt: implemented the project split and happy-dom migration successfully after the CFO's full diagnosis.
+- Key diagnostic sequence: solo file (216ms) vs full suite (1100ms) → pool overhead hypothesis → single-worker test (358ms max, zero violations) → confirmed pool contention is the real cost → per-project split as structural fix.
+- The 5000ms hard cap serves as a safety net for baseline drift — if the entire suite slows down, the hard cap catches it regardless of per-project delta calculations.
+- `brick-catalog.md` deleted by CEO (superseded by ADR-009 registry).
+
+### Strategic Alignment
+
+- The per-project Vitest configuration with a custom coverage-aware reporter demonstrates infrastructure maturity — the kind of test tooling a senior engineer expects in a large-scale project. The informational guard is an honest engineering choice: measure what matters, don't block on what you can't control.
+
+### Open Questions
+
+- Switching guard back to blocking if Vite/Vitest improve SFC compilation caching below 500ms delta
+- Baseline drift monitoring across CI vs local environments — no evidence of divergence yet
+
+---
+
 ## 2026-03-20 — ADR-010 Revision: Collect Guard Thresholds & Factory Mocking
 
 ### Decisions
