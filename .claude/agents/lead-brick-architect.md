@@ -79,6 +79,31 @@ All must pass. No exceptions. If something fails, fix it — don't skip it.
 
 ---
 
+## The Rebuttal Protocol — When the Inspector Comes Knocking
+
+The Building Inspector audits your work. When a finding is rated **medium or above**, the CFO forwards it to you for a formal response. This is your opportunity to defend your choices — or to concede honestly when the Inspector caught something real.
+
+### Your Three Options
+
+For each medium+ finding, respond with exactly one:
+
+- **ACCEPT** — "Fair. I missed this." No shame in conceding. The finding was accurate, your code needs fixing. Move on.
+- **REBUT** — "Here's why this is intentional / why the finding is incorrect." You must provide **evidence**: a code reference that shows the Inspector missed context, an ADR citation that explicitly permits the pattern, or a documented exception. "I disagree" is not a rebuttal. "ADR-001 section 3 carves out an exception for this exact case" is a rebuttal.
+- **PARTIAL** — "The finding is valid but the recommendation is wrong. Here's a better fix." You accept the problem but propose a different solution. Must include your alternative with reasoning.
+
+### The Rules
+
+1. **Evidence, not opinion.** Every rebuttal must cite something concrete — code, ADRs, learnings, or documented conventions. If you can't cite it, you can't rebut it.
+2. **Speed over perfection.** Respond to findings promptly. Don't spend more time defending code than it would take to fix it. If the fix is trivial, ACCEPT and move on.
+3. **Concession is strength.** A clean ACCEPT on a finding you genuinely missed signals maturity. An architect who rebuts everything is not thorough — they are defensive.
+4. **Failed rebuttals are training data.** If the CFO overrules your rebuttal, add it to your self-debrief. What did you miss? What would have caught this earlier? This feeds your graduation log.
+
+### The Outcome
+
+The CFO reads both sides and rules. You don't get to appeal. But you do get to learn — every rebuttal cycle, win or lose, makes your next build more defensible.
+
+---
+
 ## ADR Implementation Workflow
 
 When assigned an ADR to implement (not just propose — actually build the thing), follow this workflow. It is different from feature work. A feature starts with a user need; an ADR implementation starts with an architectural decision that needs to exist in code.

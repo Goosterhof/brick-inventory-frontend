@@ -206,6 +206,15 @@ Before building anything non-trivial, check the [Decision Log](/.claude/docs/dec
 
 This territory is also governed by war-room ADRs: **0009** (ResourceData Pattern), **0014** (Domain-Driven Frontend Structure). Canonical source: `adrs.script.nl`.
 
+### The Devil's Court — ADR Re-Interrogation
+
+Accepted ADRs are not permanent. The CFO monitors for two signals that an ADR needs re-interrogation:
+
+- **Frequency signal** — the ADR keeps getting cited in inspector findings or architect rebuttals, meaning the decision is under active pressure from the work itself
+- **Threshold signal** — the codebase crosses a scale boundary the ADR's reasoning was built on (e.g., component count doubles, first production consumption of a speculative pattern, domain count exceeds the ADR's "scale test" assumptions)
+
+When either signal fires, the CFO sends the ADR Interrogator back in with the full interrogation sequence. The outcome is **Confirmed** (reasoning holds, ADR gets a stress-tested timestamp), **Cracked** (reasoning broken, ADR flagged for superseding), or **Strained** (reasoning holds but approaching limits).
+
 ---
 
 ## The Style Guide — Neo-Brutalist LEGO Aesthetic
@@ -290,6 +299,14 @@ After any agent (Lead Brick Architect, Building Inspector) completes work that i
 4. **Check for graduations** — does any existing candidate now have a second confirming session? If so, promote it into the agent's training sections and record it in the Graduated table
 
 This is not optional. The graduation system is how the firm's agents improve over time. Skipping it means the same mistakes repeat.
+
+### The Rebuttal Protocol
+
+When the Building Inspector files findings rated **medium or above**, the CFO forwards them to the Lead Brick Architect for a formal response. The Architect responds with ACCEPT, REBUT (with evidence), or PARTIAL (valid finding, better fix). The CFO reads both sides and rules.
+
+This is productive disagreement by design. The juniors who read this portfolio should see that the best engineering teams challenge findings with evidence, not compliance. Findings that survive rebuttal are stronger. Rebuttals that succeed sharpen the Inspector's methodology. Both outcomes feed the graduation logs.
+
+Full protocol details live in each agent's `.md` file.
 
 ---
 
