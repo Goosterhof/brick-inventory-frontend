@@ -2,15 +2,13 @@ import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 
-vi.mock("@shared/components/forms/FormError.vue", () => ({
-    default: {name: "FormError", props: ["error", "id", "message"], template: "<span />"},
-}));
-vi.mock("@shared/components/forms/FormField.vue", () => ({
-    default: {name: "FormField", template: "<div><slot /></div>"},
-}));
-vi.mock("@shared/components/forms/FormLabel.vue", () => ({
-    default: {name: "FormLabel", props: ["for", "optional"], template: "<label><slot /></label>"},
-}));
+const {createMockFormError, createMockFormField, createMockFormLabel} = await vi.hoisted(
+    () => import("../../../../../helpers"),
+);
+
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
 describe("DateInput", () => {
     it("should render label and date input", () => {

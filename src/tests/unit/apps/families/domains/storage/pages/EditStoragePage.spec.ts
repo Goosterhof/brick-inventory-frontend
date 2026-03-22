@@ -10,39 +10,27 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {MockAxiosError} = vi.hoisted(() => {
-    class MockAxiosError extends Error {
-        response?: {status: number; data: unknown; statusText: string; headers: unknown; config: unknown};
-    }
-    return {MockAxiosError};
-});
+const {
+    createMockAxiosWithError,
+    createMockStringTs,
+    createMockFamilyServices,
+    createMockFormField,
+    createMockFormLabel,
+    createMockFormError,
+} = await vi.hoisted(() => import("../../../../../../helpers"));
 
-vi.mock("axios", () => ({
-    isAxiosError: (e: unknown): boolean => e instanceof MockAxiosError,
-    AxiosError: MockAxiosError,
-    default: {create: vi.fn()},
-}));
-
+vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => ({
-    deepCamelKeys: <T>(obj: T): T => obj,
-    deepSnakeKeys: <T>(obj: T): T => obj,
+    ...createMockStringTs(),
     replace: (str: string) => str,
     replaceAll: (str: string) => str,
 }));
 
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
-vi.mock("@shared/components/forms/FormError.vue", () => ({
-    default: {name: "FormError", template: "<span />", props: ["error"]},
-}));
-
-vi.mock("@shared/components/forms/FormField.vue", () => ({
-    default: {name: "FormField", template: "<div><slot /></div>"},
-}));
-
-vi.mock("@shared/components/forms/FormLabel.vue", () => ({
-    default: {name: "FormLabel", template: "<label><slot /></label>", props: ["for"]},
-}));
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
 const {mockGetRequest, mockPatchRequest, mockDeleteRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
@@ -52,33 +40,17 @@ const {mockGetRequest, mockPatchRequest, mockDeleteRequest, mockGoToRoute, mockC
     mockCurrentRouteId: {value: 5},
 }));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: mockPatchRequest,
-        deleteRequest: mockDeleteRequest,
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyHttpService: {
+            getRequest: mockGetRequest,
+            patchRequest: mockPatchRequest,
+            deleteRequest: mockDeleteRequest,
+        },
+        familyAuthService: {isLoggedIn: {value: true}},
+        familyRouterService: {goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+    }),
+);
 
 const mockStorageOptionResponse = {
     id: 5,

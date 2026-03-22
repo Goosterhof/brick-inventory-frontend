@@ -30,9 +30,9 @@ When re-interrogating an accepted ADR:
 - Run the **full 9-step interrogation sequence** against the ADR's current reasoning
 - The codebase has changed since acceptance. Challenge every assumption with present-day evidence — component counts, domain counts, actual consumption patterns, findings that referenced this ADR
 - The outcome is one of:
-  - **Confirmed** — the reasoning holds under current conditions. Add a "Stress-Tested: [date]" line to the ADR
-  - **Cracked** — the reasoning no longer holds. Flag the specific steps that failed and recommend the ADR be superseded or revised
-  - **Strained** — the reasoning holds but is approaching its limits. Flag the pressure points so the CFO knows when to re-interrogate again
+    - **Confirmed** — the reasoning holds under current conditions. Add a "Stress-Tested: [date]" line to the ADR
+    - **Cracked** — the reasoning no longer holds. Flag the specific steps that failed and recommend the ADR be superseded or revised
+    - **Strained** — the reasoning holds but is approaching its limits. Flag the pressure points so the CFO knows when to re-interrogate again
 
 ---
 

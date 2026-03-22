@@ -5,13 +5,9 @@ import StatCard from "@shared/components/StatCard.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-vi.mock("axios", () => ({
-    isAxiosError: (_e: unknown): boolean => false,
-    AxiosError: Error,
-    default: {create: vi.fn()},
-}));
-
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+    () => import("../../../../../../helpers"),
+);
 
 const {mockGetRequest, mockGoToRoute, mockIsLoggedIn} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
@@ -19,33 +15,15 @@ const {mockGetRequest, mockGoToRoute, mockIsLoggedIn} = vi.hoisted(() => ({
     mockIsLoggedIn: {value: true},
 }));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: mockIsLoggedIn,
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyHttpService: {getRequest: mockGetRequest},
+        familyAuthService: {isLoggedIn: mockIsLoggedIn},
+        familyRouterService: {goToRoute: mockGoToRoute},
+    }),
+);
 
 const mockStatsResponse = {
     totalSets: 5,
