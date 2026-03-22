@@ -307,13 +307,26 @@ After any agent (Lead Brick Architect, Building Inspector) completes work that i
 | [proposal from debrief] | Candidate / Dropped | [why] |
 
 ### Graduation Check
-[Did any existing candidate get a second confirming session? If yes, promote it and note which training section it was added to. If no, state "No graduations this round."]
+[Did any existing candidate get a second confirming session? If yes, draft test scenarios below. If no, state "No graduations this round."]
+
+### Graduation Tests (if applicable)
+[For each candidate hitting its second confirmation, write 2-3 test scenarios:]
+
+| Scenario | Without Training | With Training | Assertion |
+| --- | --- | --- | --- |
+| [specific situation] | [failure mode] | [correct behavior] | [objectively verifiable check] |
+
+Verdict: Pass / Fail / Hold — [reasoning]
 
 ### Concerns
 [Anything the CFO noticed that the agent missed, or quality issues to flag to the CEO. "None" is acceptable.]
 ```
 
 The Dispatch Report is presented to the CEO as part of the agent's results — not filed separately. The graduation log in the agent's `.md` file is updated as a side effect of writing the report, not as a separate step.
+
+### Graduation Protocol — Test-Case-Driven Promotion
+
+Training proposals graduate only when they pass concrete, verifiable test scenarios — not on observation count alone. The full protocol (scenario format, process, and rationale) lives in each agent's `.md` file under **Graduation Protocol**. The Dispatch Report's **Graduation Tests** section is where the CFO executes this protocol in practice: drafting scenarios, evaluating them, and recording the verdict.
 
 ### Why a structured report instead of a checklist
 
