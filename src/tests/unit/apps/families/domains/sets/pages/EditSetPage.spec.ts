@@ -14,6 +14,7 @@ const {
     createMockAxiosWithError,
     createMockStringTs,
     createMockFamilyServices,
+    createMockFamilyStores,
     createMockFormField,
     createMockFormLabel,
     createMockFormError,
@@ -40,6 +41,11 @@ vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
         familySetStoreModule: {
             getAll: {value: []},
             retrieveAll: vi.fn(),
@@ -47,7 +53,6 @@ vi.mock("@app/services", () =>
             getOrFailById: mockGetOrFailById,
             generateNew: vi.fn(),
         },
-        familyLoadingService: {isLoading: {value: false}},
     }),
 );
 

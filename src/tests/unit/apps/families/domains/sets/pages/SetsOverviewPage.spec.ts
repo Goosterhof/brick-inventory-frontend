@@ -12,6 +12,7 @@ const {
     createMockAxios,
     createMockStringTs,
     createMockFamilyServices,
+    createMockFamilyStores,
     createMockFormField,
     createMockFormLabel,
     createMockFormError,
@@ -79,6 +80,13 @@ vi.mock("@app/services", async () => {
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute},
         familyLoadingService: {isLoading: computed(() => mockIsLoading.value)},
+    });
+});
+
+vi.mock("@app/stores", async () => {
+    const {computed} = await import("vue");
+
+    return createMockFamilyStores({
         familySetStoreModule: {
             getAll: computed(() => mockAllItems.value),
             retrieveAll: mockRetrieveAll,

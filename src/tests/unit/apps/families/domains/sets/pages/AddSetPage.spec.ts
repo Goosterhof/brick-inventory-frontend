@@ -10,9 +10,8 @@ import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
-const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
-    () => import("../../../../../../helpers"),
-);
+const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices, createMockFamilyStores} =
+    await vi.hoisted(() => import("../../../../../../helpers"));
 
 const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
 
@@ -22,6 +21,11 @@ vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
         familySetStoreModule: {
             getAll: {value: []},
             retrieveAll: vi.fn(),
@@ -38,7 +42,6 @@ vi.mock("@app/services", () =>
                 create: mockCreate,
             }),
         },
-        familyLoadingService: {isLoading: {value: false}},
     }),
 );
 

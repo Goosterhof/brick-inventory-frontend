@@ -13,7 +13,6 @@ export interface FamilyServicesMock {
     familyLoadingService: Record<string, unknown>;
     familySoundService: Record<string, unknown>;
     familyStorageService: Record<string, unknown>;
-    familySetStoreModule: Record<string, unknown>;
     FamilyRouterView: Record<string, unknown>;
     FamilyRouterLink: Record<string, unknown>;
 }
@@ -58,7 +57,6 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
         familyLoadingService: {},
         familySoundService: {},
         familyStorageService: {},
-        familySetStoreModule: {},
         FamilyRouterView: {template: "<div><slot /></div>"},
         FamilyRouterLink: {template: "<a><slot /></a>"},
     };
@@ -73,8 +71,23 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
         familyLoadingService: {...defaults.familyLoadingService, ...overrides.familyLoadingService},
         familySoundService: {...defaults.familySoundService, ...overrides.familySoundService},
         familyStorageService: {...defaults.familyStorageService, ...overrides.familyStorageService},
-        familySetStoreModule: {...defaults.familySetStoreModule, ...overrides.familySetStoreModule},
         FamilyRouterView: {...defaults.FamilyRouterView, ...overrides.FamilyRouterView},
         FamilyRouterLink: {...defaults.FamilyRouterLink, ...overrides.FamilyRouterLink},
     };
+};
+
+export interface FamilyStoresMock {
+    familySetStoreModule: Record<string, unknown>;
+}
+
+type FamilyStoresOverrides = {
+    [K in keyof FamilyStoresMock]?: Partial<FamilyStoresMock[K]>;
+};
+
+export const createMockFamilyStores = (overrides?: FamilyStoresOverrides): FamilyStoresMock => {
+    const defaults: FamilyStoresMock = {familySetStoreModule: {}};
+
+    if (!overrides) return defaults;
+
+    return {familySetStoreModule: {...defaults.familySetStoreModule, ...overrides.familySetStoreModule}};
 };

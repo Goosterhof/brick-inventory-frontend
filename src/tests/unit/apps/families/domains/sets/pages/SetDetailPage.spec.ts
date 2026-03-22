@@ -8,7 +8,7 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
     () => import("../../../../../../helpers"),
 );
 
@@ -34,6 +34,11 @@ vi.mock("@app/services", () =>
         familyHttpService: {getRequest: mockGetRequest},
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
         familySetStoreModule: {
             getAll: {value: []},
             retrieveAll: vi.fn(),
@@ -41,7 +46,6 @@ vi.mock("@app/services", () =>
             getOrFailById: mockGetOrFailById,
             generateNew: vi.fn(),
         },
-        familyLoadingService: {isLoading: {value: false}},
     }),
 );
 

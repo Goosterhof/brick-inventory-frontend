@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type {FamilySetStatus} from "@app/types/familySet";
 
-import {familyHttpService, familyRouterService, familySetStoreModule, familyTranslationService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familySetStoreModule} from "@app/stores";
 import DateInput from "@shared/components/forms/inputs/DateInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
