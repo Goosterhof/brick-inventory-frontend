@@ -104,6 +104,15 @@ vi.mock("@app/services", async () => {
         familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
         familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
         familyLoadingService: {isLoading: computed(() => mockIsLoading.value)},
+        FamilyRouterView: {template: "<div><slot /></div>"},
+        FamilyRouterLink: {template: "<a><slot /></a>"},
+    };
+});
+
+vi.mock("@app/stores", async () => {
+    const {computed} = await import("vue");
+
+    return {
         familySetStoreModule: {
             getAll: computed(() => mockAllItems.value),
             retrieveAll: mockRetrieveAll,
@@ -111,8 +120,6 @@ vi.mock("@app/services", async () => {
             getOrFailById: vi.fn(),
             generateNew: vi.fn(),
         },
-        FamilyRouterView: {template: "<div><slot /></div>"},
-        FamilyRouterLink: {template: "<a><slot /></a>"},
     };
 });
 

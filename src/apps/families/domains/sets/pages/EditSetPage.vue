@@ -2,7 +2,8 @@
 import type {Adapted} from "@shared/services/resource-adapter";
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
-import {familyHttpService, familyRouterService, familySetStoreModule, familyTranslationService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familySetStoreModule} from "@app/stores";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import DateInput from "@shared/components/forms/inputs/DateInput.vue";

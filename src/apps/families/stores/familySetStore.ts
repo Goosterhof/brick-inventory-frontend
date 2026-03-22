@@ -1,12 +1,11 @@
 import type {FamilySet} from "@app/types/familySet";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "@shared/services/resource-adapter";
 
+import {familyHttpService} from "@app/services/http";
+import {familyLoadingService} from "@app/services/loading";
+import {familyStorageService} from "@app/services/storage";
 import {createAdapterStoreModule} from "@shared/services/adapter-store";
 import {resourceAdapter} from "@shared/services/resource-adapter";
-
-import {familyHttpService} from "./http";
-import {familyLoadingService} from "./loading";
-import {familyStorageService} from "./storage";
 
 const DOMAIN_NAME = "family-sets";
 
