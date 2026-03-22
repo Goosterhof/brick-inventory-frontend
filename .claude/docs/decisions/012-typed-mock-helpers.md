@@ -18,12 +18,12 @@ The question: how do we eliminate mock duplication while adding compile-time saf
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-| --- | --- | --- | --- |
-| **Do nothing — keep inline mocks** | No new infrastructure. Already ADR-010 compliant | 558 lines of duplication. No drift detection. Every new page test copies 30 lines of boilerplate | Eliminated — duplication is growing linearly with domain count |
-| **`__mocks__` directories (Vitest auto-mock)** | Zero boilerplate in test files. Built-in Vitest convention | Implicit — violates ADR-010's explicit-per-file principle. Global mocks with per-test overrides are awkward. `__mocks__` directories sit next to production code. Test-specific customization fights the framework | Eliminated — trades explicitness for convenience, poor override ergonomics |
-| **Typed factory helpers with `MockedService<T>` mapped type** | Type-safe against real interfaces (catches added/removed members). Tests get typed mock access (`.mockResolvedValue()` with correct types). Each test file still owns its `vi.mock()` call. Override pattern for test-specific customization. One utility type, applied everywhere | Requires `as` cast in helper implementations (safe, controlled). Helpers must be maintained alongside interfaces | **Chosen** — eliminates duplication, adds compile-time drift detection, preserves ADR-010 explicitness |
-| **Code generation from interfaces** | Perfect accuracy, auto-generated from source | Build step dependency. Generated code is opaque. Overkill for ~8 service interfaces | Eliminated — complexity far exceeds the problem size |
+| Option                                                        | Pros                                                                                                                                                                                                                                                                               | Cons                                                                                                                                                                                                               | Why eliminated / Why chosen                                                                            |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| **Do nothing — keep inline mocks**                            | No new infrastructure. Already ADR-010 compliant                                                                                                                                                                                                                                   | 558 lines of duplication. No drift detection. Every new page test copies 30 lines of boilerplate                                                                                                                   | Eliminated — duplication is growing linearly with domain count                                         |
+| **`__mocks__` directories (Vitest auto-mock)**                | Zero boilerplate in test files. Built-in Vitest convention                                                                                                                                                                                                                         | Implicit — violates ADR-010's explicit-per-file principle. Global mocks with per-test overrides are awkward. `__mocks__` directories sit next to production code. Test-specific customization fights the framework | Eliminated — trades explicitness for convenience, poor override ergonomics                             |
+| **Typed factory helpers with `MockedService<T>` mapped type** | Type-safe against real interfaces (catches added/removed members). Tests get typed mock access (`.mockResolvedValue()` with correct types). Each test file still owns its `vi.mock()` call. Override pattern for test-specific customization. One utility type, applied everywhere | Requires `as` cast in helper implementations (safe, controlled). Helpers must be maintained alongside interfaces                                                                                                   | **Chosen** — eliminates duplication, adds compile-time drift detection, preserves ADR-010 explicitness |
+| **Code generation from interfaces**                           | Perfect accuracy, auto-generated from source                                                                                                                                                                                                                                       | Build step dependency. Generated code is opaque. Overkill for ~8 service interfaces                                                                                                                                | Eliminated — complexity far exceeds the problem size                                                   |
 
 ## Decision
 
@@ -32,11 +32,7 @@ The question: how do we eliminate mock duplication while adding compile-time saf
 A single utility type that converts any service interface into its mocked equivalent:
 
 ```typescript
-type MockedService<T> = {
-    [K in keyof T]: T[K] extends (...args: infer A) => infer R
-        ? Mock<(...args: A) => R>
-        : T[K];
-};
+type MockedService<T> = {[K in keyof T]: T[K] extends (...args: infer A) => infer R ? Mock<(...args: A) => R> : T[K]};
 ```
 
 Functions become `Mock<F>` (preserving parameter and return types). Non-function properties (refs, computeds) pass through unchanged. This gives test code two things simultaneously: mock API methods (`.mockResolvedValue()`, `.toHaveBeenCalledWith()`) and typed parameters/returns.
@@ -45,26 +41,27 @@ Functions become `Mock<F>` (preserving parameter and return types). Non-function
 
 Each major mock target gets a helper file:
 
-| File | What it mocks | Typed against |
-| --- | --- | --- |
-| `mockTypes.ts` | `MockedService<T>` utility type | N/A (generic) |
-| `mockAxios.ts` | `axios` module + `MockAxiosError` class | Axios API shape |
-| `mockStringTs.ts` | `string-ts` passthrough | string-ts API shape |
-| `mockFamilyServices.ts` | `@app/services` barrel (http, auth, router, translation, loading, storage, sound, set store) | Real service interfaces (`HttpService`, `AuthService`, `RouterService`, etc.) |
-| `mockFormComponents.ts` | `FormField`, `FormLabel`, `FormError` stubs | Component shape (name + props + template) |
-| `mockSharedComponents.ts` | `BadgeLabel`, `EmptyState`, `FilterChip`, and other shared component stubs | Component shape |
+| File                      | What it mocks                                                                                | Typed against                                                                 |
+| ------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `mockTypes.ts`            | `MockedService<T>` utility type                                                              | N/A (generic)                                                                 |
+| `mockAxios.ts`            | `axios` module + `MockAxiosError` class                                                      | Axios API shape                                                               |
+| `mockStringTs.ts`         | `string-ts` passthrough                                                                      | string-ts API shape                                                           |
+| `mockFamilyServices.ts`   | `@app/services` barrel (http, auth, router, translation, loading, storage, sound, set store) | Real service interfaces (`HttpService`, `AuthService`, `RouterService`, etc.) |
+| `mockFormComponents.ts`   | `FormField`, `FormLabel`, `FormError` stubs                                                  | Component shape (name + props + template)                                     |
+| `mockSharedComponents.ts` | `BadgeLabel`, `EmptyState`, `FilterChip`, and other shared component stubs                   | Component shape                                                               |
 
 ### Type safety enforcement — two constraints
 
 **Constraint 1: Return type annotation on helpers**
 
 ```typescript
-export const createMockHttpService = (overrides?: Partial<HttpService>): MockedService<HttpService> => ({
-    getRequest: vi.fn(),
-    postRequest: vi.fn(),
-    // ...
-    ...overrides,
-}) as MockedService<HttpService>;
+export const createMockHttpService = (overrides?: Partial<HttpService>): MockedService<HttpService> =>
+    ({
+        getRequest: vi.fn(),
+        postRequest: vi.fn(),
+        // ...
+        ...overrides,
+    }) as MockedService<HttpService>;
 ```
 
 If `HttpService` gains `headRequest`, this fails to compile — the object literal is incomplete. If `HttpService` removes `putRequest`, the excess property is flagged. The `as` cast bridges `Mock<any>` (vi.fn() return) to `MockedService<HttpService>` — this is safe because we control the implementation and the return type annotation enforces structural completeness.
@@ -72,9 +69,7 @@ If `HttpService` gains `headRequest`, this fails to compile — the object liter
 **Constraint 2: Override parameter typed as `Partial<Interface>`**
 
 ```typescript
-createMockFamilyServices({
-    familyAuthService: {login: mockLogin},
-})
+createMockFamilyServices({familyAuthService: {login: mockLogin}});
 ```
 
 The override must be structurally compatible with the real interface. You can't pass `{login: "not a function"}` — TypeScript catches it at the call site.
@@ -82,17 +77,16 @@ The override must be structurally compatible with the real interface. You can't 
 ### Test file usage pattern
 
 ```typescript
-const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({
-    mockLogin: vi.fn(),
-    mockGoToDashboard: vi.fn(),
-}));
+const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({mockLogin: vi.fn(), mockGoToDashboard: vi.fn()}));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
-vi.mock("@app/services", () => createMockFamilyServices({
-    familyAuthService: {login: mockLogin},
-    familyRouterService: {goToDashboard: mockGoToDashboard},
-}));
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyAuthService: {login: mockLogin},
+        familyRouterService: {goToDashboard: mockGoToDashboard},
+    }),
+);
 ```
 
 3 lines replace 30. The `vi.mock()` call is still per-file, still explicit, still declares what it mocks. ADR-010 is preserved. The factory function is the second argument — the lint rule is satisfied.
@@ -113,13 +107,13 @@ vi.mock("@app/services", () => createMockFamilyServices({
 
 ## Enforcement
 
-| What | Mechanism | Scope |
-| --- | --- | --- |
+| What                                  | Mechanism                                        | Scope                                    |
+| ------------------------------------- | ------------------------------------------------ | ---------------------------------------- |
 | Helpers typed against real interfaces | TypeScript return type annotations + `satisfies` | All helper files in `src/tests/helpers/` |
-| Override parameters typed | `Partial<Interface>` constraint | All `createMock*` function signatures |
-| Per-file `vi.mock()` still required | ADR-010 lint rule (unchanged) | All `.spec.ts` files |
-| Factory function still required | ADR-010 lint rule (unchanged) | All `vi.mock()` calls |
-| No mocks in setup files | ADR-010 + ADR-011 (unchanged) | `setup.ts` |
+| Override parameters typed             | `Partial<Interface>` constraint                  | All `createMock*` function signatures    |
+| Per-file `vi.mock()` still required   | ADR-010 lint rule (unchanged)                    | All `.spec.ts` files                     |
+| Factory function still required       | ADR-010 lint rule (unchanged)                    | All `vi.mock()` calls                    |
+| No mocks in setup files               | ADR-010 + ADR-011 (unchanged)                    | `setup.ts`                               |
 
 ## Relationship to other ADRs
 

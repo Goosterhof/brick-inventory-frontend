@@ -536,39 +536,39 @@ Every app state is a moment to reinforce the brand. Here's how the voice sounds 
 
 ### The Copy Doctrine — Building With Words
 
-The brand voice isn't just tone — it's vocabulary. Every user-facing string should speak the language of LEGO construction. This is not decoration. If you removed the construction metaphors, the copy should feel *broken* — like instructions for a set with the diagrams ripped out.
+The brand voice isn't just tone — it's vocabulary. Every user-facing string should speak the language of LEGO construction. This is not decoration. If you removed the construction metaphors, the copy should feel _broken_ — like instructions for a set with the diagrams ripped out.
 
 #### The Construction Vocabulary
 
 These are the domain words. Use them instead of their generic equivalents.
 
-| Generic | Construction Equivalent | When to Use |
-|---|---|---|
-| Add / Create | **Build**, **Place**, **Snap** | Adding items to collections, storage, inventory |
-| Delete / Remove | **Disassemble**, **Pull apart** | Removing items. "Disassemble this set?" not "Delete this set?" |
-| Save | **Lock in**, **Set** | Confirming changes. "Changes locked in." not "Changes saved." |
-| Load / Fetch | **Assemble**, **Pull together** | Data loading. "Assembling your collection..." not "Loading..." |
-| Search | **Dig through** | Searching inventory. "Dig through your bricks" not "Search your items" |
-| Filter | **Sort by** | Filtering views. Sorting bricks is what you do on the floor before building |
-| Empty / None | **The bin is empty**, **No bricks here** | Empty states always reference the physical absence of bricks |
-| Error | **Doesn't fit**, **Won't snap** | Errors are misaligned bricks, not system failures |
-| Collection | **Collection** (this one stays) | Collections of sets are already LEGO vocabulary |
-| Storage location | **Bin**, **Shelf**, **Drawer** | Physical storage — use the words people actually use for their LEGO storage |
-| User account | **Builder profile** | The person using the app is a builder |
+| Generic          | Construction Equivalent                  | When to Use                                                                 |
+| ---------------- | ---------------------------------------- | --------------------------------------------------------------------------- |
+| Add / Create     | **Build**, **Place**, **Snap**           | Adding items to collections, storage, inventory                             |
+| Delete / Remove  | **Disassemble**, **Pull apart**          | Removing items. "Disassemble this set?" not "Delete this set?"              |
+| Save             | **Lock in**, **Set**                     | Confirming changes. "Changes locked in." not "Changes saved."               |
+| Load / Fetch     | **Assemble**, **Pull together**          | Data loading. "Assembling your collection..." not "Loading..."              |
+| Search           | **Dig through**                          | Searching inventory. "Dig through your bricks" not "Search your items"      |
+| Filter           | **Sort by**                              | Filtering views. Sorting bricks is what you do on the floor before building |
+| Empty / None     | **The bin is empty**, **No bricks here** | Empty states always reference the physical absence of bricks                |
+| Error            | **Doesn't fit**, **Won't snap**          | Errors are misaligned bricks, not system failures                           |
+| Collection       | **Collection** (this one stays)          | Collections of sets are already LEGO vocabulary                             |
+| Storage location | **Bin**, **Shelf**, **Drawer**           | Physical storage — use the words people actually use for their LEGO storage |
+| User account     | **Builder profile**                      | The person using the app is a builder                                       |
 
 #### Construction Voice by Context
 
-| Context | Voice | Example |
-|---|---|---|
-| **Page headings** | Commands from the build instructions | "YOUR SETS", "ADD A SET", "STORAGE BINS" |
-| **Button labels** | Actions a builder takes | "Place this brick", "Start building", "Disassemble" |
-| **Empty states** | The builder looking at an empty table | "No bricks in this bin yet. Time to sort." / "Your collection is wide open. Snap in your first set." |
-| **Loading states** | The build is in progress | "Assembling your collection..." / "Pulling bricks together..." / "Sorting the pile..." |
-| **Success feedback** | The satisfying snap | "Locked in." / "Set placed." / "Brick snapped into place." |
-| **Validation errors** | The brick doesn't fit | "This piece doesn't fit here." / "Missing a piece — [field] is required." / "That brick's already placed." (duplicate) |
-| **Network errors** | The instructions blew away | "Lost the connection. The instructions blew off the table." / "Can't reach the warehouse. Try again?" |
-| **Destructive confirmations** | Pulling apart is permanent | "Disassemble this set? You'll need to rebuild from scratch." / "Pull apart all storage bins? Gone means gone." |
-| **Onboarding** | Unboxing a new set | "Welcome to Brick Inventory. Let's unbox your collection." / "First step: where do you keep your bricks?" |
+| Context                       | Voice                                 | Example                                                                                                                |
+| ----------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Page headings**             | Commands from the build instructions  | "YOUR SETS", "ADD A SET", "STORAGE BINS"                                                                               |
+| **Button labels**             | Actions a builder takes               | "Place this brick", "Start building", "Disassemble"                                                                    |
+| **Empty states**              | The builder looking at an empty table | "No bricks in this bin yet. Time to sort." / "Your collection is wide open. Snap in your first set."                   |
+| **Loading states**            | The build is in progress              | "Assembling your collection..." / "Pulling bricks together..." / "Sorting the pile..."                                 |
+| **Success feedback**          | The satisfying snap                   | "Locked in." / "Set placed." / "Brick snapped into place."                                                             |
+| **Validation errors**         | The brick doesn't fit                 | "This piece doesn't fit here." / "Missing a piece — [field] is required." / "That brick's already placed." (duplicate) |
+| **Network errors**            | The instructions blew away            | "Lost the connection. The instructions blew off the table." / "Can't reach the warehouse. Try again?"                  |
+| **Destructive confirmations** | Pulling apart is permanent            | "Disassemble this set? You'll need to rebuild from scratch." / "Pull apart all storage bins? Gone means gone."         |
+| **Onboarding**                | Unboxing a new set                    | "Welcome to Brick Inventory. Let's unbox your collection." / "First step: where do you keep your bricks?"              |
 
 #### The Constraint
 

@@ -190,9 +190,9 @@ Not every finding goes unchallenged. Findings rated **medium or above** are sent
 1. You file your inspection report as normal. Every medium+ finding is a rebuttal candidate.
 2. The CFO forwards medium+ findings to the Architect with your evidence attached.
 3. The Architect responds with one of three verdicts:
-   - **ACCEPT** — "Fair. I missed this." The finding stands.
-   - **REBUT** — "Here's why this is intentional / why the finding is incorrect." Must include evidence — code references, ADR citations, or documented exceptions. Opinion alone is not a rebuttal.
-   - **PARTIAL** — "The finding is valid but the recommendation is wrong. Here's a better fix." Must include an alternative.
+    - **ACCEPT** — "Fair. I missed this." The finding stands.
+    - **REBUT** — "Here's why this is intentional / why the finding is incorrect." Must include evidence — code references, ADR citations, or documented exceptions. Opinion alone is not a rebuttal.
+    - **PARTIAL** — "The finding is valid but the recommendation is wrong. Here's a better fix." Must include an alternative.
 4. The CFO reads both sides and rules. The ruling is final for that inspection cycle.
 
 ### When the Architect Wins
@@ -223,6 +223,7 @@ This is not personal. It is the same evidence-based challenge you demand from yo
 ### When It Arrives
 
 The CFO routes a Methodology Objection to you with:
+
 - What the Architect encountered during building
 - Which SOP they claim failed (missed entirely, or gave wrong guidance)
 - Evidence — code, ADR, or documented pattern

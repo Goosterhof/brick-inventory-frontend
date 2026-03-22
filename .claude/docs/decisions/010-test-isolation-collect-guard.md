@@ -39,6 +39,7 @@ A custom Vitest reporter (`test-guard-reporter.ts`) measures the execution durat
 **Why execution time over collect duration:** Collect duration (`collectDuration`) measures how long Vitest spends importing a file's dependency tree. This metric is heavily polluted by thread pool contention, Vite transform caching, and coverage instrumentation — making it unreliable as an enforcement mechanism without complex baseline calculations. Execution time measures how long the tests themselves take to run. It is deterministic, does not vary with worker pool size or coverage mode, and directly captures the developer experience.
 
 **What execution time catches:**
+
 - **Insufficient mocking** — real I/O, heavy dependencies not stubbed, expensive DOM operations
 - **File too large** — too many tests in one file, cumulative runtime adds up
 - **Expensive setup/teardown** — heavy `beforeEach`/`afterEach` hooks
@@ -53,6 +54,7 @@ A custom Vitest reporter (`test-guard-reporter.ts`) measures the execution durat
 **Output format:** Each line shows `[project] durationMs | testCount tests | file`.
 
 **Remediation when a test file exceeds the threshold:**
+
 1. Check if heavy dependencies are unmocked — add `vi.mock()` with factory functions
 2. If the file has many tests, consider splitting into focused test files
 3. If setup/teardown is expensive, reduce per-test overhead (share setup where safe)
@@ -82,10 +84,7 @@ vi.mock("axios", () => ({
     default: {create: vi.fn()},
 }));
 
-vi.mock("string-ts", () => ({
-    deepCamelKeys: <T>(obj: T): T => obj,
-    deepSnakeKeys: <T>(obj: T): T => obj,
-}));
+vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
 ```
 
 When mocking `string-ts` with a passthrough, fixture data must already be in camelCase since `deepCamelKeys` won't convert it.
@@ -152,16 +151,16 @@ Every `vi.mock()` call lives in the test file that needs it. No global mocks in 
 
 ## Enforcement
 
-| What                                   | Mechanism                                                            | Scope                                                            |
-| -------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Test execution time limit              | `test-guard-reporter.ts` custom Vitest reporter                      | Every `.spec.ts` file — warn at 300ms, **fail at 1000ms** (blocks pipeline) |
-| Import chain duration (delta)          | `collect-guard-reporter.ts` custom Vitest reporter                   | Every `.spec.ts` file — warn at 200ms delta, violation at 500ms delta (informational, does not block) |
-| Import chain duration (hard cap)       | `collect-guard-reporter.ts` custom Vitest reporter                   | Every `.spec.ts` file — violation at 5000ms raw regardless of delta (informational, does not block)   |
-| Coverage mode threshold scaling        | `collect-guard-reporter.ts` detects `coverage.enabled` via `onInit`  | Collect guard thresholds doubled when running with `--coverage` (test guard unaffected — execution time is coverage-stable) |
-| Factory required on `vi.mock()`        | Custom lint rule in `scripts/lint-vue-conventions.mjs`               | Every `.spec.ts` file                                            |
-| Reporters registered in config         | `vitest.config.ts` reporters array                                   | Suite-wide (both reporters)                                      |
-| Lint runs on commit                    | lint-staged in Husky pre-commit hook                                 | All staged `.spec.ts` files                                      |
-| Pre-push gate                          | Husky pre-push hook runs `test:coverage` which includes both reporters | All pushes                                                     |
+| What                             | Mechanism                                                              | Scope                                                                                                                       |
+| -------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Test execution time limit        | `test-guard-reporter.ts` custom Vitest reporter                        | Every `.spec.ts` file — warn at 300ms, **fail at 1000ms** (blocks pipeline)                                                 |
+| Import chain duration (delta)    | `collect-guard-reporter.ts` custom Vitest reporter                     | Every `.spec.ts` file — warn at 200ms delta, violation at 500ms delta (informational, does not block)                       |
+| Import chain duration (hard cap) | `collect-guard-reporter.ts` custom Vitest reporter                     | Every `.spec.ts` file — violation at 5000ms raw regardless of delta (informational, does not block)                         |
+| Coverage mode threshold scaling  | `collect-guard-reporter.ts` detects `coverage.enabled` via `onInit`    | Collect guard thresholds doubled when running with `--coverage` (test guard unaffected — execution time is coverage-stable) |
+| Factory required on `vi.mock()`  | Custom lint rule in `scripts/lint-vue-conventions.mjs`                 | Every `.spec.ts` file                                                                                                       |
+| Reporters registered in config   | `vitest.config.ts` reporters array                                     | Suite-wide (both reporters)                                                                                                 |
+| Lint runs on commit              | lint-staged in Husky pre-commit hook                                   | All staged `.spec.ts` files                                                                                                 |
+| Pre-push gate                    | Husky pre-push hook runs `test:coverage` which includes both reporters | All pushes                                                                                                                  |
 
 ## Resolved Questions
 
