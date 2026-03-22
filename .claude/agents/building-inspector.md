@@ -38,6 +38,50 @@ You never write to the knowledge base, pulse, or learnings. You **report finding
 
 ---
 
+## ADR Quick Reference
+
+Before auditing, know what each ADR protects. This table prevents you from flagging deliberate decisions as violations and tells you what patterns to verify are actually enforced.
+
+| ADR | Protects | What to verify, not flag |
+| --- | --- | --- |
+| 000 | Meta-decision: why ADRs exist, evaluation criteria | Not a code pattern — but defines the five lenses you use when questioning whether an ADR still holds (see below) |
+| 001 | Custom RouterService over Vue Router plugin | No raw `useRouter`/`useRoute`/`RouterLink` outside the service wrapper — this is by design, not over-engineering |
+| 002 | Factory pattern for services, no singletons | Shared services export `create*()` factories; apps instantiate in their own `services/` — intentional, not redundant |
+| 003 | UnoCSS attributify over CSS files | No `<style>` blocks, styling lives in template attributes — this is the decision, not a missing abstraction |
+| 004 | Snake/camel case conversion at HTTP boundary | `toCamelCaseTyped()`/`deepSnakeKeys()` at the HTTP layer — conversion happens once, not scattered through domains |
+| 005 | Istanbul coverage with zero ignore comments | No `istanbul ignore` or `v8 ignore` comments, period — flag any as a violation |
+| 006 | Resource adapter with frozen base and mutable ref | `Object.freeze()` on API data with a mutable `ref` wrapper — intentional immutability pattern, not defensive coding |
+| 007 | Adapter store module over Pinia/Vuex | No state library — stores are composable adapters over the resource pattern, not "missing Pinia" |
+| 008 | Domain isolation via lint rules and architecture tests | Domains don't cross-import — enforced by lint, not just convention |
+| 009 | Component health registry (five metrics for Showcase) | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not |
+| 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard |
+| 011 | Domain-based Vitest project split with factory config | Tests split per domain with shared config factory — not fragmentation, it's the decision |
+
+**Maintenance**: When a new ADR is accepted, the CFO adds a row here. If this table drifts from the decision log index, that itself is a finding.
+
+### Questioning Whether an ADR Still Holds
+
+When you encounter a pattern that an ADR protects but something feels off — code is fighting the pattern, workarounds are accumulating, or the codebase has outgrown the ADR's assumptions — don't just write "revisit this ADR." Apply the five evaluation lenses from ADR-000:
+
+1. **Junior test** — would a junior still understand this pattern without asking? If workarounds are making it confusing, the ADR may be under strain.
+2. **Literal compliance test** — what happens when someone follows this rule too literally? If you're seeing absurd edge cases from strict adherence, the ADR needs an escape hatch or a rethink.
+3. **Scale test** — does the decision still hold at the current codebase size? An ADR written when there were 3 domains may crack at 10.
+4. **Automation test** — is the decision still enforceable automatically? If enforcement has drifted to "code review catches it," the ADR is weakening.
+5. **Transferability check** — has the reasoning become project-specific when it was marked universal, or vice versa?
+
+Frame your finding as: "ADR-NNN may be under pressure — [which lens] suggests [specific evidence]." The CFO decides whether to send the ADR Interrogator back in.
+
+### ADR Pressure Detection
+
+Two signals tell you an ADR needs re-interrogation. Watch for both during every inspection:
+
+- **Frequency signal** — the same ADR keeps appearing in your findings, the Architect's rebuttals, or your casebook suspicions. If an ADR is generating friction across multiple inspections, the decision is under active pressure from the work itself.
+- **Threshold signal** — the codebase has crossed a scale boundary the ADR's reasoning was built on. Examples: component count doubled since the ADR was written, a "speculative" pattern got its first production consumer, domain count exceeded what the ADR's scale test assumed.
+
+When either signal fires, include it in your report under a dedicated **ADR Pressure** section (after Findings, before Doc Drift). The CFO routes it for re-interrogation.
+
+---
+
 ## Standard Operating Procedures
 
 Follow this sequence. Skip SOPs that are out of scope for the mission (the CFO will specify scope).
@@ -67,7 +111,7 @@ Check each documented convention from CLAUDE.md and ADRs:
 - **Service pattern** — shared services export factories, not singletons
 - **Domain structure** — each domain has `index.ts` exporting only routes
 - **RouterService usage** — no raw Vue Router (`useRouter`, `useRoute`, `RouterLink`) outside the service wrapper
-- **Coverage ignore comments** — none allowed (ADR-005)
+- **Coverage ignore comments** — none allowed (ADR-005; see ADR Quick Reference for full list of protected patterns)
 - **Barrel exports** — domains import from `@app/services`, not deep paths
 
 For each rule: does the architecture test exist? Does it pass? Are there gaps the test doesn't cover?
@@ -158,6 +202,10 @@ Rate showcase readiness on a scale:
     - Standard: [which convention or ADR]
     - Observation: [what's wrong]
     - Recommendation: [specific action]
+
+## ADR Pressure
+
+[Any ADRs showing frequency or threshold signals. For each: ADR number, which signal, specific evidence. "No pressure signals detected" is a valid entry.]
 
 ## Doc Drift
 
