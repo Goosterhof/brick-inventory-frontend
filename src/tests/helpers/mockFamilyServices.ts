@@ -78,6 +78,7 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
 
 export interface FamilyStoresMock {
     familySetStoreModule: Record<string, unknown>;
+    storageOptionStoreModule: Record<string, unknown>;
 }
 
 type FamilyStoresOverrides = {
@@ -85,9 +86,12 @@ type FamilyStoresOverrides = {
 };
 
 export const createMockFamilyStores = (overrides?: FamilyStoresOverrides): FamilyStoresMock => {
-    const defaults: FamilyStoresMock = {familySetStoreModule: {}};
+    const defaults: FamilyStoresMock = {familySetStoreModule: {}, storageOptionStoreModule: {}};
 
     if (!overrides) return defaults;
 
-    return {familySetStoreModule: {...defaults.familySetStoreModule, ...overrides.familySetStoreModule}};
+    return {
+        familySetStoreModule: {...defaults.familySetStoreModule, ...overrides.familySetStoreModule},
+        storageOptionStoreModule: {...defaults.storageOptionStoreModule, ...overrides.storageOptionStoreModule},
+    };
 };

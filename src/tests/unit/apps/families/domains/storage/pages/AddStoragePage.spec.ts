@@ -6,20 +6,41 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {ref} from "vue";
 
-const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
-    () => import("../../../../../../helpers"),
-);
+const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices, createMockFamilyStores} =
+    await vi.hoisted(() => import("../../../../../../helpers"));
 
-const {mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({mockPostRequest: vi.fn(), mockGoToRoute: vi.fn()}));
+const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
-        familyHttpService: {postRequest: mockPostRequest},
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
+        storageOptionStoreModule: {
+            getAll: {value: []},
+            retrieveAll: vi.fn(),
+            getById: vi.fn(),
+            getOrFailById: vi.fn(),
+            generateNew: () => ({
+                name: "",
+                description: null,
+                parentId: null,
+                row: null,
+                column: null,
+                childIds: [],
+                mutable: ref({name: "", description: null, parentId: null, row: null, column: null, childIds: []}),
+                reset: vi.fn(),
+                create: mockCreate,
+            }),
+        },
     }),
 );
 
@@ -64,10 +85,16 @@ describe("AddStoragePage", () => {
         expect(button.text()).toBe("storage.add");
     });
 
-    it("should submit correct payload on form submit", async () => {
+    it("should call create on form submit", async () => {
         // Arrange
-        mockPostRequest.mockResolvedValue({
-            data: {id: 1, name: "Lade A", description: null, parentId: null, row: null, column: null, childIds: []},
+        mockCreate.mockResolvedValue({
+            id: 1,
+            name: "Lade A",
+            description: null,
+            parentId: null,
+            row: null,
+            column: null,
+            childIds: [],
         });
         const wrapper = shallowMount(AddStoragePage);
 
@@ -80,19 +107,19 @@ describe("AddStoragePage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockPostRequest).toHaveBeenCalledWith("/storage-options", {
+        expect(mockCreate).toHaveBeenCalled();
+    });
+
+    it("should navigate to detail page on successful create", async () => {
+        // Arrange
+        mockCreate.mockResolvedValue({
+            id: 7,
             name: "Lade A",
             description: null,
             parentId: null,
             row: null,
             column: null,
-        });
-    });
-
-    it("should navigate to detail page on successful create", async () => {
-        // Arrange
-        mockPostRequest.mockResolvedValue({
-            data: {id: 7, name: "Lade A", description: null, parentId: null, row: null, column: null, childIds: []},
+            childIds: [],
         });
         const wrapper = shallowMount(AddStoragePage);
 
@@ -108,7 +135,7 @@ describe("AddStoragePage", () => {
         // Arrange
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPostRequest.mockRejectedValue(axiosError);
+        mockCreate.mockRejectedValue(axiosError);
         const wrapper = shallowMount(AddStoragePage);
 
         // Act
@@ -123,7 +150,7 @@ describe("AddStoragePage", () => {
         // Arrange
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPostRequest.mockRejectedValue(axiosError);
+        mockCreate.mockRejectedValue(axiosError);
         const wrapper = shallowMount(AddStoragePage);
 
         // Act

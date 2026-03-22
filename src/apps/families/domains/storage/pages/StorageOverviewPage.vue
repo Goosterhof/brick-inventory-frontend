@@ -1,41 +1,40 @@
 <script setup lang="ts">
 import type {StorageOption} from "@app/types/storageOption";
+import type {Adapted} from "@shared/services/resource-adapter";
 
-import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familyLoadingService, familyRouterService, familyTranslationService} from "@app/services";
+import {storageOptionStoreModule} from "@app/stores";
 import EmptyState from "@shared/components/EmptyState.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {toCamelCaseTyped} from "@shared/helpers/string";
 import {computed, onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
-const storageOptions = ref<StorageOption[]>([]);
-const loading = ref(true);
+const {isLoading} = familyLoadingService;
+const {getAll, retrieveAll} = storageOptionStoreModule;
 const searchQuery = ref("");
 
 const isSearching = computed(() => searchQuery.value.trim().length > 0);
 
 const filteredOptions = computed(() => {
     const query = searchQuery.value.toLowerCase().trim();
-    if (!query) return storageOptions.value;
+    if (!query) return getAll.value;
 
-    return storageOptions.value.filter(
+    return getAll.value.filter(
         (o) =>
             o.name.toLowerCase().includes(query) ||
             (o.description !== null && o.description.toLowerCase().includes(query)),
     );
 });
 
-const topLevelOptions = computed(() => storageOptions.value.filter((o) => o.parentId === null));
+const topLevelOptions = computed(() => getAll.value.filter((o) => o.parentId === null));
 
-const getChildren = (parentId: number): StorageOption[] => storageOptions.value.filter((o) => o.parentId === parentId);
+const getChildren = (parentId: number): Adapted<StorageOption>[] => getAll.value.filter((o) => o.parentId === parentId);
 
 onMounted(async () => {
-    const response = await familyHttpService.getRequest<StorageOption[]>("/storage-options");
-    storageOptions.value = response.data.map((item) => toCamelCaseTyped(item));
-    loading.value = false;
+    await retrieveAll();
 });
 
 const goToAdd = async () => {
@@ -53,9 +52,9 @@ const goToDetail = async (id: number) => {
             <PrimaryButton @click="goToAdd">{{ t("storage.addStorage").value }}</PrimaryButton>
         </PageHeader>
 
-        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
+        <p v-if="isLoading" text="gray-600">{{ t("common.loading").value }}</p>
 
-        <EmptyState v-else-if="storageOptions.length === 0" :message="t('storage.noStorage').value" />
+        <EmptyState v-else-if="getAll.length === 0" :message="t('storage.noStorage').value" />
 
         <template v-else>
             <div m="b-4">

@@ -7,21 +7,84 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
-    () => import("../../../../../../helpers"),
-);
-
-const {mockGetRequest, mockGoToRoute} = vi.hoisted(() => ({mockGetRequest: vi.fn(), mockGoToRoute: vi.fn()}));
+const {
+    createMockAxios,
+    createMockStringTs,
+    createMockFamilyServices,
+    createMockFamilyStores,
+    createMockFormField,
+    createMockFormLabel,
+    createMockFormError,
+} = await vi.hoisted(() => import("../../../../../../helpers"));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
-vi.mock("@app/services", () =>
-    createMockFamilyServices({
-        familyHttpService: {getRequest: mockGetRequest},
+
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
+
+vi.mock("@shared/components/EmptyState.vue", () => ({
+    default: {name: "EmptyState", template: "<span><slot /></span>", props: ["message"]},
+}));
+
+vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({
+    default: {
+        name: "TextInput",
+        template: "<input @input='$emit(\"update:modelValue\", $event.target.value)' />",
+        props: ["modelValue"],
+    },
+}));
+
+vi.mock("@shared/components/ListItemButton.vue", () => ({
+    default: {name: "ListItemButton", template: "<div @click='$emit(\"click\")'><slot /></div>", props: ["variant"]},
+}));
+
+vi.mock("@shared/components/PageHeader.vue", () => ({
+    default: {name: "PageHeader", template: "<header><h1>{{ title }}</h1><slot /></header>", props: ["title"]},
+}));
+
+vi.mock("@shared/components/PrimaryButton.vue", () => ({
+    default: {
+        name: "PrimaryButton",
+        template: "<button @click='$emit(\"click\")'><slot /></button>",
+        props: ["variant"],
+    },
+}));
+
+const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
+    const {ref} = await import("vue");
+    return {
+        mockRetrieveAll: vi.fn(),
+        mockGoToRoute: vi.fn(),
+        mockAllItems: ref<unknown[]>([]),
+        mockIsLoading: ref(false),
+    };
+});
+
+vi.mock("@app/services", async () => {
+    const {computed} = await import("vue");
+
+    return createMockFamilyServices({
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute},
-    }),
-);
+        familyLoadingService: {isLoading: computed(() => mockIsLoading.value)},
+    });
+});
+
+vi.mock("@app/stores", async () => {
+    const {computed} = await import("vue");
+
+    return createMockFamilyStores({
+        storageOptionStoreModule: {
+            getAll: computed(() => mockAllItems.value),
+            retrieveAll: mockRetrieveAll,
+            getById: vi.fn(),
+            getOrFailById: vi.fn(),
+            generateNew: vi.fn(),
+        },
+    });
+});
 
 const mockStorageOption = {
     id: 1,
@@ -46,13 +109,13 @@ const mockChildOption = {
 describe("StorageOverviewPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockAllItems.value = [];
+        mockIsLoading.value = false;
+        mockRetrieveAll.mockResolvedValue(undefined);
     });
 
     it("should render page title", async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
-
-        // Act
+        // Arrange & Act
         const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
@@ -60,21 +123,18 @@ describe("StorageOverviewPage", () => {
         expect(wrapper.findComponent(PageHeader).props("title")).toBe("storage.title");
     });
 
-    it("should fetch storage options on mount", async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
-
-        // Act
+    it("should call retrieveAll on mount", async () => {
+        // Arrange & Act
         shallowMount(StorageOverviewPage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/storage-options");
+        expect(mockRetrieveAll).toHaveBeenCalled();
     });
 
     it("should render storage option cards when options exist", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: [mockStorageOption]});
+        mockAllItems.value = [mockStorageOption];
 
         // Act
         const wrapper = shallowMount(StorageOverviewPage);
@@ -89,7 +149,7 @@ describe("StorageOverviewPage", () => {
 
     it("should show empty state when no storage options exist", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockAllItems.value = [];
 
         // Act
         const wrapper = shallowMount(StorageOverviewPage);
@@ -101,7 +161,7 @@ describe("StorageOverviewPage", () => {
 
     it("should show loading state initially", () => {
         // Arrange
-        mockGetRequest.mockReturnValue(new Promise(() => {}));
+        mockIsLoading.value = true;
 
         // Act
         const wrapper = shallowMount(StorageOverviewPage);
@@ -112,7 +172,7 @@ describe("StorageOverviewPage", () => {
 
     it("should navigate to add page when add button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockAllItems.value = [];
         const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
@@ -126,7 +186,7 @@ describe("StorageOverviewPage", () => {
 
     it("should navigate to detail page when a storage card is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: [mockStorageOption]});
+        mockAllItems.value = [mockStorageOption];
         const wrapper = shallowMount(StorageOverviewPage);
         await flushPromises();
 
@@ -141,7 +201,7 @@ describe("StorageOverviewPage", () => {
     it("should not show sub-locations badge when no children", async () => {
         // Arrange
         const optionWithoutChildren = {...mockStorageOption, childIds: []};
-        mockGetRequest.mockResolvedValue({data: [optionWithoutChildren]});
+        mockAllItems.value = [optionWithoutChildren];
 
         // Act
         const wrapper = shallowMount(StorageOverviewPage);
@@ -154,7 +214,7 @@ describe("StorageOverviewPage", () => {
     it("should not show row and column when null", async () => {
         // Arrange
         const optionWithoutGrid = {...mockStorageOption, row: null, column: null};
-        mockGetRequest.mockResolvedValue({data: [optionWithoutGrid]});
+        mockAllItems.value = [optionWithoutGrid];
 
         // Act
         const wrapper = shallowMount(StorageOverviewPage);
@@ -167,7 +227,7 @@ describe("StorageOverviewPage", () => {
     it("should not show description when null", async () => {
         // Arrange
         const optionWithoutDescription = {...mockStorageOption, description: null};
-        mockGetRequest.mockResolvedValue({data: [optionWithoutDescription]});
+        mockAllItems.value = [optionWithoutDescription];
 
         // Act
         const wrapper = shallowMount(StorageOverviewPage);
@@ -180,7 +240,7 @@ describe("StorageOverviewPage", () => {
     describe("tree view", () => {
         it("should show children indented under parent", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockChildOption]});
+            mockAllItems.value = [mockStorageOption, mockChildOption];
 
             // Act
             const wrapper = shallowMount(StorageOverviewPage);
@@ -195,7 +255,7 @@ describe("StorageOverviewPage", () => {
 
         it("should not show children at top level", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockChildOption]});
+            mockAllItems.value = [mockStorageOption, mockChildOption];
 
             // Act
             const wrapper = shallowMount(StorageOverviewPage);
@@ -209,7 +269,7 @@ describe("StorageOverviewPage", () => {
 
     describe("search", () => {
         const mockStorageOptionB = {
-            id: 2,
+            id: 3,
             name: "Lade B",
             description: "Rechterla op plank 1",
             parentId: null,
@@ -220,7 +280,7 @@ describe("StorageOverviewPage", () => {
 
         it("should filter storage by name", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockStorageOptionB]});
+            mockAllItems.value = [mockStorageOption, mockStorageOptionB];
             const wrapper = shallowMount(StorageOverviewPage);
             await flushPromises();
 
@@ -235,7 +295,7 @@ describe("StorageOverviewPage", () => {
 
         it("should filter storage by description", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockStorageOption, mockStorageOptionB]});
+            mockAllItems.value = [mockStorageOption, mockStorageOptionB];
             const wrapper = shallowMount(StorageOverviewPage);
             await flushPromises();
 
@@ -250,7 +310,7 @@ describe("StorageOverviewPage", () => {
 
         it("should show no results when search matches nothing", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: [mockStorageOption]});
+            mockAllItems.value = [mockStorageOption];
             const wrapper = shallowMount(StorageOverviewPage);
             await flushPromises();
 

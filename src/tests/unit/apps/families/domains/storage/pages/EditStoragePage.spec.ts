@@ -9,22 +9,20 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {ref} from "vue";
 
 const {
     createMockAxiosWithError,
     createMockStringTs,
     createMockFamilyServices,
+    createMockFamilyStores,
     createMockFormField,
     createMockFormLabel,
     createMockFormError,
 } = await vi.hoisted(() => import("../../../../../../helpers"));
 
 vi.mock("axios", () => createMockAxiosWithError());
-vi.mock("string-ts", () => ({
-    ...createMockStringTs(),
-    replace: (str: string) => str,
-    replaceAll: (str: string) => str,
-}));
+vi.mock("string-ts", () => createMockStringTs());
 
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
@@ -32,27 +30,34 @@ vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
 vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
 vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
-const {mockGetRequest, mockPatchRequest, mockDeleteRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
-    mockGetRequest: vi.fn(),
-    mockPatchRequest: vi.fn(),
-    mockDeleteRequest: vi.fn(),
+const {mockGetOrFailById, mockGoToRoute, mockCurrentRouteId, mockPatch, mockDelete} = vi.hoisted(() => ({
+    mockGetOrFailById: vi.fn(),
     mockGoToRoute: vi.fn(),
     mockCurrentRouteId: {value: 5},
+    mockPatch: vi.fn(),
+    mockDelete: vi.fn(),
 }));
 
 vi.mock("@app/services", () =>
     createMockFamilyServices({
-        familyHttpService: {
-            getRequest: mockGetRequest,
-            patchRequest: mockPatchRequest,
-            deleteRequest: mockDeleteRequest,
-        },
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
+        storageOptionStoreModule: {
+            getAll: {value: []},
+            retrieveAll: vi.fn(),
+            getById: vi.fn(),
+            getOrFailById: mockGetOrFailById,
+            generateNew: vi.fn(),
+        },
     }),
 );
 
-const mockStorageOptionResponse = {
+const createMockAdapted = () => ({
     id: 5,
     name: "Lade A",
     description: "Linkerla op plank 1",
@@ -60,7 +65,19 @@ const mockStorageOptionResponse = {
     row: 1,
     column: 2,
     childIds: [6, 7],
-};
+    mutable: ref({
+        name: "Lade A",
+        description: "Linkerla op plank 1",
+        parentId: null,
+        row: 1,
+        column: 2,
+        childIds: [6, 7],
+    }),
+    reset: vi.fn(),
+    update: vi.fn(),
+    patch: mockPatch,
+    delete: mockDelete,
+});
 
 describe("EditStoragePage", () => {
     beforeEach(() => {
@@ -70,19 +87,19 @@ describe("EditStoragePage", () => {
 
     it("should fetch storage option on mount", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         shallowMount(EditStoragePage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/storage-options/5");
+        expect(mockGetOrFailById).toHaveBeenCalledWith(5);
     });
 
     it("should render page title with storage name", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(EditStoragePage);
@@ -95,7 +112,7 @@ describe("EditStoragePage", () => {
 
     it("should populate form with existing data", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(EditStoragePage);
@@ -115,7 +132,7 @@ describe("EditStoragePage", () => {
 
     it("should show loading state initially", () => {
         // Arrange
-        mockGetRequest.mockReturnValue(new Promise(() => {}));
+        mockGetOrFailById.mockReturnValue(new Promise(() => {}));
 
         // Act
         const wrapper = shallowMount(EditStoragePage);
@@ -126,8 +143,8 @@ describe("EditStoragePage", () => {
 
     it("should submit update with correct payload", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        mockPatchRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockPatch.mockResolvedValue({});
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
@@ -136,7 +153,7 @@ describe("EditStoragePage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockPatchRequest).toHaveBeenCalledWith("/storage-options/5", {
+        expect(mockPatch).toHaveBeenCalledWith({
             name: "Lade A",
             description: "Linkerla op plank 1",
             parentId: null,
@@ -147,8 +164,8 @@ describe("EditStoragePage", () => {
 
     it("should navigate to detail page on successful update", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        mockPatchRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockPatch.mockResolvedValue({});
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
@@ -162,10 +179,10 @@ describe("EditStoragePage", () => {
 
     it("should not navigate on 422 validation error", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const axiosError = new AxiosError("Validation failed");
         axiosError.response = {status: 422, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPatchRequest.mockRejectedValue(axiosError);
+        mockPatch.mockRejectedValue(axiosError);
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
@@ -179,10 +196,10 @@ describe("EditStoragePage", () => {
 
     it("should rethrow non-422 errors", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const axiosError = new AxiosError("Server error");
         axiosError.response = {status: 500, data: {}, statusText: "", headers: {}, config: {} as never};
-        mockPatchRequest.mockRejectedValue(axiosError);
+        mockPatch.mockRejectedValue(axiosError);
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
@@ -200,7 +217,7 @@ describe("EditStoragePage", () => {
 
     it("should open confirm dialog when delete button is clicked", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
@@ -214,8 +231,8 @@ describe("EditStoragePage", () => {
 
     it("should delete storage option and navigate to overview on confirm", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
-        mockDeleteRequest.mockResolvedValue({});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockDelete.mockResolvedValue(undefined);
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
@@ -226,13 +243,13 @@ describe("EditStoragePage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockDeleteRequest).toHaveBeenCalledWith("/storage-options/5");
+        expect(mockDelete).toHaveBeenCalled();
         expect(mockGoToRoute).toHaveBeenCalledWith("storage");
     });
 
     it("should close dialog when user cancels confirmation", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
         const wrapper = shallowMount(EditStoragePage);
         await flushPromises();
 
@@ -243,13 +260,13 @@ describe("EditStoragePage", () => {
         await wrapper.vm.$nextTick();
 
         // Assert
-        expect(mockDeleteRequest).not.toHaveBeenCalled();
+        expect(mockDelete).not.toHaveBeenCalled();
         expect(wrapper.findComponent(ConfirmDialog).props("open")).toBe(false);
     });
 
     it("should render save and delete buttons", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockStorageOptionResponse});
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
 
         // Act
         const wrapper = shallowMount(EditStoragePage);
