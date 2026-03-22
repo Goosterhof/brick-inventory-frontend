@@ -50,8 +50,8 @@ No Pinia. No Vuex. No external state management dependency.
 - **Tight coupling between store and adapter** — by design. The adapter's CRUD methods need `setById`/`deleteById` to keep the store in sync. This coupling is the feature, not a bug: it guarantees the store is always consistent with the last successful API operation
 - **localStorage is the persistence layer** — every `setById`, `deleteById`, and `retrieveAll` writes to localStorage. This means instant load on return visits and offline resilience, but also means localStorage size limits apply. For a LEGO inventory app, this is well within bounds
 
-## Open Questions
+## Resolved Questions
 
-- Like the resource adapter (ADR-006), this pattern is built and tested but not yet consumed by any domain. First integration will validate the API surface.
-- `getAll` re-adapts every item on every computed access. For domains with hundreds of items, should we add memoization? Current assessment: not yet — premature optimization for the expected dataset sizes.
-- Should the store expose a `clear()` method for logout scenarios, or should the auth service handle localStorage cleanup directly?
+- ~~Like the resource adapter (ADR-006), this pattern is built and tested but not yet consumed by any domain. First integration will validate the API surface.~~ **Resolved**: Sets domain is the first consumer. All four CRUD pages (overview, detail, add, edit) are integrated and validated the API surface.
+- ~~`getAll` re-adapts every item on every computed access. For domains with hundreds of items, should we add memoization?~~ **Resolved**: Memoization was added via `adaptedCache` (Map keyed by ID). `getAll` calls `getAdapted()` which checks the cache before creating new adapted objects. The `Object.values()` iteration cost is trivial; the expensive part (adapter creation) is cached.
+- ~~Should the store expose a `clear()` method for logout scenarios, or should the auth service handle localStorage cleanup directly?~~ **Resolved**: Neither. Logout clears localStorage and triggers a full page refresh. All in-memory state (refs, caches, computed refs) is destroyed with the page. The store has no logout responsibility.

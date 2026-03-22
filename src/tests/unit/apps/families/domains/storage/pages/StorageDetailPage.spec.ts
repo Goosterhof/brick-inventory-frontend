@@ -7,36 +7,65 @@ import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {ref} from "vue";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
     () => import("../../../../../../helpers"),
 );
 
-const {mockGetRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+
+const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
+    mockGetOrFailById: vi.fn(),
     mockGetRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
     mockCurrentRouteId: {value: 5},
 }));
 
-vi.mock("axios", () => createMockAxios());
-vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyHttpService: {getRequest: mockGetRequest},
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
+        storageOptionStoreModule: {
+            getAll: {value: []},
+            retrieveAll: vi.fn(),
+            getById: vi.fn(),
+            getOrFailById: mockGetOrFailById,
+            generateNew: vi.fn(),
+        },
     }),
 );
 
-const mockStorageOptionResponse = {
+const createMockAdapted = (
+    overrides?: Partial<{description: string | null; row: number | null; column: number | null; childIds: number[]}>,
+) => ({
     id: 5,
     name: "Lade A",
-    description: "Linkerla op plank 1",
+    description: overrides?.description !== undefined ? overrides.description : "Linkerla op plank 1",
     parentId: null,
-    row: 1,
-    column: 2,
-    childIds: [6, 7],
-};
+    row: overrides?.row !== undefined ? overrides.row : 1,
+    column: overrides?.column !== undefined ? overrides.column : 2,
+    childIds: overrides?.childIds ?? [6, 7],
+    mutable: ref({
+        name: "Lade A",
+        description: overrides?.description !== undefined ? overrides.description : "Linkerla op plank 1",
+        parentId: null,
+        row: overrides?.row !== undefined ? overrides.row : 1,
+        column: overrides?.column !== undefined ? overrides.column : 2,
+        childIds: overrides?.childIds ?? [6, 7],
+    }),
+    reset: vi.fn(),
+    update: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+});
 
 const mockStoragePartsResponse = [
     {
@@ -55,14 +84,6 @@ const mockStoragePartsResponse = [
     },
 ];
 
-const mountWithResponses = (
-    optionData: Record<string, unknown> = mockStorageOptionResponse,
-    partsData: unknown[] = mockStoragePartsResponse,
-) => {
-    mockGetRequest.mockResolvedValueOnce({data: optionData}).mockResolvedValueOnce({data: partsData});
-    return shallowMount(StorageDetailPage);
-};
-
 describe("StorageDetailPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -70,18 +91,26 @@ describe("StorageDetailPage", () => {
     });
 
     it("should fetch storage option and parts by route id on mount", async () => {
-        // Arrange & Act
-        mountWithResponses();
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/storage-options/5");
+        expect(mockGetOrFailById).toHaveBeenCalledWith(5);
         expect(mockGetRequest).toHaveBeenCalledWith("/storage-options/5/parts");
     });
 
     it("should render storage option details", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses();
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -93,6 +122,7 @@ describe("StorageDetailPage", () => {
 
     it("should show loading state initially", () => {
         // Arrange
+        mockGetOrFailById.mockReturnValue(new Promise(() => {}));
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
         // Act
@@ -104,7 +134,9 @@ describe("StorageDetailPage", () => {
 
     it("should navigate to edit page when edit button is clicked", async () => {
         // Arrange
-        const wrapper = mountWithResponses();
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Act
@@ -117,7 +149,9 @@ describe("StorageDetailPage", () => {
 
     it("should navigate back to overview when back button is clicked", async () => {
         // Arrange
-        const wrapper = mountWithResponses();
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Act
@@ -129,8 +163,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should not show description when null", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses({...mockStorageOptionResponse, description: null});
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted({description: null}));
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -138,8 +176,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should not show row when null", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses({...mockStorageOptionResponse, row: null});
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted({row: null}));
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -148,8 +190,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should not show column when null", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses({...mockStorageOptionResponse, column: null});
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted({column: null}));
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -158,8 +204,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should not show sub-locations when no children", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses({...mockStorageOptionResponse, childIds: []});
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted({childIds: []}));
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -170,8 +220,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should show child count when children exist", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses();
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -183,8 +237,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should render parts with names and quantities", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses();
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -200,8 +258,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should render color swatch when color is present", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses();
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -210,8 +272,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should render color name when color is present", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses();
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -220,8 +286,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should render part image when available", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses();
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: mockStoragePartsResponse});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert
@@ -230,8 +300,12 @@ describe("StorageDetailPage", () => {
     });
 
     it("should show empty message when no parts", async () => {
-        // Arrange & Act
-        const wrapper = mountWithResponses(mockStorageOptionResponse, []);
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValue({data: []});
+
+        // Act
+        const wrapper = shallowMount(StorageDetailPage);
         await flushPromises();
 
         // Assert

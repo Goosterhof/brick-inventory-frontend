@@ -42,20 +42,20 @@ You never write to the knowledge base, pulse, or learnings. You **report finding
 
 Before auditing, know what each ADR protects. This table prevents you from flagging deliberate decisions as violations and tells you what patterns to verify are actually enforced.
 
-| ADR | Protects | What to verify, not flag |
-| --- | --- | --- |
-| 000 | Meta-decision: why ADRs exist, evaluation criteria | Not a code pattern — but defines the five lenses you use when questioning whether an ADR still holds (see below) |
-| 001 | Custom RouterService over Vue Router plugin | No raw `useRouter`/`useRoute`/`RouterLink` outside the service wrapper — this is by design, not over-engineering |
-| 002 | Factory pattern for services, no singletons | Shared services export `create*()` factories; apps instantiate in their own `services/` — intentional, not redundant |
-| 003 | UnoCSS attributify over CSS files | No `<style>` blocks, styling lives in template attributes — this is the decision, not a missing abstraction |
-| 004 | Snake/camel case conversion at HTTP boundary | `toCamelCaseTyped()`/`deepSnakeKeys()` at the HTTP layer — conversion happens once, not scattered through domains |
-| 005 | Istanbul coverage with zero ignore comments | No `istanbul ignore` or `v8 ignore` comments, period — flag any as a violation |
-| 006 | Resource adapter with frozen base and mutable ref | `Object.freeze()` on API data with a mutable `ref` wrapper — intentional immutability pattern, not defensive coding |
-| 007 | Adapter store module over Pinia/Vuex | No state library — stores are composable adapters over the resource pattern, not "missing Pinia" |
-| 008 | Domain isolation via lint rules and architecture tests | Domains don't cross-import — enforced by lint, not just convention |
-| 009 | Component health registry (five metrics for Showcase) | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not |
-| 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard |
-| 011 | Domain-based Vitest project split with factory config | Tests split per domain with shared config factory — not fragmentation, it's the decision |
+| ADR | Protects                                                                         | What to verify, not flag                                                                                             |
+| --- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 000 | Meta-decision: why ADRs exist, evaluation criteria                               | Not a code pattern — but defines the five lenses you use when questioning whether an ADR still holds (see below)     |
+| 001 | Custom RouterService over Vue Router plugin                                      | No raw `useRouter`/`useRoute`/`RouterLink` outside the service wrapper — this is by design, not over-engineering     |
+| 002 | Factory pattern for services, no singletons                                      | Shared services export `create*()` factories; apps instantiate in their own `services/` — intentional, not redundant |
+| 003 | UnoCSS attributify over CSS files                                                | No `<style>` blocks, styling lives in template attributes — this is the decision, not a missing abstraction          |
+| 004 | Snake/camel case conversion at HTTP boundary                                     | `toCamelCaseTyped()`/`deepSnakeKeys()` at the HTTP layer — conversion happens once, not scattered through domains    |
+| 005 | Istanbul coverage with zero ignore comments                                      | No `istanbul ignore` or `v8 ignore` comments, period — flag any as a violation                                       |
+| 006 | Resource adapter with frozen base and mutable ref                                | `Object.freeze()` on API data with a mutable `ref` wrapper — intentional immutability pattern, not defensive coding  |
+| 007 | Adapter store module over Pinia/Vuex                                             | No state library — stores are composable adapters over the resource pattern, not "missing Pinia"                     |
+| 008 | Domain isolation via lint rules and architecture tests                           | Domains don't cross-import — enforced by lint, not just convention                                                   |
+| 009 | Component health registry (five metrics for Showcase)                            | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not                         |
+| 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard                                 |
+| 011 | Domain-based Vitest project split with factory config                            | Tests split per domain with shared config factory — not fragmentation, it's the decision                             |
 
 **Maintenance**: When a new ADR is accepted, the CFO adds a row here. If this table drifts from the decision log index, that itself is a finding.
 
