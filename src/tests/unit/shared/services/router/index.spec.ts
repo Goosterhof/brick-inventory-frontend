@@ -5,15 +5,11 @@ import {flushPromises} from "@vue/test-utils";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {defineComponent, h} from "vue";
 
-vi.mock("axios", () => ({
-    isAxiosError: (_e: unknown): boolean => false,
-    AxiosError: Error,
-    default: {create: vi.fn()},
-}));
+const {createMockAxios, createMockStringTs} = await vi.hoisted(() => import("../../../../helpers"));
 
+vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => ({
-    deepCamelKeys: <T>(obj: T): T => obj,
-    deepSnakeKeys: <T>(obj: T): T => obj,
+    ...createMockStringTs(),
     replace: (str: string, from: string, to: string) => str.replace(from, to),
     replaceAll: (str: string, from: string, to: string) => str.replace(new RegExp(from, "g"), to),
 }));

@@ -1,41 +1,21 @@
+import type {AuthService} from "@shared/services/auth/types";
+import type {HttpService} from "@shared/services/http";
+
 import {vi} from "vitest";
 
 import type {MockedService} from "./mockTypes";
 
-interface MockHttpService {
-    getRequest: (...args: unknown[]) => unknown;
-    postRequest: (...args: unknown[]) => unknown;
-    putRequest: (...args: unknown[]) => unknown;
-    patchRequest: (...args: unknown[]) => unknown;
-    deleteRequest: (...args: unknown[]) => unknown;
-    registerRequestMiddleware: (...args: unknown[]) => unknown;
-    registerResponseMiddleware: (...args: unknown[]) => unknown;
-    registerResponseErrorMiddleware: (...args: unknown[]) => unknown;
-}
-
-interface MockAuthService {
-    isLoggedIn: {value: boolean};
-    user: {value: unknown};
-    userId: () => unknown;
-    register: (...args: unknown[]) => unknown;
-    login: (...args: unknown[]) => unknown;
-    logout: () => unknown;
-    checkIfLoggedIn: () => unknown;
-    sendEmailResetPassword: (...args: unknown[]) => unknown;
-    resetPassword: (...args: unknown[]) => unknown;
-}
-
 export interface FamilyServicesMock {
-    familyHttpService: MockedService<MockHttpService>;
-    familyAuthService: MockedService<MockAuthService>;
+    familyHttpService: MockedService<HttpService>;
+    familyAuthService: MockedService<AuthService<{id: number}>>;
     familyRouterService: Record<string, unknown>;
     familyTranslationService: {t: (key: string) => {value: string}; locale: {value: string}};
     familyLoadingService: Record<string, unknown>;
     familySoundService: Record<string, unknown>;
     familyStorageService: Record<string, unknown>;
     familySetStoreModule: Record<string, unknown>;
-    FamilyRouterView: {template: string};
-    FamilyRouterLink: {template: string};
+    FamilyRouterView: Record<string, unknown>;
+    FamilyRouterLink: Record<string, unknown>;
 }
 
 type FamilyServicesOverrides = {
@@ -74,10 +54,7 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
             goToShowPage: vi.fn(),
             goBack: vi.fn(),
         },
-        familyTranslationService: {
-            t: (key: string) => ({value: key}),
-            locale: {value: "en"},
-        },
+        familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
         familyLoadingService: {},
         familySoundService: {},
         familyStorageService: {},

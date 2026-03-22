@@ -8,11 +8,7 @@ export const createMockAxios = (): {
     isAxiosError: (e: unknown) => boolean;
     AxiosError: typeof Error;
     default: {create: ReturnType<typeof vi.fn>};
-} => ({
-    isAxiosError: (_e: unknown): boolean => false,
-    AxiosError: Error,
-    default: {create: vi.fn()},
-});
+} => ({isAxiosError: (_e: unknown): boolean => false, AxiosError: Error, default: {create: vi.fn()}});
 
 export const createMockAxiosWithError = (): {
     isAxiosError: (e: unknown) => boolean;

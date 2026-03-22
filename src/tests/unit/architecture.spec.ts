@@ -433,7 +433,7 @@ describe("Architecture", () => {
             );
 
             const testFiles = allFiles.filter(
-                (file) => !file.endsWith("setup.ts") && !file.endsWith("-reporter.ts") && !file.includes("/helpers/"),
+                (file) => !file.endsWith("setup.ts") && !file.endsWith("-reporter.ts") && !file.includes("helpers/"),
             );
             const violations: string[] = [];
 

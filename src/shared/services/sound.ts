@@ -7,7 +7,7 @@ import type {StorageService} from "./storage";
 /** @public */
 export type SoundType = "snap" | "pull" | "cascade" | "thud";
 
-export interface SoundService {
+interface SoundService {
     isEnabled: ComputedRef<boolean>;
     toggle: () => void;
     play: (sound: SoundType) => void;

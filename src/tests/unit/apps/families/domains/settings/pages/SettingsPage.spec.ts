@@ -6,25 +6,21 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-vi.mock("@shared/components/forms/FormError.vue", () => ({
-    default: {name: "FormError", template: "<span />", props: ["error"]},
-}));
+const {
+    createMockAxios,
+    createMockStringTs,
+    createMockFamilyServices,
+    createMockFormField,
+    createMockFormLabel,
+    createMockFormError,
+} = await vi.hoisted(() => import("../../../../../../helpers"));
 
-vi.mock("@shared/components/forms/FormField.vue", () => ({
-    default: {name: "FormField", template: "<div><slot /></div>"},
-}));
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
-vi.mock("@shared/components/forms/FormLabel.vue", () => ({
-    default: {name: "FormLabel", template: "<label><slot /></label>", props: ["for"]},
-}));
-
-vi.mock("axios", () => ({
-    isAxiosError: (_e: unknown): boolean => false,
-    AxiosError: Error,
-    default: {create: vi.fn()},
-}));
-
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(obj: T): T => obj, deepSnakeKeys: <T>(obj: T): T => obj}));
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
 
 const {mockGetRequest, mockPutRequest, mockPostRequest} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
@@ -32,33 +28,12 @@ const {mockGetRequest, mockPutRequest, mockPostRequest} = vi.hoisted(() => ({
     mockPostRequest: vi.fn(),
 }));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: mockPostRequest,
-        putRequest: mockPutRequest,
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: vi.fn()},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyHttpService: {getRequest: mockGetRequest, postRequest: mockPostRequest, putRequest: mockPutRequest},
+        familyAuthService: {isLoggedIn: {value: true}},
+    }),
+);
 
 describe("SettingsPage", () => {
     beforeEach(() => {
