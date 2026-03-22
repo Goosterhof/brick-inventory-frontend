@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type {FamilySetStatus} from "@app/types/familySet";
 
-import {familyLoadingService, familyRouterService, familySetStoreModule, familyTranslationService} from "@app/services";
+import {familyLoadingService, familyRouterService, familyTranslationService} from "@app/services";
+import {familySetStoreModule} from "@app/stores";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import FilterChip from "@shared/components/FilterChip.vue";

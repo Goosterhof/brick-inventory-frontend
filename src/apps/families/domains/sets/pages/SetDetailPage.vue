@@ -3,7 +3,8 @@ import type {FamilySet} from "@app/types/familySet";
 import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
 import type {Adapted} from "@shared/services/resource-adapter";
 
-import {familyHttpService, familyRouterService, familySetStoreModule, familyTranslationService} from "@app/services";
+import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familySetStoreModule} from "@app/stores";
 import BackButton from "@shared/components/BackButton.vue";
 import LoadingState from "@shared/components/LoadingState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";

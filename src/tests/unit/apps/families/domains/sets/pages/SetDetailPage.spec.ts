@@ -54,6 +54,12 @@ vi.mock("@app/services", () => ({
     },
     familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
     familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
+    familyLoadingService: {isLoading: {value: false}},
+    FamilyRouterView: {template: "<div><slot /></div>"},
+    FamilyRouterLink: {template: "<a><slot /></a>"},
+}));
+
+vi.mock("@app/stores", () => ({
     familySetStoreModule: {
         getAll: {value: []},
         retrieveAll: vi.fn(),
@@ -61,9 +67,6 @@ vi.mock("@app/services", () => ({
         getOrFailById: mockGetOrFailById,
         generateNew: vi.fn(),
     },
-    familyLoadingService: {isLoading: {value: false}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
 }));
 
 const createMockAdapted = (
