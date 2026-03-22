@@ -19,12 +19,12 @@ The question: how should test projects be organized so that a junior can mechani
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-| --- | --- | --- | --- |
-| **Keep test-type split (unit/components/apps)** | Already implemented. Different environments per type | Fragile classification, doesn't match architecture, juniors can't self-serve. Motivated by a guard that's no longer the primary enforcer | Eliminated — solving a problem that no longer exists |
-| **Single flat project (no split)** | Zero configuration, all tests in one pool | No per-domain isolation, setup file would accumulate domain-specific config. At 700+ files, no structural organization | Eliminated — doesn't scale |
-| **Domain-based projects with per-domain setup files** | Matches architecture, clear ownership per domain | Setup files accumulate mocks, leading to "someone mocked X in setup and broke my test" — a known recurring problem across projects | Eliminated — setup-file mocking is a maintenance trap |
-| **Domain-based projects with one global setup file, per-file mocking** | Matches architecture, clear ownership, no mock confusion. Factory function eliminates config verbosity | More projects in config (15+ now, 50+ at scale). Slight CI overhead (~1-2 minutes). New domains require a config line | **Chosen** — clarity for juniors outweighs config volume, factory makes it manageable |
+| Option                                                                 | Pros                                                                                                   | Cons                                                                                                                                     | Why eliminated / Why chosen                                                           |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Keep test-type split (unit/components/apps)**                        | Already implemented. Different environments per type                                                   | Fragile classification, doesn't match architecture, juniors can't self-serve. Motivated by a guard that's no longer the primary enforcer | Eliminated — solving a problem that no longer exists                                  |
+| **Single flat project (no split)**                                     | Zero configuration, all tests in one pool                                                              | No per-domain isolation, setup file would accumulate domain-specific config. At 700+ files, no structural organization                   | Eliminated — doesn't scale                                                            |
+| **Domain-based projects with per-domain setup files**                  | Matches architecture, clear ownership per domain                                                       | Setup files accumulate mocks, leading to "someone mocked X in setup and broke my test" — a known recurring problem across projects       | Eliminated — setup-file mocking is a maintenance trap                                 |
+| **Domain-based projects with one global setup file, per-file mocking** | Matches architecture, clear ownership, no mock confusion. Factory function eliminates config verbosity | More projects in config (15+ now, 50+ at scale). Slight CI overhead (~1-2 minutes). New domains require a config line                    | **Chosen** — clarity for juniors outweighs config volume, factory makes it manageable |
 
 ## Decision
 
@@ -32,12 +32,12 @@ The question: how should test projects be organized so that a junior can mechani
 
 Every testable domain or shared directory gets its own Vitest project. Projects are named with a two-part prefix that mirrors the source architecture:
 
-| Pattern | Example | Maps to |
-| --- | --- | --- |
-| `{app}/{domain}` | `families/sets` | `src/tests/unit/apps/families/domains/sets/` |
-| `{app}/root` | `families/root` | `src/tests/unit/apps/families/App.spec.ts` (and siblings) |
-| `shared/{directory}` | `shared/components` | `src/tests/unit/shared/components/` |
-| `architecture` | `architecture` | `src/tests/unit/architecture.spec.ts` |
+| Pattern              | Example             | Maps to                                                   |
+| -------------------- | ------------------- | --------------------------------------------------------- |
+| `{app}/{domain}`     | `families/sets`     | `src/tests/unit/apps/families/domains/sets/`              |
+| `{app}/root`         | `families/root`     | `src/tests/unit/apps/families/App.spec.ts` (and siblings) |
+| `shared/{directory}` | `shared/components` | `src/tests/unit/shared/components/`                       |
+| `architecture`       | `architecture`      | `src/tests/unit/architecture.spec.ts`                     |
 
 The two-part name immediately tells a developer where in the codebase a project lives. No ambiguity between app domains and shared directories.
 
@@ -92,12 +92,12 @@ No judgment calls about environments, DOM globals, or test-utils usage. The sour
 
 ## Enforcement
 
-| What | Mechanism | Scope |
-| --- | --- | --- |
-| Every test file covered by exactly one project | Architecture test in `architecture.spec.ts` | All `*.spec.ts` files — catches missing domains and orphaned tests |
-| No mocks in setup files | ADR-010 lint rule (factory required on `vi.mock()`) + code review | `setup.ts` and any future setup files |
-| Project naming convention (`app/domain`, `shared/dir`) | Factory function signature — name is a required parameter | `vitest.config.ts` |
-| Missing domain detection | Architecture test compares domain directories against project list | All `src/apps/*/domains/*/` directories |
+| What                                                   | Mechanism                                                          | Scope                                                              |
+| ------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| Every test file covered by exactly one project         | Architecture test in `architecture.spec.ts`                        | All `*.spec.ts` files — catches missing domains and orphaned tests |
+| No mocks in setup files                                | ADR-010 lint rule (factory required on `vi.mock()`) + code review  | `setup.ts` and any future setup files                              |
+| Project naming convention (`app/domain`, `shared/dir`) | Factory function signature — name is a required parameter          | `vitest.config.ts`                                                 |
+| Missing domain detection                               | Architecture test compares domain directories against project list | All `src/apps/*/domains/*/` directories                            |
 
 ## Resolved Questions
 
