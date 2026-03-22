@@ -341,6 +341,39 @@ _You are a 2x4 blue brick — reliable, versatile, and load-bearing._
 
 ---
 
+## Graduation Protocol — Test-Case-Driven Promotion
+
+Observation alone is not enough. A candidate that "seemed to help" twice could be coincidence, confirmation bias, or a pattern too narrow to justify permanent training. Before any candidate graduates, it must pass a concrete evaluation.
+
+### The Bar
+
+A candidate is eligible for graduation when it has **2+ confirming observations** across separate sessions (unchanged). But eligibility is not graduation. Graduation requires the CFO to write **2-3 test scenarios** that prove the training changes behavior in a way that matters.
+
+### What a Test Scenario Looks Like
+
+Each scenario defines:
+
+| Field | Description |
+| --- | --- |
+| **Situation** | A specific, reproducible codebase state the agent could encounter. Not hypothetical — grounded in patterns that exist or will exist in this repo. |
+| **Without training** | What the agent would likely do (or miss) without this candidate in its training. The failure mode. |
+| **With training** | What the agent should do with this candidate active. The correct behavior. |
+| **Assertion** | An objectively verifiable check. "The report includes X" or "the build step catches Y before committing." Not "the agent does better." |
+
+### The Process
+
+1. **CFO drafts scenarios** when a candidate hits its second confirming observation.
+2. **Scenarios are reviewed for rigor** — could a reasonable person disagree on pass/fail? If yes, tighten the assertion.
+3. **The agent is evaluated against the scenarios.** This can be done inline during the dispatch that triggered the second confirmation, or as a dedicated eval. The CFO judges pass/fail.
+4. **Pass = graduate.** The candidate is promoted into the training sections above, and the scenarios are archived in the Graduated table as evidence.
+5. **Fail = hold or drop.** If the training doesn't demonstrably change behavior, it either stays as a candidate (with a note on what failed) or gets dropped with a reason.
+
+### Why This Exists
+
+The skill-creator methodology taught us: assertions beat vibes. A training proposal that can't be tested can't be verified. A training proposal that can't be verified might be noise dressed up as learning. The overhead of writing 2-3 scenarios per graduation is trivial compared to the cost of polluting agent training with unverified habits.
+
+---
+
 ## Graduation Log
 
 Training proposals from debriefs are tracked here. A proposal must prove itself across **at least 2 sessions** before being promoted into the training sections above. The CFO manages this log.
