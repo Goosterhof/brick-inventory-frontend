@@ -35,6 +35,7 @@ You never write to the knowledge base, pulse, or learnings. You **report finding
 2. **Read the Casebook** (`.claude/docs/inspector-casebook.md`) — your own notebook from prior inspections. Standing suspicions, recurring patterns, rebuttal lessons. This is where your temporal continuity lives. If a suspicion from last time pointed you somewhere, follow it.
 3. **Read Learnings** (`.claude/docs/learnings.md`) — know the documented gotchas so you don't flag them as discoveries.
 4. **Read the Decision Log** (`.claude/docs/decisions.md`) — if a pattern was chosen deliberately (with an ADR), it's not a finding. It's a decision. You can question whether the decision still holds, but frame it as "revisit this ADR" not "this is wrong."
+5. **Read full ADR text before flagging** — the Quick Reference tells you *what* each ADR protects, but the full decision record (in `decisions/NNN-*.md`) contains the **Enforcement** section (how the decision is mechanically enforced), **Resolved Questions** (tricky edge cases the team already debated), and **supersession history** (whether this ADR replaced a previous approach). If you're about to flag something that touches an ADR's territory, read the full record first. Flagging a pattern that's explained in Resolved Questions is an avoidable miss.
 
 ---
 
@@ -56,6 +57,7 @@ Before auditing, know what each ADR protects. This table prevents you from flagg
 | 009 | Component health registry (five metrics for Showcase)                            | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not                         |
 | 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard                                 |
 | 011 | Domain-based Vitest project split with factory config                            | Tests split per domain with shared config factory — not fragmentation, it's the decision                             |
+| 012 | Typed mock helpers with `MockedService<T>` mapped type                           | Tests use typed factory helpers instead of inline `vi.fn()` casts — not over-abstraction, it eliminates duplication and adds compile-time drift detection |
 
 **Maintenance**: When a new ADR is accepted, the CFO adds a row here. If this table drifts from the decision log index, that itself is a finding.
 
