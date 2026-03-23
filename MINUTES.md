@@ -5,6 +5,30 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 
 ---
 
+## 2026-03-23 — ADR-008 Re-Interrogation: Domain Isolation Stress Test
+
+### Decisions
+
+- **ADR-008 confirmed under re-interrogation**: Full 9-step interrogation sequence run against the accepted ADR. All branches held. Verdict: Confirmed with stress-tested timestamp.
+- **Full isolation over controlled sharing (barrel exports)**: Barrel exports were the strongest alternative — controlled surface area, domains expose only what they choose. Rejected because it introduces judgment calls at the boundary ("should this be public?"). Full isolation removes the judgment call entirely: the answer is always "no."
+- **Duplication is an accepted, out-of-scope cost**: If a domain needs a helper that exists in another domain, the correct action is to copy it or promote it to `@shared/`. Duplication is a separate concern with its own fix path, not a reason to punch holes in isolation.
+- **Subdomain principle established**: As domains grow, subdomains follow the same isolation rules as top-level domains — fractal isolation. Enforcement tooling for subdomain-to-subdomain imports is deferred until the first domain actually splits.
+- **Shared types live at `@app/types/`, not in domains**: Types that cross domain boundaries (e.g., a set summary nested inside a storage API response) are app-level concepts. Keeping them at `@app/types/` preserves the zero-import-between-domains guarantee.
+- **Incremental adoption strategy documented**: The pattern can be adopted in existing codebases by scoping enforcement rules to new domains first, then progressively tightening. No big-bang migration required.
+
+### Notes
+
+- Problem is real and observed — cross-domain imports (primarily shared state) are actively causing pain in Script's other apps. This repo eliminates the primary vector by having no domain-level stores; adapter stores at `@app/` level handle shared data.
+- Enforcement is fail-fast: oxlint catches violations at IDE level (red squiggle on type), architecture tests catch edge cases at pre-push. Both alias and relative path violations are covered.
+- Type-safe routing means renaming a route produces a compile-time error everywhere — cross-domain coordination through the type system, not imports.
+- Migration plan for enforcement: consolidate to oxlint-only once custom rule support matures, architecture tests as bridge.
+
+### Strategic Alignment
+
+- The re-interrogation process itself is showcase-worthy — demonstrating that the firm stress-tests its own decisions rather than treating them as permanent. A senior reviewer would appreciate that accepted ADRs are revisited under pressure with present-day evidence.
+
+---
+
 ## 2026-03-22 — Dispatch Report Process: Replacing the Post-Dispatch Checklist
 
 ### Decisions
