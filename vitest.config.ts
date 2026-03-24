@@ -83,6 +83,9 @@ export default mergeConfig(
                 project("shared/helpers", "shared/helpers"),
                 project("shared/services", "shared/services"),
 
+                // Showcase
+                project("showcase/components", "apps/showcase/components"),
+
                 // Infrastructure
                 fileProject("architecture", "architecture.spec.ts"),
             ],

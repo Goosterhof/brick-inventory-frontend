@@ -350,12 +350,12 @@ A candidate is eligible for graduation when it has **2+ confirming observations*
 
 Each scenario defines:
 
-| Field | Description |
-| --- | --- |
-| **Situation** | A specific, reproducible codebase state the agent could encounter. Not hypothetical — grounded in patterns that exist or will exist in this repo. |
-| **Without training** | What the agent would likely do (or miss) without this candidate in its training. The failure mode. |
-| **With training** | What the agent should do with this candidate active. The correct behavior. |
-| **Assertion** | An objectively verifiable check. "The report includes X" or "the build step catches Y before committing." Not "the agent does better." |
+| Field                | Description                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Situation**        | A specific, reproducible codebase state the agent could encounter. Not hypothetical — grounded in patterns that exist or will exist in this repo. |
+| **Without training** | What the agent would likely do (or miss) without this candidate in its training. The failure mode.                                                |
+| **With training**    | What the agent should do with this candidate active. The correct behavior.                                                                        |
+| **Assertion**        | An objectively verifiable check. "The report includes X" or "the build step catches Y before committing." Not "the agent does better."            |
 
 ### The Process
 
@@ -379,26 +379,28 @@ Training proposals from construction journals are tracked here. A proposal must 
 
 _Proposals observed once. Need a second confirming shift before graduation._
 
-| Proposal | First Observed | Journal Evidence | Context |
-|---|---|---|---|
-| Before adding `defineProps` to a component, check sibling components in the same directory for destructuring patterns — the linter may require it | 2026-03-20 | _(pre-records)_ | Scanner slots→props refactor: hit `define-props-destructuring` lint error on CameraCapture because BarcodeScanner already destructured |
-| When implementing config-only changes affecting test organization, verify isolation with `--project=X` for representative projects, not just the full suite | 2026-03-22 | _(pre-records)_ | ADR-011 implementation: ran `--project=families/sets` and `--project=shared/components` to confirm project boundaries |
-| Before classifying a test as pure TS for node environment, grep for DOM globals (`localStorage`, `document.`, `window.`, `AudioContext`, `navigator.`, `HTMLMediaElement`) | 2026-03-21 | _(pre-records)_ | Happy-dom migration: initially misclassified `sound.spec.ts` and `storage.spec.ts` as unit/node when they need DOM globals |
+| Proposal                                                                                                                                                                   | First Observed | Journal Evidence | Context                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Before adding `defineProps` to a component, check sibling components in the same directory for destructuring patterns — the linter may require it                          | 2026-03-20     | _(pre-records)_  | Scanner slots→props refactor: hit `define-props-destructuring` lint error on CameraCapture because BarcodeScanner already destructured |
+| When implementing config-only changes affecting test organization, verify isolation with `--project=X` for representative projects, not just the full suite                | 2026-03-22     | _(pre-records)_  | ADR-011 implementation: ran `--project=families/sets` and `--project=shared/components` to confirm project boundaries                  |
+| Before classifying a test as pure TS for node environment, grep for DOM globals (`localStorage`, `document.`, `window.`, `AudioContext`, `navigator.`, `HTMLMediaElement`) | 2026-03-21     | _(pre-records)_  | Happy-dom migration: initially misclassified `sound.spec.ts` and `storage.spec.ts` as unit/node when they need DOM globals             |
+| Before creating files specified in a permit, check if they already exist — the permit may describe existing work that needs tests or verification, not creation from scratch | 2026-03-24     | 2026-03-24-dialog-toast-showcase | Assumed DialogServiceDemo.vue needed creation, but it was already present |
+| When testing that specific dynamic text is absent, ensure the assertion pattern does not match static labels already in the template — use a more specific pattern | 2026-03-24     | 2026-03-24-dialog-toast-showcase | "hide(" matched static label "toastService.hide(id)" in the template; tightened to "hide(toast-" |
 
 ### Graduated
 
 _Proposals confirmed across 2+ shifts. Promoted into training above._
 
-| Proposal | Graduated | Confirming Journals | Promoted To |
-|---|---|---|---|
-| _(none yet)_ | | | |
+| Proposal     | Graduated | Confirming Journals | Promoted To |
+| ------------ | --------- | ------------------- | ----------- |
+| _(none yet)_ |           |                     |             |
 
 ### Dropped
 
 _Proposals evaluated and rejected. Kept for institutional memory._
 
-| Proposal | Dropped | Journal Evidence | Reason |
-|---|---|---|---|
-| happy-dom localStorage/srcObject/addEventListener workarounds as training | 2026-03-22 | _(pre-records)_ | Too specific to a one-time migration. These are happy-dom quirks, not recurring architectural decisions. The fixes are in the code — no need to train on them. |
-| "Per-project baselines require threshold recalibration" | 2026-03-22 | _(pre-records)_ | Moot — the execution-time guard replaced collect-duration as the primary enforcer, making baseline calibration irrelevant. The architect's observation was correct at the time but the problem was solved differently. |
-| "Factory variants beat parameterized factories for small divergences" | 2026-03-22 | _(pre-records)_ | Too generic to be actionable training. This is standard programming judgment, not an architect-specific lesson. The decision was good but doesn't need to be codified. |
+| Proposal                                                                  | Dropped    | Journal Evidence | Reason                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------- | ---------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| happy-dom localStorage/srcObject/addEventListener workarounds as training | 2026-03-22 | _(pre-records)_  | Too specific to a one-time migration. These are happy-dom quirks, not recurring architectural decisions. The fixes are in the code — no need to train on them.                                                         |
+| "Per-project baselines require threshold recalibration"                   | 2026-03-22 | _(pre-records)_  | Moot — the execution-time guard replaced collect-duration as the primary enforcer, making baseline calibration irrelevant. The architect's observation was correct at the time but the problem was solved differently. |
+| "Factory variants beat parameterized factories for small divergences"     | 2026-03-22 | _(pre-records)_  | Too generic to be actionable training. This is standard programming judgment, not an architect-specific lesson. The decision was good but doesn't need to be codified.                                                 |

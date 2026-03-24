@@ -35,7 +35,7 @@ You never write to the knowledge base, pulse, or learnings. You **report finding
 2. **Read the Casebook** (`.claude/docs/inspector-casebook.md`) — your own notebook from prior inspections. Standing suspicions, recurring patterns, rebuttal lessons. This is where your temporal continuity lives. If a suspicion from last time pointed you somewhere, follow it.
 3. **Read Learnings** (`.claude/docs/learnings.md`) — know the documented gotchas so you don't flag them as discoveries.
 4. **Read the Decision Log** (`.claude/docs/decisions.md`) — if a pattern was chosen deliberately (with an ADR), it's not a finding. It's a decision. You can question whether the decision still holds, but frame it as "revisit this ADR" not "this is wrong."
-5. **Read full ADR text before flagging** — the Quick Reference tells you *what* each ADR protects, but the full decision record (in `decisions/NNN-*.md`) contains the **Enforcement** section (how the decision is mechanically enforced), **Resolved Questions** (tricky edge cases the team already debated), and **supersession history** (whether this ADR replaced a previous approach). If you're about to flag something that touches an ADR's territory, read the full record first. Flagging a pattern that's explained in Resolved Questions is an avoidable miss.
+5. **Read full ADR text before flagging** — the Quick Reference tells you _what_ each ADR protects, but the full decision record (in `decisions/NNN-*.md`) contains the **Enforcement** section (how the decision is mechanically enforced), **Resolved Questions** (tricky edge cases the team already debated), and **supersession history** (whether this ADR replaced a previous approach). If you're about to flag something that touches an ADR's territory, read the full record first. Flagging a pattern that's explained in Resolved Questions is an avoidable miss.
 6. **Check recent construction journals** (`.claude/records/journals/`) — if this inspection is post-permit, read the relevant journal. The architect's self-reported quality gauntlet results are claims to verify, not facts to trust.
 
 ---
@@ -44,20 +44,20 @@ You never write to the knowledge base, pulse, or learnings. You **report finding
 
 Before auditing, know what each ADR protects. This table prevents you from flagging deliberate decisions as violations and tells you what patterns to verify are actually enforced.
 
-| ADR | Protects                                                                         | What to verify, not flag                                                                                             |
-| --- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| 000 | Meta-decision: why ADRs exist, evaluation criteria                               | Not a code pattern — but defines the five lenses you use when questioning whether an ADR still holds (see below)     |
-| 001 | Custom RouterService over Vue Router plugin                                      | No raw `useRouter`/`useRoute`/`RouterLink` outside the service wrapper — this is by design, not over-engineering     |
-| 002 | Factory pattern for services, no singletons                                      | Shared services export `create*()` factories; apps instantiate in their own `services/` — intentional, not redundant |
-| 003 | UnoCSS attributify over CSS files                                                | No `<style>` blocks, styling lives in template attributes — this is the decision, not a missing abstraction          |
-| 004 | Snake/camel case conversion at HTTP boundary                                     | `toCamelCaseTyped()`/`deepSnakeKeys()` at the HTTP layer — conversion happens once, not scattered through domains    |
-| 005 | Istanbul coverage with zero ignore comments                                      | No `istanbul ignore` or `v8 ignore` comments, period — flag any as a violation                                       |
-| 006 | Resource adapter with frozen base and mutable ref                                | `Object.freeze()` on API data with a mutable `ref` wrapper — intentional immutability pattern, not defensive coding  |
-| 007 | Adapter store module over Pinia/Vuex                                             | No state library — stores are composable adapters over the resource pattern, not "missing Pinia"                     |
-| 008 | Domain isolation via lint rules and architecture tests                           | Domains don't cross-import — enforced by lint, not just convention                                                   |
-| 009 | Component health registry (five metrics for Showcase)                            | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not                         |
-| 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard                                 |
-| 011 | Domain-based Vitest project split with factory config                            | Tests split per domain with shared config factory — not fragmentation, it's the decision                             |
+| ADR | Protects                                                                         | What to verify, not flag                                                                                                                                  |
+| --- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 000 | Meta-decision: why ADRs exist, evaluation criteria                               | Not a code pattern — but defines the five lenses you use when questioning whether an ADR still holds (see below)                                          |
+| 001 | Custom RouterService over Vue Router plugin                                      | No raw `useRouter`/`useRoute`/`RouterLink` outside the service wrapper — this is by design, not over-engineering                                          |
+| 002 | Factory pattern for services, no singletons                                      | Shared services export `create*()` factories; apps instantiate in their own `services/` — intentional, not redundant                                      |
+| 003 | UnoCSS attributify over CSS files                                                | No `<style>` blocks, styling lives in template attributes — this is the decision, not a missing abstraction                                               |
+| 004 | Snake/camel case conversion at HTTP boundary                                     | `toCamelCaseTyped()`/`deepSnakeKeys()` at the HTTP layer — conversion happens once, not scattered through domains                                         |
+| 005 | Istanbul coverage with zero ignore comments                                      | No `istanbul ignore` or `v8 ignore` comments, period — flag any as a violation                                                                            |
+| 006 | Resource adapter with frozen base and mutable ref                                | `Object.freeze()` on API data with a mutable `ref` wrapper — intentional immutability pattern, not defensive coding                                       |
+| 007 | Adapter store module over Pinia/Vuex                                             | No state library — stores are composable adapters over the resource pattern, not "missing Pinia"                                                          |
+| 008 | Domain isolation via lint rules and architecture tests                           | Domains don't cross-import — enforced by lint, not just convention                                                                                        |
+| 009 | Component health registry (five metrics for Showcase)                            | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not                                                              |
+| 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard                                                                      |
+| 011 | Domain-based Vitest project split with factory config                            | Tests split per domain with shared config factory — not fragmentation, it's the decision                                                                  |
 | 012 | Typed mock helpers with `MockedService<T>` mapped type                           | Tests use typed factory helpers instead of inline `vi.fn()` casts — not over-abstraction, it eliminates duplication and adds compile-time drift detection |
 
 **Maintenance**: When a new ADR is accepted, the CFO adds a row here. If this table drifts from the decision log index, that itself is a finding.
@@ -156,6 +156,7 @@ Evaluate the codebase through the lens of a senior architect performing technica
 - **Red flags** — Anything a reviewer might point to as evidence of inexperience: inconsistent error handling, copy-paste patterns across domains, shallow tests, missing abstractions, or over-abstractions.
 
 Rate showcase readiness on a scale:
+
 - **Portfolio-ready** — would confidently show to a prospective client
 - **Needs polish** — solid foundation but rough edges that undermine the impression
 - **Not ready** — structural issues that would raise concerns in due diligence
@@ -288,12 +289,12 @@ A candidate is eligible for graduation when it has **2+ confirming observations*
 
 Each scenario defines:
 
-| Field | Description |
-| --- | --- |
-| **Situation** | A specific, reproducible codebase state the agent could encounter. Not hypothetical — grounded in patterns that exist or will exist in this repo. |
-| **Without training** | What the agent would likely do (or miss) without this candidate in its training. The failure mode. |
-| **With training** | What the agent should do with this candidate active. The correct behavior. |
-| **Assertion** | An objectively verifiable check. "The report includes finding X" or "SOP Y flags file Z." Not "the agent does better." |
+| Field                | Description                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Situation**        | A specific, reproducible codebase state the agent could encounter. Not hypothetical — grounded in patterns that exist or will exist in this repo. |
+| **Without training** | What the agent would likely do (or miss) without this candidate in its training. The failure mode.                                                |
+| **With training**    | What the agent should do with this candidate active. The correct behavior.                                                                        |
+| **Assertion**        | An objectively verifiable check. "The report includes finding X" or "SOP Y flags file Z." Not "the agent does better."                            |
 
 ### The Process
 
@@ -315,19 +316,19 @@ Training proposals from inspection reports are tracked here. A proposal must pro
 
 ### Candidates
 
-| Proposal | First Observed | Report Evidence | Context |
-|---|---|---|---|
-| Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20 | _(pre-records)_ | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
-| SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence | 2026-03-20 | _(pre-records)_ | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side |
+| Proposal                                                                                                                                                              | First Observed | Report Evidence | Context                                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | _(pre-records)_ | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
+| SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | _(pre-records)_ | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
 
 ### Graduated
 
-| Proposal | Graduated | Confirming Reports | Promoted To |
-|---|---|---|---|
-| _(none yet)_ | | | |
+| Proposal     | Graduated | Confirming Reports | Promoted To |
+| ------------ | --------- | ------------------ | ----------- |
+| _(none yet)_ |           |                    |             |
 
 ### Dropped
 
-| Proposal | Dropped | Report Evidence | Reason |
-|---|---|---|---|
+| Proposal                                                                         | Dropped    | Report Evidence | Reason                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------- | ---------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | SOP 1 should verify all devDependencies are installed before running npm scripts | 2026-03-20 | _(pre-records)_ | The "missing dependency" was a false positive — `@vitest/coverage-istanbul` was in `package.json` all along. The real issue was non-executable husky hooks. This check would add noise without catching the actual problem class. |
