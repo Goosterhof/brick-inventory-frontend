@@ -119,10 +119,10 @@ The inline `defineComponent` with render function in DialogServiceDemo is the ri
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-|---|---|---|
-| Check if files exist before creating them | Candidate | Valid observation. The permit language was ambiguous ("What to Build" vs "What to Test"), and the architect assumed creation. First occurrence — needs a second confirming session to graduate. |
-| Use specific patterns when asserting absence of dynamic text | Candidate | Good general testing hygiene. The "hide(" vs "hide(toast-" issue is a real footgun in component tests with mixed static/dynamic content. First occurrence — needs confirmation. |
+| Proposal                                                     | Disposition | Rationale                                                                                                                                                                                       |
+| ------------------------------------------------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Check if files exist before creating them                    | Candidate   | Valid observation. The permit language was ambiguous ("What to Build" vs "What to Test"), and the architect assumed creation. First occurrence — needs a second confirming session to graduate. |
+| Use specific patterns when asserting absence of dynamic text | Candidate   | Good general testing hygiene. The "hide(" vs "hide(toast-" issue is a real footgun in component tests with mixed static/dynamic content. First occurrence — needs confirmation.                 |
 
 ### Notes for the Architect
 

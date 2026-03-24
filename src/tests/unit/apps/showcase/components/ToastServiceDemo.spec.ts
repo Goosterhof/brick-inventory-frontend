@@ -178,18 +178,29 @@ describe("ToastServiceDemo", () => {
     });
 
     it("should not attempt hide when lastToastId is null", async () => {
-        // Arrange
+        // Arrange — show a toast and hide it so lastToastId becomes null
         const wrapper = mount(ToastServiceDemo);
 
-        // Verify the button is disabled initially (no lastToastId)
-        const hideBtn = wrapper.findAll("button").find((b) => b.text() === "Hide Last");
-        expect(hideBtn?.attributes("disabled")).toBeDefined();
+        const showBtn = wrapper.findAll("button").find((b) => b.text() === "Show Toast");
+        await showBtn?.trigger("click");
+        await nextTick();
 
-        // Act — click anyway (button is disabled but we test the guard)
+        const hideBtn = wrapper.findAll("button").find((b) => b.text() === "Hide Last");
+        expect(hideBtn?.attributes("disabled")).toBeUndefined();
         await hideBtn?.trigger("click");
         await nextTick();
 
-        // Assert — no crash, no log entry with hide(toast-...)
-        expect(wrapper.text()).not.toContain("hide(toast-");
+        // Now lastToastId is null, button should be disabled
+        expect(hideBtn?.attributes("disabled")).toBeDefined();
+
+        // Act — temporarily remove disabled to force the click through,
+        // exercising the `if (lastToastId.value)` false branch.
+        (hideBtn?.element as HTMLButtonElement).disabled = false;
+        await hideBtn?.trigger("click");
+        await nextTick();
+
+        // Assert — no additional hide log (only the first hide)
+        const hideEntries = wrapper.text().match(/hide\(toast-/g);
+        expect(hideEntries).toHaveLength(1);
     });
 });

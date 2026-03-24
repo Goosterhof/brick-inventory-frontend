@@ -27,7 +27,8 @@ Strong architectural foundation. 100% test coverage enforced. 8 ADRs documented.
 | Adapter-store not consumed by domains    | Medium   | Planned    | ADR-006 + 007 are speculative until a domain migration validates the API surface    |
 | `Item` type constraint mismatch          | Low      | Aware      | `FamilySet` has `id` but no `createdAt`/`updatedAt` — will surface during migration |
 | Coverage gap on adapter-store.ts line 59 | Low      | New        | Introduced by recent `retrieveAll` changes — pre-push hook now fails                |
-| Showcase app staleness                   | Low      | Monitoring | Component count in Showcase (9) lags behind shared components (26)                  |
+| Showcase app staleness                   | Low      | Monitoring | Component count in Showcase (12) covered; shared components now at 31               |
+| `SetsOverviewPage.spec.ts` test guard    | High     | New        | Exceeds 1000ms execution threshold (ADR-010); blocks pre-push gauntlet              |
 
 ## In-Progress Work
 
@@ -53,7 +54,7 @@ Strong architectural foundation. 100% test coverage enforced. 8 ADRs documented.
 | Case conversion at HTTP boundary              | Battle-tested        | All API communication flows through it               |
 | Resource adapter (frozen + mutable)           | Tested, not consumed | Unit tests pass, but no domain page uses it yet      |
 | Adapter-store module                          | Tested, not consumed | Unit tests pass, but no domain page uses it yet      |
-| Brick Brutalism design system                 | Battle-tested        | 26 shared components, Showcase app, brand guide      |
+| Brick Brutalism design system                 | Battle-tested        | 31 shared components, Showcase app, brand guide      |
 
 ## Tech Debt
 
@@ -90,7 +91,7 @@ Ideas planted but deferred — revisit when the trigger condition is met. Seeds 
 | Test coverage (branches) | 99.44%    | 100%      |
 | Test files               | 74        | —         |
 | Test count               | 908       | —         |
-| Shared components        | 26        | —         |
+| Shared components        | 31        | —         |
 | Architecture tests       | 10 groups | —         |
 | ADRs documented          | 8         | —         |
 | Domains (Families)       | 7         | —         |

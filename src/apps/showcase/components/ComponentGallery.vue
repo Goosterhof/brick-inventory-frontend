@@ -15,9 +15,13 @@ import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import LoadingState from "@shared/components/LoadingState.vue";
 import ModalDialog from "@shared/components/ModalDialog.vue";
+import NavHeader from "@shared/components/NavHeader.vue";
+import NavLink from "@shared/components/NavLink.vue";
+import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -50,6 +54,8 @@ const resetToasts = () => {
 const toggleFilter = (filter: string) => {
     activeFilter.value = activeFilter.value === filter ? null : filter;
 };
+
+const noop = () => {};
 </script>
 
 <template>
@@ -390,6 +396,112 @@ const toggleFilter = (filter: string) => {
             <p class="brick-label" m="b-6">Empty State</p>
             <div p="8" class="brick-border" bg="gray-50">
                 <EmptyState message="No bricks found. Time to go shopping." />
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">Navigation</p>
+            <div flex="~ col" gap="6">
+                <div class="brick-border" bg="gray-50" overflow="hidden">
+                    <p text="xs" font="mono" text-color="gray-500" p="4 b-0">NavHeader</p>
+                    <NavHeader>
+                        <template #links>
+                            <NavLink to="/sets" @click="noop">Sets</NavLink>
+                            <NavLink to="/storage" @click="noop">Storage</NavLink>
+                        </template>
+                        <template #mobile-links>
+                            <NavMobileLink to="/sets" :active="true" @click="noop">Sets</NavMobileLink>
+                            <NavMobileLink to="/storage" :active="false" @click="noop">Storage</NavMobileLink>
+                        </template>
+                        <template #actions>
+                            <PrimaryButton>Log In</PrimaryButton>
+                        </template>
+                    </NavHeader>
+                </div>
+
+                <div grid="~ cols-1 md:cols-2" gap="6">
+                    <div p="6" class="brick-border" bg="gray-50">
+                        <p text="xs" font="mono" text-color="gray-500" m="b-3">NavLink</p>
+                        <div flex gap="3">
+                            <NavLink to="/sets" @click="noop">Sets</NavLink>
+                            <NavLink to="/parts" @click="noop">Parts</NavLink>
+                        </div>
+                    </div>
+
+                    <div p="6" class="brick-border" bg="gray-50">
+                        <p text="xs" font="mono" text-color="gray-500" m="b-3">NavMobileLink</p>
+                        <div flex="~ col">
+                            <NavMobileLink to="/sets" :active="true" @click="noop">Sets</NavMobileLink>
+                            <NavMobileLink to="/storage" :active="false" @click="noop">Storage</NavMobileLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanner Components -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">Scanner Components</p>
+            <div grid="~ cols-1 md:cols-2" gap="6">
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">BarcodeScanner</p>
+                    <p text="sm gray-600" m="b-3">Requires camera hardware. Shows error state in demo environment.</p>
+                    <!--
+                        BarcodeScanner and CameraCapture require camera hardware and are not
+                        rendered live in the gallery. They auto-start the camera on mount, which
+                        would fail in demo/test environments. The components are imported to prove
+                        they exist and are available, but demoed via description only.
+                    -->
+                    <div
+                        p="6"
+                        bg="gray-900"
+                        text="white center"
+                        font="bold"
+                        class="brick-border brick-shadow"
+                        role="img"
+                        aria-label="BarcodeScanner placeholder"
+                    >
+                        BarcodeScanner — Camera Required
+                    </div>
+                </div>
+
+                <div p="6" class="brick-border" bg="gray-50">
+                    <p text="xs" font="mono" text-color="gray-500" m="b-3">CameraCapture</p>
+                    <p text="sm gray-600" m="b-3">Requires camera hardware. Shows error state in demo environment.</p>
+                    <div
+                        p="6"
+                        bg="gray-900"
+                        text="white center"
+                        font="bold"
+                        class="brick-border brick-shadow"
+                        role="img"
+                        aria-label="CameraCapture placeholder"
+                    >
+                        CameraCapture — Camera Required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LegoBrick -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">LegoBrick</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <div flex="~ wrap" gap="6" items="end">
+                    <div flex="~ col" items="center" gap="2">
+                        <LegoBrick :columns="4" :rows="2" color="#DC2626" />
+                        <p text="xs" font="mono" text-color="gray-500">4x2 Red</p>
+                    </div>
+                    <div flex="~ col" items="center" gap="2">
+                        <LegoBrick :columns="2" :rows="2" color="#0055BF" />
+                        <p text="xs" font="mono" text-color="gray-500">2x2 Blue</p>
+                    </div>
+                    <div flex="~ col" items="center" gap="2">
+                        <LegoBrick :columns="1" :rows="1" color="#F5C518" :shadow="false" />
+                        <p text="xs" font="mono" text-color="gray-500">1x1 Yellow (no shadow)</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

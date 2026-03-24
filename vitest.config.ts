@@ -56,7 +56,6 @@ export default mergeConfig(
                     "src/apps/**/services/**",
                     "src/apps/**/stores/**",
                     "src/apps/**/types/**",
-                    "src/apps/showcase/**",
                     "src/shared/services/auth/types.ts",
                     "src/tests/**",
                 ],
