@@ -11,15 +11,15 @@
 
 ## Quality Gauntlet Results
 
-| Check         | Result | Notes                                                                                                        |
-| ------------- | ------ | ------------------------------------------------------------------------------------------------------------ |
-| format:check  | FAIL   | 3 files with formatting issues: `.claude/agents/lead-brick-architect.md`, `.claude/records/journals/2026-03-24-dialog-toast-showcase.md`, `src/shared/generated/component-registry.json` |
-| lint          | PASS   | 1 warning (non-error): `consistent-function-scoping` on `parseAdrNumbers` in `architecture.spec.ts`        |
-| lint:vue      | PASS   | All conventions passed                                                                                        |
-| type-check    | PASS   | No type errors                                                                                                |
+| Check         | Result | Notes                                                                                                                                                                                                   |
+| ------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| format:check  | FAIL   | 3 files with formatting issues: `.claude/agents/lead-brick-architect.md`, `.claude/records/journals/2026-03-24-dialog-toast-showcase.md`, `src/shared/generated/component-registry.json`                |
+| lint          | PASS   | 1 warning (non-error): `consistent-function-scoping` on `parseAdrNumbers` in `architecture.spec.ts`                                                                                                     |
+| lint:vue      | PASS   | All conventions passed                                                                                                                                                                                  |
+| type-check    | PASS   | No type errors                                                                                                                                                                                          |
 | test:coverage | FAIL   | Test guard violation: `SetsOverviewPage.spec.ts` exceeded 1000ms threshold. Coverage itself: 100% across all measured files. Showcase components are excluded from coverage thresholds (see Finding 1). |
-| knip          | PASS   | No unused exports or dead bricks                                                                             |
-| size          | N/A    | Cannot run — dist artifacts not built. size-limit requires `npm run build` first. Not a code defect.        |
+| knip          | PASS   | No unused exports or dead bricks                                                                                                                                                                        |
+| size          | N/A    | Cannot run — dist artifacts not built. size-limit requires `npm run build` first. Not a code defect.                                                                                                    |
 
 ---
 
@@ -41,9 +41,9 @@
 - **Location:** `src/tests/unit/apps/showcase/components/` — only `DialogServiceDemo.spec.ts` (10 tests, L2 behavior) and `ToastServiceDemo.spec.ts` (14 tests, L2-L3 behavior) exist
 - **Standard:** CLAUDE.md "If you build it, you test it."
 - **Observation:** The following components have zero test coverage: AntiPatterns, BrandVoice, BrickDimensions, ColorPalette, ComponentGallery, ComponentHealth, SectionHeading, ShowcaseHero, SnapDemo, TypographySpecimen. Priority assessment:
-  - **High priority**: ComponentHealth (reads live registry JSON, computed properties, toggle logic), ComponentGallery (25 imported components, interactive state for modals/filters/toasts), SnapDemo (four independent state machines with interaction handlers)
-  - **Medium priority**: ColorPalette (data-driven rendering, conditional reserved/overlay logic), BrickDimensions (LegoBrick integration), ShowcaseHero (onMounted visibility toggle)
-  - **Low priority**: SectionHeading (two props, pure display), AntiPatterns (static content), BrandVoice (static content), TypographySpecimen (static content)
+    - **High priority**: ComponentHealth (reads live registry JSON, computed properties, toggle logic), ComponentGallery (25 imported components, interactive state for modals/filters/toasts), SnapDemo (four independent state machines with interaction handlers)
+    - **Medium priority**: ColorPalette (data-driven rendering, conditional reserved/overlay logic), BrickDimensions (LegoBrick integration), ShowcaseHero (onMounted visibility toggle)
+    - **Low priority**: SectionHeading (two props, pure display), AntiPatterns (static content), BrandVoice (static content), TypographySpecimen (static content)
 - **Recommendation:** Prioritize tests for ComponentHealth (registry-driven behavior must be verified), ComponentGallery (most complex component in the app), and SnapDemo (state machines). Static content components can be covered with basic render assertions.
 
 ---
@@ -84,13 +84,13 @@
 - **Location:** `src/apps/showcase/components/ComponentGallery.vue`
 - **Standard:** ADR-009 (Showcase app renders registry data alongside component demos; health data visible to the team). The Showcase app's purpose is to demonstrate every shared component.
 - **Observation:** The ComponentGallery imports and demos 25 of 31 shared components. The following 6 are absent:
-  - **BarcodeScanner** — Scanner module, used in families/sets (ScanSetPage). Complex component with 3 props, 2 emits.
-  - **CameraCapture** — Scanner module, used in families/sets (IdentifyBrickPage). Complex component.
-  - **NavHeader** — Navigation shell, used in families App.vue. 3 named slots.
-  - **NavLink** — Used in families and admin. Props + emits.
-  - **NavMobileLink** — Used in families App.vue. Props + emits.
-  - **LegoBrick** — Used in BrickDimensions section but not in the ComponentGallery section itself.
-  - Note: The five navigation/scanner components are arguably harder to demo in isolation (NavHeader requires a layout context; scanner components require camera hardware). However, their absence from the gallery is not documented as intentional.
+    - **BarcodeScanner** — Scanner module, used in families/sets (ScanSetPage). Complex component with 3 props, 2 emits.
+    - **CameraCapture** — Scanner module, used in families/sets (IdentifyBrickPage). Complex component.
+    - **NavHeader** — Navigation shell, used in families App.vue. 3 named slots.
+    - **NavLink** — Used in families and admin. Props + emits.
+    - **NavMobileLink** — Used in families App.vue. Props + emits.
+    - **LegoBrick** — Used in BrickDimensions section but not in the ComponentGallery section itself.
+    - Note: The five navigation/scanner components are arguably harder to demo in isolation (NavHeader requires a layout context; scanner components require camera hardware). However, their absence from the gallery is not documented as intentional.
 - **Recommendation:** Add gallery sections for the missing components. Navigation components can be demoed statically (showing the visual appearance without routing). Scanner components can show the component in its "loading" or "error" state with mock handlers. If their exclusion is intentional (e.g., hardware dependencies make demo impractical), document it.
 
 ---
@@ -147,12 +147,12 @@ No ADR pressure signals detected in the showcase scope during this inspection.
 
 ## Doc Drift
 
-| Document      | Accurate | Drift Found                                                                                                        |
-| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
-| Domain Map    | No       | Showcase section lists 9 components (actual: 12); Shared Components section says "23 components" (actual: 31)    |
-| Brick Catalog | Not checked | Out of scope for this inspection — separate verification needed                                                |
-| Pulse         | No       | Showcase count in Active Concerns: 9 (actual 12); Shared component count in Active Concerns and Quality Metrics: 26 (actual: 31) |
-| CLAUDE.md     | Yes      | Showcase app description matches reality. Three-app structure accurate. No drift found.                           |
+| Document      | Accurate    | Drift Found                                                                                                                      |
+| ------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Domain Map    | No          | Showcase section lists 9 components (actual: 12); Shared Components section says "23 components" (actual: 31)                    |
+| Brick Catalog | Not checked | Out of scope for this inspection — separate verification needed                                                                  |
+| Pulse         | No          | Showcase count in Active Concerns: 9 (actual 12); Shared component count in Active Concerns and Quality Metrics: 26 (actual: 31) |
+| CLAUDE.md     | Yes         | Showcase app description matches reality. Three-app structure accurate. No drift found.                                          |
 
 ---
 
@@ -213,9 +213,9 @@ The foundation is solid. The surface needs a second coat.
 
 ### Training Proposals
 
-| Proposal | Context | Report Evidence |
-| -------- | ------- | --------------- |
-| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc (e.g., brick-catalog.md) is missing, flag its absence as a separate finding rather than silently skipping it | Domain map referenced brick-catalog.md but file could not be located; SOP proceeded without surfacing this | 2026-03-24-showcase-app |
+| Proposal                                                                                                                                                                                                                        | Context                                                                                                                              | Report Evidence         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
+| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc (e.g., brick-catalog.md) is missing, flag its absence as a separate finding rather than silently skipping it                            | Domain map referenced brick-catalog.md but file could not be located; SOP proceeded without surfacing this                           | 2026-03-24-showcase-app |
 | SOP 1 should add a classification step after running the gauntlet: for each failure, note whether it is caused by the inspected scope or is a pre-existing issue unrelated to the scope. This prevents scope bleed in findings. | SetsOverviewPage and component-registry.json format failures are not showcase defects but appear in the showcase inspection findings | 2026-03-24-showcase-app |
 
 ---
@@ -232,7 +232,7 @@ The inspector delivered a clean, well-scoped audit. Severity calibration is accu
 
 - **Finding 2 (10 untested components) — correctly rated medium.** The priority triage (high/medium/low by component complexity) is useful and well-reasoned. ComponentHealth and ComponentGallery are the right top priorities.
 
-- **Finding 5 (SetsOverviewPage test guard) — correctly rated medium, but I'd escalate to high for operational impact.** This blocks *all* pushes in the repo right now. It's not a showcase defect, but the inspector correctly flagged it despite being out of scope — you can't ignore a fire alarm because you're inspecting the kitchen.
+- **Finding 5 (SetsOverviewPage test guard) — correctly rated medium, but I'd escalate to high for operational impact.** This blocks _all_ pushes in the repo right now. It's not a showcase defect, but the inspector correctly flagged it despite being out of scope — you can't ignore a fire alarm because you're inspecting the kitchen.
 
 - **Finding 6 (6 missing gallery components) — correctly rated medium.** The nuance about scanner/nav components being harder to demo is fair, but the inspector is right that undocumented absence is the problem, not the absence itself. Good call.
 
@@ -242,10 +242,10 @@ The inspector delivered a clean, well-scoped audit. Severity calibration is accu
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| -------- | ----------- | --------- |
-| SOP 3 "verify document exists" step | Candidate | Legitimate gap. The inspector noticed the brick-catalog.md reference was dangling but didn't have a protocol for escalating it beyond a mention. A "verify exists" step before "compare content" is obvious and low-cost. First observation — needs a second confirming instance. |
-| SOP 1 failure classification step | Candidate | Valid. The report mixes showcase-scoped findings with repo-wide infrastructure failures without clear labeling. A classification step (in-scope vs. pre-existing) would sharpen the findings section and help the CFO triage. First observation — needs a second confirming instance. |
+| Proposal                            | Disposition | Rationale                                                                                                                                                                                                                                                                             |
+| ----------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SOP 3 "verify document exists" step | Candidate   | Legitimate gap. The inspector noticed the brick-catalog.md reference was dangling but didn't have a protocol for escalating it beyond a mention. A "verify exists" step before "compare content" is obvious and low-cost. First observation — needs a second confirming instance.     |
+| SOP 1 failure classification step   | Candidate   | Valid. The report mixes showcase-scoped findings with repo-wide infrastructure failures without clear labeling. A classification step (in-scope vs. pre-existing) would sharpen the findings section and help the CFO triage. First observation — needs a second confirming instance. |
 
 ### Notes for the Inspector
 

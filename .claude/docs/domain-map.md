@@ -84,12 +84,12 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 
 The design system specimen — Brick Brutalism on display. No domains, no routing, no auth. A single-page exhibition of every design token, component, and interaction pattern.
 
-- **Components**: ShowcaseHero, ColorPalette, TypographySpecimen, BrickDimensions, SnapDemo, ComponentGallery, BrandVoice, AntiPatterns, SectionHeading
+- **Components**: ShowcaseHero, ColorPalette, TypographySpecimen, BrickDimensions, SnapDemo, ComponentGallery, BrandVoice, AntiPatterns, SectionHeading, ComponentHealth, DialogServiceDemo, ToastServiceDemo
 - **Deployed at**: showcase.brick-inventory.com
 
 ## Shared Components
 
-23 components available to all apps via `@shared/components/`. See the [Brick Catalog](./brick-catalog.md) for the full parts inventory with props, slots, emits, and composition patterns.
+31 components available to all apps via `@shared/components/`. See the [Brick Catalog](./brick-catalog.md) for the full parts inventory with props, slots, emits, and composition patterns.
 
 ## Adding a New Domain
 

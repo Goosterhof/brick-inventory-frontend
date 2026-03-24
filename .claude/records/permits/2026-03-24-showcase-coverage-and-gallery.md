@@ -18,9 +18,9 @@ Close the coverage and gallery gaps in the Showcase app identified by inspection
 
 - **Finding 1 — Coverage exclusion:** Remove `src/apps/showcase/**` from the `vitest.config.ts` coverage exclude array. All showcase components must be covered by the 100% threshold like everything else.
 - **Finding 2 — 10 untested components:** Write tests for all 10 untested showcase components. Priority order per inspector:
-  - High: ComponentHealth, ComponentGallery, SnapDemo
-  - Medium: ColorPalette, BrickDimensions, ShowcaseHero
-  - Low: SectionHeading, AntiPatterns, BrandVoice, TypographySpecimen
+    - High: ComponentHealth, ComponentGallery, SnapDemo
+    - Medium: ColorPalette, BrickDimensions, ShowcaseHero
+    - Low: SectionHeading, AntiPatterns, BrandVoice, TypographySpecimen
 - **Finding 6 — Gallery gaps:** Add demo sections in ComponentGallery for: BarcodeScanner, CameraCapture, NavHeader, NavLink, NavMobileLink, LegoBrick. Mock hardware/routing dependencies as needed. If any component is genuinely impractical to demo, document the rationale in a code comment.
 - **Finding 3 & 4 — Format fixes:** Run `npm run format` to fix `component-registry.json` and `.claude/` markdown files. Verify the pre-commit hook sequence doesn't regenerate the formatting issue.
 - **Finding 7, 8, 9 — Doc drift:** Update domain-map.md (component counts: 12 showcase, 31 shared) and pulse.md (same counts, plus add SetsOverviewPage guard as an active concern).
