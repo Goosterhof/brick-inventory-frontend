@@ -115,6 +115,7 @@ const toggleFilter = (filter: string) => {
                             font="medium"
                             w="full"
                             outline="none"
+                            focus-visible:brick-focus
                             class="brick-border brick-shadow brick-transition focus:brick-shadow-hover focus:bg-brick-yellow"
                             bg="white"
                         />
@@ -135,6 +136,7 @@ const toggleFilter = (filter: string) => {
                             font="medium"
                             w="full"
                             outline="none"
+                            focus-visible:brick-focus
                             class="brick-border brick-transition bg-brick-red-light border-brick-red brick-shadow-error focus:brick-shadow-error-hover"
                             aria-invalid="true"
                             aria-describedby="error-input-error"

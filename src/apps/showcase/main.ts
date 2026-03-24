@@ -1,6 +1,7 @@
 import "@unocss/reset/tailwind.css";
 import "virtual:uno.css";
 import "@shared/assets/icons.css";
+import "@shared/assets/accessibility.css";
 import {createApp} from "vue";
 
 import App from "./App.vue";

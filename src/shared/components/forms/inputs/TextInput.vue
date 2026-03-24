@@ -53,6 +53,7 @@ const inputStateClass = computed(() => {
             font="medium"
             class="brick-border brick-transition"
             outline="none"
+            focus-visible:brick-focus
             :class="inputStateClass"
         />
         <FormError v-if="error" :id="errorId" :message="error" />

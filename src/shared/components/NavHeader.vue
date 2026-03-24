@@ -37,6 +37,7 @@ const closeMenu = () => {
                 ]"
                 cursor="pointer"
                 outline="none"
+                focus-visible:brick-focus
                 :aria-expanded="menuOpen"
                 aria-controls="mobile-menu"
                 aria-label="Menu"

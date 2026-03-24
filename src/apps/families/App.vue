@@ -120,6 +120,7 @@ const handleLogout = async () => {
                 tracking="wide"
                 cursor="pointer"
                 outline="none"
+                focus-visible:brick-focus
                 class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             >
                 <PhSignOut size="20" aria-hidden="true" />

@@ -15,6 +15,7 @@ const {type = "button", disabled = false} = defineProps<{type?: "button" | "subm
         tracking="wide"
         cursor="pointer disabled:not-allowed"
         outline="none"
+        focus-visible:brick-focus
         class="brick-shadow-danger brick-transition hover:brick-shadow-error-hover focus:brick-shadow-error-hover active:shadow-[2px_2px_0px_0px_#C41A16] active:translate-x-[2px] active:translate-y-[2px] disabled:brick-disabled"
     >
         <slot />

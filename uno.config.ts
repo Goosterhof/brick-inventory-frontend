@@ -17,6 +17,7 @@ export default defineConfig({
         "brick-stud-grid": "bg-[radial-gradient(circle,rgba(0,0,0,0.06)_22%,transparent_22%)] bg-[size:24px_24px]",
         "brick-stud-grid-hover":
             "hover:bg-[radial-gradient(circle,rgba(0,0,0,0.08)_22%,transparent_22%)] hover:bg-[size:24px_24px]",
+        "brick-focus": "outline-3 outline-offset-2 outline-brick-ink",
     },
     theme: {
         fontFamily: {heading: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"]},
