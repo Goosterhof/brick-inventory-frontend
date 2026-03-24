@@ -1,6 +1,7 @@
 import "@unocss/reset/tailwind.css";
 import "virtual:uno.css";
 import "@shared/assets/icons.css";
+import "@shared/assets/accessibility.css";
 import {registerAuthGuard} from "@shared/services/auth/guards";
 import {createApp} from "vue";
 

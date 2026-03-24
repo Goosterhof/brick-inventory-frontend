@@ -222,6 +222,7 @@ const handleAssigned = () => {
                                     tracking="wide"
                                     cursor="pointer"
                                     outline="none"
+                                    focus-visible:brick-focus
                                     class="brick-border brick-transition"
                                     :bg="adapted.status === status ? 'yellow-300' : 'white hover:yellow-100'"
                                     :disabled="statusUpdating"
@@ -304,6 +305,7 @@ const handleAssigned = () => {
                             bg="transparent"
                             p="0"
                             outline="none"
+                            focus-visible:brick-focus
                             class="brick-transition"
                             @click="showMissingParts = !showMissingParts"
                         >
@@ -371,6 +373,7 @@ const handleAssigned = () => {
                         p="0"
                         cursor="pointer"
                         outline="none"
+                        focus-visible:brick-focus
                         @click="openAssignModal(setPart)"
                     >
                         <PartListItem
@@ -429,6 +432,7 @@ const handleAssigned = () => {
                             p="0"
                             cursor="pointer"
                             outline="none"
+                            focus-visible:brick-focus
                             @click="openAssignModal(setPart)"
                         >
                             <PartListItem

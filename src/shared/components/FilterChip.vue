@@ -13,6 +13,7 @@ defineEmits<{click: []}>();
         tracking="wide"
         cursor="pointer"
         outline="none"
+        focus-visible:brick-focus
         class="brick-border brick-transition"
         :bg="active ? 'yellow-300' : 'white hover:yellow-100'"
         @click="$emit('click')"

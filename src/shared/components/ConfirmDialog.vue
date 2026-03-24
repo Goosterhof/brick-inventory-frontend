@@ -21,6 +21,7 @@ const emit = defineEmits<{confirm: []; cancel: []}>();
                 tracking="wide"
                 cursor="pointer"
                 outline="none"
+                focus-visible:brick-focus
                 class="brick-shadow-danger brick-transition hover:brick-shadow-error-hover focus:brick-shadow-error-hover active:shadow-[2px_2px_0px_0px_#C41A16] active:translate-x-[2px] active:translate-y-[2px]"
             >
                 <slot name="confirm">Confirm</slot>
@@ -34,6 +35,7 @@ const emit = defineEmits<{confirm: []; cancel: []}>();
                 tracking="wide"
                 cursor="pointer"
                 outline="none"
+                focus-visible:brick-focus
                 class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
             >
                 <slot name="cancel">Cancel</slot>

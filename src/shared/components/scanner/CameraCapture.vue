@@ -200,6 +200,7 @@ onUnmounted(() => {
                     tracking="wide"
                     cursor="pointer"
                     outline="none"
+                    focus-visible:brick-focus
                     aria-label="Retry camera access"
                     class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     @click="startCamera"
@@ -219,6 +220,7 @@ onUnmounted(() => {
             tracking="wide"
             cursor="pointer disabled:not-allowed"
             outline="none"
+            focus-visible:brick-focus
             :aria-label="isCameraActive ? 'Capture photo of Lego brick' : 'Capture photo (camera not ready)'"
             :disabled="!isCameraActive"
             class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px] disabled:brick-disabled"

@@ -448,6 +448,36 @@ describe("Architecture", () => {
         });
     });
 
+    describe("accessibility — outline removal must have focus-visible replacement", () => {
+        it("should not have outline=none without a paired focus-visible:brick-focus on the same element", () => {
+            const vueFiles = getVueFiles(SRC_DIR);
+            const violations: string[] = [];
+
+            for (const file of vueFiles) {
+                const content = readFileSync(file, "utf-8");
+
+                // Extract opening tags (potentially multi-line) that contain outline="none"
+                // Match from < to > across lines, capturing tags with outline="none"
+                const tagRegex = /<[a-zA-Z][^>]*outline="none"[^>]*>/gs;
+                let match: RegExpExecArray | null = null;
+
+                while ((match = tagRegex.exec(content)) !== null) {
+                    const tag = match[0];
+                    if (!tag.includes("focus-visible")) {
+                        const lineNum = content.slice(0, match.index).split("\n").length;
+                        const rel = relative(SRC_DIR, file);
+                        violations.push(`${rel}:${lineNum} has outline="none" without focus-visible replacement`);
+                    }
+                }
+            }
+
+            expect(
+                violations,
+                'Every outline="none" must be paired with focus-visible:brick-focus on the same element (WCAG 2.4.7)',
+            ).toEqual([]);
+        });
+    });
+
     describe("ADR sync — decision log index must match inspector Quick Reference", () => {
         const parseAdrNumbers = (content: string): string[] => {
             const numbers: string[] = [];

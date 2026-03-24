@@ -61,6 +61,7 @@ const stateColors: Record<InteractionState, string> = {
                     tracking="wide"
                     cursor="pointer"
                     outline="none"
+                    focus-visible:brick-focus
                     class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     @mouseenter="buttonState = 'hover'"
                     @mouseleave="buttonState = 'default'"
@@ -100,6 +101,7 @@ const stateColors: Record<InteractionState, string> = {
                     font="medium"
                     w="full"
                     outline="none"
+                    focus-visible:brick-focus
                     class="brick-border brick-shadow brick-transition focus:brick-shadow-hover focus:bg-brick-yellow"
                     bg="white"
                     @mouseenter="inputState = 'hover'"
@@ -173,6 +175,7 @@ const stateColors: Record<InteractionState, string> = {
                     decoration="3 black"
                     class="hover:decoration-[#F5C518] focus:decoration-[#F5C518] hover:bg-[#F5C518] focus:bg-[#F5C518]"
                     outline="none"
+                    focus-visible:brick-focus
                     p="x-1"
                     @mouseenter="linkState = 'hover'"
                     @mouseleave="linkState = 'default'"
