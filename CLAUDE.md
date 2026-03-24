@@ -217,6 +217,70 @@ When either signal fires, the CFO sends the ADR Interrogator back in with the fu
 
 ---
 
+## Operations Protocol — The Paper Trail
+
+Every job at Brick & Mortar Associates leaves a paper trail. No exceptions.
+
+### The Accountability Pipeline
+
+```
+Building Permit (before work)
+  → Construction Journal (after work, by architect)
+    → CFO Evaluation (appended to journal)
+      → Inspection Report (optional, by inspector)
+```
+
+### Building Permits (`.claude/records/permits/`)
+
+Filed BEFORE work starts. Every non-trivial task gets a permit — filed by whoever assigns the work (CEO, CFO, or General when deployed by the war room). Trivial changes (typo fixes, config tweaks) are exempt.
+
+A permit specifies: what to build, what's in scope, what's not, and how to verify it's done.
+
+**Naming:** `YYYY-MM-DD-{short-description}.md`
+**Template:** `.claude/records/permits/.building-permit-template.md`
+
+### Construction Journals (`.claude/records/journals/`)
+
+Filed AFTER work completes. The Lead Brick Architect produces a construction journal for every permit. The journal includes: what was built, whether acceptance criteria were met, decisions made, quality gauntlet results, proposed knowledge updates, and a self-debrief with training proposals.
+
+The CFO appends an evaluation — assessing the work, reviewing decisions, and dispositioning training proposals.
+
+**Naming:** `YYYY-MM-DD-{short-description}.md` (matches the permit it fulfills)
+**Template:** `.claude/records/journals/.construction-journal-template.md`
+
+### Inspection Reports (`.claude/records/inspections/`)
+
+Filed by the Building Inspector after an audit. Inspections can be routine (periodic sweeps), post-permit (verify a specific delivery), or on-demand (CEO/CFO request).
+
+**Naming:** `YYYY-MM-DD-{scope-description}.md`
+**Template:** `.claude/records/inspections/.inspection-report-template.md`
+
+### Who Files What
+
+| Document | Filed By | Reviewed By | Approved By |
+|---|---|---|---|
+| Building Permit | CEO, CFO, or General | — | — (filed = active) |
+| Construction Journal | Lead Brick Architect | CFO (appends evaluation) | CEO (approves knowledge updates) |
+| Inspection Report | Building Inspector | CFO (appends evaluation) | CEO (approves findings disposition) |
+
+### War Room Integration
+
+When the General deploys the company via the war room:
+1. The General issues a building permit (or the CFO translates deployment orders into a permit)
+2. The architect works and files a construction journal
+3. The CFO evaluates and reports back to the General
+4. The General does NOT file in the company's records — the company's paper trail is sovereign
+
+### Graduation — Evidence-Backed Training
+
+Both agents (architect and inspector) propose training improvements in their journals/reports. The CFO tracks these in each agent's Graduation Log with evidence:
+
+- A proposal must be observed in **at least 2 shifts** before promotion into the agent's training
+- Every graduation log entry references the specific journal or report that provided evidence
+- The CFO dispositions proposals (Candidate / Dropped) with rationale — no silent ignoring
+
+---
+
 ## The Style Guide — Neo-Brutalist LEGO Aesthetic
 
 Our design language is neo-brutalist, inspired by actual LEGO bricks:
