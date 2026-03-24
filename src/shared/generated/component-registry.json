@@ -43,8 +43,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
-                "linesChanged": 20
+                "commits": 2,
+                "linesChanged": 18
             },
             "dependencyDepth": 0
         },
@@ -132,8 +132,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 7,
-                "linesChanged": 256
+                "commits": 6,
+                "linesChanged": 254
             },
             "dependencyDepth": 0
         },
@@ -178,8 +178,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 8,
-                "linesChanged": 92
+                "commits": 5,
+                "linesChanged": 292
             },
             "dependencyDepth": 0
         },
@@ -321,8 +321,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
-                "linesChanged": 31
+                "commits": 2,
+                "linesChanged": 23
             },
             "dependencyDepth": 0
         },
@@ -375,8 +375,8 @@
                 ]
             },
             "churn": {
-                "commits": 5,
-                "linesChanged": 61
+                "commits": 3,
+                "linesChanged": 53
             },
             "dependencyDepth": 1
         },
@@ -458,8 +458,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
-                "linesChanged": 11
+                "commits": 2,
+                "linesChanged": 9
             },
             "dependencyDepth": 0
         },
@@ -546,8 +546,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
-                "linesChanged": 6
+                "commits": 2,
+                "linesChanged": 11
             },
             "dependencyDepth": 0
         },
@@ -585,8 +585,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 0,
-                "linesChanged": 0
+                "commits": 1,
+                "linesChanged": 5
             },
             "dependencyDepth": 0
         },
@@ -633,8 +633,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
-                "linesChanged": 8
+                "commits": 1,
+                "linesChanged": 10
             },
             "dependencyDepth": 0
         },
@@ -723,8 +723,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
-                "linesChanged": 23
+                "commits": 2,
+                "linesChanged": 21
             },
             "dependencyDepth": 0
         },
@@ -816,8 +816,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 4,
-                "linesChanged": 68
+                "commits": 2,
+                "linesChanged": 64
             },
             "dependencyDepth": 0
         },
@@ -852,8 +852,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 4,
-                "linesChanged": 73
+                "commits": 2,
+                "linesChanged": 67
             },
             "dependencyDepth": 0
         },
@@ -896,8 +896,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 5,
-                "linesChanged": 26
+                "commits": 2,
+                "linesChanged": 27
             },
             "dependencyDepth": 0
         },
@@ -939,8 +939,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 5,
-                "linesChanged": 43
+                "commits": 2,
+                "linesChanged": 29
             },
             "dependencyDepth": 0
         },
@@ -1014,8 +1014,8 @@
                 ]
             },
             "churn": {
-                "commits": 5,
-                "linesChanged": 39
+                "commits": 2,
+                "linesChanged": 75
             },
             "dependencyDepth": 1
         },
@@ -1138,8 +1138,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 5,
-                "linesChanged": 53
+                "commits": 2,
+                "linesChanged": 35
             },
             "dependencyDepth": 0
         },
@@ -1176,7 +1176,9 @@
                 },
                 "showcase": {
                     "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
+                        "src/apps/showcase/components/ComponentGallery.vue",
+                        "src/apps/showcase/components/DialogServiceDemo.vue",
+                        "src/apps/showcase/components/ToastServiceDemo.vue"
                     ]
                 }
             },
@@ -1204,8 +1206,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 4,
-                "linesChanged": 16
+                "commits": 2,
+                "linesChanged": 22
             },
             "dependencyDepth": 0
         },
@@ -1289,8 +1291,8 @@
                 ]
             },
             "churn": {
-                "commits": 4,
-                "linesChanged": 60
+                "commits": 2,
+                "linesChanged": 52
             },
             "dependencyDepth": 1
         },
@@ -1395,8 +1397,8 @@
                 ]
             },
             "churn": {
-                "commits": 5,
-                "linesChanged": 62
+                "commits": 3,
+                "linesChanged": 54
             },
             "dependencyDepth": 1
         },
@@ -1469,8 +1471,8 @@
                 ]
             },
             "churn": {
-                "commits": 5,
-                "linesChanged": 39
+                "commits": 2,
+                "linesChanged": 61
             },
             "dependencyDepth": 1
         },
@@ -1480,7 +1482,8 @@
             "consumers": {
                 "showcase": {
                     "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
+                        "src/apps/showcase/components/ComponentGallery.vue",
+                        "src/apps/showcase/components/ToastServiceDemo.vue"
                     ]
                 }
             },
@@ -1508,8 +1511,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 4,
-                "linesChanged": 45
+                "commits": 2,
+                "linesChanged": 33
             },
             "dependencyDepth": 0
         }
