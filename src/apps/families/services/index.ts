@@ -1,3 +1,4 @@
+export {familyDialogService} from "./dialog";
 export {familyHttpService} from "./http";
 export {familyAuthService} from "./auth";
 export {familyRouterService, FamilyRouterView, FamilyRouterLink} from "./router";
