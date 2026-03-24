@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type {StorageOptionPart} from "@app/types/part";
 import type {StorageOption} from "@app/types/storageOption";
+import type {Adapted} from "@shared/services/resource-adapter";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {storageOptionStoreModule} from "@app/stores";
 import BackButton from "@shared/components/BackButton.vue";
 import DetailRow from "@shared/components/DetailRow.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
@@ -13,26 +15,26 @@ import {toCamelCaseTyped} from "@shared/helpers/string";
 import {onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
-const storageOption = ref<StorageOption | null>(null);
+const adapted = ref<Adapted<StorageOption> | null>(null);
 const storageParts = ref<StorageOptionPart[]>([]);
 const loading = ref(true);
 const partsLoading = ref(true);
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
-    const [optionResponse, partsResponse] = await Promise.all([
-        familyHttpService.getRequest<StorageOption>(`/storage-options/${id}`),
+    const [storageOption, partsResponse] = await Promise.all([
+        storageOptionStoreModule.getOrFailById(id),
         familyHttpService.getRequest<StorageOptionPart[]>(`/storage-options/${id}/parts`),
     ]);
-    storageOption.value = toCamelCaseTyped(optionResponse.data);
+    adapted.value = storageOption;
     storageParts.value = partsResponse.data.map((item) => toCamelCaseTyped(item));
     loading.value = false;
     partsLoading.value = false;
 });
 
 const goToEdit = async () => {
-    if (!storageOption.value) return;
-    await familyRouterService.goToRoute("storage-edit", storageOption.value.id);
+    if (!adapted.value) return;
+    await familyRouterService.goToRoute("storage-edit", adapted.value.id);
 };
 
 const goBack = async () => {
@@ -44,25 +46,25 @@ const goBack = async () => {
     <div max-w="6xl" m="x-auto">
         <LoadingState v-if="loading" :message="t('common.loading').value" />
 
-        <template v-else-if="storageOption">
+        <template v-else-if="adapted">
             <div m="b-6">
                 <BackButton @click="goBack">&larr; {{ t("storage.backToOverview").value }}</BackButton>
             </div>
 
             <div flex="~ col" gap="3">
-                <h1 text="2xl" font="bold" uppercase tracking="wide">{{ storageOption.name }}</h1>
+                <h1 text="2xl" font="bold" uppercase tracking="wide">{{ adapted.name }}</h1>
 
-                <DetailRow v-if="storageOption.description" :label="t('storage.description').value">
-                    {{ storageOption.description }}
+                <DetailRow v-if="adapted.description" :label="t('storage.description').value">
+                    {{ adapted.description }}
                 </DetailRow>
-                <DetailRow v-if="storageOption.row !== null" :label="t('storage.row').value">
-                    {{ storageOption.row }}
+                <DetailRow v-if="adapted.row !== null" :label="t('storage.row').value">
+                    {{ adapted.row }}
                 </DetailRow>
-                <DetailRow v-if="storageOption.column !== null" :label="t('storage.column').value">
-                    {{ storageOption.column }}
+                <DetailRow v-if="adapted.column !== null" :label="t('storage.column').value">
+                    {{ adapted.column }}
                 </DetailRow>
-                <DetailRow v-if="storageOption.childIds.length > 0" :label="t('storage.subLocations').value">
-                    {{ storageOption.childIds.length }}
+                <DetailRow v-if="adapted.childIds.length > 0" :label="t('storage.subLocations').value">
+                    {{ adapted.childIds.length }}
                 </DetailRow>
 
                 <div m="t-4">

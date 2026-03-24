@@ -4,6 +4,7 @@ import BrandVoice from "./components/BrandVoice.vue";
 import BrickDimensions from "./components/BrickDimensions.vue";
 import ColorPalette from "./components/ColorPalette.vue";
 import ComponentGallery from "./components/ComponentGallery.vue";
+import ComponentHealth from "./components/ComponentHealth.vue";
 import ShowcaseHero from "./components/ShowcaseHero.vue";
 import SnapDemo from "./components/SnapDemo.vue";
 import TypographySpecimen from "./components/TypographySpecimen.vue";
@@ -21,6 +22,7 @@ import TypographySpecimen from "./components/TypographySpecimen.vue";
             <AntiPatterns />
             <BrandVoice />
             <BrickDimensions />
+            <ComponentHealth />
         </div>
 
         <footer p="y-16 x-4" border="t-3 black" m="t-24">

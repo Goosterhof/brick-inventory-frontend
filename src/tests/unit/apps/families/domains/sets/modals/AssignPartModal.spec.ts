@@ -6,35 +6,32 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {
+    createMockAxios,
+    createMockStringTs,
+    createMockFamilyServices,
+    createMockFormField,
+    createMockFormLabel,
+    createMockFormError,
+} = await vi.hoisted(() => import("../../../../../../helpers"));
+
+vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
+
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
+
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+
 const {mockGetRequest, mockPostRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn(), mockPostRequest: vi.fn()}));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: mockPostRequest,
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: vi.fn()},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyHttpService: {getRequest: mockGetRequest, postRequest: mockPostRequest},
+        familyAuthService: {isLoggedIn: {value: true}},
+    }),
+);
 
 const mockPart = {
     id: 1,
@@ -46,8 +43,8 @@ const mockPart = {
 };
 
 const mockStorageOptions = [
-    {id: 1, name: "Drawer A", description: null, parent_id: null, row: null, column: null, child_ids: []},
-    {id: 2, name: "Drawer B", description: null, parent_id: null, row: null, column: null, child_ids: []},
+    {id: 1, name: "Drawer A", description: null, parentId: null, row: null, column: null, childIds: []},
+    {id: 2, name: "Drawer B", description: null, parentId: null, row: null, column: null, childIds: []},
 ];
 
 const mountModal = () => shallowMount(AssignPartModal, {props: {open: true, part: mockPart}});

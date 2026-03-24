@@ -8,6 +8,19 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
+const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
+    () => import("../../../../../../helpers"),
+);
+
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+
+vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
+
+vi.mock("@app/domains/sets/modals/AssignPartModal.vue", () => ({
+    default: {name: "AssignPartModal", template: "<div />", props: ["open", "part", "existingLocations"]},
+}));
+
 const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockPatch} = vi.hoisted(() => ({
     mockGetOrFailById: vi.fn(),
     mockGetRequest: vi.fn(),
@@ -16,41 +29,25 @@ const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, moc
     mockPatch: vi.fn(),
 }));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    familySetStoreModule: {
-        getAll: {value: []},
-        retrieveAll: vi.fn(),
-        getById: vi.fn(),
-        getOrFailById: mockGetOrFailById,
-        generateNew: vi.fn(),
-    },
-    familyLoadingService: {isLoading: {value: false}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyHttpService: {getRequest: mockGetRequest},
+        familyAuthService: {isLoggedIn: {value: true}},
+        familyRouterService: {goToRoute: mockGoToRoute, currentRouteId: mockCurrentRouteId},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
+        familySetStoreModule: {
+            getAll: {value: []},
+            retrieveAll: vi.fn(),
+            getById: vi.fn(),
+            getOrFailById: mockGetOrFailById,
+            generateNew: vi.fn(),
+        },
+    }),
+);
 
 const createMockAdapted = (
     overrides?: Partial<{status: string; purchaseDate: string | null; notes: string | null}>,
@@ -87,34 +84,34 @@ const createMockAdapted = (
 
 const mockSetWithPartsResponse = {
     id: 10,
-    set_num: "75192-1",
+    setNum: "75192-1",
     name: "Millennium Falcon",
     year: 2017,
     theme: "Star Wars",
-    num_parts: 7541,
-    image_url: "https://example.com/75192.jpg",
+    numParts: 7541,
+    imageUrl: "https://example.com/75192.jpg",
     parts: [
         {
             id: 1,
             quantity: 10,
-            is_spare: false,
-            element_id: "300101",
+            isSpare: false,
+            elementId: "300101",
             part: {
                 id: 10,
-                part_num: "3001",
+                partNum: "3001",
                 name: "Brick 2 x 4",
                 category: null,
-                image_url: "https://example.com/3001.jpg",
+                imageUrl: "https://example.com/3001.jpg",
             },
-            color: {id: 1, name: "Red", rgb: "CC0000", is_transparent: false},
+            color: {id: 1, name: "Red", rgb: "CC0000", isTransparent: false},
         },
         {
             id: 2,
             quantity: 2,
-            is_spare: true,
-            element_id: "300226",
-            part: {id: 20, part_num: "3002", name: "Brick 2 x 3", category: null, image_url: null},
-            color: {id: 5, name: "Blue", rgb: "0000CC", is_transparent: false},
+            isSpare: true,
+            elementId: "300226",
+            part: {id: 20, partNum: "3002", name: "Brick 2 x 3", category: null, imageUrl: null},
+            color: {id: 5, name: "Blue", rgb: "0000CC", isTransparent: false},
         },
     ],
 };
@@ -420,7 +417,7 @@ describe("SetDetailPage", () => {
     it("should display storage location badges on parts", async () => {
         // Arrange
         const storageMapData = [
-            {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 8},
+            {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: "Drawer A", quantity: 8},
         ];
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
@@ -459,7 +456,7 @@ describe("SetDetailPage", () => {
     it("should show build check when all parts are available", async () => {
         // Arrange
         const storageMapData = [
-            {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 10},
+            {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: "Drawer A", quantity: 10},
         ];
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
@@ -484,7 +481,7 @@ describe("SetDetailPage", () => {
     it("should show missing parts when not all available", async () => {
         // Arrange
         const storageMapData = [
-            {part_id: 10, color_id: 1, storage_option_id: 5, storage_option_name: "Drawer A", quantity: 3},
+            {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: "Drawer A", quantity: 3},
         ];
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest

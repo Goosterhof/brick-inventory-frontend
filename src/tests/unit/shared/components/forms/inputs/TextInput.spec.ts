@@ -1,9 +1,14 @@
-import FormError from "@shared/components/forms/FormError.vue";
-import FormField from "@shared/components/forms/FormField.vue";
-import FormLabel from "@shared/components/forms/FormLabel.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+const {createMockFormError, createMockFormField, createMockFormLabel} = await vi.hoisted(
+    () => import("../../../../../helpers"),
+);
+
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
 describe("TextInput", () => {
     it("should render label and input", () => {
@@ -11,7 +16,7 @@ describe("TextInput", () => {
         const wrapper = shallowMount(TextInput, {props: {label: "Username", modelValue: ""}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.text()).toContain("Username");
         expect(wrapper.find("input").exists()).toBe(true);
         expect(wrapper.find("input").element.value).toBe("");
@@ -21,7 +26,7 @@ describe("TextInput", () => {
         // Arrange
         const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
         const input = wrapper.find("input");
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         const inputId = input.attributes("id");
 
         // Assert
@@ -47,7 +52,7 @@ describe("TextInput", () => {
         const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.props("optional")).toBe(false);
         expect(wrapper.find("input").attributes("required")).toBeDefined();
     });
@@ -57,7 +62,7 @@ describe("TextInput", () => {
         const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: "", optional: true}});
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.props("optional")).toBe(true);
         expect(wrapper.find("input").attributes("required")).toBeUndefined();
     });
@@ -68,7 +73,7 @@ describe("TextInput", () => {
             props: {label: "Email", modelValue: "", error: "Invalid email address"},
         });
         const input = wrapper.find("input");
-        const errorComponent = wrapper.findComponent(FormError);
+        const errorComponent = wrapper.findComponent({name: "FormError"});
 
         // Assert
         expect(errorComponent.props("message")).toBe("Invalid email address");
@@ -119,7 +124,7 @@ describe("TextInput", () => {
         const wrapper = shallowMount(TextInput, {props: {label: "Email", modelValue: ""}});
 
         // Assert
-        expect(wrapper.findComponent(FormField).exists()).toBe(true);
+        expect(wrapper.findComponent({name: "FormField"}).exists()).toBe(true);
     });
 
     it("should apply normal styling when not disabled and no error", () => {
@@ -138,7 +143,7 @@ describe("TextInput", () => {
 
         // Assert
         expect(input.classes()).toContain("bg-brick-red-light");
-        expect(wrapper.findComponent(FormError).props("message")).toBe("Invalid");
+        expect(wrapper.findComponent({name: "FormError"}).props("message")).toBe("Invalid");
     });
 
     it("should not render FormError when no error", () => {
@@ -147,7 +152,7 @@ describe("TextInput", () => {
         const input = wrapper.find("input");
 
         // Assert
-        expect(wrapper.findComponent(FormError).exists()).toBe(false);
+        expect(wrapper.findComponent({name: "FormError"}).exists()).toBe(false);
         expect(input.attributes("aria-invalid")).toBeUndefined();
         expect(input.attributes("aria-describedby")).toBeUndefined();
     });

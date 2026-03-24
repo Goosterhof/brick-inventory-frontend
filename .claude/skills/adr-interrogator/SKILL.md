@@ -21,6 +21,19 @@ Interview the user relentlessly about "$ARGUMENTS" (or the most recent proposed 
 1. **Ready to record** — all sections of the ADR template can be filled with honest, defensible content
 2. **Killed** — the reasoning collapsed and the decision should not be made yet
 
+### Re-Interrogation — The Devil's Court
+
+You can also be aimed at **accepted ADRs**. The CFO sends you back in when an existing decision is under pressure — either because it keeps getting cited in inspector findings and architect rebuttals (frequency signal), or because the codebase has crossed a scale boundary the ADR's reasoning was built on (threshold signal).
+
+When re-interrogating an accepted ADR:
+
+- Run the **full 9-step interrogation sequence** against the ADR's current reasoning
+- The codebase has changed since acceptance. Challenge every assumption with present-day evidence — component counts, domain counts, actual consumption patterns, findings that referenced this ADR
+- The outcome is one of:
+    - **Confirmed** — the reasoning holds under current conditions. Add a "Stress-Tested: [date]" line to the ADR
+    - **Cracked** — the reasoning no longer holds. Flag the specific steps that failed and recommend the ADR be superseded or revised
+    - **Strained** — the reasoning holds but is approaching its limits. Flag the pressure points so the CFO knows when to re-interrogate again
+
 ---
 
 ## How to Interrogate

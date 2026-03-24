@@ -8,6 +8,61 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {
+    createMockAxios,
+    createMockStringTs,
+    createMockFamilyServices,
+    createMockFamilyStores,
+    createMockFormField,
+    createMockFormLabel,
+    createMockFormError,
+} = await vi.hoisted(() => import("../../../../../../helpers"));
+
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
+
+vi.mock("@shared/components/BadgeLabel.vue", () => ({
+    default: {name: "BadgeLabel", template: "<span><slot /></span>", props: ["variant"]},
+}));
+
+vi.mock("@shared/components/EmptyState.vue", () => ({
+    default: {name: "EmptyState", template: "<span><slot /></span>", props: ["message"]},
+}));
+
+vi.mock("@shared/components/FilterChip.vue", () => ({
+    default: {name: "FilterChip", template: "<button @click='$emit(\"click\")'><slot /></button>", props: ["selected"]},
+}));
+
+vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({
+    default: {
+        name: "TextInput",
+        template: "<input @input='$emit(\"update:modelValue\", $event.target.value)' />",
+        props: ["modelValue"],
+    },
+}));
+
+vi.mock("@shared/components/ListItemButton.vue", () => ({
+    default: {name: "ListItemButton", template: "<div @click='$emit(\"click\")'><slot /></div>", props: ["variant"]},
+}));
+
+vi.mock("@shared/components/PageHeader.vue", () => ({
+    default: {name: "PageHeader", template: "<header><h1>{{ title }}</h1><slot /></header>", props: ["title"]},
+}));
+
+vi.mock("@shared/components/PrimaryButton.vue", () => ({
+    default: {
+        name: "PrimaryButton",
+        template: "<button @click='$emit(\"click\")'><slot /></button>",
+        props: ["variant"],
+    },
+}));
+
+vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn(), toCsv: vi.fn()}));
+
 const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
     const {ref} = await import("vue");
     return {
@@ -21,31 +76,17 @@ const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading} = await vi.h
 vi.mock("@app/services", async () => {
     const {computed} = await import("vue");
 
-    return {
-        familyHttpService: {
-            getRequest: vi.fn(),
-            postRequest: vi.fn(),
-            putRequest: vi.fn(),
-            patchRequest: vi.fn(),
-            deleteRequest: vi.fn(),
-            registerRequestMiddleware: vi.fn(() => vi.fn()),
-            registerResponseMiddleware: vi.fn(() => vi.fn()),
-            registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-        },
-        familyAuthService: {
-            isLoggedIn: {value: true},
-            user: {value: null},
-            userId: vi.fn(),
-            register: vi.fn(),
-            login: vi.fn(),
-            logout: vi.fn(),
-            checkIfLoggedIn: vi.fn(),
-            sendEmailResetPassword: vi.fn(),
-            resetPassword: vi.fn(),
-        },
-        familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
-        familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
+    return createMockFamilyServices({
+        familyAuthService: {isLoggedIn: {value: true}},
+        familyRouterService: {goToRoute: mockGoToRoute},
         familyLoadingService: {isLoading: computed(() => mockIsLoading.value)},
+    });
+});
+
+vi.mock("@app/stores", async () => {
+    const {computed} = await import("vue");
+
+    return createMockFamilyStores({
         familySetStoreModule: {
             getAll: computed(() => mockAllItems.value),
             retrieveAll: mockRetrieveAll,
@@ -53,9 +94,7 @@ vi.mock("@app/services", async () => {
             getOrFailById: vi.fn(),
             generateNew: vi.fn(),
         },
-        FamilyRouterView: {template: "<div><slot /></div>"},
-        FamilyRouterLink: {template: "<a><slot /></a>"},
-    };
+    });
 });
 
 const mockAdaptedSet = {

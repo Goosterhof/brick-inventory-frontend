@@ -5,6 +5,7 @@ import {describe, expect, it} from "vitest";
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = join(CURRENT_DIR, "../..");
+const ROOT_DIR = join(SRC_DIR, "..");
 const SHARED_DIR = join(SRC_DIR, "shared");
 const APPS_DIR = join(SRC_DIR, "apps");
 
@@ -432,7 +433,9 @@ describe("Architecture", () => {
                 (file) => file.endsWith(".ts") && !file.endsWith(".d.ts"),
             );
 
-            const testFiles = allFiles.filter((file) => !file.endsWith("setup.ts") && !file.includes("/helpers/"));
+            const testFiles = allFiles.filter(
+                (file) => !file.endsWith("setup.ts") && !file.endsWith("-reporter.ts") && !file.includes("helpers/"),
+            );
             const violations: string[] = [];
 
             for (const file of testFiles) {
@@ -442,6 +445,45 @@ describe("Architecture", () => {
             }
 
             expect(violations, "Test files must use .spec.ts extension").toEqual([]);
+        });
+    });
+
+    describe("ADR sync — decision log index must match inspector Quick Reference", () => {
+        const parseAdrNumbers = (content: string): string[] => {
+            const numbers: string[] = [];
+            for (const line of content.split("\n")) {
+                const match = /^\|\s*(\d{3})\s*\|/.exec(line);
+                if (match?.[1]) {
+                    numbers.push(match[1]);
+                }
+            }
+            return numbers;
+        };
+
+        it("every ADR in the decision log index should appear in the inspector Quick Reference", () => {
+            const decisionLog = readFileSync(join(ROOT_DIR, ".claude/docs/decisions.md"), "utf-8");
+            const inspector = readFileSync(join(ROOT_DIR, ".claude/agents/building-inspector.md"), "utf-8");
+
+            const logAdrs = parseAdrNumbers(decisionLog);
+            const inspectorAdrs = parseAdrNumbers(inspector);
+
+            const missingFromInspector = logAdrs.filter((adr) => !inspectorAdrs.includes(adr));
+            const inspectorOnly = inspectorAdrs.filter((adr) => !logAdrs.includes(adr) && adr !== "000");
+
+            const violations: string[] = [];
+
+            for (const adr of missingFromInspector) {
+                violations.push(`ADR-${adr} is in the decision log but missing from the inspector Quick Reference`);
+            }
+
+            for (const adr of inspectorOnly) {
+                violations.push(`ADR-${adr} is in the inspector Quick Reference but missing from the decision log`);
+            }
+
+            expect(
+                violations,
+                "The decision log index and inspector ADR Quick Reference must stay in sync. ADR-000 (meta) is exempt.",
+            ).toEqual([]);
         });
     });
 });

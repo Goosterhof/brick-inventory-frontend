@@ -1,9 +1,14 @@
-import FormError from "@shared/components/forms/FormError.vue";
-import FormField from "@shared/components/forms/FormField.vue";
-import FormLabel from "@shared/components/forms/FormLabel.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+
+const {createMockFormError, createMockFormField, createMockFormLabel} = await vi.hoisted(
+    () => import("../../../../../helpers"),
+);
+
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
 describe("SelectInput", () => {
     const defaultSlot = '<option value="a">A</option><option value="b">B</option>';
@@ -16,7 +21,7 @@ describe("SelectInput", () => {
         });
 
         // Assert
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
         expect(label.text()).toContain("Status");
         expect(wrapper.find("select").exists()).toBe(true);
     });
@@ -28,7 +33,7 @@ describe("SelectInput", () => {
             slots: {default: defaultSlot},
         });
         const select = wrapper.find("select");
-        const label = wrapper.findComponent(FormLabel);
+        const label = wrapper.findComponent({name: "FormLabel"});
 
         // Assert
         expect(select.attributes("id")).toBeTruthy();
@@ -59,7 +64,7 @@ describe("SelectInput", () => {
         });
 
         // Assert
-        expect(wrapper.findComponent(FormLabel).props("optional")).toBe(false);
+        expect(wrapper.findComponent({name: "FormLabel"}).props("optional")).toBe(false);
         expect(wrapper.find("select").attributes("required")).toBeDefined();
     });
 
@@ -71,7 +76,7 @@ describe("SelectInput", () => {
         });
 
         // Assert
-        expect(wrapper.findComponent(FormLabel).props("optional")).toBe(true);
+        expect(wrapper.findComponent({name: "FormLabel"}).props("optional")).toBe(true);
     });
 
     it("should display error message and set aria-invalid", () => {
@@ -82,7 +87,7 @@ describe("SelectInput", () => {
         });
 
         // Assert
-        expect(wrapper.findComponent(FormError).props("message")).toBe("Required");
+        expect(wrapper.findComponent({name: "FormError"}).props("message")).toBe("Required");
         expect(wrapper.find("select").attributes("aria-invalid")).toBe("true");
     });
 
@@ -94,7 +99,7 @@ describe("SelectInput", () => {
         });
 
         // Assert
-        expect(wrapper.findComponent(FormField).exists()).toBe(true);
+        expect(wrapper.findComponent({name: "FormField"}).exists()).toBe(true);
     });
 
     it("should apply error styling when error is present", () => {

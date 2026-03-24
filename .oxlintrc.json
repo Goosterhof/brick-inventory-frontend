@@ -336,6 +336,7 @@
             }
         },
         {"files": ["src/**/*.ts"], "rules": {"import/no-default-export": "error"}},
+        {"files": ["src/tests/**/*-reporter.ts"], "rules": {"import/no-default-export": "off", "no-console": "off"}},
         {"files": ["uno.config.ts"], "rules": {"typescript/no-deprecated": "off"}}
     ]
 }

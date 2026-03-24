@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type {StorageOption} from "@app/types/storageOption";
+import type {Adapted} from "@shared/services/resource-adapter";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {storageOptionStoreModule} from "@app/stores";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
@@ -11,19 +13,12 @@ import LoadingState from "@shared/components/LoadingState.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {useFormSubmit} from "@shared/composables/useFormSubmit";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {deepSnakeKeys} from "string-ts";
 import {onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
-const storageOption = ref<StorageOption | null>(null);
+const adapted = ref<Adapted<StorageOption> | null>(null);
 const loading = ref(true);
 const showDeleteConfirm = ref(false);
-
-const name = ref("");
-const description = ref("");
-const row = ref<number | null>(null);
-const column = ref<number | null>(null);
 
 type EditStorageField = "name" | "description" | "parentId" | "row" | "column";
 const validationErrors = useValidationErrors<EditStorageField>(familyHttpService);
@@ -32,37 +27,28 @@ const {handleSubmit} = useFormSubmit(validationErrors);
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
-    const response = await familyHttpService.getRequest<StorageOption>(`/storage-options/${id}`);
-    const data = toCamelCaseTyped(response.data);
-    storageOption.value = data;
-
-    name.value = data.name;
-    description.value = data.description ?? "";
-    row.value = data.row;
-    column.value = data.column;
+    adapted.value = await storageOptionStoreModule.getOrFailById(id);
     loading.value = false;
 });
 
 const onSubmit = () =>
     handleSubmit(async () => {
-        if (!storageOption.value) return;
+        if (!adapted.value) return;
 
-        const payload = deepSnakeKeys({
-            name: name.value,
-            description: description.value || null,
-            parentId: storageOption.value.parentId,
-            row: row.value,
-            column: column.value,
+        await adapted.value.patch({
+            name: adapted.value.mutable.name,
+            description: adapted.value.mutable.description,
+            parentId: adapted.value.mutable.parentId,
+            row: adapted.value.mutable.row,
+            column: adapted.value.mutable.column,
         });
-
-        await familyHttpService.patchRequest(`/storage-options/${storageOption.value.id}`, payload);
-        await familyRouterService.goToRoute("storage-detail", storageOption.value.id);
+        await familyRouterService.goToRoute("storage-detail", adapted.value.id);
     });
 
 const handleDelete = async () => {
-    if (!storageOption.value) return;
+    if (!adapted.value) return;
 
-    await familyHttpService.deleteRequest(`/storage-options/${storageOption.value.id}`);
+    await adapted.value.delete();
     await familyRouterService.goToRoute("storage");
 };
 </script>
@@ -71,19 +57,19 @@ const handleDelete = async () => {
     <div max-w="md" m="x-auto">
         <LoadingState v-if="loading" :message="t('common.loading').value" />
 
-        <template v-else-if="storageOption">
+        <template v-else-if="adapted">
             <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("storage.editStorage").value }}</h1>
-            <p text="gray-600" m="b-6">{{ storageOption.name }}</p>
+            <p text="gray-600" m="b-6">{{ adapted.name }}</p>
 
             <form flex="~ col" gap="4" @submit.prevent="onSubmit">
-                <TextInput v-model="name" :label="t('storage.name').value" :error="errors.name" />
+                <TextInput v-model="adapted.mutable.name" :label="t('storage.name').value" :error="errors.name" />
 
-                <TextareaInput v-model="description" :label="t('storage.description').value" optional />
+                <TextareaInput v-model="adapted.mutable.description" :label="t('storage.description').value" optional />
 
                 <div flex gap="4">
                     <div flex="1 ~ col" gap="2">
                         <NumberInput
-                            v-model="row"
+                            v-model="adapted.mutable.row"
                             :label="t('storage.row').value"
                             :error="errors.row"
                             :min="0"
@@ -92,7 +78,7 @@ const handleDelete = async () => {
                     </div>
                     <div flex="1 ~ col" gap="2">
                         <NumberInput
-                            v-model="column"
+                            v-model="adapted.mutable.column"
                             :label="t('storage.column').value"
                             :error="errors.column"
                             :min="0"

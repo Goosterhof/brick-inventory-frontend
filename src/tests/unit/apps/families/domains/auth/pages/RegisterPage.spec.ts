@@ -4,35 +4,20 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+    () => import("../../../../../../helpers"),
+);
+
 const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({mockRegister: vi.fn(), mockGoToDashboard: vi.fn()}));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: vi.fn(),
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: false},
-        user: {value: null},
-        userId: vi.fn(),
-        register: mockRegister,
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: mockGoToDashboard, goToRoute: vi.fn()},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyAuthService: {register: mockRegister},
+        familyRouterService: {goToDashboard: mockGoToDashboard},
+    }),
+);
 
 describe("RegisterPage", () => {
     beforeEach(() => {

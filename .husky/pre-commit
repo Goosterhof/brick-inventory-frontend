@@ -1,1 +1,3 @@
+node scripts/generate-component-registry.mjs
+git add src/shared/generated/component-registry.json
 npx lint-staged

@@ -6,47 +6,42 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {
+    createMockAxios,
+    createMockStringTs,
+    createMockFamilyServices,
+    createMockFormField,
+    createMockFormLabel,
+    createMockFormError,
+} = await vi.hoisted(() => import("../../../../../../helpers"));
+
+vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
+vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
+vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
+
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+
 const {mockGetRequest, mockPutRequest, mockPostRequest} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
     mockPutRequest: vi.fn(),
     mockPostRequest: vi.fn(),
 }));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: mockPostRequest,
-        putRequest: mockPutRequest,
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: vi.fn()},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyHttpService: {getRequest: mockGetRequest, postRequest: mockPostRequest, putRequest: mockPutRequest},
+        familyAuthService: {isLoggedIn: {value: true}},
+    }),
+);
 
 describe("SettingsPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockGetRequest.mockResolvedValue({
             data: [
-                {id: 1, name: "Jan", email: "jan@example.com", is_head: true},
-                {id: 2, name: "Maria", email: "maria@example.com", is_head: false},
+                {id: 1, name: "Jan", email: "jan@example.com", isHead: true},
+                {id: 2, name: "Maria", email: "maria@example.com", isHead: false},
             ],
         });
     });

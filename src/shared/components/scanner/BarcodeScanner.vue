@@ -4,7 +4,7 @@ import {ref, watch, onMounted, onUnmounted} from "vue";
 
 import {ensureRefValueExists} from "@shared/helpers/type-check";
 
-const {resetKey} = defineProps<{resetKey?: number}>();
+const {resetKey} = defineProps<{resetKey?: number; loadingText: string; retryText: string}>();
 const emit = defineEmits<{detect: [barcode: string]; error: [message: string]}>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -168,7 +168,7 @@ onUnmounted(() => {
                 role="status"
                 aria-live="polite"
             >
-                <span font="bold"><slot name="loading">Starting camera...</slot></span>
+                <span font="bold">{{ loadingText }}</span>
             </div>
 
             <div
@@ -199,7 +199,7 @@ onUnmounted(() => {
                     class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
                     @click="startCamera"
                 >
-                    <slot name="retry">Retry</slot>
+                    {{ retryText }}
                 </button>
             </div>
 

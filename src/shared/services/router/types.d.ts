@@ -1,6 +1,5 @@
 import type {FilterUndefined} from "@shared/types/generics";
-import type {RouterLinkStub} from "@vue/test-utils";
-import type {ComputedRef, DefineSetupFnComponent, Ref} from "vue";
+import type {Component, ComputedRef, DefineSetupFnComponent, Ref} from "vue";
 import type {
     LocationQuery,
     LocationQueryRaw,
@@ -80,7 +79,7 @@ export interface RouterService<Routes extends RouteRecordRaw[]> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     RouterView: RouterView;
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    RouterLink: SpecificRouterLink<Routes> | typeof RouterLinkStub;
+    RouterLink: SpecificRouterLink<Routes> | Component;
 }
 
 export interface CrudRoute<P extends string, N extends string, C extends LazyRouteComponent> {

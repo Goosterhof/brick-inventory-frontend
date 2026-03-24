@@ -4,6 +4,19 @@ import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+    () => import("../../../helpers"),
+);
+
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+
+vi.mock("@phosphor-icons/vue", () => ({
+    PhSignOut: {template: "<i />"},
+    PhList: {template: "<i />"},
+    PhX: {template: "<i />"},
+}));
+
 const {mockLogout, mockGoToRoute, mockIsLoggedIn, mockCurrentRouteRef} = vi.hoisted(() => ({
     mockLogout: vi.fn(),
     mockGoToRoute: vi.fn(),
@@ -11,13 +24,14 @@ const {mockLogout, mockGoToRoute, mockIsLoggedIn, mockCurrentRouteRef} = vi.hois
     mockCurrentRouteRef: {value: {name: "home", path: "/", matched: [] as never[], meta: {}, query: {}, params: {}}},
 }));
 
-vi.mock("@app/services", () => ({
-    FamilyRouterLink: {name: "FamilyRouterLink", props: ["to"], template: "<a><slot /></a>"},
-    FamilyRouterView: {name: "FamilyRouterView", template: "<div><slot /></div>"},
-    familyAuthService: {isLoggedIn: mockIsLoggedIn, logout: mockLogout},
-    familyRouterService: {goToRoute: mockGoToRoute, currentRouteRef: mockCurrentRouteRef},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-}));
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        FamilyRouterLink: {name: "FamilyRouterLink", props: ["to"], template: "<a><slot /></a>"},
+        FamilyRouterView: {name: "FamilyRouterView", template: "<div><slot /></div>"},
+        familyAuthService: {isLoggedIn: mockIsLoggedIn, logout: mockLogout},
+        familyRouterService: {goToRoute: mockGoToRoute, currentRouteRef: mockCurrentRouteRef},
+    }),
+);
 
 vi.mock("@shared/components/NavHeader.vue", () => ({
     default: {

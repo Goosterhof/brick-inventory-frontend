@@ -52,7 +52,14 @@ const goBack = async () => {
 
         <p text="gray-600" m="b-4">{{ t("sets.identifyDescription").value }}</p>
 
-        <CameraCapture v-if="showCamera" @capture="onCapture" @error="() => {}" />
+        <CameraCapture
+            v-if="showCamera"
+            loading-text="Starting camera..."
+            retry-text="Retry"
+            capture-text="Capture Photo"
+            @capture="onCapture"
+            @error="() => {}"
+        />
 
         <div v-if="isIdentifying" m="t-6">
             <p text="gray-600">{{ t("sets.identifying").value }}</p>

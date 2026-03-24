@@ -161,6 +161,27 @@ for (const file of allSourceFiles) {
     }
 }
 
+// Check 9: vi.mock() must include a factory function (ADR-010)
+// Without a factory, vi.mock() still triggers a full module load during test collection.
+// Only vi.mock("module", () => ({...})) avoids the import chain entirely.
+const VI_MOCK_WITHOUT_FACTORY = /vi\.mock\(\s*["'][^"']+["']\s*\)/;
+
+const specFiles =
+    argFiles.length > 0 ? argFiles.filter((f) => f.endsWith(".spec.ts")) : findFiles("src/tests", [".spec.ts"]);
+
+for (const file of specFiles) {
+    const content = readFileSync(file, "utf-8");
+    const lines = content.split("\n");
+
+    for (let i = 0; i < lines.length; i++) {
+        if (VI_MOCK_WITHOUT_FACTORY.test(lines[i])) {
+            errors.push(
+                `${file}:${i + 1}: vi.mock() must include a factory function as the second argument (ADR-010). Use vi.mock("module", () => ({...})) instead of vi.mock("module").`,
+            );
+        }
+    }
+}
+
 // ── Report ──────────────────────────────────────────────────────────────────────
 
 if (errors.length > 0) {

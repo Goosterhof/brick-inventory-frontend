@@ -10,52 +10,40 @@ import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
+const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices, createMockFamilyStores} =
+    await vi.hoisted(() => import("../../../../../../helpers"));
+
 const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: vi.fn(),
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    familySetStoreModule: {
-        getAll: {value: []},
-        retrieveAll: vi.fn(),
-        getById: vi.fn(),
-        getOrFailById: vi.fn(),
-        generateNew: () => ({
-            setNum: "",
-            quantity: 1,
-            status: "sealed",
-            purchaseDate: null,
-            notes: null,
-            mutable: ref({setNum: "", quantity: 1, status: "sealed", purchaseDate: null, notes: null}),
-            reset: vi.fn(),
-            create: mockCreate,
-        }),
-    },
-    familyLoadingService: {isLoading: {value: false}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("axios", () => createMockAxiosWithError());
+vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyAuthService: {isLoggedIn: {value: true}},
+        familyRouterService: {goToRoute: mockGoToRoute},
+        familyLoadingService: {isLoading: {value: false}},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
+        familySetStoreModule: {
+            getAll: {value: []},
+            retrieveAll: vi.fn(),
+            getById: vi.fn(),
+            getOrFailById: vi.fn(),
+            generateNew: () => ({
+                setNum: "",
+                quantity: 1,
+                status: "sealed",
+                purchaseDate: null,
+                notes: null,
+                mutable: ref({setNum: "", quantity: 1, status: "sealed", purchaseDate: null, notes: null}),
+                reset: vi.fn(),
+                create: mockCreate,
+            }),
+        },
+    }),
+);
 
 describe("AddSetPage", () => {
     beforeEach(() => {

@@ -206,6 +206,15 @@ Before building anything non-trivial, check the [Decision Log](/.claude/docs/dec
 
 This territory is also governed by war-room ADRs: **0009** (ResourceData Pattern), **0014** (Domain-Driven Frontend Structure). Canonical source: `adrs.script.nl`.
 
+### The Devil's Court — ADR Re-Interrogation
+
+Accepted ADRs are not permanent. The CFO monitors for two signals that an ADR needs re-interrogation:
+
+- **Frequency signal** — the ADR keeps getting cited in inspector findings or architect rebuttals, meaning the decision is under active pressure from the work itself
+- **Threshold signal** — the codebase crosses a scale boundary the ADR's reasoning was built on (e.g., component count doubles, first production consumption of a speculative pattern, domain count exceeds the ADR's "scale test" assumptions)
+
+When either signal fires, the CFO sends the ADR Interrogator back in with the full interrogation sequence. The outcome is **Confirmed** (reasoning holds, ADR gets a stress-tested timestamp), **Cracked** (reasoning broken, ADR flagged for superseding), or **Strained** (reasoning holds but approaching limits).
+
 ---
 
 ## Operations Protocol — The Paper Trail
@@ -341,6 +350,59 @@ feat: add barcode scanning to set lookup
 fix: correct validation error display on storage form
 refactor: extract http middleware into shared service
 ```
+
+---
+
+## Agent Management — The Dispatch Report
+
+After any agent (Lead Brick Architect, Building Inspector) completes work that includes a self-debrief with training proposals, the CFO **must** produce a structured **Dispatch Report** before responding to the CEO. This is not a checklist to remember — it is a required output. The CFO cannot present results without having written it.
+
+### Dispatch Report Format
+
+```
+## Dispatch Report: [Agent Name] — [Task Summary]
+
+### Result
+[1-2 sentences: what the agent delivered, did it meet the brief?]
+
+### Training Evaluation
+| Proposal | Verdict | Reason |
+| --- | --- | --- |
+| [proposal from debrief] | Candidate / Dropped | [why] |
+
+### Graduation Check
+[Did any existing candidate get a second confirming session? If yes, draft test scenarios below. If no, state "No graduations this round."]
+
+### Graduation Tests (if applicable)
+[For each candidate hitting its second confirmation, write 2-3 test scenarios:]
+
+| Scenario | Without Training | With Training | Assertion |
+| --- | --- | --- | --- |
+| [specific situation] | [failure mode] | [correct behavior] | [objectively verifiable check] |
+
+Verdict: Pass / Fail / Hold — [reasoning]
+
+### Concerns
+[Anything the CFO noticed that the agent missed, or quality issues to flag to the CEO. "None" is acceptable.]
+```
+
+The Dispatch Report is presented to the CEO as part of the agent's results — not filed separately. The graduation log in the agent's `.md` file is updated as a side effect of writing the report, not as a separate step.
+
+### Graduation Protocol — Test-Case-Driven Promotion
+
+Training proposals graduate only when they pass concrete, verifiable test scenarios — not on observation count alone. The full protocol (scenario format, process, and rationale) lives in each agent's `.md` file under **Graduation Protocol**. The Dispatch Report's **Graduation Tests** section is where the CFO executes this protocol in practice: drafting scenarios, evaluating them, and recording the verdict.
+
+### Why a structured report instead of a checklist
+
+A checklist says "you must do this" but produces no artifact — it's easy to skip because nothing is visibly missing. A structured report is a document the CEO sees. If the Training Evaluation section is missing, the CEO sees it's missing. The report makes the evaluation visible, not just mandatory.
+
+### The Rebuttal Protocol
+
+When the Building Inspector files findings rated **medium or above**, the CFO forwards them to the Lead Brick Architect for a formal response. The Architect responds with ACCEPT, REBUT (with evidence), or PARTIAL (valid finding, better fix). The CFO reads both sides and rules.
+
+This is productive disagreement by design. The juniors who read this portfolio should see that the best engineering teams challenge findings with evidence, not compliance. Findings that survive rebuttal are stronger. Rebuttals that succeed sharpen the Inspector's methodology. Both outcomes feed the graduation logs.
+
+Full protocol details live in each agent's `.md` file.
 
 ---
 

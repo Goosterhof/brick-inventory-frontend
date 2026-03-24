@@ -3,14 +3,47 @@ import {configDefaults, defineConfig, mergeConfig} from "vitest/config";
 
 import viteConfig from "./vite.config";
 
+const project = (name: string, include: string) => ({
+    extends: true as const,
+    test: {
+        name,
+        environment: "happy-dom" as const,
+        setupFiles: ["./src/tests/unit/setup.ts"],
+        include: [`src/tests/unit/${include}/**/*.spec.ts`],
+    },
+});
+
+const rootProject = (name: string, include: string) => ({
+    extends: true as const,
+    test: {
+        name,
+        environment: "happy-dom" as const,
+        setupFiles: ["./src/tests/unit/setup.ts"],
+        include: [`src/tests/unit/${include}/*.spec.ts`],
+    },
+});
+
+const fileProject = (name: string, include: string) => ({
+    extends: true as const,
+    test: {
+        name,
+        environment: "happy-dom" as const,
+        setupFiles: ["./src/tests/unit/setup.ts"],
+        include: [`src/tests/unit/${include}`],
+    },
+});
+
 export default mergeConfig(
     viteConfig,
     defineConfig({
         test: {
-            environment: "jsdom",
             exclude: [...configDefaults.exclude, "e2e/**"],
             root: fileURLToPath(new URL("./", import.meta.url)),
-            setupFiles: ["./src/tests/unit/setup.ts"],
+            reporters: [
+                "default",
+                "./src/tests/unit/collect-guard-reporter.ts",
+                "./src/tests/unit/test-guard-reporter.ts",
+            ],
             coverage: {
                 provider: "istanbul",
                 include: ["src/**/*.ts", "src/**/*.vue"],
@@ -21,12 +54,38 @@ export default mergeConfig(
                     "src/apps/**/router/**",
                     "src/apps/**/domains/**",
                     "src/apps/**/services/**",
+                    "src/apps/**/stores/**",
                     "src/apps/**/types/**",
                     "src/apps/showcase/**",
                     "src/shared/services/auth/types.ts",
+                    "src/tests/**",
                 ],
                 thresholds: {lines: 100, functions: 100, branches: 100, statements: 100},
             },
+            projects: [
+                // Families app — domain pages
+                project("families/about", "apps/families/domains/about"),
+                project("families/auth", "apps/families/domains/auth"),
+                project("families/home", "apps/families/domains/home"),
+                project("families/parts", "apps/families/domains/parts"),
+                project("families/sets", "apps/families/domains/sets"),
+                project("families/settings", "apps/families/domains/settings"),
+                project("families/storage", "apps/families/domains/storage"),
+
+                // App roots — files directly in the app directory, not in domains
+                rootProject("families/root", "apps/families"),
+                rootProject("admin/root", "apps/admin"),
+
+                // Shared directories
+                project("shared/components", "shared/components"),
+                project("shared/composables", "shared/composables"),
+                project("shared/errors", "shared/errors"),
+                project("shared/helpers", "shared/helpers"),
+                project("shared/services", "shared/services"),
+
+                // Infrastructure
+                fileProject("architecture", "architecture.spec.ts"),
+            ],
         },
     }),
 );

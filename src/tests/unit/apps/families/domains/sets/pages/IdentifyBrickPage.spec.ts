@@ -6,35 +6,21 @@ import CameraCapture from "@shared/components/scanner/CameraCapture.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
+const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+    () => import("../../../../../../helpers"),
+);
+
 const {mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({mockPostRequest: vi.fn(), mockGoToRoute: vi.fn()}));
 
-vi.mock("@app/services", () => ({
-    familyHttpService: {
-        getRequest: vi.fn(),
-        postRequest: mockPostRequest,
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {
-        isLoggedIn: {value: true},
-        user: {value: null},
-        userId: vi.fn(),
-        register: vi.fn(),
-        login: vi.fn(),
-        logout: vi.fn(),
-        checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
-    },
-    familyRouterService: {goToDashboard: vi.fn(), goToRoute: mockGoToRoute},
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    FamilyRouterView: {template: "<div><slot /></div>"},
-    FamilyRouterLink: {template: "<a><slot /></a>"},
-}));
+vi.mock("axios", () => createMockAxios());
+vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@app/services", () =>
+    createMockFamilyServices({
+        familyHttpService: {postRequest: mockPostRequest},
+        familyAuthService: {isLoggedIn: {value: true}},
+        familyRouterService: {goToRoute: mockGoToRoute},
+    }),
+);
 
 describe("IdentifyBrickPage", () => {
     beforeEach(() => {
@@ -80,7 +66,7 @@ describe("IdentifyBrickPage", () => {
     it("should send image to identify endpoint on capture", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null},
+            data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null},
         });
         const wrapper = shallowMount(IdentifyBrickPage);
         const blob = new Blob(["image"], {type: "image/jpeg"});
@@ -98,10 +84,10 @@ describe("IdentifyBrickPage", () => {
         mockPostRequest.mockResolvedValue({
             data: {
                 id: 42,
-                part_num: "3001",
+                partNum: "3001",
                 name: "Brick 2 x 4",
                 category: null,
-                image_url: "https://example.com/3001.jpg",
+                imageUrl: "https://example.com/3001.jpg",
             },
         });
         const wrapper = shallowMount(IdentifyBrickPage);
@@ -119,7 +105,7 @@ describe("IdentifyBrickPage", () => {
     it("should hide camera after capture", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null},
+            data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null},
         });
         const wrapper = shallowMount(IdentifyBrickPage);
         const blob = new Blob(["image"], {type: "image/jpeg"});
@@ -163,13 +149,13 @@ describe("IdentifyBrickPage", () => {
 
         // Assert
         expect(wrapper.text()).toContain("sets.identifying");
-        resolveRequest?.({data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null}});
+        resolveRequest?.({data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null}});
     });
 
     it("should reset state when try again is clicked after success", async () => {
         // Arrange
         mockPostRequest.mockResolvedValue({
-            data: {id: 42, part_num: "3001", name: "Brick 2 x 4", category: null, image_url: null},
+            data: {id: 42, partNum: "3001", name: "Brick 2 x 4", category: null, imageUrl: null},
         });
         const wrapper = shallowMount(IdentifyBrickPage);
         const blob = new Blob(["image"], {type: "image/jpeg"});
