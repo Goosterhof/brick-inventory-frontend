@@ -169,6 +169,13 @@ const translations = {
         parts: {
             title: "Parts Inventory",
             noParts: "No parts stored yet. Assign parts to storage locations from a set's detail page.",
+            searchPlaceholder: "Search by name or part number...",
+            sortName: "Name",
+            sortQuantity: "Quantity",
+            sortColor: "Color",
+            allColors: "All colors",
+            orphanParts: "Orphan parts",
+            noResults: "No parts match your search or filters.",
         },
         settings: {
             title: "Settings",
@@ -360,6 +367,13 @@ const translations = {
             title: "Onderdelenvoorraad",
             noParts:
                 "Nog geen onderdelen opgeslagen. Wijs onderdelen toe aan opslaglocaties vanuit een set detailpagina.",
+            searchPlaceholder: "Zoeken op naam of onderdeelnummer...",
+            sortName: "Naam",
+            sortQuantity: "Aantal",
+            sortColor: "Kleur",
+            allColors: "Alle kleuren",
+            orphanParts: "Weesonderdelen",
+            noResults: "Geen onderdelen gevonden voor deze zoekopdracht of filters.",
         },
         settings: {
             title: "Instellingen",

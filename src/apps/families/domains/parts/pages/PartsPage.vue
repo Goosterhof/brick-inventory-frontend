@@ -3,6 +3,8 @@ import type {FamilyPartEntry, GroupedFamilyPart} from "@app/types/part";
 
 import {familyHttpService, familyTranslationService} from "@app/services";
 import EmptyState from "@shared/components/EmptyState.vue";
+import FilterChip from "@shared/components/FilterChip.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -10,9 +12,15 @@ import {downloadCsv, toCsv} from "@shared/helpers/csv";
 import {deepCamelKeys} from "string-ts";
 import {computed, onMounted, ref} from "vue";
 
+type SortField = "name" | "quantity" | "color";
+
 const {t} = familyTranslationService;
 const entries = ref<FamilyPartEntry[]>([]);
 const loading = ref(true);
+const searchQuery = ref("");
+const activeColorFilter = ref<string | null>(null);
+const showOrphansOnly = ref(false);
+const activeSortField = ref<SortField>("name");
 
 onMounted(async () => {
     try {
@@ -39,6 +47,9 @@ const groupedParts = computed((): GroupedFamilyPart[] => {
                 storageOptionName: entry.storageOptionName,
                 quantity: entry.quantity,
             });
+            if (entry.familySetId === null) {
+                existing.isOrphan = true;
+            }
         } else {
             map.set(key, {
                 partId: entry.partId,
@@ -49,6 +60,7 @@ const groupedParts = computed((): GroupedFamilyPart[] => {
                 colorName: entry.colorName,
                 colorRgb: entry.colorRgb,
                 totalQuantity: entry.quantity,
+                isOrphan: entry.familySetId === null,
                 locations: [
                     {
                         storageOptionId: entry.storageOptionId,
@@ -63,9 +75,62 @@ const groupedParts = computed((): GroupedFamilyPart[] => {
     return [...map.values()];
 });
 
+const uniqueColors = computed(() => {
+    const colors = new Map<string, string>();
+    for (const part of groupedParts.value) {
+        if (part.colorName !== null) {
+            colors.set(part.colorName, part.colorName);
+        }
+    }
+    return [...colors.values()].sort();
+});
+
+const toggleColorFilter = (color: string) => {
+    activeColorFilter.value = activeColorFilter.value === color ? null : color;
+};
+
+const toggleOrphanFilter = () => {
+    showOrphansOnly.value = !showOrphansOnly.value;
+};
+
+const setSortField = (field: SortField) => {
+    activeSortField.value = field;
+};
+
+const compareParts = (a: GroupedFamilyPart, b: GroupedFamilyPart): number => {
+    if (activeSortField.value === "name") {
+        return a.partName.localeCompare(b.partName);
+    }
+    if (activeSortField.value === "quantity") {
+        return b.totalQuantity - a.totalQuantity;
+    }
+    return (a.colorName ?? "").localeCompare(b.colorName ?? "");
+};
+
+const filteredParts = computed(() => {
+    let result = groupedParts.value;
+
+    const query = searchQuery.value.toLowerCase().trim();
+    if (query) {
+        result = result.filter(
+            (p) => p.partName.toLowerCase().includes(query) || p.partNum.toLowerCase().includes(query),
+        );
+    }
+
+    if (activeColorFilter.value) {
+        result = result.filter((p) => p.colorName === activeColorFilter.value);
+    }
+
+    if (showOrphansOnly.value) {
+        result = result.filter((p) => p.isOrphan);
+    }
+
+    return [...result].sort(compareParts);
+});
+
 const exportCsv = () => {
     const headers = ["Part Number", "Name", "Color", "Total Quantity", "Storage Locations"];
-    const rows = groupedParts.value.map((p) => [
+    const rows = filteredParts.value.map((p) => [
         p.partNum,
         p.partName,
         p.colorName ?? "",
@@ -74,6 +139,13 @@ const exportCsv = () => {
     ]);
     downloadCsv(toCsv(headers, rows), "lego-parts.csv");
 };
+
+const sortLabelKey: Record<SortField, "parts.sortName" | "parts.sortQuantity" | "parts.sortColor"> = {
+    name: "parts.sortName",
+    quantity: "parts.sortQuantity",
+    color: "parts.sortColor",
+};
+const allSortFields: SortField[] = ["name", "quantity", "color"];
 </script>
 
 <template>
@@ -88,32 +160,90 @@ const exportCsv = () => {
 
         <EmptyState v-else-if="groupedParts.length === 0" :message="t('parts.noParts').value" />
 
-        <div v-else flex="~ col" gap="2">
-            <PartListItem
-                v-for="part in groupedParts"
-                :key="`${part.partId}_${part.colorId}`"
-                :name="part.partName"
-                :part-num="part.partNum"
-                :quantity="part.totalQuantity"
-                :image-url="part.partImageUrl"
-                :color-name="part.colorName"
-                :color-rgb="part.colorRgb"
-            >
-                <div flex gap="1" m="t-1" flex-wrap="wrap">
-                    <span
-                        v-for="loc in part.locations"
-                        :key="loc.storageOptionId"
-                        text="xs"
-                        p="x-2 y-0.5"
-                        bg="yellow-300"
-                        font="bold"
-                        class="brick-border"
-                        border="1"
-                    >
-                        {{ loc.storageOptionName }} ({{ loc.quantity }}x)
-                    </span>
+        <template v-else>
+            <div flex="~ col" gap="4" m="b-4">
+                <TextInput
+                    v-model="searchQuery"
+                    :label="t('common.search').value"
+                    type="search"
+                    :placeholder="t('parts.searchPlaceholder').value"
+                    optional
+                />
+
+                <div flex="~ col" gap="2">
+                    <div flex gap="2" flex-wrap="wrap">
+                        <FilterChip
+                            v-for="field in allSortFields"
+                            :key="field"
+                            :active="activeSortField === field"
+                            @click="setSortField(field)"
+                        >
+                            {{ t(sortLabelKey[field]).value }}
+                        </FilterChip>
+                    </div>
+
+                    <div flex gap="2" flex-wrap="wrap">
+                        <FilterChip :active="!activeColorFilter" @click="activeColorFilter = null">
+                            {{ t("parts.allColors").value }}
+                        </FilterChip>
+                        <FilterChip
+                            v-for="color in uniqueColors"
+                            :key="color"
+                            :active="activeColorFilter === color"
+                            @click="toggleColorFilter(color)"
+                        >
+                            {{ color }}
+                        </FilterChip>
+                    </div>
+
+                    <div flex gap="2" flex-wrap="wrap">
+                        <FilterChip :active="showOrphansOnly" @click="toggleOrphanFilter">
+                            {{ t("parts.orphanParts").value }}
+                        </FilterChip>
+                    </div>
                 </div>
-            </PartListItem>
-        </div>
+            </div>
+
+            <EmptyState v-if="filteredParts.length === 0" :message="t('parts.noResults').value" />
+
+            <div v-else flex="~ col" gap="2">
+                <PartListItem
+                    v-for="part in filteredParts"
+                    :key="`${part.partId}_${part.colorId}`"
+                    :name="part.partName"
+                    :part-num="part.partNum"
+                    :quantity="part.totalQuantity"
+                    :image-url="part.partImageUrl"
+                    :color-name="part.colorName"
+                    :color-rgb="part.colorRgb"
+                >
+                    <div flex gap="1" m="t-1" flex-wrap="wrap">
+                        <span
+                            v-for="loc in part.locations"
+                            :key="loc.storageOptionId"
+                            text="xs"
+                            p="x-2 y-0.5"
+                            bg="yellow-300"
+                            font="bold"
+                            class="brick-border"
+                            border="1"
+                        >
+                            {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                        </span>
+                        <span
+                            v-if="part.isOrphan"
+                            text="xs"
+                            p="x-2 y-0.5"
+                            bg="red-200"
+                            font="bold"
+                            class="brick-border"
+                            border="1"
+                        >
+                            {{ t("parts.orphanParts").value }}
+                        </span>
+                    </div>
+                </PartListItem>
+            </div>
+        </template>
     </div>
 </template>

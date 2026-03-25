@@ -52,6 +52,7 @@ export interface FamilyPartEntry {
     storageOptionId: number;
     storageOptionName: string;
     quantity: number;
+    familySetId: number | null;
 }
 
 export interface GroupedFamilyPart {
@@ -63,6 +64,7 @@ export interface GroupedFamilyPart {
     colorName: string | null;
     colorRgb: string | null;
     totalQuantity: number;
+    isOrphan: boolean;
     locations: {storageOptionId: number; storageOptionName: string; quantity: number}[];
 }
 

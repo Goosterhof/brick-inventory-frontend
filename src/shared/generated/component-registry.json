@@ -468,6 +468,9 @@
             "category": null,
             "consumers": {
                 "families": {
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
                     ]
@@ -480,7 +483,7 @@
             },
             "adoption": {
                 "apps": 2,
-                "domains": 1
+                "domains": 2
             },
             "apiSurface": {
                 "props": [
@@ -1427,6 +1430,9 @@
                         "src/apps/families/domains/auth/pages/LoginPage.vue",
                         "src/apps/families/domains/auth/pages/RegisterPage.vue"
                     ],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
                         "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
@@ -1448,7 +1454,7 @@
             },
             "adoption": {
                 "apps": 2,
-                "domains": 4
+                "domains": 5
             },
             "apiSurface": {
                 "props": [
