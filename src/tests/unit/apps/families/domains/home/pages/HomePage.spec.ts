@@ -16,7 +16,7 @@ const {mockGetRequest, mockGoToRoute, mockIsLoggedIn, mockRetrieveAll, mockGetAl
     mockGoToRoute: vi.fn(),
     mockIsLoggedIn: {value: true},
     mockRetrieveAll: vi.fn().mockResolvedValue(undefined),
-    mockGetAll: {value: []},
+    mockGetAll: {value: [] as {set?: {year?: number | null}}[]},
 }));
 
 vi.mock("axios", () => createMockAxios());
