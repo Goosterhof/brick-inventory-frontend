@@ -20,7 +20,7 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 **Goal**: Figure out where the feature lives and what pieces are needed.
 
 - Consult the [Domain Map](./domain-map.md) — does this fit in an existing domain or need a new one?
-- Check the [Brick Catalog](./brick-catalog.md) — can you reuse existing components?
+- Check the component registry (`src/shared/generated/component-registry.json`) — can you reuse existing components?
 - Check the [Decision Log](./decisions.md) — has a similar architectural choice been made before?
 - Identify required pieces: pages, components, modals, API endpoints
 - Create [Component Specs](./.component-spec-template.md) for non-trivial components
@@ -35,7 +35,7 @@ A lightweight 5-phase loop for designing and building features, inspired by the 
 - Work domain-by-domain, component-by-component
 - Consult reference docs before building:
     - [Brand Guide](./brand.md) for Brick Brutalism styling, colors, and UnoCSS shortcuts
-    - [Brick Catalog](./brick-catalog.md) for existing shared components and their APIs
+    - Component registry (`src/shared/generated/component-registry.json`) for existing shared components
     - [Learnings](./learnings.md) for known gotchas and patterns that work
 - Write tests alongside code (not after)
 - Commit early and often with conventional commit messages
@@ -98,7 +98,7 @@ npm run knip
 | Document                            | Used In     | Purpose                                           |
 | ----------------------------------- | ----------- | ------------------------------------------------- |
 | [Brand Guide](./brand.md)           | Build       | Brick Brutalism styling, colors, UnoCSS shortcuts |
-| [Brick Catalog](./brick-catalog.md) | Sort, Build | Existing shared components and their APIs         |
+| Component Registry (`component-registry.json`) | Sort, Build | Auto-generated list of shared components          |
 | [Domain Map](./domain-map.md)       | Sort        | Routes, pages, components per domain              |
 | [Decision Log](./decisions.md)      | Sort        | Prior architectural choices                       |
 | [Learnings](./learnings.md)         | Build       | Gotchas, patterns, mistakes not to repeat         |

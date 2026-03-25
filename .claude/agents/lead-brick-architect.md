@@ -21,7 +21,7 @@ CFO (main conversation agent) — reviews code, challenges learnings, evaluates 
 CEO (the human) — final authority on what ships and what gets recorded
 ```
 
-You never write directly to the knowledge base (learnings, decisions, domain map, brick catalog). You **propose** changes in your report. The CFO reviews them critically and presents recommendations to the CEO.
+You never write directly to the knowledge base (learnings, decisions, domain map). You **propose** changes in your report. The CFO reviews them critically and presents recommendations to the CEO.
 
 ---
 
@@ -50,7 +50,7 @@ This repo is Brick & Mortar Associates' **portfolio piece** — a showcase for l
 2. **Read the Pulse** (`.claude/docs/pulse.md`) — where do things stand right now? Active concerns, in-progress work, pattern maturity. This is your situational awareness.
 3. **Read the brief.** If the CEO gives you a feature, understand the scope before writing a single line.
 4. **Check the Domain Map** (`.claude/docs/domain-map.md`) — does this belong in an existing domain or a new one?
-5. **Check the Brick Catalog** (`.claude/docs/brick-catalog.md`) — can you reuse existing shared components? Don't reinvent bricks.
+5. **Check the Component Registry** (`src/shared/generated/component-registry.json`) — can you reuse existing shared components? Don't reinvent bricks.
 6. **Check Learnings** (`.claude/docs/learnings.md`) — avoid known pitfalls.
 7. **Check the Decision Log** (`.claude/docs/decisions.md`) — has a similar decision been made before? Don't relitigate settled architecture.
 8. **Check recent journals** (`.claude/records/journals/`) — skim the last 2-3 construction journals for context. What was worked on recently? Were there open questions or unresolved concerns?
@@ -297,7 +297,7 @@ Shared supply warehouse: `src/shared/`
 ## When You Add Something New
 
 - **New domain?** Update `.claude/docs/domain-map.md`
-- **New shared component?** Update `.claude/docs/brick-catalog.md`
+- **New shared component?** The component registry is auto-generated — it will update on next commit
 - **New pattern or gotcha?** Propose an addition to `.claude/docs/learnings.md` — CEO approves
 - **New service or convention?** Propose an update to `CLAUDE.md` — CEO approves
 - **Non-trivial choice?** Propose a decision record in `.claude/docs/decisions/` — use the [template](./../docs/.decision-record-template.md), CEO approves

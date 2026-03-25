@@ -55,7 +55,7 @@ Before auditing, know what each ADR protects. This table prevents you from flagg
 | 006 | Resource adapter with frozen base and mutable ref                                | `Object.freeze()` on API data with a mutable `ref` wrapper — intentional immutability pattern, not defensive coding                                       |
 | 007 | Adapter store module over Pinia/Vuex                                             | No state library — stores are composable adapters over the resource pattern, not "missing Pinia"                                                          |
 | 008 | Domain isolation via lint rules and architecture tests                           | Domains don't cross-import — enforced by lint, not just convention                                                                                        |
-| 009 | Component health registry (five metrics for Showcase)                            | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not                                                              |
+| 009 | Component health registry (five metrics for Showcase)                            | Registry metrics are deliberate; missing metrics are findings, invented metrics are not                                                                   |
 | 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard                                                                      |
 | 011 | Domain-based Vitest project split with factory config                            | Tests split per domain with shared config factory — not fragmentation, it's the decision                                                                  |
 | 012 | Typed mock helpers with `MockedService<T>` mapped type                           | Tests use typed factory helpers instead of inline `vi.fn()` casts — not over-abstraction, it eliminates duplication and adds compile-time drift detection |
@@ -128,7 +128,7 @@ For each rule: does the architecture test exist? Does it pass? Are there gaps th
 Compare documentation against the actual codebase:
 
 - **Domain Map** — does it match the actual domains, routes, pages, and components?
-- **Brick Catalog** — does the component count match? Are props/emits/slots accurate?
+- **Component Registry** — does the auto-generated registry match reality? Run `npm run registry:check`.
 - **Pulse** — are the active concerns still accurate? Has pattern maturity changed? Are quality metrics current?
 - **CLAUDE.md** — do the stated conventions match what the code actually does?
 
@@ -156,7 +156,7 @@ Evaluate the codebase through the lens of a senior architect performing technica
 - **Pattern consistency** — Are patterns applied uniformly, or are there areas where the team "got lazy"? Inconsistency signals immaturity to reviewers.
 - **Scalability signals** — Do the architectural boundaries (domain isolation, service factories, import rules) demonstrate that this could grow to 10+ domains and 5+ apps without structural changes?
 - **Code sophistication** — Is the TypeScript usage genuinely advanced (discriminated unions, mapped types, const assertions) or just "typed JavaScript"? Does the component architecture show composition mastery?
-- **Documentation quality** — Do ADRs, the domain map, and the brick catalog tell a coherent architectural story? Could a new senior hire understand the system from docs alone?
+- **Documentation quality** — Do ADRs, the domain map, and the component registry tell a coherent architectural story? Could a new senior hire understand the system from docs alone?
 - **Red flags** — Anything a reviewer might point to as evidence of inexperience: inconsistent error handling, copy-paste patterns across domains, shallow tests, missing abstractions, or over-abstractions.
 
 Rate showcase readiness on a scale:
