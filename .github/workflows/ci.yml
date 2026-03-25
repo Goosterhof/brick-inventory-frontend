@@ -31,8 +31,6 @@ jobs:
             - name: Lint Vue conventions
               run: npm run lint:vue
 
-            - name: Validate brick catalog
-              run: npm run lint:catalog
 
             - name: Check unused exports (knip)
               run: npm run knip

@@ -55,7 +55,7 @@ Before auditing, know what each ADR protects. This table prevents you from flagg
 | 006 | Resource adapter with frozen base and mutable ref                                | `Object.freeze()` on API data with a mutable `ref` wrapper — intentional immutability pattern, not defensive coding                                       |
 | 007 | Adapter store module over Pinia/Vuex                                             | No state library — stores are composable adapters over the resource pattern, not "missing Pinia"                                                          |
 | 008 | Domain isolation via lint rules and architecture tests                           | Domains don't cross-import — enforced by lint, not just convention                                                                                        |
-| 009 | Component health registry (five metrics for Showcase)                            | Brick Catalog metrics are deliberate; missing metrics are findings, invented metrics are not                                                              |
+| 009 | Component health registry (five metrics for Showcase)                            | Registry metrics are deliberate; missing metrics are findings, invented metrics are not                                                                   |
 | 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard                                                                      |
 | 011 | Domain-based Vitest project split with factory config                            | Tests split per domain with shared config factory — not fragmentation, it's the decision                                                                  |
 | 012 | Typed mock helpers with `MockedService<T>` mapped type                           | Tests use typed factory helpers instead of inline `vi.fn()` casts — not over-abstraction, it eliminates duplication and adds compile-time drift detection |
@@ -105,6 +105,8 @@ npm run size
 
 Record: pass/fail, any error messages, coverage percentages, knip findings.
 
+**After recording results:** For each failure, classify whether it was caused by the inspected scope or is pre-existing/unrelated. Add a "Gauntlet Failure Classification" subsection after the results table that labels each failure with its scope attribution. This prevents scope bleed — out-of-scope failures should not inflate the finding count or be misattributed to the audit target. If all checks pass, skip this subsection (the step is conditional, not bureaucratic). _(Graduated 2026-03-25 from 2026-03-24-showcase-app + 2026-03-25-shared-directory-audit)_
+
 ### SOP 2: Audit Architecture Compliance
 
 Check each documented convention from CLAUDE.md and ADRs:
@@ -121,10 +123,12 @@ For each rule: does the architecture test exist? Does it pass? Are there gaps th
 
 ### SOP 3: Audit Doc Accuracy
 
+**Before comparing content, verify each referenced document exists.** For every document link or cross-reference encountered (in domain map, CLAUDE.md, ADRs, etc.), confirm the target file is present on disk. If a referenced document is missing, file its absence as a finding rather than silently skipping the comparison. A dead link in documentation is worse than a missing document — it actively misleads readers into expecting content that isn't there. _(Graduated 2026-03-25 from 2026-03-24-showcase-app + 2026-03-25-shared-directory-audit)_
+
 Compare documentation against the actual codebase:
 
 - **Domain Map** — does it match the actual domains, routes, pages, and components?
-- **Brick Catalog** — does the component count match? Are props/emits/slots accurate?
+- **Component Registry** — does the auto-generated registry match reality? Run `npm run registry:check`.
 - **Pulse** — are the active concerns still accurate? Has pattern maturity changed? Are quality metrics current?
 - **CLAUDE.md** — do the stated conventions match what the code actually does?
 
@@ -152,7 +156,7 @@ Evaluate the codebase through the lens of a senior architect performing technica
 - **Pattern consistency** — Are patterns applied uniformly, or are there areas where the team "got lazy"? Inconsistency signals immaturity to reviewers.
 - **Scalability signals** — Do the architectural boundaries (domain isolation, service factories, import rules) demonstrate that this could grow to 10+ domains and 5+ apps without structural changes?
 - **Code sophistication** — Is the TypeScript usage genuinely advanced (discriminated unions, mapped types, const assertions) or just "typed JavaScript"? Does the component architecture show composition mastery?
-- **Documentation quality** — Do ADRs, the domain map, and the brick catalog tell a coherent architectural story? Could a new senior hire understand the system from docs alone?
+- **Documentation quality** — Do ADRs, the domain map, and the component registry tell a coherent architectural story? Could a new senior hire understand the system from docs alone?
 - **Red flags** — Anything a reviewer might point to as evidence of inexperience: inconsistent error handling, copy-paste patterns across domains, shallow tests, missing abstractions, or over-abstractions.
 
 Rate showcase readiness on a scale:
@@ -320,14 +324,13 @@ Training proposals from inspection reports are tracked here. A proposal must pro
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | _(pre-records)_         | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
 | SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | _(pre-records)_         | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
-| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping       | 2026-03-24     | 2026-03-24-showcase-app | Domain map referenced brick-catalog.md; file could not be located; SOP proceeded without surfacing this as a finding           |
-| SOP 1 should add a failure classification step: for each gauntlet failure, note whether caused by inspected scope or pre-existing/unrelated to prevent scope bleed    | 2026-03-24     | 2026-03-24-showcase-app | SetsOverviewPage and component-registry.json format failures are not showcase defects but appear in showcase findings          |
 
 ### Graduated
 
-| Proposal     | Graduated | Confirming Reports | Promoted To |
-| ------------ | --------- | ------------------ | ----------- |
-| _(none yet)_ |           |                    |             |
+| Proposal | Graduated | Confirming Reports | Promoted To |
+| --- | --- | --- | --- |
+| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 3 |
+| SOP 1 should add a failure classification step: for each gauntlet failure, note whether caused by inspected scope or pre-existing/unrelated to prevent scope bleed | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 1 |
 
 ### Dropped
 

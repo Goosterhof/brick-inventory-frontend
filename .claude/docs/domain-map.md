@@ -89,7 +89,7 @@ The design system specimen — Brick Brutalism on display. No domains, no routin
 
 ## Shared Components
 
-31 components available to all apps via `@shared/components/`. See the [Brick Catalog](./brick-catalog.md) for the full parts inventory with props, slots, emits, and composition patterns.
+31 components available to all apps via `@shared/components/`. The component registry (`src/shared/generated/component-registry.json`) is auto-generated and tracks all shared components.
 
 ## Adding a New Domain
 
