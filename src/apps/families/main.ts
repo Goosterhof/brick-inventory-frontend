@@ -17,6 +17,8 @@ app.provide("color", "currentColor");
 familyRouterService.install();
 registerAuthGuard(familyAuthService, familyRouterService, "login");
 
+await familyAuthService.checkIfLoggedIn();
+
 const {t} = familyTranslationService;
 const APP_TITLE = "Brick Inventory";
 
