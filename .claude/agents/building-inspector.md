@@ -105,6 +105,8 @@ npm run size
 
 Record: pass/fail, any error messages, coverage percentages, knip findings.
 
+**After recording results:** For each failure, classify whether it was caused by the inspected scope or is pre-existing/unrelated. Add a "Gauntlet Failure Classification" subsection after the results table that labels each failure with its scope attribution. This prevents scope bleed — out-of-scope failures should not inflate the finding count or be misattributed to the audit target. If all checks pass, skip this subsection (the step is conditional, not bureaucratic). _(Graduated 2026-03-25 from 2026-03-24-showcase-app + 2026-03-25-shared-directory-audit)_
+
 ### SOP 2: Audit Architecture Compliance
 
 Check each documented convention from CLAUDE.md and ADRs:
@@ -120,6 +122,8 @@ Check each documented convention from CLAUDE.md and ADRs:
 For each rule: does the architecture test exist? Does it pass? Are there gaps the test doesn't cover?
 
 ### SOP 3: Audit Doc Accuracy
+
+**Before comparing content, verify each referenced document exists.** For every document link or cross-reference encountered (in domain map, CLAUDE.md, ADRs, etc.), confirm the target file is present on disk. If a referenced document is missing, file its absence as a finding rather than silently skipping the comparison. A dead link in documentation is worse than a missing document — it actively misleads readers into expecting content that isn't there. _(Graduated 2026-03-25 from 2026-03-24-showcase-app + 2026-03-25-shared-directory-audit)_
 
 Compare documentation against the actual codebase:
 
@@ -320,14 +324,13 @@ Training proposals from inspection reports are tracked here. A proposal must pro
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | _(pre-records)_         | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
 | SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | _(pre-records)_         | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
-| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping       | 2026-03-24     | 2026-03-24-showcase-app | Domain map referenced brick-catalog.md; file could not be located; SOP proceeded without surfacing this as a finding           |
-| SOP 1 should add a failure classification step: for each gauntlet failure, note whether caused by inspected scope or pre-existing/unrelated to prevent scope bleed    | 2026-03-24     | 2026-03-24-showcase-app | SetsOverviewPage and component-registry.json format failures are not showcase defects but appear in showcase findings          |
 
 ### Graduated
 
-| Proposal     | Graduated | Confirming Reports | Promoted To |
-| ------------ | --------- | ------------------ | ----------- |
-| _(none yet)_ |           |                    |             |
+| Proposal | Graduated | Confirming Reports | Promoted To |
+| --- | --- | --- | --- |
+| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 3 |
+| SOP 1 should add a failure classification step: for each gauntlet failure, note whether caused by inspected scope or pre-existing/unrelated to prevent scope bleed | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 1 |
 
 ### Dropped
 
