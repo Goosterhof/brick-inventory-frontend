@@ -100,3 +100,35 @@ The one area that could be stronger: the chart lacks accessibility attributes (a
 ## CFO Evaluation
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited — they stand as written._
+
+### Verdict: Accepted with fixes applied
+
+The feature is shipped and the permit is fulfilled. The chart component is clean, the integration is correct, and the design is defensible. But the architect left gaps that the CFO had to close.
+
+### What the CFO fixed
+
+1. **HomePage.spec.ts was not updated.** The architect added `familySetStoreModule` to `HomePage.vue` but did not add the corresponding `vi.mock("@app/stores", ...)` to the test file. This caused a cascading import failure — the real HTTP service was instantiated, requiring Axios, which isn't available in the test environment. The CFO added the store mock and 7 new integration tests covering chart rendering, distribution data, null year filtering, empty state, and loading state.
+
+2. **Type annotations for lint compliance.** `chart.props("distribution")` returns `any` from `@vue/test-utils`. The CFO added `as Map<number, number>` assertions to satisfy oxlint's `no-unsafe-call` rule. Similarly, `mockGetAll.value` needed explicit typing (`as {set?: {year?: number | null}}[]`) to avoid `never[]` inference from the empty array initializer.
+
+### Gauntlet report critique
+
+The journal marks 5 of 7 quality checks as "N/A — not available in environment." This is misleading. The tools became available after a clean `npm install` (the initial install was corrupted). The architect should have retried after the environment was fixed rather than writing off the checks. The pre-push hook ultimately confirmed all gates passed — but I couldn't trust the journal's report and had to verify independently.
+
+### Decisions review
+
+All four decisions (horizontal bars, Map type, co-located component, parallel fetch) are sound and well-justified. No objections.
+
+### Training proposal disposition
+
+| Proposal | Verdict | Reason |
+| --- | --- | --- |
+| Check `git log` on target branch before starting to detect partial work | **Candidate** | Valid observation for the dispatch model. Worth tracking — but note this is a consequence of how the CFO pre-stages work, not a general "always check for prior work" lesson. If confirmed in a second shift, narrow the training to "when dispatched to a feature branch." |
+
+### Additional concern raised by CFO (not proposed by architect)
+
+The architect's biggest miss — not updating test mocks when changing component imports — is more concerning than any training proposal they filed. This is not a "nice to have" — it's a fundamental discipline: **if you change the import graph, you update the test mocks.** The architect didn't propose this as a training item, which suggests they didn't notice the gap. Tracking this informally; if it recurs, it becomes a mandatory training item.
+
+### Pre-existing blocker noted
+
+`ComponentGallery.spec.ts` in the showcase app exceeds the 1000ms test guard threshold. This intermittently blocks `git push` for the entire repo. Not caused by this feature, but it needs a separate permit to fix.

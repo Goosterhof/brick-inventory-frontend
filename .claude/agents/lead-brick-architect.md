@@ -389,6 +389,7 @@ _Proposals observed once. Need a second confirming shift before graduation._
 | When testing a component that imports many shared components, estimate import chain cost upfront and pre-commit to mocking strategy before writing the first test            | 2026-03-24     | 2026-03-24-showcase-coverage-and-gallery | ComponentGallery went through 3 iterations of mock strategy, wasting time on approaches that hit hoisting/timing issues         |
 | When using `vi.hoisted` with `vi.mock`, use plain object component definitions (not `defineComponent`) to avoid the `require()` -> `any` type chain                         | 2026-03-24     | 2026-03-24-showcase-coverage-and-gallery | `require("vue").defineComponent` in vi.hoisted caused no-unsafe-assignment lint errors; plain objects work identically for stubs |
 | Before writing test assertions that access array items by index, check linter rules for `no-non-null-assertion` and verify what array access patterns existing tests use     | 2026-03-25     | 2026-03-25-brick-census                  | Wasted three iterations on `[0]!` → `.at(0)!` → `.find()?.` / `.map()` pattern due to not checking existing test conventions first |
+| Before starting implementation, run `git log --oneline -5` on the target branch to check if work is partially done                                                          | 2026-03-25     | 2026-03-25-decade-dial                   | Feature was already substantially implemented on the branch; starting from scratch would have wasted time                          |
 
 ### Graduated
 
