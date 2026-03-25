@@ -41,8 +41,6 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
             login: vi.fn(),
             logout: vi.fn(),
             checkIfLoggedIn: vi.fn(),
-            sendEmailResetPassword: vi.fn(),
-            resetPassword: vi.fn(),
         },
         familyRouterService: {
             goToDashboard: vi.fn(),

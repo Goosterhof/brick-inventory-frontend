@@ -29,8 +29,6 @@ describe("auth service", () => {
             expect(authService).toHaveProperty("login");
             expect(authService).toHaveProperty("logout");
             expect(authService).toHaveProperty("checkIfLoggedIn");
-            expect(authService).toHaveProperty("sendEmailResetPassword");
-            expect(authService).toHaveProperty("resetPassword");
         });
 
         it("should initialize with user as null", () => {
@@ -273,79 +271,6 @@ describe("auth service", () => {
 
             // Act & Assert
             await expect(authService.checkIfLoggedIn()).rejects.toThrow();
-
-            mock.restore();
-        });
-    });
-
-    describe("sendEmailResetPassword", () => {
-        it("should send email reset password request", async () => {
-            // Arrange
-            const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
-            const authService = createAuthService<TestProfile>(httpService);
-            mock.onPost(`${baseURL}/password/email`, {email: "test@example.com"}).reply(200);
-
-            // Act & Assert
-            await expect(authService.sendEmailResetPassword("test@example.com")).resolves.toBeUndefined();
-
-            mock.restore();
-        });
-
-        it("should throw error on failed request", async () => {
-            // Arrange
-            const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
-            const authService = createAuthService<TestProfile>(httpService);
-            mock.onPost(`${baseURL}/password/email`).reply(500);
-
-            // Act & Assert
-            await expect(authService.sendEmailResetPassword("test@example.com")).rejects.toThrow();
-
-            mock.restore();
-        });
-    });
-
-    describe("resetPassword", () => {
-        it("should send reset password request with snake_case keys", async () => {
-            // Arrange
-            const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
-            const authService = createAuthService<TestProfile>(httpService);
-            const resetData = {
-                token: "abc123",
-                email: "test@example.com",
-                password: "newpassword",
-                passwordConfirmation: "newpassword",
-            };
-            mock.onPost(`${baseURL}/password/reset`, {
-                token: "abc123",
-                email: "test@example.com",
-                password: "newpassword",
-                password_confirmation: "newpassword",
-            }).reply(200);
-
-            // Act & Assert
-            await expect(authService.resetPassword(resetData)).resolves.toBeUndefined();
-
-            mock.restore();
-        });
-
-        it("should throw error on failed request", async () => {
-            // Arrange
-            const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
-            const authService = createAuthService<TestProfile>(httpService);
-            const resetData = {
-                token: "abc123",
-                email: "test@example.com",
-                password: "newpassword",
-                passwordConfirmation: "newpassword",
-            };
-            mock.onPost(`${baseURL}/password/reset`).reply(422);
-
-            // Act & Assert
-            await expect(authService.resetPassword(resetData)).rejects.toThrow();
 
             mock.restore();
         });

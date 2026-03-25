@@ -29,8 +29,6 @@ const createMockAuthService = (isLoggedInValue: boolean) => {
         login: vi.fn(),
         logout: vi.fn(),
         checkIfLoggedIn: vi.fn(),
-        sendEmailResetPassword: vi.fn(),
-        resetPassword: vi.fn(),
         _setLoggedIn: (value: boolean) => {
             isLoggedInRef.value = value;
         },
