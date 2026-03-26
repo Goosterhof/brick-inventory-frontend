@@ -31,7 +31,6 @@ jobs:
             - name: Lint Vue conventions
               run: npm run lint:vue
 
-
             - name: Check unused exports (knip)
               run: npm run knip
 
