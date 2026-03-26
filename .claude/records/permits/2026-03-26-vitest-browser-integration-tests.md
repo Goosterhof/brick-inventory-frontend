@@ -21,9 +21,9 @@ Add a Vitest Browser Mode workspace (Playwright provider) alongside the existing
 - Create a browser test setup file (`src/tests/browser/setup.ts`) if needed
 - Add npm scripts: `test:browser` (watch), `test:browser:coverage` (single run with coverage)
 - Write browser-mode integration tests for initial targets:
-  - **BarcodeScanner** — camera permissions, mediaDevices API, BarcodeDetector interaction, error states (NotAllowedError, NotFoundError), reset mechanism
-  - **ConfirmDialog** — native `<dialog>` element behavior, open/close lifecycle, return values
-  - **ModalDialog** — native `<dialog>` showModal/close, backdrop interactions, focus trapping
+    - **BarcodeScanner** — camera permissions, mediaDevices API, BarcodeDetector interaction, error states (NotAllowedError, NotFoundError), reset mechanism
+    - **ConfirmDialog** — native `<dialog>` element behavior, open/close lifecycle, return values
+    - **ModalDialog** — native `<dialog>` showModal/close, backdrop interactions, focus trapping
 - Ensure browser tests pass the existing test guard reporters (collect-guard, test-guard) or define appropriate thresholds for browser context
 - Ensure browser test coverage integrates with the existing Istanbul coverage pipeline
 - Update the pre-push gauntlet if browser tests should be included (architect to recommend, CFO to approve)
@@ -60,6 +60,7 @@ Add a Vitest Browser Mode workspace (Playwright provider) alongside the existing
 **Strategic context:** This is the first step in a two-phase testing strategy approved by the CEO. The goal is to move from "they know how to unit test" to "they have a testing strategy" — a key signal for the portfolio showcase.
 
 **Key technical considerations:**
+
 - The existing `vitest.config.ts` uses a multi-project setup with 14 workspaces. The browser workspace should follow the same pattern, not introduce a separate config file.
 - Test guard reporters (collect-guard at 500ms delta, test-guard at 1000ms) were tuned for happy-dom. Browser tests will be slower by nature — the architect should propose adjusted thresholds with rationale, not silently disable the guards.
 - BarcodeScanner is the highest-value target: it uses `navigator.mediaDevices.getUserMedia`, `BarcodeDetector`, and interval-based polling — all things happy-dom can't meaningfully test.
@@ -69,5 +70,5 @@ Add a Vitest Browser Mode workspace (Playwright provider) alongside the existing
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Delivered
+**Journal:** `.claude/records/journals/2026-03-26-vitest-browser-integration-tests.md`

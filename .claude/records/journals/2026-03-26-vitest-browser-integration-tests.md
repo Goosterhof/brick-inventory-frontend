@@ -102,26 +102,41 @@ The one gap: browser tests cannot be verified end-to-end in this environment bec
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
 
-**Overall Assessment:** _pending_
+**Overall Assessment:** Solid delivery with one justified deviation. The architect correctly identified that the permit's multi-project suggestion was impractical due to Playwright's eager provider initialization, adapted with a separate config file, and documented the reasoning. 28 browser tests across 3 components, all type-checked, gauntlet-clean. The runtime verification gap (no Chromium binary in sandbox) is an environment constraint, not a quality issue.
 
 ### Permit Fulfillment Review
 
-_pending_
+The "Partial" on criterion 1 is honest — the config is structurally correct and type-checks, but browser tests have not executed against Chromium yet. This is acceptable for this environment. All other criteria are met. The architect correctly excluded guard reporters from browser config and did not add browser tests to the pre-push gauntlet, both of which are the right calls.
+
+One thing the journal doesn't mention: the permit said the architect should "evaluate whether `@testing-library/vue` adds value for browser tests." The architect stayed with `@vue/test-utils` `mount` without explicit evaluation. Given the codebase exclusively uses `@vue/test-utils`, this is the correct default — consistency over marginal ergonomic gains. But the evaluation should have been stated.
 
 ### Decision Review
 
-_pending_
+1. **Separate config file** — Accepted. The eager initialization issue is real and the architect tested it before committing to the workaround. The separate config follows Vitest's own recommended pattern for multi-environment setups.
+
+2. **`@vitest/browser-playwright` over raw `@vitest/browser`** — Accepted. Vitest 4.x API change requires the wrapper package.
+
+3. **`vi.stubGlobal` for browser mocks** — Accepted. Idiomatic for browser mode, cleaner than prototype manipulation.
+
+4. **`mount` over `shallowMount`** — Accepted per permit guidance. This is the whole point of browser tests — testing real component trees.
+
+5. **Not in pre-push gauntlet** — Accepted. Browser tests should remain opt-in until we have CI infrastructure that guarantees Playwright availability.
 
 ### Showcase Assessment
 
-_pending_
+The implementation demonstrates testing strategy maturity: two distinct test environments (happy-dom unit, Playwright browser) sharing a coverage pipeline, with clean isolation between them. The test patterns are consistent across modes. A reviewer would see this and understand the team knows the difference between unit and integration testing.
+
+Minor quality note: the ConfirmDialog browser test finds the confirm button via `btn.attributes("border")?.includes("brick-red")` — this is implementation-coupled. The unit test finds it via `btn.text() === "Retry"` which is better. Not a blocker but worth noting for future test reviews.
 
 ### Training Proposal Dispositions
 
 | Proposal | Disposition | Rationale |
 | --- | --- | --- |
-| _pending_ | | |
+| Test provider isolation before adding non-happy-dom projects (run `--project=!name` to confirm no eager init) | Candidate | Valid insight from real debugging. Needs a second confirming shift before graduation. |
+| Check knip immediately after adding new test infrastructure files | Candidate | Practical workflow improvement. Knip caught 3 issues here. Needs second confirmation. |
 
 ### Notes for the Architect
 
-_pending_
+- Good self-awareness on the blind spot (untested runtime). The first real Chromium execution should be tracked as a follow-up.
+- The permit asked for an explicit evaluation of `@testing-library/vue` — next time, state the evaluation even when the answer is "stay with current patterns."
+- The `createMockStream` helper in BarcodeScanner browser tests is a nice DRY improvement over the unit test's repeated mock setup. Consider backporting to the unit test in a future cleanup.
