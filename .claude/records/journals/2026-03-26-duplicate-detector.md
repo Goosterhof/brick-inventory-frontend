@@ -93,26 +93,28 @@ Solid. The duplicate detection is a straightforward reactive computed check -- n
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
 
-**Overall Assessment:** _pending_
+**Overall Assessment:** Clean delivery. The architect correctly identified that the feature was partially implemented, completed the gaps (ScanSetPage template, AddSetPage reset bug, tests), and shipped with all gates passing. This is exactly how a trivial permit should go — no over-engineering, no unnecessary abstractions, no scope creep.
 
 ### Permit Fulfillment Review
 
-_pending_
+All 8 acceptance criteria met. The duplicate warning shows on both pages, displays quantity and status, can be dismissed, and doesn't appear for non-matching sets. 100% coverage, all gates green. No concerns.
 
 ### Decision Review
 
-_pending_
+1. **Reset `duplicateDismissed` on setNum change** — Good catch. This was a real bug in the pre-existing code: dismissing once would suppress warnings for all subsequent set numbers. The watcher approach is the correct fix. ScanSetPage already handled this in `onDetect`, so the inconsistency was AddSetPage-specific. Sound.
+
+2. **Plain object for `mockStoreGetAll`** — Pragmatic. Avoids the `require("vue")` anti-pattern in `vi.hoisted`. The computed still re-evaluates because it depends on other reactive refs internal to the component. This is consistent with ADR-012 (typed mocks) and existing test patterns.
 
 ### Showcase Assessment
 
-_pending_
+Good. The feature is small, follows existing patterns exactly, and the bug fix demonstrates the kind of edge-case awareness we want in the portfolio. The string replacement for translations (`.replace("{quantity}", ...)`) is crude compared to a proper i18n interpolation function, but it matches the existing codebase pattern — not the architect's problem to fix here.
 
 ### Training Proposal Dispositions
 
 | Proposal | Disposition | Rationale |
 | --- | --- | --- |
-| _pending_ | | |
+| When a feature is partially implemented, diff the script and template sections independently — computed/reactive logic without corresponding template usage is a gap | Candidate | Valid observation. ScanSetPage had all the logic but no template. This is a Vue-specific variant of the existing "check if work is partially done" candidate but distinct enough — it's about *completeness auditing within a file*, not about checking git history. First occurrence; needs a second confirming shift. |
 
 ### Notes for the Architect
 
-_pending_
+Nothing to fix. Ship it.
