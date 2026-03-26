@@ -6,7 +6,8 @@ import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {deepCamelKeys} from "string-ts";
+import {toCamelCaseTyped} from "@shared/helpers/string";
+import {isAxiosError} from "axios";
 import {onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
@@ -33,7 +34,7 @@ const importError = ref("");
 
 onMounted(async () => {
     const response = await familyHttpService.getRequest<FamilyMember[]>("/family/members");
-    members.value = response.data.map((item) => deepCamelKeys(item) as FamilyMember);
+    members.value = response.data.map((item) => toCamelCaseTyped<FamilyMember>(item));
     membersLoading.value = false;
 });
 
@@ -49,7 +50,7 @@ const saveToken = async () => {
         tokenSaved.value = true;
         rebrickableToken.value = "";
     } catch (error: unknown) {
-        const status = (error as {response?: {status?: number}})?.response?.status;
+        const status = isAxiosError(error) ? error.response?.status : undefined;
         tokenError.value = status === 403 ? t("settings.notFamilyHead").value : t("settings.tokenSaveError").value;
     } finally {
         tokenSaving.value = false;
@@ -73,7 +74,7 @@ const importSets = async () => {
         }>("/family-sets/import-from-rebrickable", {});
         importResult.value = response.data;
     } catch (error: unknown) {
-        const status = (error as {response?: {status?: number}})?.response?.status;
+        const status = isAxiosError(error) ? error.response?.status : undefined;
         if (status === 403) {
             importError.value = t("settings.notFamilyHead").value;
         } else if (status === 422) {

@@ -147,6 +147,9 @@ const translations = {
             allThemes: "All themes",
             unknownTheme: "Unknown theme",
             themeCount: "{count} sets",
+            startingCamera: "Starting camera...",
+            retry: "Retry",
+            capturePhoto: "Capture Photo",
         },
         storage: {
             title: "Storage",
@@ -349,6 +352,9 @@ const translations = {
             allThemes: "Alle thema's",
             unknownTheme: "Onbekend thema",
             themeCount: "{count} sets",
+            startingCamera: "Camera starten...",
+            retry: "Opnieuw",
+            capturePhoto: "Foto maken",
         },
         storage: {
             title: "Opslag",

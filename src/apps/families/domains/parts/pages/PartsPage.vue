@@ -9,7 +9,7 @@ import PageHeader from "@shared/components/PageHeader.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {downloadCsv, toCsv} from "@shared/helpers/csv";
-import {deepCamelKeys} from "string-ts";
+import {toCamelCaseTyped} from "@shared/helpers/string";
 import {computed, onMounted, ref} from "vue";
 
 type SortField = "name" | "quantity" | "color";
@@ -25,7 +25,7 @@ const activeSortField = ref<SortField>("name");
 onMounted(async () => {
     try {
         const response = await familyHttpService.getRequest<FamilyPartEntry[]>("/family/parts");
-        entries.value = response.data.map((item) => deepCamelKeys(item) as FamilyPartEntry);
+        entries.value = response.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
     } catch {
         entries.value = [];
     } finally {
