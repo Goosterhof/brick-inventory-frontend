@@ -30,12 +30,26 @@ describe("RegisterPage", () => {
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
-        expect(inputs).toHaveLength(5);
-        expect(inputs[0]?.props("label")).toBe("auth.familyName");
-        expect(inputs[1]?.props("label")).toBe("auth.name");
-        expect(inputs[2]?.props("label")).toBe("auth.email");
-        expect(inputs[3]?.props("label")).toBe("auth.password");
-        expect(inputs[4]?.props("label")).toBe("auth.passwordConfirmation");
+        expect(inputs).toHaveLength(6);
+        expect(inputs.map((i) => i.props("label"))).toEqual([
+            "auth.inviteCode",
+            "auth.familyName",
+            "auth.name",
+            "auth.email",
+            "auth.password",
+            "auth.passwordConfirmation",
+        ]);
+    });
+
+    it("should render invite code field as optional", () => {
+        // Arrange & Act
+        const wrapper = shallowMount(RegisterPage);
+
+        // Assert
+        const inviteCodeInput = wrapper
+            .findAllComponents(TextInput)
+            .find((i) => i.props("label") === "auth.inviteCode");
+        expect(inviteCodeInput?.props("optional")).toBe(true);
     });
 
     it("should render email field with email type", () => {
@@ -43,8 +57,8 @@ describe("RegisterPage", () => {
         const wrapper = shallowMount(RegisterPage);
 
         // Assert
-        const inputs = wrapper.findAllComponents(TextInput);
-        expect(inputs[2]?.props("type")).toBe("email");
+        const emailInput = wrapper.findAllComponents(TextInput).find((i) => i.props("label") === "auth.email");
+        expect(emailInput?.props("type")).toBe("email");
     });
 
     it("should render password fields with password type", () => {
@@ -52,20 +66,22 @@ describe("RegisterPage", () => {
         const wrapper = shallowMount(RegisterPage);
 
         // Assert
-        const inputs = wrapper.findAllComponents(TextInput);
-        expect(inputs[3]?.props("type")).toBe("password");
-        expect(inputs[4]?.props("type")).toBe("password");
+        const passwordInputs = wrapper.findAllComponents(TextInput).filter((i) => i.props("type") === "password");
+        expect(passwordInputs).toHaveLength(2);
+        expect(passwordInputs.map((i) => i.props("label"))).toEqual(["auth.password", "auth.passwordConfirmation"]);
     });
 
-    it("should have all fields required by default", () => {
+    it("should have all fields required except invite code", () => {
         // Arrange & Act
         const wrapper = shallowMount(RegisterPage);
 
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
-        for (const input of inputs) {
-            expect(input.props("optional")).toBe(false);
-        }
+        const requiredInputs = inputs.filter((i) => i.props("optional") === false);
+        const optionalInputs = inputs.filter((i) => i.props("optional") === true);
+        expect(requiredInputs).toHaveLength(5);
+        expect(optionalInputs).toHaveLength(1);
+        expect(optionalInputs.find((i) => i.props("label") === "auth.inviteCode")).toBeTruthy();
     });
 
     it("should render submit button", () => {
@@ -79,16 +95,18 @@ describe("RegisterPage", () => {
         expect(button.text()).toBe("auth.register");
     });
 
-    it("should call authService.register on form submit", async () => {
+    it("should call authService.register on form submit with invite code", async () => {
         // Arrange
         const wrapper = shallowMount(RegisterPage);
 
         const inputs = wrapper.findAllComponents(TextInput);
-        inputs[0]?.vm.$emit("update:modelValue", "Smith");
-        inputs[1]?.vm.$emit("update:modelValue", "John");
-        inputs[2]?.vm.$emit("update:modelValue", "john@example.com");
-        inputs[3]?.vm.$emit("update:modelValue", "password123");
-        inputs[4]?.vm.$emit("update:modelValue", "password123");
+        const findInput = (label: string) => inputs.find((i) => i.props("label") === label);
+        findInput("auth.inviteCode")?.vm.$emit("update:modelValue", "ABC123");
+        findInput("auth.familyName")?.vm.$emit("update:modelValue", "Smith");
+        findInput("auth.name")?.vm.$emit("update:modelValue", "John");
+        findInput("auth.email")?.vm.$emit("update:modelValue", "john@example.com");
+        findInput("auth.password")?.vm.$emit("update:modelValue", "password123");
+        findInput("auth.passwordConfirmation")?.vm.$emit("update:modelValue", "password123");
         await flushPromises();
 
         // Act
@@ -97,12 +115,34 @@ describe("RegisterPage", () => {
 
         // Assert
         expect(mockRegister).toHaveBeenCalledWith({
+            inviteCode: "ABC123",
             familyName: "Smith",
             name: "John",
             email: "john@example.com",
             password: "password123",
             passwordConfirmation: "password123",
         });
+    });
+
+    it("should send undefined inviteCode when field is empty", async () => {
+        // Arrange
+        const wrapper = shallowMount(RegisterPage);
+
+        const inputs = wrapper.findAllComponents(TextInput);
+        const findInput = (label: string) => inputs.find((i) => i.props("label") === label);
+        findInput("auth.familyName")?.vm.$emit("update:modelValue", "Smith");
+        findInput("auth.name")?.vm.$emit("update:modelValue", "John");
+        findInput("auth.email")?.vm.$emit("update:modelValue", "john@example.com");
+        findInput("auth.password")?.vm.$emit("update:modelValue", "password123");
+        findInput("auth.passwordConfirmation")?.vm.$emit("update:modelValue", "password123");
+        await flushPromises();
+
+        // Act
+        await wrapper.find("form").trigger("submit");
+        await flushPromises();
+
+        // Assert
+        expect(mockRegister).toHaveBeenCalledWith(expect.objectContaining({inviteCode: undefined}));
     });
 
     it("should navigate to dashboard on successful registration", async () => {

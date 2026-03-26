@@ -30,6 +30,7 @@ const translations = {
             familyName: "Family Name",
             alreadyHaveAccount: "Already have an account?",
             noAccountYet: "Don't have an account yet?",
+            inviteCode: "Invite Code",
         },
         errors: {
             required: "This field is required",
@@ -205,6 +206,14 @@ const translations = {
             importUpdated: "{count} sets updated",
             importSkipped: "{count} sets skipped",
             importError: "Import failed. Please try again.",
+            inviteCodeTitle: "Invite Code",
+            inviteCodeDescription: "Generate an invite code to let new members join your family during registration.",
+            generateInviteCode: "Generate Invite Code",
+            revokeCode: "Revoke Code",
+            copyCode: "Copy Code",
+            codeCopied: "Code copied to clipboard!",
+            codeExpires: "Expires at",
+            inviteCodeError: "Could not load invite code. Please try again.",
         },
     },
     nl: {
@@ -236,6 +245,7 @@ const translations = {
             familyName: "Familienaam",
             alreadyHaveAccount: "Heb je al een account?",
             noAccountYet: "Heb je nog geen account?",
+            inviteCode: "Uitnodigingscode",
         },
         errors: {
             required: "Dit veld is verplicht",
@@ -411,6 +421,15 @@ const translations = {
             importUpdated: "{count} sets bijgewerkt",
             importSkipped: "{count} sets overgeslagen",
             importError: "Import mislukt. Probeer het opnieuw.",
+            inviteCodeTitle: "Uitnodigingscode",
+            inviteCodeDescription:
+                "Genereer een uitnodigingscode zodat nieuwe leden zich bij je gezin kunnen aansluiten tijdens registratie.",
+            generateInviteCode: "Uitnodigingscode genereren",
+            revokeCode: "Code intrekken",
+            copyCode: "Code kopiëren",
+            codeCopied: "Code gekopieerd naar klembord!",
+            codeExpires: "Verloopt op",
+            inviteCodeError: "Kon uitnodigingscode niet laden. Probeer het opnieuw.",
         },
     },
 } as const;

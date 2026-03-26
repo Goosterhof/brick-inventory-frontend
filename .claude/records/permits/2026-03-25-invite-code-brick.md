@@ -55,5 +55,5 @@ Medium piece count, fullstack. The backend handles code generation, validation, 
 
 ---
 
-**Status:** Ready to Build
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-03-26-invite-code-brick.md`
