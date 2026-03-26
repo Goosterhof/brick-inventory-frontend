@@ -14,6 +14,7 @@ const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices, c
     await vi.hoisted(() => import("../../../../../../helpers"));
 
 const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
+const mockStoreGetAll = vi.hoisted(() => ({value: [] as {setNum: string; quantity: number; status: string}[]}));
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
@@ -27,7 +28,7 @@ vi.mock("@app/services", () =>
 vi.mock("@app/stores", () =>
     createMockFamilyStores({
         familySetStoreModule: {
-            getAll: {value: []},
+            getAll: mockStoreGetAll,
             retrieveAll: vi.fn(),
             getById: vi.fn(),
             getOrFailById: vi.fn(),
@@ -48,6 +49,7 @@ vi.mock("@app/stores", () =>
 describe("AddSetPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockStoreGetAll.value = [];
     });
 
     it("should render page title", () => {
@@ -158,5 +160,101 @@ describe("AddSetPage", () => {
         // Assert
         const textInput = wrapper.findComponent(TextInput);
         expect(textInput.props("optional")).toBe(false);
+    });
+
+    describe("duplicate detection", () => {
+        it("should show duplicate warning when entered set number matches store", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 2, status: "built"}];
+            const wrapper = shallowMount(AddSetPage);
+
+            // Act
+            const textInput = wrapper.findComponent(TextInput);
+            textInput.vm.$emit("update:modelValue", "75192-1");
+            await flushPromises();
+
+            // Assert
+            const warning = wrapper.find("[data-testid='duplicate-warning']");
+            expect(warning.exists()).toBe(true);
+            expect(warning.text()).toContain("sets.duplicateWarning");
+        });
+
+        it("should not show duplicate warning when set number does not match", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "10179-1", quantity: 1, status: "sealed"}];
+            const wrapper = shallowMount(AddSetPage);
+
+            // Act
+            const textInput = wrapper.findComponent(TextInput);
+            textInput.vm.$emit("update:modelValue", "75192-1");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+        });
+
+        it("should not show duplicate warning when set number is empty", () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 1, status: "sealed"}];
+
+            // Act
+            const wrapper = shallowMount(AddSetPage);
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+        });
+
+        it("should dismiss duplicate warning when dismiss button is clicked", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 2, status: "built"}];
+            const wrapper = shallowMount(AddSetPage);
+            const textInput = wrapper.findComponent(TextInput);
+            textInput.vm.$emit("update:modelValue", "75192-1");
+            await flushPromises();
+
+            // Act
+            const dismissButton = wrapper.find("[data-testid='duplicate-warning'] button");
+            await dismissButton.trigger("click");
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+        });
+
+        it("should reset dismissed state when set number changes", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 2, status: "built"}];
+            const wrapper = shallowMount(AddSetPage);
+            const textInput = wrapper.findComponent(TextInput);
+            textInput.vm.$emit("update:modelValue", "75192-1");
+            await flushPromises();
+
+            // Dismiss the warning
+            const dismissButton = wrapper.find("[data-testid='duplicate-warning'] button");
+            await dismissButton.trigger("click");
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+
+            // Act — change set number to something else and back
+            textInput.vm.$emit("update:modelValue", "10179-1");
+            await flushPromises();
+            textInput.vm.$emit("update:modelValue", "75192-1");
+            await flushPromises();
+
+            // Assert — warning reappears
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(true);
+        });
+
+        it("should not show duplicate warning when store is empty", async () => {
+            // Arrange
+            mockStoreGetAll.value = [];
+            const wrapper = shallowMount(AddSetPage);
+
+            // Act
+            const textInput = wrapper.findComponent(TextInput);
+            textInput.vm.$emit("update:modelValue", "75192-1");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+        });
     });
 });

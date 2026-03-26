@@ -2,13 +2,14 @@
 import type {SetSummary} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familySetStoreModule} from "@app/stores";
 import BackButton from "@shared/components/BackButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {deepSnakeKeys} from "string-ts";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 
 const {t} = familyTranslationService;
 const resetKey = ref(0);
@@ -18,6 +19,18 @@ const isSearching = ref(false);
 const hasSearched = ref(false);
 const isAdding = ref(false);
 const addError = ref("");
+const duplicateDismissed = ref(false);
+
+const duplicateMatch = computed(() => {
+    if (!foundSet.value) return null;
+    return familySetStoreModule.getAll.value.find((s) => s.setNum === foundSet.value?.setNum) ?? null;
+});
+
+const showDuplicateWarning = computed(() => duplicateMatch.value !== null && !duplicateDismissed.value);
+
+const dismissDuplicate = () => {
+    duplicateDismissed.value = true;
+};
 
 const onDetect = async (barcode: string) => {
     scannedCode.value = barcode;
@@ -25,6 +38,7 @@ const onDetect = async (barcode: string) => {
     hasSearched.value = false;
     foundSet.value = null;
     addError.value = "";
+    duplicateDismissed.value = false;
 
     try {
         const response = await familyHttpService.getRequest<SetSummary>(`/sets/ean/${barcode}`);
@@ -111,6 +125,36 @@ const goBack = async () => {
                                 >
                             </div>
                         </div>
+                    </div>
+
+                    <div
+                        v-if="showDuplicateWarning"
+                        p="4"
+                        bg="yellow-100"
+                        class="brick-border"
+                        border="1"
+                        flex="~ col"
+                        gap="2"
+                        data-testid="duplicate-warning"
+                    >
+                        <p font="bold" text="sm">
+                            {{
+                                t("sets.duplicateWarning")
+                                    .value.replace("{quantity}", String(duplicateMatch?.quantity ?? 0))
+                                    .replace("{status}", duplicateMatch?.status ?? "")
+                            }}
+                        </p>
+                        <button
+                            type="button"
+                            text="xs"
+                            font="bold"
+                            uppercase
+                            tracking="wide"
+                            self="start"
+                            @click="dismissDuplicate"
+                        >
+                            {{ t("sets.duplicateDismiss").value }}
+                        </button>
                     </div>
 
                     <p v-if="addError" text="brick-red-dark" font="bold">{{ addError }}</p>

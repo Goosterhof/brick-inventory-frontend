@@ -6,7 +6,7 @@ import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
     () => import("../../../../../../helpers"),
 );
 
@@ -15,6 +15,8 @@ const {mockGetRequest, mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({
     mockPostRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
 }));
+
+const mockStoreGetAll = vi.hoisted(() => ({value: [] as {setNum: string; quantity: number; status: string}[]}));
 
 vi.mock("barcode-detector", () => ({BarcodeDetector: vi.fn()}));
 
@@ -25,6 +27,11 @@ vi.mock("@app/services", () =>
         familyHttpService: {getRequest: mockGetRequest, postRequest: mockPostRequest},
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute},
+    }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({
+        familySetStoreModule: {getAll: mockStoreGetAll, retrieveAll: vi.fn(), getById: vi.fn(), getOrFailById: vi.fn()},
     }),
 );
 
@@ -41,6 +48,7 @@ const mockSetResponse = {
 describe("ScanSetPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockStoreGetAll.value = [];
     });
 
     it("should render page header with title", () => {
@@ -285,6 +293,103 @@ describe("ScanSetPage", () => {
             // Assert
             expect(wrapper.text()).not.toContain("5702015357197");
             expect(wrapper.findComponent(BarcodeScanner).props("resetKey")).toBe(1);
+        });
+    });
+
+    describe("duplicate detection", () => {
+        it("should show duplicate warning when scanned set already exists in store", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 2, status: "built"}];
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Act
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+
+            // Assert
+            const warning = wrapper.find("[data-testid='duplicate-warning']");
+            expect(warning.exists()).toBe(true);
+            expect(warning.text()).toContain("sets.duplicateWarning");
+        });
+
+        it("should not show duplicate warning when scanned set is not in store", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "10179-1", quantity: 1, status: "sealed"}];
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Act
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+        });
+
+        it("should dismiss duplicate warning when dismiss button is clicked", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 2, status: "built"}];
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            const wrapper = shallowMount(ScanSetPage);
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+
+            // Act
+            const dismissButton = wrapper.find("[data-testid='duplicate-warning'] button");
+            await dismissButton.trigger("click");
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+        });
+
+        it("should reset duplicate dismissed state on new scan", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 2, status: "built"}];
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            const wrapper = shallowMount(ScanSetPage);
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+
+            // Dismiss the warning
+            const dismissButton = wrapper.find("[data-testid='duplicate-warning'] button");
+            await dismissButton.trigger("click");
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+
+            // Act — scan again with same barcode
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+
+            // Assert — warning reappears
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(true);
+        });
+
+        it("should not show duplicate warning when no set is found", async () => {
+            // Arrange
+            mockStoreGetAll.value = [{setNum: "75192-1", quantity: 1, status: "sealed"}];
+            mockGetRequest.mockRejectedValue(new Error("Not found"));
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Act
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
+        });
+
+        it("should not show duplicate warning when store is empty", async () => {
+            // Arrange
+            mockStoreGetAll.value = [];
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Act
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.find("[data-testid='duplicate-warning']").exists()).toBe(false);
         });
     });
 });
