@@ -334,6 +334,9 @@
                     "sets": [
                         "src/apps/families/domains/sets/pages/EditSetPage.vue"
                     ],
+                    "settings": [
+                        "src/apps/families/domains/settings/pages/SettingsPage.vue"
+                    ],
                     "storage": [
                         "src/apps/families/domains/storage/pages/EditStoragePage.vue"
                     ]
@@ -346,7 +349,7 @@
             },
             "adoption": {
                 "apps": 2,
-                "domains": 2
+                "domains": 3
             },
             "apiSurface": {
                 "props": [

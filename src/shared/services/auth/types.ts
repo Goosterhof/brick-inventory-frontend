@@ -11,6 +11,7 @@ export interface RegistrationData {
     email: string;
     password: string;
     passwordConfirmation: string;
+    inviteCode?: string;
 }
 
 export interface AuthService<Profile> {

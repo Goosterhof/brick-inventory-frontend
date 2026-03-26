@@ -13,13 +13,14 @@ import {useValidationErrors} from "@shared/composables/useValidationErrors";
 import {ref} from "vue";
 
 const {t} = familyTranslationService;
+const inviteCode = ref("");
 const familyName = ref("");
 const name = ref("");
 const email = ref("");
 const password = ref("");
 const passwordConfirmation = ref("");
 
-type RegistrationField = "familyName" | "name" | "email" | "password" | "passwordConfirmation";
+type RegistrationField = "inviteCode" | "familyName" | "name" | "email" | "password" | "passwordConfirmation";
 const validationErrors = useValidationErrors<RegistrationField>(familyHttpService);
 const {errors} = validationErrors;
 const {handleSubmit} = useFormSubmit(validationErrors);
@@ -27,6 +28,7 @@ const {handleSubmit} = useFormSubmit(validationErrors);
 const onSubmit = () =>
     handleSubmit(async () => {
         await familyAuthService.register({
+            inviteCode: inviteCode.value || undefined,
             familyName: familyName.value,
             name: name.value,
             email: email.value,
@@ -42,6 +44,13 @@ const onSubmit = () =>
         <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">{{ t("auth.createAccount").value }}</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="onSubmit">
+            <TextInput
+                v-model="inviteCode"
+                :label="t('auth.inviteCode').value"
+                :error="errors.inviteCode"
+                :optional="true"
+            />
+
             <TextInput v-model="familyName" :label="t('auth.familyName').value" :error="errors.familyName" />
 
             <TextInput v-model="name" :label="t('auth.name').value" :error="errors.name" />

@@ -1,19 +1,31 @@
 <script setup lang="ts">
+import type {InviteCode} from "@app/types/inviteCode";
 import type {FamilyMember} from "@app/types/profile";
 
-import {familyHttpService, familyTranslationService} from "@app/services";
+import {familyAuthService, familyHttpService, familyTranslationService} from "@app/services";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
+import DangerButton from "@shared/components/DangerButton.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {isAxiosError} from "axios";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 
 const {t} = familyTranslationService;
 
 const members = ref<FamilyMember[]>([]);
 const membersLoading = ref(true);
+
+const inviteCode = ref<InviteCode | null>(null);
+const inviteCodeLoading = ref(false);
+const inviteCodeError = ref("");
+const codeCopied = ref(false);
+
+const isHead = computed(() => {
+    const userId = familyAuthService.userId();
+    return members.value.some((member) => member.id === userId && member.isHead);
+});
 
 const rebrickableToken = ref("");
 const tokenSaving = ref(false);
@@ -36,7 +48,50 @@ onMounted(async () => {
     const response = await familyHttpService.getRequest<FamilyMember[]>("/family/members");
     members.value = response.data.map((item) => toCamelCaseTyped<FamilyMember>(item));
     membersLoading.value = false;
+
+    try {
+        const codeResponse = await familyHttpService.getRequest<InviteCode>("/family/invite-code");
+        inviteCode.value = toCamelCaseTyped<InviteCode>(codeResponse.data);
+    } catch (error: unknown) {
+        if (!isAxiosError(error) || error.response?.status !== 404) {
+            inviteCodeError.value = t("settings.inviteCodeError").value;
+        }
+    }
 });
+
+const generateInviteCode = async () => {
+    inviteCodeLoading.value = true;
+    inviteCodeError.value = "";
+
+    try {
+        const response = await familyHttpService.postRequest<InviteCode>("/family/invite-code", {});
+        inviteCode.value = toCamelCaseTyped<InviteCode>(response.data);
+    } catch {
+        inviteCodeError.value = t("settings.inviteCodeError").value;
+    } finally {
+        inviteCodeLoading.value = false;
+    }
+};
+
+const revokeInviteCode = async () => {
+    inviteCodeLoading.value = true;
+    inviteCodeError.value = "";
+
+    try {
+        await familyHttpService.deleteRequest("/family/invite-code");
+        inviteCode.value = null;
+    } catch {
+        inviteCodeError.value = t("settings.inviteCodeError").value;
+    } finally {
+        inviteCodeLoading.value = false;
+    }
+};
+
+const copyCode = async () => {
+    if (!inviteCode.value) return;
+    await navigator.clipboard.writeText(inviteCode.value.code);
+    codeCopied.value = true;
+};
 
 const saveToken = async () => {
     tokenSaving.value = true;
@@ -121,6 +176,33 @@ const importSets = async () => {
             </section>
 
             <hr border="t-3 black" />
+
+            <section v-if="isHead" flex="~ col" gap="4">
+                <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.inviteCodeTitle").value }}</h2>
+                <p text="gray-600">{{ t("settings.inviteCodeDescription").value }}</p>
+
+                <div v-if="inviteCode" p="4" bg="white" class="brick-border" flex="~ col" gap="3">
+                    <div flex items="center" gap="3">
+                        <p font="mono bold" text="lg">{{ inviteCode.code }}</p>
+                        <PrimaryButton @click="copyCode">
+                            {{ t("settings.copyCode").value }}
+                        </PrimaryButton>
+                    </div>
+                    <p v-if="codeCopied" text="baseplate-green" font="bold">{{ t("settings.codeCopied").value }}</p>
+                    <p text="sm gray-600">{{ t("settings.codeExpires").value }}: {{ inviteCode.expiresAt }}</p>
+                    <DangerButton :disabled="inviteCodeLoading" @click="revokeInviteCode">
+                        {{ t("settings.revokeCode").value }}
+                    </DangerButton>
+                </div>
+
+                <p v-if="inviteCodeError" text="brick-red-dark" font="bold">{{ inviteCodeError }}</p>
+
+                <PrimaryButton v-if="!inviteCode" :disabled="inviteCodeLoading" @click="generateInviteCode">
+                    {{ t("settings.generateInviteCode").value }}
+                </PrimaryButton>
+            </section>
+
+            <hr v-if="isHead" border="t-3 black" />
 
             <section flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.rebrickableTitle").value }}</h2>

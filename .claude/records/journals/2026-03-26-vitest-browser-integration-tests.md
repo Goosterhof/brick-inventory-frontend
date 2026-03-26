@@ -9,32 +9,32 @@
 
 ## Work Summary
 
-| Action   | File                                                                       | Notes                                                                      |
-| -------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Created  | `vitest.browser.config.ts`                                                 | Separate config for Playwright browser tests                               |
-| Created  | `src/tests/browser/setup.ts`                                               | Browser test setup (renderStubDefaultSlot)                                 |
-| Created  | `src/tests/browser/shared/components/ModalDialog.spec.ts`                  | 9 tests: native dialog behavior, rendering, interactions, accessibility    |
-| Created  | `src/tests/browser/shared/components/ConfirmDialog.spec.ts`                | 8 tests: native dialog integration, rendering, interactions, component     |
-| Created  | `src/tests/browser/shared/components/scanner/BarcodeScanner.spec.ts`       | 11 tests: camera init, permission errors, detection, reset, cleanup, a11y  |
-| Modified | `package.json`                                                             | Added `test:browser`, `test:browser:run` scripts; added `@vitest/browser-playwright` |
-| Modified | `vitest.config.ts`                                                         | Added comment noting browser tests live in separate config                 |
-| Modified | `knip.json`                                                                | Added browser setup entry, ignored `vitest.browser.config.ts` and `@vitest/browser` |
-| Modified | `package-lock.json`                                                        | Lock file updated for new dependency                                       |
-| Modified | `src/shared/generated/component-registry.json`                             | Reformatted by oxfmt (no content changes)                                  |
+| Action   | File                                                                 | Notes                                                                                |
+| -------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Created  | `vitest.browser.config.ts`                                           | Separate config for Playwright browser tests                                         |
+| Created  | `src/tests/browser/setup.ts`                                         | Browser test setup (renderStubDefaultSlot)                                           |
+| Created  | `src/tests/browser/shared/components/ModalDialog.spec.ts`            | 9 tests: native dialog behavior, rendering, interactions, accessibility              |
+| Created  | `src/tests/browser/shared/components/ConfirmDialog.spec.ts`          | 8 tests: native dialog integration, rendering, interactions, component               |
+| Created  | `src/tests/browser/shared/components/scanner/BarcodeScanner.spec.ts` | 11 tests: camera init, permission errors, detection, reset, cleanup, a11y            |
+| Modified | `package.json`                                                       | Added `test:browser`, `test:browser:run` scripts; added `@vitest/browser-playwright` |
+| Modified | `vitest.config.ts`                                                   | Added comment noting browser tests live in separate config                           |
+| Modified | `knip.json`                                                          | Added browser setup entry, ignored `vitest.browser.config.ts` and `@vitest/browser`  |
+| Modified | `package-lock.json`                                                  | Lock file updated for new dependency                                                 |
+| Modified | `src/shared/generated/component-registry.json`                       | Reformatted by oxfmt (no content changes)                                            |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                          | Met     | Notes                                                                                       |
-| ----------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------- |
-| `npm run test:browser` runs integration tests via Playwright                  | Partial | Config is correct; Playwright chromium binary unavailable in this sandbox                    |
-| BarcodeScanner tests cover permission grant/deny, detection, error, reset     | Yes     | 11 tests covering all specified scenarios                                                   |
-| ConfirmDialog tests cover native dialog open/close, confirm/cancel, backdrop  | Yes     | 8 tests covering all specified scenarios                                                    |
-| ModalDialog tests cover showModal lifecycle, backdrop, slots                  | Yes     | 9 tests covering all specified scenarios                                                    |
-| Browser tests pass test guard performance thresholds                          | N/A     | Browser config excludes guard reporters per permit (different perf characteristics)          |
-| Coverage from browser tests reported alongside unit coverage                  | Yes     | Istanbul provider shared; browser config includes same coverage source globs                 |
-| Existing unit tests unaffected                                                | Yes     | 93 files, 1147 tests, 100% coverage, exit code 0                                           |
-| Full quality gauntlet passes                                                  | Yes     | All 7 checks pass clean                                                                    |
-| Architecture test updated if needed                                           | N/A     | No changes needed; browser `.spec.ts` files pass existing pattern checks                    |
+| Acceptance Criterion                                                         | Met     | Notes                                                                               |
+| ---------------------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------- |
+| `npm run test:browser` runs integration tests via Playwright                 | Partial | Config is correct; Playwright chromium binary unavailable in this sandbox           |
+| BarcodeScanner tests cover permission grant/deny, detection, error, reset    | Yes     | 11 tests covering all specified scenarios                                           |
+| ConfirmDialog tests cover native dialog open/close, confirm/cancel, backdrop | Yes     | 8 tests covering all specified scenarios                                            |
+| ModalDialog tests cover showModal lifecycle, backdrop, slots                 | Yes     | 9 tests covering all specified scenarios                                            |
+| Browser tests pass test guard performance thresholds                         | N/A     | Browser config excludes guard reporters per permit (different perf characteristics) |
+| Coverage from browser tests reported alongside unit coverage                 | Yes     | Istanbul provider shared; browser config includes same coverage source globs        |
+| Existing unit tests unaffected                                               | Yes     | 93 files, 1147 tests, 100% coverage, exit code 0                                    |
+| Full quality gauntlet passes                                                 | Yes     | All 7 checks pass clean                                                             |
+| Architecture test updated if needed                                          | N/A     | No changes needed; browser `.spec.ts` files pass existing pattern checks            |
 
 ## Decisions Made
 
@@ -50,15 +50,15 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                   |
-| ------------- | ------ | ----------------------- |
-| format:check  | Pass   |                         |
-| lint          | Pass   | 4 warnings (pre-existing) |
-| lint:vue      | Pass   |                         |
-| type-check    | Pass   |                         |
+| Check         | Result | Notes                                             |
+| ------------- | ------ | ------------------------------------------------- |
+| format:check  | Pass   |                                                   |
+| lint          | Pass   | 4 warnings (pre-existing)                         |
+| lint:vue      | Pass   |                                                   |
+| type-check    | Pass   |                                                   |
 | test:coverage | Pass   | Lines: 100%, Branches: 100%, 93 files, 1147 tests |
-| knip          | Pass   |                         |
-| size          | Pass   | families: 103.71kB, admin: 30.79kB |
+| knip          | Pass   |                                                   |
+| size          | Pass   | families: 103.71kB, admin: 30.79kB                |
 
 ## Showcase Readiness
 
@@ -91,10 +91,10 @@ The one gap: browser tests cannot be verified end-to-end in this environment bec
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
-| When adding a new Vitest project with a non-happy-dom environment provider, test isolation first by running `--project=!name` to confirm the provider doesn't eagerly initialize | Spent time debugging why Playwright provider errored during unit-only runs; the provider factory runs at config parse time regardless of project selection | This journal |
-| When adding new test infrastructure files (setup.ts, configs), immediately check knip for unused file/dependency reports before running the rest of the gauntlet | Knip caught 3 issues (unused file, unused dep, unresolved import) that required config updates | This journal |
+| Proposal                                                                                                                                                                         | Context                                                                                                                                                    | Shift Evidence |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| When adding a new Vitest project with a non-happy-dom environment provider, test isolation first by running `--project=!name` to confirm the provider doesn't eagerly initialize | Spent time debugging why Playwright provider errored during unit-only runs; the provider factory runs at config parse time regardless of project selection | This journal   |
+| When adding new test infrastructure files (setup.ts, configs), immediately check knip for unused file/dependency reports before running the rest of the gauntlet                 | Knip caught 3 issues (unused file, unused dep, unresolved import) that required config updates                                                             | This journal   |
 
 ---
 
@@ -130,10 +130,10 @@ Minor quality note: the ConfirmDialog browser test finds the confirm button via 
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Test provider isolation before adding non-happy-dom projects (run `--project=!name` to confirm no eager init) | Candidate | Valid insight from real debugging. Needs a second confirming shift before graduation. |
-| Check knip immediately after adding new test infrastructure files | Candidate | Practical workflow improvement. Knip caught 3 issues here. Needs second confirmation. |
+| Proposal                                                                                                      | Disposition | Rationale                                                                             |
+| ------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------- |
+| Test provider isolation before adding non-happy-dom projects (run `--project=!name` to confirm no eager init) | Candidate   | Valid insight from real debugging. Needs a second confirming shift before graduation. |
+| Check knip immediately after adding new test infrastructure files                                             | Candidate   | Practical workflow improvement. Knip caught 3 issues here. Needs second confirmation. |
 
 ### Notes for the Architect
 
