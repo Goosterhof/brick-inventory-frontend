@@ -10,7 +10,6 @@ import LoadingState from "@shared/components/LoadingState.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
-import {deepCamelKeys} from "string-ts";
 import {computed, onMounted, ref} from "vue";
 
 import AssignPartModal from "../modals/AssignPartModal.vue";
@@ -105,7 +104,7 @@ const loadParts = async (setNum: string) => {
 
     try {
         const mapResponse = await familyHttpService.getRequest<StorageMapEntry[]>(`/sets/${setNum}/storage-map`);
-        storageMap.value = mapResponse.data.map((item) => deepCamelKeys(item) as StorageMapEntry);
+        storageMap.value = mapResponse.data.map((item) => toCamelCaseTyped<StorageMapEntry>(item));
     } catch {
         storageMap.value = [];
     }

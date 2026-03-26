@@ -442,3 +442,25 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 - The settings file watcher may not detect a newly created `.claude/settings.json` mid-session — hooks activate on next session start or after visiting `/hooks`.
 
 ---
+
+## 2026-03-26 — Families App Full-Sweep Audit & Remediation
+
+### Decisions
+
+- **Remove CLAUDE.md war-room ADR references**: Deleted line 207 referencing non-existent ADR-0014 ("Domain-Driven Frontend Structure") and mislabeled ADR-0009 ("ResourceData Pattern"). These were external war-room references to `adrs.script.nl` that are not actionable for repo readers. The concepts are already covered by local ADRs (006 for resource adapter, 008 for domain isolation).
+- **Relax `toCamelCaseTyped` type constraint**: Changed from `T extends Item` to `T extends object`. The helper has no runtime dependency on `id` — the original constraint was over-specified, forcing 4 files to bypass type safety with `as T` casts. Not significant enough to warrant an ADR.
+- **All 3 remaining permits are backend-blocked**: Brick DNA Lab, Invite Code Brick, and Member Removal Wrench all depend on backend API contracts that aren't agreed yet. CFO recommended against building UI against imaginary contracts.
+
+### Action Items
+
+- [ ] CFO: Update Pulse metrics (test files 90→93, tests 1081→1147, shared components 31→32) — stale for 3 consecutive inspections
+- [ ] CEO: Decide direction on backend-blocked permits (unblock one, pick different work, or draft API contracts ourselves)
+
+### Notes
+
+- **Inspection results (8.5/10)**: 6 findings (0 high, 2 medium, 4 low). Architecture compliance clean across all 12 ADRs. 100% test coverage confirmed genuine (behavioral L2-L3 depth). All findings resolved in-session.
+- **Inspector training**: Two new graduation candidates added (SOP 2: grep for `deepCamelKeys`; SOP 3: verify numeric count claims). Both need second confirmation. Two prior SOPs (gauntlet failure classification, verify document exists) confirmed working in this inspection.
+- **Three inspections now complete**: Showcase (2026-03-24), Shared (2026-03-25), Families (2026-03-26). Only Admin app remains unaudited.
+- **Recurring pattern escalated**: `component-registry.json` format:check failure hit 3 consecutive inspections — escalated from low to medium. Root cause is the generation pipeline not piping through oxfmt.
+
+---

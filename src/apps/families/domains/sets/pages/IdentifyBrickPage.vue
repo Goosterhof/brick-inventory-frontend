@@ -54,9 +54,9 @@ const goBack = async () => {
 
         <CameraCapture
             v-if="showCamera"
-            loading-text="Starting camera..."
-            retry-text="Retry"
-            capture-text="Capture Photo"
+            :loading-text="t('sets.startingCamera').value"
+            :retry-text="t('sets.retry').value"
+            :capture-text="t('sets.capturePhoto').value"
             @capture="onCapture"
             @error="() => {}"
         />

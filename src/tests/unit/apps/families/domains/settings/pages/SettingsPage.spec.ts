@@ -7,7 +7,8 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
 const {
-    createMockAxios,
+    createMockAxiosWithError,
+    MockAxiosError,
     createMockStringTs,
     createMockFamilyServices,
     createMockFormField,
@@ -19,7 +20,7 @@ vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
 vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
 vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
-vi.mock("axios", () => createMockAxios());
+vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
 
 const {mockGetRequest, mockPutRequest, mockPostRequest} = vi.hoisted(() => ({
@@ -154,7 +155,9 @@ describe("SettingsPage", () => {
 
         it("should show error when not family head (403)", async () => {
             // Arrange
-            mockPutRequest.mockRejectedValue({response: {status: 403}});
+            const axiosError = new MockAxiosError("Forbidden");
+            axiosError.response = {status: 403, data: null, statusText: "Forbidden", headers: {}, config: {}};
+            mockPutRequest.mockRejectedValue(axiosError);
             const wrapper = shallowMount(SettingsPage);
             await wrapper.findComponent(TextInput).setValue("my-secret-token");
 
@@ -262,7 +265,9 @@ describe("SettingsPage", () => {
 
         it("should show error when not family head (403)", async () => {
             // Arrange
-            mockPostRequest.mockRejectedValue({response: {status: 403}});
+            const axiosError = new MockAxiosError("Forbidden");
+            axiosError.response = {status: 403, data: null, statusText: "Forbidden", headers: {}, config: {}};
+            mockPostRequest.mockRejectedValue(axiosError);
             const wrapper = shallowMount(SettingsPage);
 
             // Act
@@ -278,7 +283,15 @@ describe("SettingsPage", () => {
 
         it("should show no token error (422)", async () => {
             // Arrange
-            mockPostRequest.mockRejectedValue({response: {status: 422}});
+            const axiosError = new MockAxiosError("Unprocessable Entity");
+            axiosError.response = {
+                status: 422,
+                data: null,
+                statusText: "Unprocessable Entity",
+                headers: {},
+                config: {},
+            };
+            mockPostRequest.mockRejectedValue(axiosError);
             const wrapper = shallowMount(SettingsPage);
 
             // Act

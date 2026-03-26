@@ -224,7 +224,7 @@ describe("ScanSetPage", () => {
 
             // Assert
             expect(mockPostRequest).toHaveBeenCalledWith("/family-sets", {
-                set_num: "75192-1",
+                setNum: "75192-1",
                 quantity: 1,
                 status: "sealed",
             });

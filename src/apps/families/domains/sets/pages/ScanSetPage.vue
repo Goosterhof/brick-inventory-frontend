@@ -7,6 +7,7 @@ import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
+import {deepSnakeKeys} from "string-ts";
 import {ref} from "vue";
 
 const {t} = familyTranslationService;
@@ -43,11 +44,10 @@ const addToCollection = async () => {
     addError.value = "";
 
     try {
-        const response = await familyHttpService.postRequest<{id: number}>("/family-sets", {
-            set_num: foundSet.value.setNum,
-            quantity: 1,
-            status: "sealed",
-        });
+        const response = await familyHttpService.postRequest<{id: number}>(
+            "/family-sets",
+            deepSnakeKeys({setNum: foundSet.value.setNum, quantity: 1, status: "sealed"}),
+        );
         await familyRouterService.goToRoute("sets-detail", response.data.id);
     } catch {
         addError.value = t("sets.scanAddError").value;
@@ -77,8 +77,8 @@ const goBack = async () => {
 
         <BarcodeScanner
             :reset-key="resetKey"
-            loading-text="Starting camera..."
-            retry-text="Retry"
+            :loading-text="t('sets.startingCamera').value"
+            :retry-text="t('sets.retry').value"
             @detect="onDetect"
             @error="() => {}"
         />
