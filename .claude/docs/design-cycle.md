@@ -95,10 +95,10 @@ npm run knip
 
 ## Reference Documents
 
-| Document                            | Used In     | Purpose                                           |
-| ----------------------------------- | ----------- | ------------------------------------------------- |
-| [Brand Guide](./brand.md)           | Build       | Brick Brutalism styling, colors, UnoCSS shortcuts |
+| Document                                       | Used In     | Purpose                                           |
+| ---------------------------------------------- | ----------- | ------------------------------------------------- |
+| [Brand Guide](./brand.md)                      | Build       | Brick Brutalism styling, colors, UnoCSS shortcuts |
 | Component Registry (`component-registry.json`) | Sort, Build | Auto-generated list of shared components          |
-| [Domain Map](./domain-map.md)       | Sort        | Routes, pages, components per domain              |
-| [Decision Log](./decisions.md)      | Sort        | Prior architectural choices                       |
-| [Learnings](./learnings.md)         | Build       | Gotchas, patterns, mistakes not to repeat         |
+| [Domain Map](./domain-map.md)                  | Sort        | Routes, pages, components per domain              |
+| [Decision Log](./decisions.md)                 | Sort        | Prior architectural choices                       |
+| [Learnings](./learnings.md)                    | Build       | Gotchas, patterns, mistakes not to repeat         |
