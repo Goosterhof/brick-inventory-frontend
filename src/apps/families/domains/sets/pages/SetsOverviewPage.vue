@@ -4,6 +4,7 @@ import type {FamilySetStatus} from "@app/types/familySet";
 import {familyLoadingService, familyRouterService, familyTranslationService} from "@app/services";
 import {familySetStoreModule} from "@app/stores";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
+import CollapsibleSection from "@shared/components/CollapsibleSection.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import FilterChip from "@shared/components/FilterChip.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -18,6 +19,8 @@ const {isLoading} = familyLoadingService;
 const {getAll, retrieveAll} = familySetStoreModule;
 const searchQuery = ref("");
 const activeStatusFilter = ref<FamilySetStatus | null>(null);
+const activeThemeFilters = ref<Set<string>>(new Set());
+const expandedThemes = ref<Set<string>>(new Set());
 
 const statusKey: Record<
     FamilySetStatus,
@@ -32,11 +35,17 @@ const statusKey: Record<
 
 const allStatuses: FamilySetStatus[] = ["sealed", "in_progress", "built", "incomplete", "wishlist"];
 
+const UNKNOWN_THEME = "Unknown";
+
 const filteredSets = computed(() => {
     let result = getAll.value;
 
     if (activeStatusFilter.value) {
         result = result.filter((s) => s.status === activeStatusFilter.value);
+    }
+
+    if (activeThemeFilters.value.size > 0) {
+        result = result.filter((s) => activeThemeFilters.value.has(s.set?.theme ?? UNKNOWN_THEME));
     }
 
     const query = searchQuery.value.toLowerCase().trim();
@@ -49,8 +58,58 @@ const filteredSets = computed(() => {
     return result;
 });
 
+const allThemes = computed(() => {
+    const themes = new Set<string>();
+    for (const s of getAll.value) {
+        themes.add(s.set?.theme ?? UNKNOWN_THEME);
+    }
+    return [...themes].sort();
+});
+
+const groupedSets = computed(() => {
+    const groups: {theme: string; sets: typeof filteredSets.value}[] = [];
+    const map = new Map<string, typeof filteredSets.value>();
+
+    for (const s of filteredSets.value) {
+        const theme = s.set?.theme ?? UNKNOWN_THEME;
+        const existing = map.get(theme);
+        if (existing) {
+            existing.push(s);
+        } else {
+            const arr = [s];
+            map.set(theme, arr);
+        }
+    }
+
+    for (const [theme, sets] of map) {
+        groups.push({theme, sets});
+    }
+
+    return groups.sort((a, b) => a.theme.localeCompare(b.theme));
+});
+
 const toggleStatusFilter = (status: FamilySetStatus) => {
     activeStatusFilter.value = activeStatusFilter.value === status ? null : status;
+};
+
+const toggleThemeFilter = (theme: string) => {
+    const next = new Set(activeThemeFilters.value);
+    if (next.has(theme)) {
+        next.delete(theme);
+    } else {
+        next.add(theme);
+    }
+    activeThemeFilters.value = next;
+};
+
+const toggleThemeExpanded = (theme: string) => {
+    const next = new Set(expandedThemes.value);
+    if (next.has(theme)) {
+        next.delete(theme);
+    } else {
+        next.add(theme);
+    }
+    expandedThemes.value = next;
 };
 
 onMounted(async () => {
@@ -130,34 +189,69 @@ const exportCsv = () => {
                         {{ t(statusKey[status]).value }}
                     </FilterChip>
                 </div>
+
+                <div v-if="allThemes.length > 1" flex gap="2" flex-wrap="wrap">
+                    <FilterChip
+                        v-for="theme in allThemes"
+                        :key="theme"
+                        :active="activeThemeFilters.has(theme)"
+                        @click="toggleThemeFilter(theme)"
+                    >
+                        {{ theme }}
+                    </FilterChip>
+                </div>
             </div>
 
             <EmptyState v-if="filteredSets.length === 0" :message="t('common.noResults').value" />
 
             <div v-else flex="~ col" gap="4">
-                <ListItemButton v-for="familySet in filteredSets" :key="familySet.id" @click="goToDetail(familySet.id)">
-                    <img
-                        v-if="familySet.set?.imageUrl"
-                        :src="familySet.set.imageUrl"
-                        :alt="familySet.set.name"
-                        w="20"
-                        h="20"
-                        object="contain"
-                    />
-                    <div v-else w="20" h="20" bg="gray-200" flex items="center" justify="center" text="sm gray-600">
-                        {{ t("common.noImage").value }}
+                <CollapsibleSection
+                    v-for="group in groupedSets"
+                    :key="group.theme"
+                    :title="group.theme"
+                    :count="group.sets.length"
+                    :expanded="expandedThemes.has(group.theme)"
+                    @toggle="toggleThemeExpanded(group.theme)"
+                >
+                    <div flex="~ col" gap="4" p="t-4">
+                        <ListItemButton
+                            v-for="familySet in group.sets"
+                            :key="familySet.id"
+                            @click="goToDetail(familySet.id)"
+                        >
+                            <img
+                                v-if="familySet.set?.imageUrl"
+                                :src="familySet.set.imageUrl"
+                                :alt="familySet.set.name"
+                                w="20"
+                                h="20"
+                                object="contain"
+                            />
+                            <div
+                                v-else
+                                w="20"
+                                h="20"
+                                bg="gray-200"
+                                flex
+                                items="center"
+                                justify="center"
+                                text="sm gray-600"
+                            >
+                                {{ t("common.noImage").value }}
+                            </div>
+                            <div flex="1">
+                                <p font="bold">{{ familySet.set?.name ?? familySet.setNum }}</p>
+                                <p text="sm gray-600">{{ familySet.set?.setNum ?? familySet.setNum }}</p>
+                                <div flex gap="2" m="t-1" items="center">
+                                    <BadgeLabel :variant="familySet.status === 'wishlist' ? 'muted' : 'default'">{{
+                                        t(statusKey[familySet.status]).value
+                                    }}</BadgeLabel>
+                                    <span text="xs gray-600">{{ familySet.quantity }}x</span>
+                                </div>
+                            </div>
+                        </ListItemButton>
                     </div>
-                    <div flex="1">
-                        <p font="bold">{{ familySet.set?.name ?? familySet.setNum }}</p>
-                        <p text="sm gray-600">{{ familySet.set?.setNum ?? familySet.setNum }}</p>
-                        <div flex gap="2" m="t-1" items="center">
-                            <BadgeLabel :variant="familySet.status === 'wishlist' ? 'muted' : 'default'">{{
-                                t(statusKey[familySet.status]).value
-                            }}</BadgeLabel>
-                            <span text="xs gray-600">{{ familySet.quantity }}x</span>
-                        </div>
-                    </div>
-                </ListItemButton>
+                </CollapsibleSection>
             </div>
         </template>
     </div>

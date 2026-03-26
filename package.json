@@ -32,7 +32,6 @@
         "format:check": "oxfmt --check .",
         "knip": "knip",
         "lint": "oxlint --type-aware",
-
         "lint:vue": "node scripts/lint-vue-conventions.mjs",
         "prepare": "husky",
         "preview": "cross-env APP_NAME=families vite preview",

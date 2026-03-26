@@ -9,25 +9,25 @@
 
 ## Work Summary
 
-| Action   | File                                                                              | Notes                                                                           |
-| -------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Modified | `src/apps/families/domains/parts/pages/PartsPage.vue`                            | Added search, color filter, sort, orphan filter/badge, empty state, refactored template |
-| Modified | `src/apps/families/types/part.ts`                                                | Added `familySetId` to `FamilyPartEntry`, `isOrphan` to `GroupedFamilyPart`     |
-| Modified | `src/apps/families/services/translation.ts`                                      | Added NL translation keys for parts search/filter/sort/orphan                   |
-| Modified | `src/tests/unit/apps/families/domains/parts/pages/PartsPage.spec.ts`             | Expanded from 7 to 29 tests covering all new functionality                      |
+| Action   | File                                                                 | Notes                                                                                   |
+| -------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Modified | `src/apps/families/domains/parts/pages/PartsPage.vue`                | Added search, color filter, sort, orphan filter/badge, empty state, refactored template |
+| Modified | `src/apps/families/types/part.ts`                                    | Added `familySetId` to `FamilyPartEntry`, `isOrphan` to `GroupedFamilyPart`             |
+| Modified | `src/apps/families/services/translation.ts`                          | Added NL translation keys for parts search/filter/sort/orphan                           |
+| Modified | `src/tests/unit/apps/families/domains/parts/pages/PartsPage.spec.ts` | Expanded from 7 to 29 tests covering all new functionality                              |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                           | Met | Notes                                                                                      |
-| -------------------------------------------------------------- | --- | ------------------------------------------------------------------------------------------ |
-| Search input filters by part name and part number              | Yes | TextInput with case-insensitive search on both fields                                      |
-| Color filter (dropdown or chips)                               | Yes | FilterChip-based with dynamic colors extracted from data + "All colors" reset chip          |
-| Sort controls (at minimum: name, quantity)                     | Yes | Three sort options: name (alpha), quantity (desc), color (alpha) via FilterChip toggle      |
-| Orphan parts surfaced or filterable                            | Yes | Orphan badge on items + dedicated filter chip; orphan = `familySetId === null`              |
-| Empty state when no parts match active filters                 | Yes | Uses `parts.noResults` translation key                                                     |
-| Follows existing patterns from Sets and Storage pages          | Yes | Same TextInput/FilterChip pattern as SetsOverviewPage; same mock structure in tests         |
-| 100% test coverage on new code                                 | Yes | 100% lines/branches/functions/statements across full suite                                 |
-| All quality gates pass                                         | Yes | type-check, knip, lint (0 errors), lint:vue, test:coverage, build, size all pass           |
+| Acceptance Criterion                                  | Met | Notes                                                                                  |
+| ----------------------------------------------------- | --- | -------------------------------------------------------------------------------------- |
+| Search input filters by part name and part number     | Yes | TextInput with case-insensitive search on both fields                                  |
+| Color filter (dropdown or chips)                      | Yes | FilterChip-based with dynamic colors extracted from data + "All colors" reset chip     |
+| Sort controls (at minimum: name, quantity)            | Yes | Three sort options: name (alpha), quantity (desc), color (alpha) via FilterChip toggle |
+| Orphan parts surfaced or filterable                   | Yes | Orphan badge on items + dedicated filter chip; orphan = `familySetId === null`         |
+| Empty state when no parts match active filters        | Yes | Uses `parts.noResults` translation key                                                 |
+| Follows existing patterns from Sets and Storage pages | Yes | Same TextInput/FilterChip pattern as SetsOverviewPage; same mock structure in tests    |
+| 100% test coverage on new code                        | Yes | 100% lines/branches/functions/statements across full suite                             |
+| All quality gates pass                                | Yes | type-check, knip, lint (0 errors), lint:vue, test:coverage, build, size all pass       |
 
 ## Decisions Made
 
@@ -43,15 +43,15 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                                         |
-| ------------- | ------ | ------------------------------------------------------------- |
+| Check         | Result | Notes                                                           |
+| ------------- | ------ | --------------------------------------------------------------- |
 | format:check  | Pass   | Changed files pass; pre-existing md format issues are unrelated |
-| lint          | Pass   | 0 errors, 3 warnings (all pre-existing in other files)        |
-| lint:vue      | Pass   | All conventions passed                                        |
-| type-check    | Pass   | Clean                                                         |
-| test:coverage | Pass   | 100% lines, branches, functions, statements                   |
-| knip          | Pass   | No unused exports                                             |
-| size          | Pass   | families: 101.08 kB brotlied (budget: 350 kB)                |
+| lint          | Pass   | 0 errors, 3 warnings (all pre-existing in other files)          |
+| lint:vue      | Pass   | All conventions passed                                          |
+| type-check    | Pass   | Clean                                                           |
+| test:coverage | Pass   | 100% lines, branches, functions, statements                     |
+| knip          | Pass   | No unused exports                                               |
+| size          | Pass   | families: 101.08 kB brotlied (budget: 350 kB)                   |
 
 ## Showcase Readiness
 
@@ -87,8 +87,8 @@ One area that could be stronger: the sort and color filter interactions are not 
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                                                     | Context                                                                          | Shift Evidence          |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------- |
 | Before writing test assertions that access array items by index, check the linter rules for `no-non-null-assertion` and verify what array access patterns existing tests use | Wasted three iterations on `[0]!` -> `.at(0)!` -> `.find()?.` / `.map()` pattern | 2026-03-25-brick-census |
 
 ---
@@ -105,6 +105,7 @@ The architect delivered exactly what the permit asked for, following established
 ### Code Review Notes
 
 The implementation is solid:
+
 - **Search/filter/sort** follows the SetsOverviewPage blueprint faithfully — same components (TextInput, FilterChip), same computed chain (group → filter → sort).
 - **Orphan parts** as a visible badge (red-200 background) plus a filter chip is the right call. It's not buried — it's immediately visible on each orphan item and filterable for users who want to focus on them.
 - **Export respects filters** — good catch, matches the Sets pattern.
@@ -122,8 +123,8 @@ All five decisions are sound and well-reasoned. No objections.
 
 ### Training Proposal Disposition
 
-| Proposal | Verdict | Reason |
-| --- | --- | --- |
+| Proposal                                                                                                                                                                 | Verdict       | Reason                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Before writing test assertions that access array items by index, check linter rules for `no-non-null-assertion` and verify what array access patterns existing tests use | **Candidate** | Specific, actionable, and addresses a real iteration-waste pattern. Added to graduation log. Needs a second shift to confirm. |
 
 ### Knowledge Update Review

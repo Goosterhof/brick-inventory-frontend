@@ -320,17 +320,17 @@ Training proposals from inspection reports are tracked here. A proposal must pro
 
 ### Candidates
 
-| Proposal                                                                                                                                                              | First Observed | Report Evidence         | Context                                                                                                                        |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | _(pre-records)_         | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
-| SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | _(pre-records)_         | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
+| Proposal                                                                                                                                                              | First Observed | Report Evidence | Context                                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | _(pre-records)_ | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
+| SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | _(pre-records)_ | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
 
 ### Graduated
 
-| Proposal | Graduated | Confirming Reports | Promoted To |
-| --- | --- | --- | --- |
-| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 3 |
-| SOP 1 should add a failure classification step: for each gauntlet failure, note whether caused by inspected scope or pre-existing/unrelated to prevent scope bleed | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 1 |
+| Proposal                                                                                                                                                           | Graduated  | Confirming Reports                                         | Promoted To |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ---------------------------------------------------------- | ----------- |
+| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping    | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 3       |
+| SOP 1 should add a failure classification step: for each gauntlet failure, note whether caused by inspected scope or pre-existing/unrelated to prevent scope bleed | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 1       |
 
 ### Dropped
 

@@ -11,16 +11,16 @@
 
 ## Quality Gauntlet Results
 
-| Check         | Result | Notes                                                                                                                          |
-| ------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| Check         | Result | Notes                                                                                                                                                                                                   |
+| ------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | format:check  | FAIL   | 4 files: `.claude/agents/lead-brick-architect.md`, `.claude/docs/inspector-casebook.md`, `.claude/records/journals/2026-03-24-dialog-toast-showcase.md`, `src/shared/generated/component-registry.json` |
-| lint          | PASS   | 3 warnings (0 errors) — `consistent-function-scoping` on `parseAdrNumbers` in `architecture.spec.ts`                          |
-| lint:vue      | PASS   | All conventions passed                                                                                                         |
-| type-check    | PASS   | Clean — no type errors                                                                                                         |
-| test:coverage | PASS   | 90 files, 1081 tests, all passing. 100% coverage on all shared files (lines/branches/functions/statements)                    |
-| knip          | PASS   | No unused exports or dead bricks                                                                                               |
-| size          | PASS   | families: 99.41kB/350kB, admin: 30.79kB/150kB — well within limits                                                           |
-| build         | PASS   | All 3 apps built successfully                                                                                                  |
+| lint          | PASS   | 3 warnings (0 errors) — `consistent-function-scoping` on `parseAdrNumbers` in `architecture.spec.ts`                                                                                                    |
+| lint:vue      | PASS   | All conventions passed                                                                                                                                                                                  |
+| type-check    | PASS   | Clean — no type errors                                                                                                                                                                                  |
+| test:coverage | PASS   | 90 files, 1081 tests, all passing. 100% coverage on all shared files (lines/branches/functions/statements)                                                                                              |
+| knip          | PASS   | No unused exports or dead bricks                                                                                                                                                                        |
+| size          | PASS   | families: 99.41kB/350kB, admin: 30.79kB/150kB — well within limits                                                                                                                                      |
+| build         | PASS   | All 3 apps built successfully                                                                                                                                                                           |
 
 ### Gauntlet Failure Classification
 
@@ -99,12 +99,12 @@ One observation worth monitoring: ADR-006 and ADR-007 have been "Tested, not con
 
 ## Doc Drift
 
-| Document      | Accurate | Drift Found                                                                                                                    |
-| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Domain Map    | Partial  | Shared component count accurate (31). Brick Catalog link is a dead reference — file does not exist.                           |
-| Brick Catalog | N/A      | File does not exist. Not a drift issue — an absence issue. Flagged as Finding 1.                                               |
+| Document      | Accurate | Drift Found                                                                                                                                                                                                                                                                                     |
+| ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Domain Map    | Partial  | Shared component count accurate (31). Brick Catalog link is a dead reference — file does not exist.                                                                                                                                                                                             |
+| Brick Catalog | N/A      | File does not exist. Not a drift issue — an absence issue. Flagged as Finding 1.                                                                                                                                                                                                                |
 | Pulse         | Partial  | Quality metrics count (31 shared components) is accurate. Test file count (74) and test count (908) are stale — current run shows 90 files and 1081 tests. Coverage percentages in Quality Metrics table (99.88% lines, 99.44% branches) are stale — current run shows 100% across all metrics. |
-| CLAUDE.md     | Yes      | Shared directory structure matches reality. Service factory convention, import path rules, component conventions all accurate. |
+| CLAUDE.md     | Yes      | Shared directory structure matches reality. Service factory convention, import path rules, component conventions all accurate.                                                                                                                                                                  |
 
 ---
 
@@ -160,10 +160,10 @@ The shared directory's architecture, patterns, and test quality are all portfoli
 
 ### Training Proposals
 
-| Proposal                                                                                                                                                                                    | Context                                                                                                                                                                                                | Report Evidence                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
-| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping (second confirming instance) | brick-catalog.md still missing; domain-map still references it; lint:catalog still broken. Same gap as 2026-03-24 inspection. This SOP candidate is confirmed a second time by this exact same finding. | 2026-03-25-shared-directory-audit    |
-| SOP 1 should add a classification step after running the gauntlet: for each failure, note whether caused by inspected scope or pre-existing (second confirming instance)                    | format:check fails on both a shared file (in scope) and .claude/ docs (out of scope). Without the classification step the distinction is not mechanically surfaced.                                    | 2026-03-25-shared-directory-audit    |
+| Proposal                                                                                                                                                                                     | Context                                                                                                                                                                                                 | Report Evidence                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping (second confirming instance) | brick-catalog.md still missing; domain-map still references it; lint:catalog still broken. Same gap as 2026-03-24 inspection. This SOP candidate is confirmed a second time by this exact same finding. | 2026-03-25-shared-directory-audit |
+| SOP 1 should add a classification step after running the gauntlet: for each failure, note whether caused by inspected scope or pre-existing (second confirming instance)                     | format:check fails on both a shared file (in scope) and .claude/ docs (out of scope). Without the classification step the distinction is not mechanically surfaced.                                     | 2026-03-25-shared-directory-audit |
 
 ---
 
@@ -180,7 +180,7 @@ Findings are well-calibrated. No severity over/under-calls.
 - **Finding 3 (TODO in router/components.ts, low):** Correct severity. Minor polish item.
 - **Finding 4 (lint:catalog broken script, medium):** Shares a root cause with Finding 1. Medium is fair — a broken npm script in a portfolio repo is independently bad regardless of why it's broken. Good call filing them separately: the fix for #1 (create the catalog) doesn't automatically fix #4 (the script might still have bugs), and vice versa (removing the script doesn't create the catalog).
 
-The non-findings section is the strongest part of this report. Eight potential issues investigated and cleared with specific evidence (oxlintrc overrides, ADR citations, code reads). This is exactly what a thorough inspection looks like — the things you *didn't* flag matter as much as the things you did. A less careful inspector would have filed `console.error` in storage.ts as a finding without checking the config overrides.
+The non-findings section is the strongest part of this report. Eight potential issues investigated and cleared with specific evidence (oxlintrc overrides, ADR citations, code reads). This is exactly what a thorough inspection looks like — the things you _didn't_ flag matter as much as the things you did. A less careful inspector would have filed `console.error` in storage.ts as a finding without checking the config overrides.
 
 The Pulse metric staleness catch (test files 74→90, tests 908→1081, coverage 99.88%→100%) is a valuable service finding. Numbers that drift silently erode trust in the Pulse as a source of truth.
 
@@ -188,30 +188,30 @@ The Pulse metric staleness catch (test files 74→90, tests 908→1081, coverage
 
 Both proposals hit their second confirming observation. Graduation tests below.
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| SOP 3: "verify document exists" before comparing | **Graduate** — see tests below | Second confirmation: brick-catalog.md still missing, same finding surfaced again. The inspector applied this check manually both times, proving the behavior change is real. |
-| SOP 1: gauntlet failure classification step | **Graduate** — see tests below | Second confirmation: inspector produced the classification table without prompting. The report's "Gauntlet Failure Classification" subsection is direct evidence of the behavior. |
+| Proposal                                         | Disposition                    | Rationale                                                                                                                                                                         |
+| ------------------------------------------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SOP 3: "verify document exists" before comparing | **Graduate** — see tests below | Second confirmation: brick-catalog.md still missing, same finding surfaced again. The inspector applied this check manually both times, proving the behavior change is real.      |
+| SOP 1: gauntlet failure classification step      | **Graduate** — see tests below | Second confirmation: inspector produced the classification table without prompting. The report's "Gauntlet Failure Classification" subsection is direct evidence of the behavior. |
 
 ### Graduation Tests
 
 **SOP 3: "Verify document exists" step**
 
-| Scenario | Without Training | With Training | Assertion |
-| --- | --- | --- | --- |
-| Domain map references `brick-catalog.md` which doesn't exist | Inspector reads domain map, notes the reference, proceeds to compare domain map content against reality without flagging the missing file as a finding | Inspector checks whether `brick-catalog.md` exists before attempting comparison. Files a finding for the missing document. | Report contains a finding with severity ≥ low that explicitly states the referenced document does not exist |
-| CLAUDE.md references `~25 reusable components` but actual count is 31 | Inspector might note the count mismatch as a doc drift observation | Inspector verifies the referenced count against reality. If the reference is approximate (`~25`), flags as informational drift; if exact and wrong, flags as a finding. | Doc Drift table includes an entry noting the count discrepancy with the verified actual count |
-| A new ADR references a "see also" link to a design doc that was never committed | Inspector reads the ADR, follows the narrative, but does not verify the linked doc exists | Inspector attempts to read the linked doc. When it fails, files a finding for the dead reference. | Report contains a finding for the dead reference with the specific file path that was checked |
+| Scenario                                                                        | Without Training                                                                                                                                       | With Training                                                                                                                                                           | Assertion                                                                                                   |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Domain map references `brick-catalog.md` which doesn't exist                    | Inspector reads domain map, notes the reference, proceeds to compare domain map content against reality without flagging the missing file as a finding | Inspector checks whether `brick-catalog.md` exists before attempting comparison. Files a finding for the missing document.                                              | Report contains a finding with severity ≥ low that explicitly states the referenced document does not exist |
+| CLAUDE.md references `~25 reusable components` but actual count is 31           | Inspector might note the count mismatch as a doc drift observation                                                                                     | Inspector verifies the referenced count against reality. If the reference is approximate (`~25`), flags as informational drift; if exact and wrong, flags as a finding. | Doc Drift table includes an entry noting the count discrepancy with the verified actual count               |
+| A new ADR references a "see also" link to a design doc that was never committed | Inspector reads the ADR, follows the narrative, but does not verify the linked doc exists                                                              | Inspector attempts to read the linked doc. When it fails, files a finding for the dead reference.                                                                       | Report contains a finding for the dead reference with the specific file path that was checked               |
 
 **Verdict: Pass.** The inspector's report contains Finding 1 (brick-catalog.md absence) with the exact behavior described in scenario 1. The Doc Drift table confirms scenario 2 behavior (domain map count verified). Scenario 3 is forward-looking but the pattern is established.
 
 **SOP 1: Gauntlet failure classification step**
 
-| Scenario | Without Training | With Training | Assertion |
-| --- | --- | --- | --- |
-| format:check fails on both `component-registry.json` (in scope) and `.claude/` docs (out of scope) | Inspector lists all format:check failures as findings without distinguishing scope, leading to inflated finding count or misattributed severity | Inspector classifies each failure as "in scope" or "out of scope / pre-existing" in a dedicated subsection after the gauntlet table | Report contains a "Gauntlet Failure Classification" section (or equivalent) that labels each failure with its scope attribution |
-| test:coverage fails due to a slow test in a domain page (out of scope for a shared directory audit) | Inspector reports the test guard failure as a finding against the shared directory | Inspector notes the failure, identifies the offending test file, and classifies it as out-of-scope for this audit | The finding (if filed) is explicitly labeled as out-of-scope or pre-existing, not attributed to the audit target |
-| All gauntlet checks pass | Inspector reports "all pass" with no classification needed | Inspector reports "all pass" — classification step is skipped since there's nothing to classify | No classification section appears (the step is conditional, not bureaucratic) |
+| Scenario                                                                                            | Without Training                                                                                                                                | With Training                                                                                                                       | Assertion                                                                                                                       |
+| --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| format:check fails on both `component-registry.json` (in scope) and `.claude/` docs (out of scope)  | Inspector lists all format:check failures as findings without distinguishing scope, leading to inflated finding count or misattributed severity | Inspector classifies each failure as "in scope" or "out of scope / pre-existing" in a dedicated subsection after the gauntlet table | Report contains a "Gauntlet Failure Classification" section (or equivalent) that labels each failure with its scope attribution |
+| test:coverage fails due to a slow test in a domain page (out of scope for a shared directory audit) | Inspector reports the test guard failure as a finding against the shared directory                                                              | Inspector notes the failure, identifies the offending test file, and classifies it as out-of-scope for this audit                   | The finding (if filed) is explicitly labeled as out-of-scope or pre-existing, not attributed to the audit target                |
+| All gauntlet checks pass                                                                            | Inspector reports "all pass" with no classification needed                                                                                      | Inspector reports "all pass" — classification step is skipped since there's nothing to classify                                     | No classification section appears (the step is conditional, not bureaucratic)                                                   |
 
 **Verdict: Pass.** The report contains the "Gauntlet Failure Classification" subsection at lines 25-28, correctly separating the in-scope `component-registry.json` failure from the out-of-scope `.claude/` doc failures. This is the exact behavior described in scenario 1.
 

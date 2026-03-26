@@ -144,6 +144,9 @@ const translations = {
             scanAddError: "Could not add set to your collection. Please try again.",
             addToCollection: "Add to collection",
             scanAgain: "Scan again",
+            allThemes: "All themes",
+            unknownTheme: "Unknown theme",
+            themeCount: "{count} sets",
         },
         storage: {
             title: "Storage",
@@ -343,6 +346,9 @@ const translations = {
             scanAddError: "Kon set niet toevoegen aan je collectie. Probeer het opnieuw.",
             addToCollection: "Toevoegen aan collectie",
             scanAgain: "Opnieuw scannen",
+            allThemes: "Alle thema's",
+            unknownTheme: "Onbekend thema",
+            themeCount: "{count} sets",
         },
         storage: {
             title: "Opslag",

@@ -118,7 +118,7 @@ All 10 acceptance criteria met. The gauntlet passes clean, coverage is genuine 1
 
 1. **Scanner placeholders** — Correct call. Attempting to render BarcodeScanner/CameraCapture in a test environment would create flaky tests dependent on hardware mocking. Static placeholders with documentation are the right answer.
 
-2. **18 mocked components in ComponentGallery test** — This is the one I want on record. 18 mocks is a high number. The justification (import chain exceeds 1000ms) is valid and the architect documented it, but this is a code smell that should be monitored. If the gallery grows further, this mock list becomes a maintenance burden. The test is currently testing gallery *logic* (state, toggles, v-model), not component *rendering* — that's the right scope for a heavily-mocked test. Acceptable.
+2. **18 mocked components in ComponentGallery test** — This is the one I want on record. 18 mocks is a high number. The justification (import chain exceeds 1000ms) is valid and the architect documented it, but this is a code smell that should be monitored. If the gallery grows further, this mock list becomes a maintenance burden. The test is currently testing gallery _logic_ (state, toggles, v-model), not component _rendering_ — that's the right scope for a heavily-mocked test. Acceptable.
 
 3. **Separate mocked spec for ComponentHealth** — Clean solution. Splitting the unreachable-with-live-data branch into its own spec file with a fake registry is better than polluting the main spec with data manipulation hacks.
 
