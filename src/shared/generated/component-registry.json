@@ -260,8 +260,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 0,
-                "linesChanged": 0
+                "commits": 1,
+                "linesChanged": 35
             },
             "dependencyDepth": 0
         },
