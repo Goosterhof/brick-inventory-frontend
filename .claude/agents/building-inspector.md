@@ -324,6 +324,8 @@ Training proposals from inspection reports are tracked here. A proposal must pro
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | _(pre-records)_ | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
 | SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | _(pre-records)_ | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
+| SOP 2 should add: grep for `deepCamelKeys` in production code — any call outside `@shared/helpers/string.ts` is a potential ADR-004 violation                        | 2026-03-26     | 2026-03-26-families-app-audit | Found 4 ADR-004 violations by explicit grep; without this step the violations could be missed by page-by-page reading |
+| SOP 3 should add: for numeric count claims in docs, verify against canonical source of truth (registry, directory listing, test runner output)                        | 2026-03-26     | 2026-03-26-families-app-audit | Domain map said 31 components (registry: 32), Pulse said 1081 tests (actual: 1147) — numbers drift silently |
 
 ### Graduated
 
