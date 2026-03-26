@@ -464,3 +464,36 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 - **Recurring pattern escalated**: `component-registry.json` format:check failure hit 3 consecutive inspections — escalated from low to medium. Root cause is the generation pipeline not piping through oxfmt.
 
 ---
+
+## 2026-03-26 — Testing Strategy: Beyond Unit Tests
+
+### Decisions
+
+- **Hybrid testing strategy approved (Option 3)**: Vitest Browser Mode + standalone Playwright E2E, phased rollout. Chosen over pure Vitest Browser (insufficient for user journey coverage), pure Playwright E2E (high cost without integration layer), and Playwright Component Testing (experimental, fights the Vue/Vitest ecosystem).
+- **Phase 1: Vitest Browser Mode with Playwright provider**: Add a `browser` test workspace alongside the existing `unit` workspace. Target components exercising real browser APIs first — BarcodeScanner, ConfirmDialog, ModalDialog. Low cost, high signal.
+- **Phase 2: Standalone Playwright for critical E2E journeys**: 3-5 user paths only (auth flow, set management, barcode scan flow). Thin smoke-test layer, not broad coverage.
+- **Playwright Component Testing rejected**: Experimental status is a non-starter for a portfolio piece. Rewriting existing tests for an unstable API has terrible cost/risk ratio.
+
+### Action Items
+
+- [ ] CFO: File building permit for Phase 1 (Vitest Browser Mode integration tests)
+- [ ] CFO: Phase 2 permit to follow after Phase 1 delivery
+
+### Rejected Alternatives
+
+- **Option 1 (Vitest Browser Mode only)**: Fills the integration gap but leaves critical user journeys untested. Good but incomplete.
+- **Option 2 (Standalone Playwright E2E only)**: High value but high cost without the integration layer underneath. 80% of the value comes from integration tests at 20% of the cost.
+- **Option 4 (Playwright Component Testing)**: Experimental API, fights Vue ecosystem conventions, requires rewriting 95+ existing spec files.
+
+### Strategic Alignment
+
+- Current test suite shows "they know how to unit test" — table stakes. The hybrid strategy shows "they have a testing strategy with clear boundaries between unit, integration, and E2E layers" — the enterprise signal the portfolio needs.
+
+### Notes
+
+- Current state: 95+ spec files, Vitest + @vue/test-utils + happy-dom, 100% coverage on shared code, custom performance guard reporters, architectural validation tests. Unit testing is solid.
+- Gap identified: nothing tests components working together, real browser behavior, or actual user flows.
+- BarcodeScanner and ConfirmDialog use native browser APIs (mediaDevices, `<dialog>`) that happy-dom stubs poorly — prime candidates for browser-mode integration tests.
+- SetDetailPage and ScanSetPage have the highest complexity — multi-step flows with modals, concurrent data loading, and state management across interactions.
+
+---
