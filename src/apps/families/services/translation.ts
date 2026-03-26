@@ -151,6 +151,8 @@ const translations = {
             startingCamera: "Starting camera...",
             retry: "Retry",
             capturePhoto: "Capture Photo",
+            duplicateWarning: "You already own this set (quantity: {quantity}, status: {status}). Add another copy?",
+            duplicateDismiss: "Dismiss",
         },
         storage: {
             title: "Storage",
@@ -365,6 +367,9 @@ const translations = {
             startingCamera: "Camera starten...",
             retry: "Opnieuw",
             capturePhoto: "Foto maken",
+            duplicateWarning:
+                "Je hebt deze set al (aantal: {quantity}, status: {status}). Nog een exemplaar toevoegen?",
+            duplicateDismiss: "Sluiten",
         },
         storage: {
             title: "Opslag",

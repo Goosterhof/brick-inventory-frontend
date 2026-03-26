@@ -11,9 +11,30 @@ import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {useFormSubmit} from "@shared/composables/useFormSubmit";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
+import {computed, ref, watch} from "vue";
 
 const {t} = familyTranslationService;
 const adapted = familySetStoreModule.generateNew();
+const duplicateDismissed = ref(false);
+
+watch(
+    () => adapted.mutable.value.setNum,
+    () => {
+        duplicateDismissed.value = false;
+    },
+);
+
+const duplicateMatch = computed(() => {
+    const enteredSetNum = adapted.mutable.value.setNum.trim();
+    if (!enteredSetNum) return null;
+    return familySetStoreModule.getAll.value.find((s) => s.setNum === enteredSetNum) ?? null;
+});
+
+const showDuplicateWarning = computed(() => duplicateMatch.value !== null && !duplicateDismissed.value);
+
+const dismissDuplicate = () => {
+    duplicateDismissed.value = true;
+};
 
 type AddSetField = "setNum" | "quantity" | "status" | "purchaseDate" | "notes";
 const validationErrors = useValidationErrors<AddSetField>(familyHttpService);
@@ -48,6 +69,36 @@ const onSubmit = () =>
                 :label="t('sets.setNumber').value"
                 :error="errors.setNum"
             />
+
+            <div
+                v-if="showDuplicateWarning"
+                p="4"
+                bg="yellow-100"
+                class="brick-border"
+                border="1"
+                flex="~ col"
+                gap="2"
+                data-testid="duplicate-warning"
+            >
+                <p font="bold" text="sm">
+                    {{
+                        t("sets.duplicateWarning")
+                            .value.replace("{quantity}", String(duplicateMatch?.quantity ?? 0))
+                            .replace("{status}", duplicateMatch?.status ?? "")
+                    }}
+                </p>
+                <button
+                    type="button"
+                    text="xs"
+                    font="bold"
+                    uppercase
+                    tracking="wide"
+                    self="start"
+                    @click="dismissDuplicate"
+                >
+                    {{ t("sets.duplicateDismiss").value }}
+                </button>
+            </div>
 
             <NumberInput
                 v-model="adapted.mutable.value.quantity"
