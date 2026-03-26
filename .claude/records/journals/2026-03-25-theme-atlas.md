@@ -101,4 +101,53 @@ One area for future improvement: the expand/collapse state could persist across 
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
+_Appended by the CFO after reviewing the journal. The architect's sections above are not edited — they stand as written._
+
+### Delivery Assessment
+
+**Verdict: Clean delivery. All acceptance criteria met.**
+
+The architect delivered a well-scoped feature with zero scope creep. Key observations:
+
+1. **CollapsibleSection component** — 35 lines, genuinely reusable, proper props/emits API. Good call making this shared rather than inline. The brick-border, brick-transition, and brick-label styling is consistent with the design system. The `v-show` for content (vs `v-if`) is the right choice — preserves DOM for performance when rapidly expanding/collapsing.
+
+2. **Multi-select vs single-select** — Correct UX distinction. Status filter is exclusive (one status at a time), theme filter is additive (Star Wars AND Technic). The `Set<string>` for theme filters with immutable toggle semantics (creating a new Set on each toggle) is clean reactive state management.
+
+3. **All-collapsed default** — Justified. With many themes, collapsed surfaces the distribution overview. The filter chips are the functional entry point; collapsing makes the chips the primary interaction.
+
+4. **Test file split** — Proactive, not reactive. The 1869ms → 546ms + 789ms split was a smart move under the execution guard.
+
+5. **groupedSets computed** — Filters down to `filteredSets` first, then groups. This means theme filtering, status filtering, and search all compose naturally without special-casing. Good data flow.
+
+### Concerns
+
+- The architect's self-debrief flagged not checking the graduation log before writing tests — hitting the `.at(0)` lint issue again. This is the **second time** this exact blind spot has been documented (first: brick-census, now: theme-atlas). The candidate for "check array access patterns before writing tests" now has two confirming observations.
+
+### Training Evaluation
+
+| Proposal | Verdict | Reason |
+| --- | --- | --- |
+| v-show visibility: use `attributes("style")` for `display: none` instead of `isVisible()` | **Candidate** | Valid JSDOM limitation. First observation — needs a second confirming shift. |
+
+### Graduation Check
+
+The candidate "Before writing test assertions that access array items by index, check linter rules for `no-non-null-assertion` and verify what array access patterns existing tests use" (first observed: 2026-03-25-brick-census) was re-hit in this shift. The architect explicitly called this out as a blind spot.
+
+**Two confirming observations. Drafting graduation tests.**
+
+### Graduation Tests
+
+**Candidate:** Before writing test assertions that access array items by index, check linter rules and verify existing test conventions for array access patterns.
+
+| Scenario | Without Training | With Training | Assertion |
+| --- | --- | --- | --- |
+| Test needs to assert on the first item in `wrapper.findAllComponents(X)` | Agent writes `findAllComponents(X)[0]!.props("y")` or `.at(0)!.props("y")`, triggers `no-non-null-assertion` or `no-unsafe-call` lint errors, requiring 2-3 iterations to fix | Agent checks existing test patterns first, sees `.find()` / `.map()` convention, writes `.find((c) => c.props("title") === "expected")?.props("y")` directly | Zero lint iterations on array access patterns in the test file |
+| Test needs to verify the order of rendered components | Agent uses index-based access like `sections[0].props("title")` with non-null assertion | Agent uses `.map((s) => s.props("title"))` and asserts on the full array with `toEqual()` | The assertion uses `.map()` + `toEqual()`, not index access |
+| Test needs to find a specific component among many of the same type | Agent iterates through approaches: `[0]!` → `.at(0)!` → `.find()` as each fails lint | Agent goes directly to `.find((chip) => chip.text() === "expected")` based on training | First test-writing pass uses `.find()` pattern — no rework commits |
+
+**Verdict: Pass** — The failure mode is concrete (lint errors on array access), the fix is specific (use `.find()` / `.map()` over index access), and the assertion is objectively verifiable (zero lint iterations on array patterns). This is a real time-saver: the architect burned ~3 iterations on brick-census and acknowledged burning ~2 more on theme-atlas despite having seen the candidate. Promoting.
+
+### Proposed Knowledge Updates — CFO Disposition
+
+- Pulse metrics update: **Approved.** Will update on next pulse refresh.
+- No ADR needed: **Agreed.** These are page-level UI decisions, not architectural patterns.
