@@ -25,8 +25,18 @@ vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
 vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
 vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
+vi.mock("@phosphor-icons/vue", () => ({PhCaretRight: {template: "<i />", props: ["size", "weight"]}}));
+
 vi.mock("@shared/components/BadgeLabel.vue", () => ({
     default: {name: "BadgeLabel", template: "<span><slot /></span>", props: ["variant"]},
+}));
+
+vi.mock("@shared/components/CollapsibleSection.vue", () => ({
+    default: {
+        name: "CollapsibleSection",
+        template: "<div @click='$emit(\"toggle\")'><slot /></div>",
+        props: ["title", "count", "expanded"],
+    },
 }));
 
 vi.mock("@shared/components/EmptyState.vue", () => ({
@@ -34,7 +44,7 @@ vi.mock("@shared/components/EmptyState.vue", () => ({
 }));
 
 vi.mock("@shared/components/FilterChip.vue", () => ({
-    default: {name: "FilterChip", template: "<button @click='$emit(\"click\")'><slot /></button>", props: ["selected"]},
+    default: {name: "FilterChip", template: "<button @click='$emit(\"click\")'><slot /></button>", props: ["active"]},
 }));
 
 vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({
@@ -377,5 +387,24 @@ describe("SetsOverviewPage", () => {
         // Assert
         const exportButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "common.export");
         expect(exportButton).toBeUndefined();
+    });
+
+    it("should display set without set summary using setNum", async () => {
+        // Arrange
+        const setWithoutSummary = {
+            id: 8,
+            setId: 80,
+            setNum: "99999-1",
+            quantity: 1,
+            status: "wishlist" as const,
+            purchaseDate: null,
+            notes: null,
+        };
+        mockAllItems.value = [setWithoutSummary];
+        const wrapper = shallowMount(SetsOverviewPage);
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain("99999-1");
     });
 });

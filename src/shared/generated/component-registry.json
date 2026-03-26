@@ -1,6 +1,6 @@
 {
     "meta": {
-        "componentCount": 31,
+        "componentCount": 32,
         "churnWindowDays": 30
     },
     "components": {
@@ -215,6 +215,53 @@
             "churn": {
                 "commits": 1,
                 "linesChanged": 5
+            },
+            "dependencyDepth": 0
+        },
+        "CollapsibleSection": {
+            "path": "src/shared/components/CollapsibleSection.vue",
+            "category": null,
+            "consumers": {
+                "families": {
+                    "sets": [
+                        "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
+                    ]
+                }
+            },
+            "adoption": {
+                "apps": 1,
+                "domains": 1
+            },
+            "apiSurface": {
+                "props": [
+                    {
+                        "name": "title",
+                        "required": true
+                    },
+                    {
+                        "name": "count",
+                        "required": false
+                    },
+                    {
+                        "name": "expanded",
+                        "required": false
+                    }
+                ],
+                "emits": [
+                    {
+                        "name": "toggle"
+                    }
+                ],
+                "slots": [
+                    {
+                        "name": "default"
+                    }
+                ],
+                "models": []
+            },
+            "churn": {
+                "commits": 0,
+                "linesChanged": 0
             },
             "dependencyDepth": 0
         },
