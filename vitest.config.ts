@@ -87,6 +87,9 @@ export default mergeConfig(
 
                 // Infrastructure
                 fileProject("architecture", "architecture.spec.ts"),
+
+                // Browser integration tests — loaded from vitest.browser.config.ts via npm scripts
+                // Excluded from main config to avoid Playwright provider initialization during unit tests
             ],
         },
     }),
