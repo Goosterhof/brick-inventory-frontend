@@ -51,9 +51,9 @@ Build the frontend for the invite code system — family head generates a short 
 
 Medium piece count, fullstack. The backend handles code generation, validation, and family joining logic — the Plate just needs the UI to trigger and display it. The registration form change is the most sensitive part — make sure a blank invite code field doesn't break the existing registration flow. Coordinate with the Brick on the API contract.
 
-**Dependency:** Blocked on the Brick's shipping order being completed first (or at minimum, the API contract being agreed).
+**Dependency:** ~~Blocked on the Brick's shipping order being completed first (or at minimum, the API contract being agreed).~~ **CLEARED** — Backend shipped 2026-03-25. Endpoints: `POST /family/invite-code` (generate), `GET /family/invite-code` (show active), `DELETE /family/invite-code` (revoke). Response: `InviteCodeResourceData` with `id`, `code`, `expiresAt`, `createdAt`. Registration accepts optional `invite_code` field. See `backend/.claude/records/journals/2026-03-25-invite-code-brick.md`.
 
 ---
 
-**Status:** Open
+**Status:** Ready to Build
 **Journal:** _link to construction journal when filed_

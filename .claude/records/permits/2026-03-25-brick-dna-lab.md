@@ -54,9 +54,9 @@ Build a collection analytics page — the "Brick DNA" dashboard showing top colo
 
 Tier 2 / Burn. This is the portfolio differentiator — it turns BIO from "I track what I have" to "I understand what I have." The page should feel like opening a report about your collection, not just another data table. The backend endpoint contract needs to be agreed with the Brick before implementation starts — coordinate on the response shape.
 
-**Dependency:** Blocked on the Brick's shipping order being completed first (or at minimum, the API contract being agreed).
+**Dependency:** ~~Blocked on the Brick's shipping order being completed first (or at minimum, the API contract being agreed).~~ **CLEARED** — Backend shipped 2026-03-25. Endpoint: `GET /family/brick-dna`. Response: `BrickDnaResourceData` with `topColors` (name, hex, count), `topPartTypes` (name, category, count), `rarestParts` (part+color, quantity), `diversityScore` (Shannon index, 0-1). See `backend/.claude/records/journals/2026-03-25-brick-dna-lab.md`.
 
 ---
 
-**Status:** Open
+**Status:** Ready to Build
 **Journal:** _link to construction journal when filed_

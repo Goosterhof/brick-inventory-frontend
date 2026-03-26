@@ -49,9 +49,9 @@ Build the frontend for member removal — family head can remove a member from t
 
 Small piece count. The key UX concern from the Idea Vault: removed user's contributed data stays with the original family (scoped by family_id, not user_id). The confirmation dialog should communicate this clearly — "This member will be moved to their own family. Sets and parts they added will remain in your family's collection." Coordinate with the Brick on the endpoint.
 
-**Dependency:** Blocked on the Brick's shipping order being completed first.
+**Dependency:** ~~Blocked on the Brick's shipping order being completed first.~~ **CLEARED** — Backend shipped 2026-03-25. Endpoint: `DELETE /family/members/{user}`. Returns 200 on success. Errors: 422 (self-removal), 403 (not head), 404 (not in family). See `backend/.claude/records/journals/2026-03-25-member-removal-wrench.md`.
 
 ---
 
-**Status:** Open
+**Status:** Ready to Build
 **Journal:** _link to construction journal when filed_
