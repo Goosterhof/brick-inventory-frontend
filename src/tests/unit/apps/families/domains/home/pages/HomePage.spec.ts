@@ -1,18 +1,22 @@
+import YearDistributionChart from "@app/domains/home/components/YearDistributionChart.vue";
 import HomePage from "@app/domains/home/pages/HomePage.vue";
+import CardContainer from "@shared/components/CardContainer.vue";
 import NavLink from "@shared/components/NavLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import StatCard from "@shared/components/StatCard.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
     () => import("../../../../../../helpers"),
 );
 
-const {mockGetRequest, mockGoToRoute, mockIsLoggedIn} = vi.hoisted(() => ({
+const {mockGetRequest, mockGoToRoute, mockIsLoggedIn, mockRetrieveAll, mockGetAll} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
     mockGoToRoute: vi.fn(),
     mockIsLoggedIn: {value: true},
+    mockRetrieveAll: vi.fn().mockResolvedValue(undefined),
+    mockGetAll: {value: [] as {set?: {year?: number | null}}[]},
 }));
 
 vi.mock("axios", () => createMockAxios());
@@ -23,6 +27,9 @@ vi.mock("@app/services", () =>
         familyAuthService: {isLoggedIn: mockIsLoggedIn},
         familyRouterService: {goToRoute: mockGoToRoute},
     }),
+);
+vi.mock("@app/stores", () =>
+    createMockFamilyStores({familySetStoreModule: {retrieveAll: mockRetrieveAll, getAll: mockGetAll}}),
 );
 
 const mockStatsResponse = {
@@ -38,6 +45,7 @@ describe("HomePage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockIsLoggedIn.value = true;
+        mockGetAll.value = [];
     });
 
     describe("when logged out", () => {
@@ -229,6 +237,103 @@ describe("HomePage", () => {
             // Assert
             expect(wrapper.text()).not.toContain("home.setsByStatus");
             expect(wrapper.text()).toContain("home.quickActions");
+        });
+
+        it("should fetch sets on mount", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockStatsResponse});
+
+            // Act
+            shallowMount(HomePage);
+            await flushPromises();
+
+            // Assert
+            expect(mockRetrieveAll).toHaveBeenCalled();
+        });
+
+        it("should not fetch sets when logged out", () => {
+            // Arrange
+            mockIsLoggedIn.value = false;
+
+            // Act
+            shallowMount(HomePage);
+
+            // Assert
+            expect(mockRetrieveAll).not.toHaveBeenCalled();
+        });
+
+        it("should render year distribution chart when sets have year data", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockStatsResponse});
+            mockGetAll.value = [{set: {year: 2020}}, {set: {year: 2020}}, {set: {year: 2015}}];
+
+            // Act
+            const wrapper = shallowMount(HomePage);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("home.yearDistribution");
+            expect(wrapper.findComponent(YearDistributionChart).exists()).toBe(true);
+            expect(wrapper.findComponent(CardContainer).exists()).toBe(true);
+        });
+
+        it("should pass correct distribution to chart", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockStatsResponse});
+            mockGetAll.value = [{set: {year: 2020}}, {set: {year: 2020}}, {set: {year: 2015}}];
+
+            // Act
+            const wrapper = shallowMount(HomePage);
+            await flushPromises();
+
+            // Assert
+            const chart = wrapper.findComponent(YearDistributionChart);
+            const distribution = chart.props("distribution") as Map<number, number>;
+            expect(distribution.get(2020)).toBe(2);
+            expect(distribution.get(2015)).toBe(1);
+        });
+
+        it("should show empty message when no sets have year data", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockStatsResponse});
+            mockGetAll.value = [];
+
+            // Act
+            const wrapper = shallowMount(HomePage);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("home.yearDistributionEmpty");
+            expect(wrapper.findComponent(YearDistributionChart).exists()).toBe(false);
+        });
+
+        it("should filter out sets with null year", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockStatsResponse});
+            mockGetAll.value = [{set: {year: 2020}}, {set: {year: null}}, {set: {year: undefined}}, {set: undefined}];
+
+            // Act
+            const wrapper = shallowMount(HomePage);
+            await flushPromises();
+
+            // Assert
+            const chart = wrapper.findComponent(YearDistributionChart);
+            const distribution = chart.props("distribution") as Map<number, number>;
+            expect(distribution.size).toBe(1);
+            expect(distribution.get(2020)).toBe(1);
+        });
+
+        it("should not show year distribution while sets are loading", () => {
+            // Arrange
+            mockGetRequest.mockReturnValue(new Promise(() => {}));
+            mockGetAll.value = [{set: {year: 2020}}];
+
+            // Act
+            const wrapper = shallowMount(HomePage);
+
+            // Assert
+            expect(wrapper.findComponent(YearDistributionChart).exists()).toBe(false);
+            expect(wrapper.text()).not.toContain("home.yearDistribution");
         });
     });
 });

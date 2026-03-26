@@ -2,17 +2,21 @@
 import type {FamilyStats} from "@app/types/familyStats";
 
 import {familyAuthService, familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familySetStoreModule} from "@app/stores";
 import CardContainer from "@shared/components/CardContainer.vue";
 import NavLink from "@shared/components/NavLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import StatCard from "@shared/components/StatCard.vue";
 import {deepCamelKeys} from "string-ts";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
+
+import YearDistributionChart from "../components/YearDistributionChart.vue";
 
 const {t} = familyTranslationService;
 
 const stats = ref<FamilyStats | null>(null);
 const loading = ref(true);
+const setsLoading = ref(true);
 
 const statusKeys: Record<
     string,
@@ -25,14 +29,30 @@ const statusKeys: Record<
     wishlist: "sets.wishlist",
 };
 
+const yearDistribution = computed(() => {
+    const map = new Map<number, number>();
+    for (const adaptedSet of familySetStoreModule.getAll.value) {
+        const year = adaptedSet.set?.year;
+        if (year !== null && year !== undefined) {
+            map.set(year, (map.get(year) ?? 0) + 1);
+        }
+    }
+    return map;
+});
+
 onMounted(async () => {
     if (!familyAuthService.isLoggedIn.value) {
         return;
     }
 
-    const response = await familyHttpService.getRequest<FamilyStats>("/family/stats");
+    const [response] = await Promise.all([
+        familyHttpService.getRequest<FamilyStats>("/family/stats"),
+        familySetStoreModule.retrieveAll(),
+    ]);
+
     stats.value = deepCamelKeys(response.data) as FamilyStats;
     loading.value = false;
+    setsLoading.value = false;
 });
 
 const goToSets = async () => await familyRouterService.goToRoute("sets");
@@ -97,6 +117,20 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                         />
                     </div>
                 </template>
+
+                <!-- Year distribution -->
+                <template v-if="!setsLoading && yearDistribution.size > 0">
+                    <h2 text="lg" font="bold" uppercase tracking="wide" m="b-4">
+                        {{ t("home.yearDistribution").value }}
+                    </h2>
+                    <CardContainer m="b-6">
+                        <YearDistributionChart :distribution="yearDistribution" />
+                    </CardContainer>
+                </template>
+
+                <p v-else-if="!setsLoading && yearDistribution.size === 0" text="gray-600" m="b-6">
+                    {{ t("home.yearDistributionEmpty").value }}
+                </p>
 
                 <!-- Quick actions -->
                 <h2 text="lg" font="bold" uppercase tracking="wide" m="b-4">

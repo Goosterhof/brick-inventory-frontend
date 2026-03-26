@@ -87,6 +87,8 @@ const translations = {
             actionScan: "Scan set",
             actionIdentify: "Identify brick",
             actionImport: "Import collection",
+            yearDistribution: "Sets by year",
+            yearDistributionEmpty: "No year data available",
         },
         about: {title: "About", description: "This is the about page."},
         sets: {
@@ -284,6 +286,8 @@ const translations = {
             actionScan: "Set scannen",
             actionIdentify: "Steen herkennen",
             actionImport: "Collectie importeren",
+            yearDistribution: "Sets per jaar",
+            yearDistributionEmpty: "Geen jaargegevens beschikbaar",
         },
         about: {title: "Over", description: "Dit is de over pagina."},
         sets: {
