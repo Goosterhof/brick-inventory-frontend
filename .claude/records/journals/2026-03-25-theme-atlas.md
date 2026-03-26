@@ -9,25 +9,25 @@
 
 ## Work Summary
 
-| Action   | File                                                                                      | Notes                                                               |
-| -------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Created  | `src/shared/components/CollapsibleSection.vue`                                            | New shared component: collapsible section with brick brutalism styling, caret indicator, optional count badge |
-| Modified | `src/apps/families/domains/sets/pages/SetsOverviewPage.vue`                               | Added theme grouping (collapsible sections), multi-select theme filter chips, allThemes/groupedSets computed properties |
-| Modified | `src/tests/unit/apps/families/domains/sets/pages/SetsOverviewPage.spec.ts`                | Removed theme tests (moved to split file), added CollapsibleSection mock, phosphor-icons mock |
-| Created  | `src/tests/unit/apps/families/domains/sets/pages/SetsOverviewTheme.spec.ts`               | 18 tests covering theme grouping and theme filter chip behavior |
-| Created  | `src/tests/unit/shared/components/CollapsibleSection.spec.ts`                             | 14 tests covering rendering, expand/collapse, styling, and interactions |
+| Action   | File                                                                        | Notes                                                                                                                   |
+| -------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Created  | `src/shared/components/CollapsibleSection.vue`                              | New shared component: collapsible section with brick brutalism styling, caret indicator, optional count badge           |
+| Modified | `src/apps/families/domains/sets/pages/SetsOverviewPage.vue`                 | Added theme grouping (collapsible sections), multi-select theme filter chips, allThemes/groupedSets computed properties |
+| Modified | `src/tests/unit/apps/families/domains/sets/pages/SetsOverviewPage.spec.ts`  | Removed theme tests (moved to split file), added CollapsibleSection mock, phosphor-icons mock                           |
+| Created  | `src/tests/unit/apps/families/domains/sets/pages/SetsOverviewTheme.spec.ts` | 18 tests covering theme grouping and theme filter chip behavior                                                         |
+| Created  | `src/tests/unit/shared/components/CollapsibleSection.spec.ts`               | 14 tests covering rendering, expand/collapse, styling, and interactions                                                 |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                              | Met | Notes                                                                                     |
-| ----------------------------------------------------------------- | --- | ----------------------------------------------------------------------------------------- |
-| Sets overview groups sets by theme in collapsible sections        | Yes | Groups sorted alphabetically, empty groups hidden when filtered                           |
-| Filter chips at the top allow quick theme selection               | Yes | Multi-select theme chips appear when 2+ themes exist                                      |
-| Each theme group shows the count of sets within it                | Yes | Count badge rendered via CollapsibleSection count prop                                    |
-| Grouping coexists with existing search, status filter, and sort   | Yes | Theme filter, status filter, and search all compose correctly                             |
-| When searching, grouping still applies                            | Yes | Empty groups are hidden; non-empty groups persist with correct counts                     |
-| 100% test coverage on new code                                    | Yes | 100% lines, branches, functions, statements                                              |
-| All quality gates pass                                            | Yes | format:check, lint, lint:vue, type-check, knip, test:coverage, build, size all pass      |
+| Acceptance Criterion                                            | Met | Notes                                                                               |
+| --------------------------------------------------------------- | --- | ----------------------------------------------------------------------------------- |
+| Sets overview groups sets by theme in collapsible sections      | Yes | Groups sorted alphabetically, empty groups hidden when filtered                     |
+| Filter chips at the top allow quick theme selection             | Yes | Multi-select theme chips appear when 2+ themes exist                                |
+| Each theme group shows the count of sets within it              | Yes | Count badge rendered via CollapsibleSection count prop                              |
+| Grouping coexists with existing search, status filter, and sort | Yes | Theme filter, status filter, and search all compose correctly                       |
+| When searching, grouping still applies                          | Yes | Empty groups are hidden; non-empty groups persist with correct counts               |
+| 100% test coverage on new code                                  | Yes | 100% lines, branches, functions, statements                                         |
+| All quality gates pass                                          | Yes | format:check, lint, lint:vue, type-check, knip, test:coverage, build, size all pass |
 
 ## Decisions Made
 
@@ -45,14 +45,14 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                              |
-| ------------- | ------ | ---------------------------------- |
-| format:check  | Pass   |                                    |
-| lint          | Pass   | 0 errors (3 pre-existing warnings) |
-| lint:vue      | Pass   |                                    |
-| type-check    | Pass   |                                    |
-| test:coverage | Pass   | 100% all metrics, 93 test files    |
-| knip          | Pass   |                                    |
+| Check         | Result | Notes                                |
+| ------------- | ------ | ------------------------------------ |
+| format:check  | Pass   |                                      |
+| lint          | Pass   | 0 errors (3 pre-existing warnings)   |
+| lint:vue      | Pass   |                                      |
+| type-check    | Pass   |                                      |
+| test:coverage | Pass   | 100% all metrics, 93 test files      |
+| knip          | Pass   |                                      |
 | size          | Pass   | families: 102.58 kB (budget: 350 kB) |
 
 ## Showcase Readiness
@@ -93,9 +93,9 @@ One area for future improvement: the expand/collapse state could persist across 
 
 ### Training Proposals
 
-| Proposal                                                                                                    | Context                                                                                                          | Shift Evidence         |
-| ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| When testing v-show visibility, use attributes("style") checks for display: none instead of isVisible()     | JSDOM's isVisible() does not respect Vue's v-show inline style. Hit this in CollapsibleSection tests.            | 2026-03-25-theme-atlas |
+| Proposal                                                                                                | Context                                                                                               | Shift Evidence         |
+| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------- |
+| When testing v-show visibility, use attributes("style") checks for display: none instead of isVisible() | JSDOM's isVisible() does not respect Vue's v-show inline style. Hit this in CollapsibleSection tests. | 2026-03-25-theme-atlas |
 
 ---
 
@@ -125,8 +125,8 @@ The architect delivered a well-scoped feature with zero scope creep. Key observa
 
 ### Training Evaluation
 
-| Proposal | Verdict | Reason |
-| --- | --- | --- |
+| Proposal                                                                                  | Verdict       | Reason                                                                       |
+| ----------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------- |
 | v-show visibility: use `attributes("style")` for `display: none` instead of `isVisible()` | **Candidate** | Valid JSDOM limitation. First observation — needs a second confirming shift. |
 
 ### Graduation Check
@@ -139,11 +139,11 @@ The candidate "Before writing test assertions that access array items by index, 
 
 **Candidate:** Before writing test assertions that access array items by index, check linter rules and verify existing test conventions for array access patterns.
 
-| Scenario | Without Training | With Training | Assertion |
-| --- | --- | --- | --- |
-| Test needs to assert on the first item in `wrapper.findAllComponents(X)` | Agent writes `findAllComponents(X)[0]!.props("y")` or `.at(0)!.props("y")`, triggers `no-non-null-assertion` or `no-unsafe-call` lint errors, requiring 2-3 iterations to fix | Agent checks existing test patterns first, sees `.find()` / `.map()` convention, writes `.find((c) => c.props("title") === "expected")?.props("y")` directly | Zero lint iterations on array access patterns in the test file |
-| Test needs to verify the order of rendered components | Agent uses index-based access like `sections[0].props("title")` with non-null assertion | Agent uses `.map((s) => s.props("title"))` and asserts on the full array with `toEqual()` | The assertion uses `.map()` + `toEqual()`, not index access |
-| Test needs to find a specific component among many of the same type | Agent iterates through approaches: `[0]!` → `.at(0)!` → `.find()` as each fails lint | Agent goes directly to `.find((chip) => chip.text() === "expected")` based on training | First test-writing pass uses `.find()` pattern — no rework commits |
+| Scenario                                                                 | Without Training                                                                                                                                                              | With Training                                                                                                                                                | Assertion                                                          |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| Test needs to assert on the first item in `wrapper.findAllComponents(X)` | Agent writes `findAllComponents(X)[0]!.props("y")` or `.at(0)!.props("y")`, triggers `no-non-null-assertion` or `no-unsafe-call` lint errors, requiring 2-3 iterations to fix | Agent checks existing test patterns first, sees `.find()` / `.map()` convention, writes `.find((c) => c.props("title") === "expected")?.props("y")` directly | Zero lint iterations on array access patterns in the test file     |
+| Test needs to verify the order of rendered components                    | Agent uses index-based access like `sections[0].props("title")` with non-null assertion                                                                                       | Agent uses `.map((s) => s.props("title"))` and asserts on the full array with `toEqual()`                                                                    | The assertion uses `.map()` + `toEqual()`, not index access        |
+| Test needs to find a specific component among many of the same type      | Agent iterates through approaches: `[0]!` → `.at(0)!` → `.find()` as each fails lint                                                                                          | Agent goes directly to `.find((chip) => chip.text() === "expected")` based on training                                                                       | First test-writing pass uses `.find()` pattern — no rework commits |
 
 **Verdict: Pass** — The failure mode is concrete (lint errors on array access), the fix is specific (use `.find()` / `.map()` over index access), and the assertion is objectively verifiable (zero lint iterations on array patterns). This is a real time-saver: the architect burned ~3 iterations on brick-census and acknowledged burning ~2 more on theme-atlas despite having seen the candidate. Promoting.
 

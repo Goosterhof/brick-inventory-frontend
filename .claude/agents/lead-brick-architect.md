@@ -389,15 +389,15 @@ _Proposals observed once. Need a second confirming shift before graduation._
 | When testing that specific dynamic text is absent, ensure the assertion pattern does not match static labels already in the template — use a more specific pattern           | 2026-03-24     | 2026-03-24-dialog-toast-showcase         | "hide(" matched static label "toastService.hide(id)" in the template; tightened to "hide(toast-"                                       |
 | When testing a component that imports many shared components, estimate import chain cost upfront and pre-commit to mocking strategy before writing the first test            | 2026-03-24     | 2026-03-24-showcase-coverage-and-gallery | ComponentGallery went through 3 iterations of mock strategy, wasting time on approaches that hit hoisting/timing issues                |
 | When using `vi.hoisted` with `vi.mock`, use plain object component definitions (not `defineComponent`) to avoid the `require()` -> `any` type chain                          | 2026-03-24     | 2026-03-24-showcase-coverage-and-gallery | `require("vue").defineComponent` in vi.hoisted caused no-unsafe-assignment lint errors; plain objects work identically for stubs       |
-| When testing `v-show` visibility in Vue test utils with JSDOM, use `attributes("style")` checks for `display: none` instead of `isVisible()`                                | 2026-03-25     | 2026-03-25-theme-atlas                   | JSDOM's `isVisible()` does not respect Vue's v-show inline style toggling; hit in CollapsibleSection tests                             |
+| When testing `v-show` visibility in Vue test utils with JSDOM, use `attributes("style")` checks for `display: none` instead of `isVisible()`                                 | 2026-03-25     | 2026-03-25-theme-atlas                   | JSDOM's `isVisible()` does not respect Vue's v-show inline style toggling; hit in CollapsibleSection tests                             |
 | Before starting implementation, run `git log --oneline -5` on the target branch to check if work is partially done                                                           | 2026-03-25     | 2026-03-25-decade-dial                   | Feature was already substantially implemented on the branch; starting from scratch would have wasted time                              |
 
 ### Graduated
 
 _Proposals confirmed across 2+ shifts. Promoted into training above._
 
-| Proposal     | Graduated | Confirming Journals | Promoted To |
-| ------------ | --------- | ------------------- | ----------- |
+| Proposal                                                                                                                                                                 | Graduated  | Confirming Journals                             | Promoted To                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ----------------------------------------------- | --------------------------------- |
 | Before writing test assertions that access array items by index, check linter rules for `no-non-null-assertion` and verify what array access patterns existing tests use | 2026-03-26 | 2026-03-25-brick-census, 2026-03-25-theme-atlas | "When You Build" test conventions |
 
 ### Dropped
