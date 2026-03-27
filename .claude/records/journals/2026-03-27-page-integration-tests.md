@@ -9,43 +9,43 @@
 
 ## Work Summary
 
-| Action   | File                                                                                    | Notes                                                                |
-| -------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Created  | `vitest.integration.config.ts`                                                          | Separate Vitest config with icon alias, happy-dom env                |
+| Action   | File                                                                                    | Notes                                                                 |
+| -------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Created  | `vitest.integration.config.ts`                                                          | Separate Vitest config with icon alias, happy-dom env                 |
 | Created  | `src/tests/integration/setup.ts`                                                        | Polyfills for HTMLDialogElement and HTMLMediaElement in happy-dom     |
-| Created  | `src/tests/integration/stubs/phosphorIcons.ts`                                          | Lightweight stubs for 7 phosphor icons used in production code       |
-| Created  | `src/tests/integration/apps/families/domains/about/pages/AboutPage.spec.ts`             | 3 tests — LegoBrick composition, props, translation                  |
-| Created  | `src/tests/integration/apps/families/domains/auth/pages/LoginPage.spec.ts`              | 5 tests — TextInput composition, form submission flow                |
-| Created  | `src/tests/integration/apps/families/domains/auth/pages/RegisterPage.spec.ts`           | 6 tests — 6 TextInputs, optional marking, form submission           |
-| Created  | `src/tests/integration/apps/families/domains/home/pages/HomePage.spec.ts`               | 4 tests — logged out/in states, NavLink click flow, StatCard props   |
-| Created  | `src/tests/integration/apps/families/domains/parts/pages/PartsPage.spec.ts`             | 6 tests — PartListItem props, FilterChip interaction, EmptyState     |
-| Created  | `src/tests/integration/apps/families/domains/settings/pages/SettingsPage.spec.ts`       | 7 tests — BadgeLabel, ConfirmDialog, conditional invite code section |
-| Created  | `src/tests/integration/apps/families/domains/sets/pages/SetsOverviewPage.spec.ts`       | 7 tests — CollapsibleSection, ListItemButton click, FilterChip       |
-| Created  | `src/tests/integration/apps/families/domains/sets/pages/SetDetailPage.spec.ts`          | 6 tests — LoadingState, BackButton, conditional wishlist buttons     |
-| Created  | `src/tests/integration/apps/families/domains/sets/pages/AddSetPage.spec.ts`             | 6 tests — all 5 form input types rendered, SelectInput options       |
-| Created  | `src/tests/integration/apps/families/domains/sets/pages/EditSetPage.spec.ts`            | 6 tests — ConfirmDialog for delete, form submission                  |
-| Created  | `src/tests/integration/apps/families/domains/sets/pages/ScanSetPage.spec.ts`            | 5 tests — BarcodeScanner composition, detect event flow              |
-| Created  | `src/tests/integration/apps/families/domains/sets/pages/IdentifyBrickPage.spec.ts`      | 6 tests — CameraCapture composition, capture event flow              |
-| Created  | `src/tests/integration/apps/families/domains/storage/pages/StorageOverviewPage.spec.ts` | 6 tests — ListItemButton tree, search filtering                      |
-| Created  | `src/tests/integration/apps/families/domains/storage/pages/StorageDetailPage.spec.ts`   | 6 tests — DetailRow props, PartListItem composition                  |
-| Created  | `src/tests/integration/apps/families/domains/storage/pages/AddStoragePage.spec.ts`      | 5 tests — NumberInput pair for row/column, form submission           |
-| Created  | `src/tests/integration/apps/families/domains/storage/pages/EditStoragePage.spec.ts`     | 6 tests — ConfirmDialog for delete, form submission                  |
-| Modified | `package.json`                                                                          | Added `test:integration` and `test:integration:run` scripts          |
+| Created  | `src/tests/integration/stubs/phosphorIcons.ts`                                          | Lightweight stubs for 7 phosphor icons used in production code        |
+| Created  | `src/tests/integration/apps/families/domains/about/pages/AboutPage.spec.ts`             | 3 tests — LegoBrick composition, props, translation                   |
+| Created  | `src/tests/integration/apps/families/domains/auth/pages/LoginPage.spec.ts`              | 5 tests — TextInput composition, form submission flow                 |
+| Created  | `src/tests/integration/apps/families/domains/auth/pages/RegisterPage.spec.ts`           | 6 tests — 6 TextInputs, optional marking, form submission             |
+| Created  | `src/tests/integration/apps/families/domains/home/pages/HomePage.spec.ts`               | 4 tests — logged out/in states, NavLink click flow, StatCard props    |
+| Created  | `src/tests/integration/apps/families/domains/parts/pages/PartsPage.spec.ts`             | 6 tests — PartListItem props, FilterChip interaction, EmptyState      |
+| Created  | `src/tests/integration/apps/families/domains/settings/pages/SettingsPage.spec.ts`       | 7 tests — BadgeLabel, ConfirmDialog, conditional invite code section  |
+| Created  | `src/tests/integration/apps/families/domains/sets/pages/SetsOverviewPage.spec.ts`       | 7 tests — CollapsibleSection, ListItemButton click, FilterChip        |
+| Created  | `src/tests/integration/apps/families/domains/sets/pages/SetDetailPage.spec.ts`          | 6 tests — LoadingState, BackButton, conditional wishlist buttons      |
+| Created  | `src/tests/integration/apps/families/domains/sets/pages/AddSetPage.spec.ts`             | 6 tests — all 5 form input types rendered, SelectInput options        |
+| Created  | `src/tests/integration/apps/families/domains/sets/pages/EditSetPage.spec.ts`            | 6 tests — ConfirmDialog for delete, form submission                   |
+| Created  | `src/tests/integration/apps/families/domains/sets/pages/ScanSetPage.spec.ts`            | 5 tests — BarcodeScanner composition, detect event flow               |
+| Created  | `src/tests/integration/apps/families/domains/sets/pages/IdentifyBrickPage.spec.ts`      | 6 tests — CameraCapture composition, capture event flow               |
+| Created  | `src/tests/integration/apps/families/domains/storage/pages/StorageOverviewPage.spec.ts` | 6 tests — ListItemButton tree, search filtering                       |
+| Created  | `src/tests/integration/apps/families/domains/storage/pages/StorageDetailPage.spec.ts`   | 6 tests — DetailRow props, PartListItem composition                   |
+| Created  | `src/tests/integration/apps/families/domains/storage/pages/AddStoragePage.spec.ts`      | 5 tests — NumberInput pair for row/column, form submission            |
+| Created  | `src/tests/integration/apps/families/domains/storage/pages/EditStoragePage.spec.ts`     | 6 tests — ConfirmDialog for delete, form submission                   |
+| Modified | `package.json`                                                                          | Added `test:integration` and `test:integration:run` scripts           |
 | Modified | `knip.json`                                                                             | Added integration setup to entry points, integration config to ignore |
-| Modified | `src/tests/unit/architecture.spec.ts`                                                   | Excluded `stubs/` directory from .spec.ts extension check            |
+| Modified | `src/tests/unit/architecture.spec.ts`                                                   | Excluded `stubs/` directory from .spec.ts extension check             |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                                        | Met | Notes                                                        |
-| ------------------------------------------------------------------------------------------- | --- | ------------------------------------------------------------ |
-| `npm run test:integration:run` passes with all 16 page integration tests green              | Yes | 16 files, 90 tests, all pass                                |
-| Each integration test uses `mount` (not `shallowMount`) with real shared components         | Yes | All 16 files use `mount`                                    |
-| Each integration test mocks only services — no `vi.mock()` of `@shared/components/` paths   | Yes | Only `@app/services`, `@app/stores`, `axios`, `string-ts`, `barcode-detector`, and `@shared/helpers/csv` are mocked |
-| `@phosphor-icons/vue` is aliased to a lightweight stub in the integration Vitest config      | Yes | `resolve.alias` in `vitest.integration.config.ts`           |
-| Existing test suites unaffected: `npm run test:coverage` and browser tests still pass        | Yes | 93 unit test files, 1194 tests, 100% coverage               |
-| Integration test coverage is NOT counted toward the 100% unit coverage threshold             | Yes | Separate config, not included in unit test run               |
-| Each test verifies child components render with correct props, conditional rendering, events | Yes | Every file tests at minimum props, conditional states, and event flow |
-| Quality gauntlet passes: type-check, knip, lint, format, build                              | Yes | All pass                                                     |
+| Acceptance Criterion                                                                         | Met | Notes                                                                                                               |
+| -------------------------------------------------------------------------------------------- | --- | ------------------------------------------------------------------------------------------------------------------- |
+| `npm run test:integration:run` passes with all 16 page integration tests green               | Yes | 16 files, 90 tests, all pass                                                                                        |
+| Each integration test uses `mount` (not `shallowMount`) with real shared components          | Yes | All 16 files use `mount`                                                                                            |
+| Each integration test mocks only services — no `vi.mock()` of `@shared/components/` paths    | Yes | Only `@app/services`, `@app/stores`, `axios`, `string-ts`, `barcode-detector`, and `@shared/helpers/csv` are mocked |
+| `@phosphor-icons/vue` is aliased to a lightweight stub in the integration Vitest config      | Yes | `resolve.alias` in `vitest.integration.config.ts`                                                                   |
+| Existing test suites unaffected: `npm run test:coverage` and browser tests still pass        | Yes | 93 unit test files, 1194 tests, 100% coverage                                                                       |
+| Integration test coverage is NOT counted toward the 100% unit coverage threshold             | Yes | Separate config, not included in unit test run                                                                      |
+| Each test verifies child components render with correct props, conditional rendering, events | Yes | Every file tests at minimum props, conditional states, and event flow                                               |
+| Quality gauntlet passes: type-check, knip, lint, format, build                               | Yes | All pass                                                                                                            |
 
 ## Decisions Made
 
@@ -109,11 +109,11 @@ The test suite runs in ~5 seconds for all 16 files, well within acceptable bound
 
 ### Training Proposals
 
-| Proposal                                                                                                                                                  | Context                                                                                                                                           | Shift Evidence                          |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Before writing `vi.mock` factories that reference test-scoped variables, always use `vi.hoisted()` — check existing test patterns in the same repo first | Wrote 16 files without `vi.hoisted`, all 15 non-trivial ones failed. The unit tests already demonstrate the pattern.                              | 2026-03-27-page-integration-tests       |
-| When mocking a store that exposes computed/ref properties accessed in templates without `.value`, verify the mock uses a real Vue `ref()`, not a plain object | `SetsOverviewPage` and `StorageOverviewPage` use `getAll.length` in templates, which requires Vue ref auto-unwrapping. Plain `{value: []}` fails. | 2026-03-27-page-integration-tests       |
-| Before adding non-.spec.ts files to `src/tests/`, check the architecture test for file extension enforcement rules                                        | `stubs/phosphorIcons.ts` was caught by the architecture test that enforces `.spec.ts` extension on all test directory files.                      | 2026-03-27-page-integration-tests       |
+| Proposal                                                                                                                                                      | Context                                                                                                                                           | Shift Evidence                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| Before writing `vi.mock` factories that reference test-scoped variables, always use `vi.hoisted()` — check existing test patterns in the same repo first      | Wrote 16 files without `vi.hoisted`, all 15 non-trivial ones failed. The unit tests already demonstrate the pattern.                              | 2026-03-27-page-integration-tests |
+| When mocking a store that exposes computed/ref properties accessed in templates without `.value`, verify the mock uses a real Vue `ref()`, not a plain object | `SetsOverviewPage` and `StorageOverviewPage` use `getAll.length` in templates, which requires Vue ref auto-unwrapping. Plain `{value: []}` fails. | 2026-03-27-page-integration-tests |
+| Before adding non-.spec.ts files to `src/tests/`, check the architecture test for file extension enforcement rules                                            | `stubs/phosphorIcons.ts` was caught by the architecture test that enforces `.spec.ts` extension on all test directory files.                      | 2026-03-27-page-integration-tests |
 
 ---
 

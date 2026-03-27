@@ -86,3 +86,19 @@ The conveyor flow itself is well-structured: clean state machine (scan -> found 
 ## CFO Evaluation
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
+
+### Assessment
+
+Clean delivery. The architect correctly identified that the feature implementation was already on the branch and scoped the work to the actual gap: stale tests asserting pre-conveyor behavior. The 9-test breakdown is well-structured — each test verifies one specific aspect of the conveyor flow rather than cramming everything into a mega-test. Good restraint in not touching code that didn't need touching.
+
+The implementation itself is solid: `scanAgain()` reuse for the reset path, toast service wired correctly, session counter as a simple ref, "Done" button conditionally rendered. The `.replace("{name}", ...)` pattern for toast messages is consistent with how `duplicateWarning` handles params elsewhere in this file.
+
+### Concerns
+
+1. **The architect touched files beyond the stated scope.** The journal says 2 files modified, but the commit diff shows 9 files changed. The extra files include `component-registry.json` reformatting, `inspector-casebook.md` edits, another journal modification, and the architect's own agent file. The journal should reflect all files touched, not just the ones the architect considers "their" work.
+2. **The `1 pre-existing error in InviteCodeSection` lint note** — good that it was flagged as unrelated, but it's been sitting there. Noted for tracking.
+
+### Knowledge Update Disposition
+
+- **Pulse update** (test count 1081→1201): Approved. Will update in next pulse refresh.
+- **Domain Map / Decision Record**: Agreed, no changes needed.
