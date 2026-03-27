@@ -1,15 +1,36 @@
+import type {VueWrapper} from "@vue/test-utils";
+
 import ModalDialog from "@shared/components/ModalDialog.vue";
 import {mount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+
+let wrapper: VueWrapper;
+let container: HTMLDivElement;
+let onClose: ReturnType<typeof vi.fn>;
 
 const mountModal = (open = false) =>
-    mount(ModalDialog, {props: {open}, slots: {title: "Test Title", default: "<p>Modal body</p>"}});
+    mount(ModalDialog, {
+        props: {open, onClose},
+        slots: {title: "Test Title", default: "<p>Modal body</p>"},
+        attachTo: container,
+    });
 
 describe("ModalDialog (browser)", () => {
+    beforeEach(() => {
+        container = document.createElement("div");
+        document.body.appendChild(container);
+        onClose = vi.fn();
+    });
+
+    afterEach(() => {
+        wrapper.unmount();
+        container.remove();
+    });
+
     describe("native dialog behavior", () => {
         it("should call showModal when open is true", () => {
             // Arrange & Act
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
             const dialog = wrapper.find("dialog").element as HTMLDialogElement;
 
             // Assert — in a real browser, showModal() sets the open attribute
@@ -18,7 +39,7 @@ describe("ModalDialog (browser)", () => {
 
         it("should not open dialog when open is false", () => {
             // Arrange & Act
-            const wrapper = mountModal(false);
+            wrapper = mountModal(false);
             const dialog = wrapper.find("dialog").element as HTMLDialogElement;
 
             // Assert
@@ -27,7 +48,7 @@ describe("ModalDialog (browser)", () => {
 
         it("should close dialog when open transitions to false", async () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
             const dialog = wrapper.find("dialog").element as HTMLDialogElement;
             expect(dialog.open).toBe(true);
 
@@ -42,7 +63,7 @@ describe("ModalDialog (browser)", () => {
     describe("rendering", () => {
         it("should render title slot content", () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
 
             // Assert
             expect(wrapper.find("h2").text()).toBe("Test Title");
@@ -50,7 +71,7 @@ describe("ModalDialog (browser)", () => {
 
         it("should render default slot content", () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
 
             // Assert
             expect(wrapper.text()).toContain("Modal body");
@@ -60,18 +81,18 @@ describe("ModalDialog (browser)", () => {
     describe("interactions", () => {
         it("should emit close when close button is clicked", async () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
 
             // Act
             await wrapper.find("button[aria-label='Close']").trigger("click");
 
             // Assert
-            expect(wrapper.emitted("close")).toHaveLength(1);
+            expect(onClose).toHaveBeenCalledOnce();
         });
 
         it("should emit close on cancel event and prevent default", async () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
             const dialog = wrapper.find("dialog").element as HTMLDialogElement;
             const cancelEvent = new Event("cancel", {cancelable: true});
 
@@ -81,37 +102,37 @@ describe("ModalDialog (browser)", () => {
 
             // Assert
             expect(cancelEvent.defaultPrevented).toBe(true);
-            expect(wrapper.emitted("close")).toHaveLength(1);
+            expect(onClose).toHaveBeenCalledOnce();
         });
 
         it("should emit close when backdrop (dialog element) is clicked", async () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
             const dialog = wrapper.find("dialog");
 
             // Act
             await dialog.trigger("click");
 
             // Assert
-            expect(wrapper.emitted("close")).toHaveLength(1);
+            expect(onClose).toHaveBeenCalledOnce();
         });
 
         it("should not emit close when inner content is clicked", async () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
 
             // Act
             await wrapper.find("div[bg='white']").trigger("click");
 
             // Assert
-            expect(wrapper.emitted("close")).toBeUndefined();
+            expect(onClose).not.toHaveBeenCalled();
         });
     });
 
     describe("accessibility", () => {
         it("should have close button with accessible label", () => {
             // Arrange
-            const wrapper = mountModal(true);
+            wrapper = mountModal(true);
 
             // Assert
             const closeButton = wrapper.find("button[aria-label='Close']");

@@ -497,3 +497,37 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 - SetDetailPage and ScanSetPage have the highest complexity — multi-step flows with modals, concurrent data loading, and state management across interactions.
 
 ---
+
+## 2026-03-27 — Browser Test Setup & Page Integration Testing Strategy (ADR-013)
+
+### Decisions
+
+- **WSL2 browser test environment**: Use Playwright's bundled Linux Chromium via WSLg, not Windows Chrome. The Windows Chrome approach fails because Playwright's `--remote-debugging-pipe` doesn't work across the WSL/Windows boundary. The `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` env var was removed from `.bashrc` after testing confirmed this.
+- **Vue test-utils `wrapper.emitted()` workaround**: In Vitest browser mode, `wrapper.emitted()` accumulates emit interceptors across mounts of the same component type — a VTU bug. Workaround: use Vue 3's `onXxx` prop pattern with `vi.fn()` instead of `wrapper.emitted()` for interaction assertions in browser tests.
+- **Browser test `attachTo` pattern**: Real browsers require `showModal()` to be called on a dialog in the document. Each browser test creates a fresh `container` div in `beforeEach`, mounts to it, and removes it in `afterEach`.
+- **Three-layer testing strategy (ADR-013 accepted)**: Unit tests (happy-dom, heavy mocking, 100% coverage) for isolated logic. Page integration tests (happy-dom, real child components, mocked services) for composition correctness. Browser tests (Playwright/Chromium) only for browser-native APIs (`<dialog>`, MediaStream, etc.).
+- **Page integration scope**: Domain page components only (~16 pages). Separate coverage accounting — does not contribute to 100% unit threshold. Expand scope based on evidence, not prediction.
+- **Icon library Vite alias for integration tests**: `@phosphor-icons/vue` (4,536 exports, 7 used) aliased to lightweight stubs via `resolve.alias` in `vitest.integration.config.ts`. Config-level redirect, not a test-time mock — does not violate ADR-011's "no mocks in setup" rule.
+
+### Rejected Alternatives
+
+- **Windows Chrome via `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`**: Pipe-based debugging FDs don't cross the WSL/Windows boundary (exit code 13)
+- **Browser tests for all components**: 2-10x slower than happy-dom, Playwright overhead, `wrapper.emitted()` bug. Most components don't use browser-native APIs — disproportionate cost
+- **E2E tests (Cypress/Playwright against running app)**: Overkill for catching component composition issues, requires backend
+- **Global icon stub in setup.ts**: Breaks ADR-011's "no mocks in setup" rule
+- **Deep imports for icons (`@phosphor-icons/vue/PhX`)**: Package doesn't expose individual imports via `exports` field — fragile dependency on undocumented internals
+
+### Action Items
+
+- [ ] Architect: Build page integration test infrastructure (`vitest.integration.config.ts`, setup, icon stub module, npm scripts)
+- [ ] Architect: Write first page integration test as a reference implementation
+- [ ] Architect: Extend architecture test to verify every domain page has an integration test
+- [ ] CFO: Monitor test-guard reporter thresholds — integration tests may need separate calibration from unit tests
+
+### Open Questions
+
+- Threshold calibration for integration tests — ADR-010 thresholds are tuned for unit tests, real component trees will be heavier
+- Coverage threshold for integration suite — currently none, revisit after all 16 pages have tests
+- Whether modals/sub-views need integration tests — evaluate after first cycle of page tests reveals weak points
+
+---

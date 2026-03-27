@@ -44,3 +44,4 @@ No decision record lands here without passing through all three.
 | 010 | [Test isolation via execution-time guard, collect-duration guard, and factory mocking](./decisions/010-test-isolation-collect-guard.md) | 2026-03-20 | accepted |
 | 011 | [Domain-based Vitest project split with factory configuration](./decisions/011-domain-based-vitest-projects.md)                         | 2026-03-22 | accepted |
 | 012 | [Typed mock helpers with MockedService mapped type](./decisions/012-typed-mock-helpers.md)                                              | 2026-03-22 | accepted |
+| 013 | [Page integration tests with real component composition](./decisions/013-page-integration-tests.md)                                     | 2026-03-27 | accepted |

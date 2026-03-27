@@ -23,11 +23,21 @@ const createMockStream = () => {
 describe("BarcodeScanner (browser)", () => {
     let mockGetUserMedia: ReturnType<typeof vi.fn>;
 
+    let originalSrcObjectDescriptor: PropertyDescriptor | undefined;
+
     beforeEach(() => {
         mockGetUserMedia = vi.fn();
         mockDetect.mockReset();
 
         vi.stubGlobal("navigator", {...navigator, mediaDevices: {getUserMedia: mockGetUserMedia}});
+
+        originalSrcObjectDescriptor = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, "srcObject");
+        Object.defineProperty(HTMLMediaElement.prototype, "srcObject", {
+            set: vi.fn(),
+            get: vi.fn(() => null),
+            configurable: true,
+        });
+        vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
 
         vi.useFakeTimers();
     });
@@ -36,6 +46,10 @@ describe("BarcodeScanner (browser)", () => {
         vi.unstubAllGlobals();
         vi.restoreAllMocks();
         vi.useRealTimers();
+
+        if (originalSrcObjectDescriptor) {
+            Object.defineProperty(HTMLMediaElement.prototype, "srcObject", originalSrcObjectDescriptor);
+        }
     });
 
     describe("camera initialization", () => {
@@ -45,7 +59,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Assert
@@ -61,7 +75,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
 
             // Assert
             expect(wrapper.text()).toContain("Starting camera...");
@@ -75,7 +89,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Assert
@@ -91,7 +105,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Assert
@@ -105,7 +119,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Assert
@@ -120,7 +134,7 @@ describe("BarcodeScanner (browser)", () => {
             error.name = "NotAllowedError";
             const {mockStream} = createMockStream();
             mockGetUserMedia.mockRejectedValueOnce(error).mockResolvedValueOnce(mockStream);
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Act
@@ -142,7 +156,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockRejectedValue(error);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Assert
@@ -156,7 +170,7 @@ describe("BarcodeScanner (browser)", () => {
             const {mockStream} = createMockStream();
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Act
@@ -175,7 +189,7 @@ describe("BarcodeScanner (browser)", () => {
             const {mockStream} = createMockStream();
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Act
@@ -193,7 +207,7 @@ describe("BarcodeScanner (browser)", () => {
             const {mockStream} = createMockStream();
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
-            const wrapper = mount(BarcodeScanner, {props: {...defaultProps, resetKey: 0}});
+            const wrapper = mount(BarcodeScanner, {props: {...defaultProps, resetKey: 0}, attachTo: document.body});
             await flushPromises();
             vi.advanceTimersByTime(250);
             await flushPromises();
@@ -214,7 +228,7 @@ describe("BarcodeScanner (browser)", () => {
             // Arrange
             const {mockTrack, mockStream} = createMockStream();
             mockGetUserMedia.mockResolvedValue(mockStream);
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
             await flushPromises();
 
             // Act
@@ -232,7 +246,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
 
             // Assert
             const video = wrapper.find("video");
@@ -245,7 +259,7 @@ describe("BarcodeScanner (browser)", () => {
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
-            const wrapper = mount(BarcodeScanner, {props: defaultProps});
+            const wrapper = mount(BarcodeScanner, {props: defaultProps, attachTo: document.body});
 
             // Assert
             const region = wrapper.find("[role='region']");
