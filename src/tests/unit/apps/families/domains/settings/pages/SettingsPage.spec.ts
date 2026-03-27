@@ -1,5 +1,6 @@
 import SettingsPage from "@app/domains/settings/pages/SettingsPage.vue";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
+import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
@@ -288,8 +289,10 @@ describe("SettingsPage", () => {
             await flushPromises();
 
             // Act
-            const revokeButton = wrapper.findComponent(DangerButton);
-            await revokeButton.trigger("click");
+            const revokeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.revokeCode");
+            await revokeButton?.trigger("click");
             await flushPromises();
 
             // Assert
@@ -305,8 +308,10 @@ describe("SettingsPage", () => {
             await flushPromises();
 
             // Act
-            const revokeButton = wrapper.findComponent(DangerButton);
-            await revokeButton.trigger("click");
+            const revokeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.revokeCode");
+            await revokeButton?.trigger("click");
             await flushPromises();
 
             // Assert
@@ -400,9 +405,10 @@ describe("SettingsPage", () => {
             await flushPromises();
 
             // Assert
-            const revokeButton = wrapper.findComponent(DangerButton);
-            expect(revokeButton.exists()).toBe(true);
-            expect(revokeButton.text()).toBe("settings.revokeCode");
+            const revokeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.revokeCode");
+            expect(revokeButton?.exists()).toBe(true);
         });
 
         it("should show expires at for active code", async () => {
@@ -492,6 +498,274 @@ describe("SettingsPage", () => {
 
             // Assert
             expect(wrapper.findComponent(TextInput).props("error")).toBe("settings.tokenSaveError");
+        });
+    });
+
+    describe("member removal", () => {
+        it("should show remove button for non-head members when user is head", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+
+            // Act
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Assert
+            const dangerButtons = wrapper.findAllComponents(DangerButton);
+            const removeButton = dangerButtons.find((btn) => btn.text() === "settings.removeMember");
+            expect(removeButton?.exists()).toBe(true);
+        });
+
+        it("should not show remove button for the family head member", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
+            });
+
+            // Act
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Assert
+            const dangerButtons = wrapper.findAllComponents(DangerButton);
+            const removeButton = dangerButtons.find((btn) => btn.text() === "settings.removeMember");
+            expect(removeButton).toBeUndefined();
+        });
+
+        it("should not show remove buttons for non-head users", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(2);
+
+            // Act
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Assert
+            const dangerButtons = wrapper.findAllComponents(DangerButton);
+            const removeButton = dangerButtons.find((btn) => btn.text() === "settings.removeMember");
+            expect(removeButton).toBeUndefined();
+        });
+
+        it("should open confirm dialog when remove button is clicked", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+
+            // Assert
+            const dialog = wrapper.findComponent(ConfirmDialog);
+            expect(dialog.props("open")).toBe(true);
+            expect(dialog.props("title")).toBe("settings.removeMemberTitle");
+            expect(dialog.props("message")).toBe("settings.removeMemberMessage");
+        });
+
+        it("should close confirm dialog on cancel", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+
+            // Act
+            const dialog = wrapper.findComponent(ConfirmDialog);
+            dialog.vm.$emit("cancel");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.findComponent(ConfirmDialog).props("open")).toBe(false);
+        });
+
+        it("should remove member on confirm and update list", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            mockDeleteRequest.mockResolvedValue({});
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+
+            const dialog = wrapper.findComponent(ConfirmDialog);
+            dialog.vm.$emit("confirm");
+            await flushPromises();
+
+            // Assert
+            expect(mockDeleteRequest).toHaveBeenCalledWith("/family/members/2");
+            expect(wrapper.text()).not.toContain("Maria");
+            expect(wrapper.text()).toContain("settings.memberRemoved");
+        });
+
+        it("should show self-removal error on 422", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            const axiosError = new MockAxiosError("Unprocessable Entity");
+            axiosError.response = {
+                status: 422,
+                data: null,
+                statusText: "Unprocessable Entity",
+                headers: {},
+                config: {},
+            };
+            mockDeleteRequest.mockRejectedValue(axiosError);
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+            wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("settings.removeMemberSelfError");
+        });
+
+        it("should show not-found error and remove member from list on 404", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            const axiosError = new MockAxiosError("Not Found");
+            axiosError.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+            mockDeleteRequest.mockRejectedValue(axiosError);
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+            wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("settings.removeMemberNotFound");
+            expect(wrapper.text()).not.toContain("Maria");
+        });
+
+        it("should show generic error on network failure", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            mockDeleteRequest.mockRejectedValue(new Error("Network error"));
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+            wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("settings.removeMemberError");
+        });
+
+        it("should not call delete when memberToRemove is null", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act — emit confirm without clicking remove first
+            wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
+            await flushPromises();
+
+            // Assert
+            expect(mockDeleteRequest).not.toHaveBeenCalledWith(expect.stringContaining("/family/members/"));
+        });
+
+        it("should show 403 error as generic removal error", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            const axiosError = new MockAxiosError("Forbidden");
+            axiosError.response = {status: 403, data: null, statusText: "Forbidden", headers: {}, config: {}};
+            mockDeleteRequest.mockRejectedValue(axiosError);
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+            wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("settings.removeMemberError");
+        });
+
+        it("should clear previous removal messages when opening confirm dialog", async () => {
+            // Arrange
+            mockUserId.mockReturnValue(1);
+            mockDeleteRequest.mockResolvedValue({});
+            const wrapper = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // First removal — success
+            const removeButton = wrapper
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton?.trigger("click");
+            wrapper.findComponent(ConfirmDialog).vm.$emit("confirm");
+            await flushPromises();
+            expect(wrapper.text()).toContain("settings.memberRemoved");
+
+            // Arrange — add another member to remove
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({
+                        data: [
+                            {id: 1, name: "Jan", email: "jan@example.com", isHead: true},
+                            {id: 3, name: "Piet", email: "piet@example.com", isHead: false},
+                        ],
+                    });
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
+            });
+
+            // Remount to get the new member list
+            const wrapper2 = shallowMount(SettingsPage);
+            await flushPromises();
+
+            // Act — click remove on new member
+            const removeButton2 = wrapper2
+                .findAllComponents(DangerButton)
+                .find((btn) => btn.text() === "settings.removeMember");
+            await removeButton2?.trigger("click");
+
+            // Assert — success message is cleared when dialog opens
+            expect(wrapper2.text()).not.toContain("settings.memberRemoved");
         });
     });
 
