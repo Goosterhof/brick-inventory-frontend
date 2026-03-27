@@ -124,4 +124,32 @@ The re-export pattern is clean and defensible. A reviewer would see a consistent
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal._
+**Overall Assessment:** Solid
+
+### Permit Fulfillment Review
+
+All 6 acceptance criteria met. The architect correctly identified that 5 of 6 findings were already remediated in prior commits and focused the actual code change on the one remaining gap: routing `deepSnakeKeys` through `@shared/helpers/string` instead of importing directly from `string-ts`. Surgical scope management.
+
+The formal rebuttal responses are well-reasoned. All 6 ACCEPTs are backed by specific evidence — the ADR-004 Consequences section citation for Finding 1 is exactly the kind of reference that makes an ACCEPT credible rather than reflexive. No wasted time on defensive rebuttals, which is the right call when the inspector's evidence is airtight.
+
+### Decision Review
+
+1. **Re-export vs. wrapper for `deepSnakeKeys`:** Correct call. `toCamelCaseTyped` needs a wrapper because it adds type assertion logic. `deepSnakeKeys` from `string-ts` already returns `DeepSnakeKeys<T>` — wrapping it would be ceremony without value. A re-export centralizes the import path, which is what ADR-004 actually cares about.
+
+2. **Staying out of `src/shared/` scope:** Correct. The permit scoped to families app production files, the inspection scoped to families app. `resource-adapter.ts` and `auth/index.ts` are shared infrastructure — touching them without a permit is how scope creep starts. Flagged appropriately for a follow-up.
+
+### Showcase Assessment
+
+This is a cleanup delivery, not a feature. It does what cleanup should do: close consistency gaps without introducing new ones. The `deepSnakeKeys` re-export is the right pattern — a reviewer grepping for case conversion imports now finds everything in `@shared/helpers/string`, exactly as ADR-004 promises. Portfolio-strengthening, if modest.
+
+### Training Proposal Dispositions
+
+| Proposal | Disposition | Rationale |
+| --- | --- | --- |
+| When routing an import through a new re-export, trace the mock chain end-to-end | Candidate | Legitimate observation. Vitest's module mocking intercepts at the source level — changing an import path can break mock chains silently if the original mock target no longer sits in the call path. The architect caught this as a blind spot (verified by running tests rather than reasoning upfront). First observation — needs a second confirming instance. |
+
+### Notes for the Architect
+
+1. The audit-before-build approach saved this shift from being a waste of time. Five pre-existing fixes discovered up front is efficient triage. Keep doing this on remediation permits.
+
+2. The blind spot about the mock chain is a good catch. The fact that it worked is not the point — the point is that you couldn't explain *why* it would work before running the tests. On a larger codebase, that's the kind of assumption that causes 30-minute debugging sessions when it eventually doesn't work. The training proposal is well-framed.

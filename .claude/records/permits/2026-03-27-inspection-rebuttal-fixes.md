@@ -62,5 +62,5 @@ Finding 6 (CLAUDE.md) requires a judgment call: the war-room ADR references are 
 
 ---
 
-**Status:** Open
-**Journal:** _pending_
+**Status:** Complete
+**Journal:** [2026-03-27-inspection-rebuttal-fixes](../journals/2026-03-27-inspection-rebuttal-fixes.md)
