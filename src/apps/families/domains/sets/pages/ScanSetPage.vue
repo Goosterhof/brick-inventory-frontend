@@ -7,8 +7,7 @@ import BackButton from "@shared/components/BackButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {deepSnakeKeys} from "string-ts";
+import {deepSnakeKeys, toCamelCaseTyped} from "@shared/helpers/string";
 import {computed, ref} from "vue";
 
 const {t} = familyTranslationService;

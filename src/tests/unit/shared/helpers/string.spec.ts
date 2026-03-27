@@ -1,6 +1,6 @@
 import type {Item} from "@shared/types/item";
 
-import {normalizeForPath, toCamelCaseTyped} from "@shared/helpers/string";
+import {deepSnakeKeys, normalizeForPath, toCamelCaseTyped} from "@shared/helpers/string";
 import {describe, expect, it} from "vitest";
 
 interface TestItem extends Item {
@@ -77,6 +77,41 @@ describe("toCamelCaseTyped", () => {
 
         // Assert
         expect(result).toEqual({id: 1, isActive: true, score: 42, description: null});
+    });
+});
+
+describe("deepSnakeKeys", () => {
+    it("should convert camelCase keys to snake_case", () => {
+        // Arrange
+        const camelCase = {userName: "test", createdAt: "2024-01-01"};
+
+        // Act
+        const result = deepSnakeKeys(camelCase);
+
+        // Assert
+        expect(result).toEqual({user_name: "test", created_at: "2024-01-01"});
+    });
+
+    it("should handle nested camelCase objects", () => {
+        // Arrange
+        const camelCase = {userProfile: {firstName: "John", lastName: "Doe"}};
+
+        // Act
+        const result = deepSnakeKeys(camelCase);
+
+        // Assert
+        expect(result).toEqual({user_profile: {first_name: "John", last_name: "Doe"}});
+    });
+
+    it("should handle already snake_case data", () => {
+        // Arrange
+        const snakeCase = {user_name: "test", created_at: "2024-01-01"};
+
+        // Act
+        const result = deepSnakeKeys(snakeCase);
+
+        // Assert
+        expect(result).toEqual({user_name: "test", created_at: "2024-01-01"});
     });
 });
 
