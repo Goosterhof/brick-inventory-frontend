@@ -34,6 +34,9 @@ const handleLogout = async () => {
             <FamilyRouterLink v-show="familyAuthService.isLoggedIn.value" :to="{name: 'parts'}">
                 {{ t("navigation.parts").value }}
             </FamilyRouterLink>
+            <FamilyRouterLink v-show="familyAuthService.isLoggedIn.value" :to="{name: 'brick-dna'}">
+                {{ t("navigation.brickDna").value }}
+            </FamilyRouterLink>
             <FamilyRouterLink v-show="familyAuthService.isLoggedIn.value" :to="{name: 'settings'}">
                 {{ t("navigation.settings").value }}
             </FamilyRouterLink>
@@ -79,6 +82,14 @@ const handleLogout = async () => {
                 @click="familyRouterService.goToRoute('parts')"
             >
                 {{ t("navigation.parts").value }}
+            </NavMobileLink>
+            <NavMobileLink
+                v-show="familyAuthService.isLoggedIn.value"
+                to="/brick-dna"
+                :active="currentRouteName === 'brick-dna'"
+                @click="familyRouterService.goToRoute('brick-dna')"
+            >
+                {{ t("navigation.brickDna").value }}
             </NavMobileLink>
             <NavMobileLink
                 v-show="familyAuthService.isLoggedIn.value"

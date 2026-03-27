@@ -65,6 +65,7 @@ export default mergeConfig(
                 // Families app — domain pages
                 project("families/about", "apps/families/domains/about"),
                 project("families/auth", "apps/families/domains/auth"),
+                project("families/brick-dna", "apps/families/domains/brick-dna"),
                 project("families/home", "apps/families/domains/home"),
                 project("families/parts", "apps/families/domains/parts"),
                 project("families/sets", "apps/families/domains/sets"),

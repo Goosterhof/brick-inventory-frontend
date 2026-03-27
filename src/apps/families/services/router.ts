@@ -2,6 +2,7 @@ import type {RouteRecordRaw} from "vue-router";
 
 import {routes as aboutRoutes} from "@app/domains/about";
 import {routes as authRoutes} from "@app/domains/auth";
+import {routes as brickDnaRoutes} from "@app/domains/brick-dna";
 import {routes as homeRoutes} from "@app/domains/home";
 import {routes as partsRoutes} from "@app/domains/parts";
 import {routes as setsRoutes} from "@app/domains/sets";
@@ -16,6 +17,7 @@ const routes = [
     ...setsRoutes,
     ...storageRoutes,
     ...partsRoutes,
+    ...brickDnaRoutes,
     ...settingsRoutes,
 ] as const satisfies readonly RouteRecordRaw[];
 
