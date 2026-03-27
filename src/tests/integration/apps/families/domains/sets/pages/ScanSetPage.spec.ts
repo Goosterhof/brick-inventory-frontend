@@ -77,6 +77,30 @@ describe("ScanSetPage — integration", () => {
         expect(addButton).toBeDefined();
     });
 
+    it("resets scanner after adding a set (conveyor flow)", async () => {
+        mockGetRequest.mockResolvedValue({
+            data: {name: "City Police", setNum: "60316-1", year: 2022, numParts: 300, imageUrl: null},
+        });
+        mockPostRequest.mockResolvedValue({data: {id: 99}});
+
+        const wrapper = mountPage();
+
+        const scanner = wrapper.findComponent(BarcodeScanner);
+        scanner.vm.$emit("detect", "5702017153636");
+        await flushPromises();
+
+        const addButton = wrapper
+            .findAllComponents(PrimaryButton)
+            .find((b) => b.text().includes("sets.addToCollection"));
+        await addButton?.find("button").trigger("click");
+        await flushPromises();
+
+        // Conveyor: does NOT navigate away, scanner resets
+        expect(mockGoToRoute).not.toHaveBeenCalled();
+        expect(wrapper.findComponent(BarcodeScanner).props("resetKey")).toBe(1);
+        expect(wrapper.text()).toContain("sets.setsAddedCount");
+    });
+
     it("shows no result message when barcode lookup fails", async () => {
         mockGetRequest.mockRejectedValue(new Error("Not found"));
 

@@ -214,8 +214,8 @@ describe("ScanSetPage", () => {
         });
     });
 
-    describe("add to collection", () => {
-        it("should add set to collection and navigate to detail", async () => {
+    describe("add to collection (conveyor flow)", () => {
+        it("should post set to collection and reset scanner for next scan", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: mockSetResponse});
             mockPostRequest.mockResolvedValue({data: {id: 42}});
@@ -230,16 +230,125 @@ describe("ScanSetPage", () => {
             await addButton?.trigger("click");
             await flushPromises();
 
-            // Assert
+            // Assert — POST fires correctly
             expect(mockPostRequest).toHaveBeenCalledWith("/family-sets", {
                 setNum: "75192-1",
                 quantity: 1,
                 status: "sealed",
             });
-            expect(mockGoToRoute).toHaveBeenCalledWith("sets-detail", 42);
+            // Assert — does NOT navigate away (conveyor stays open)
+            expect(mockGoToRoute).not.toHaveBeenCalled();
+            // Assert — scanner resets for next scan
+            expect(wrapper.findComponent(BarcodeScanner).props("resetKey")).toBe(1);
+            // Assert — scanned code is cleared
+            expect(wrapper.text()).not.toContain("5702015357197");
         });
 
-        it("should show error when add fails", async () => {
+        it("should increment session count after successful add", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            mockPostRequest.mockResolvedValue({data: {id: 42}});
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Act — add first set
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+            const addButton = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((btn) => btn.text() === "sets.addToCollection");
+            await addButton?.trigger("click");
+            await flushPromises();
+
+            // Assert — session count visible
+            expect(wrapper.text()).toContain("sets.setsAddedCount");
+        });
+
+        it("should show done button after adding a set", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            mockPostRequest.mockResolvedValue({data: {id: 42}});
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Act
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+            const addButton = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((btn) => btn.text() === "sets.addToCollection");
+            await addButton?.trigger("click");
+            await flushPromises();
+
+            // Assert
+            const doneButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "sets.scanDone");
+            expect(doneButton?.exists()).toBe(true);
+        });
+
+        it("should navigate to sets overview when done button is clicked", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            mockPostRequest.mockResolvedValue({data: {id: 42}});
+            const wrapper = shallowMount(ScanSetPage);
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+            const addButton = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((btn) => btn.text() === "sets.addToCollection");
+            await addButton?.trigger("click");
+            await flushPromises();
+
+            // Act
+            const doneButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "sets.scanDone");
+            await doneButton?.trigger("click");
+            await flushPromises();
+
+            // Assert
+            expect(mockGoToRoute).toHaveBeenCalledWith("sets");
+        });
+
+        it("should not show session count before any set is added", () => {
+            // Arrange & Act
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Assert
+            expect(wrapper.text()).not.toContain("sets.setsAddedCount");
+        });
+
+        it("should not show done button before any set is added", () => {
+            // Arrange & Act
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Assert
+            const doneButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "sets.scanDone");
+            expect(doneButton).toBeUndefined();
+        });
+
+        it("should allow consecutive scans after adding", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: mockSetResponse});
+            mockPostRequest.mockResolvedValue({data: {id: 42}});
+            const wrapper = shallowMount(ScanSetPage);
+
+            // Act — first scan + add
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "5702015357197");
+            await flushPromises();
+            const addButton = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((btn) => btn.text() === "sets.addToCollection");
+            await addButton?.trigger("click");
+            await flushPromises();
+
+            // Act — second scan
+            const secondSetResponse = {...mockSetResponse, setNum: "10179-1", name: "UCS Falcon"};
+            mockGetRequest.mockResolvedValue({data: secondSetResponse});
+            wrapper.findComponent(BarcodeScanner).vm.$emit("detect", "1234567890123");
+            await flushPromises();
+
+            // Assert — second set is displayed
+            expect(wrapper.text()).toContain("UCS Falcon");
+            expect(wrapper.text()).toContain("10179-1");
+        });
+
+        it("should show error when add fails without killing conveyor", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: mockSetResponse});
             mockPostRequest.mockRejectedValue(new Error("Server error"));
@@ -254,8 +363,17 @@ describe("ScanSetPage", () => {
             await addButton?.trigger("click");
             await flushPromises();
 
-            // Assert
+            // Assert — error shown but scanner still available
             expect(wrapper.text()).toContain("sets.scanAddError");
+            expect(wrapper.findComponent(BarcodeScanner).exists()).toBe(true);
+        });
+
+        it("should not add when no set is found", () => {
+            // Arrange & Act
+            shallowMount(ScanSetPage);
+
+            // Assert — no POST without a detected set
+            expect(mockPostRequest).not.toHaveBeenCalled();
         });
     });
 
