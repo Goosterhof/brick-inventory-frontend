@@ -153,6 +153,9 @@ const translations = {
             capturePhoto: "Capture Photo",
             duplicateWarning: "You already own this set (quantity: {quantity}, status: {status}). Add another copy?",
             duplicateDismiss: "Dismiss",
+            scanAddedToast: "Added {name} ({setNum}) to your collection!",
+            setsAddedCount: "{count} sets added this session",
+            scanDone: "Done scanning",
         },
         storage: {
             title: "Storage",
@@ -378,6 +381,9 @@ const translations = {
             duplicateWarning:
                 "Je hebt deze set al (aantal: {quantity}, status: {status}). Nog een exemplaar toevoegen?",
             duplicateDismiss: "Sluiten",
+            scanAddedToast: "{name} ({setNum}) toegevoegd aan je collectie!",
+            setsAddedCount: "{count} sets toegevoegd deze sessie",
+            scanDone: "Klaar met scannen",
         },
         storage: {
             title: "Opslag",

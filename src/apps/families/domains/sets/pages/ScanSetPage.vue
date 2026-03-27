@@ -7,10 +7,13 @@ import BackButton from "@shared/components/BackButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
+import ToastMessage from "@shared/components/ToastMessage.vue";
 import {deepSnakeKeys, toCamelCaseTyped} from "@shared/helpers/string";
+import {createToastService} from "@shared/services/toast";
 import {computed, ref} from "vue";
 
 const {t} = familyTranslationService;
+const toastService = createToastService(ToastMessage);
 const resetKey = ref(0);
 const scannedCode = ref("");
 const foundSet = ref<SetSummary | null>(null);
@@ -19,6 +22,7 @@ const hasSearched = ref(false);
 const isAdding = ref(false);
 const addError = ref("");
 const duplicateDismissed = ref(false);
+const setsAddedCount = ref(0);
 
 const duplicateMatch = computed(() => {
     if (!foundSet.value) return null;
@@ -56,12 +60,20 @@ const addToCollection = async () => {
     isAdding.value = true;
     addError.value = "";
 
+    const setName = foundSet.value.name;
+    const setNum = foundSet.value.setNum;
+
     try {
-        const response = await familyHttpService.postRequest<{id: number}>(
+        await familyHttpService.postRequest<{id: number}>(
             "/family-sets",
             deepSnakeKeys({setNum: foundSet.value.setNum, quantity: 1, status: "sealed"}),
         );
-        await familyRouterService.goToRoute("sets-detail", response.data.id);
+        setsAddedCount.value++;
+        toastService.show({
+            message: t("sets.scanAddedToast").value.replace("{name}", setName).replace("{setNum}", setNum),
+            variant: "success",
+        });
+        scanAgain();
     } catch {
         addError.value = t("sets.scanAddError").value;
     } finally {
@@ -87,6 +99,10 @@ const goBack = async () => {
         <PageHeader :title="t('sets.scanSet').value">
             <BackButton @click="goBack">{{ t("sets.backToOverview").value }}</BackButton>
         </PageHeader>
+
+        <p v-if="setsAddedCount > 0" m="b-4" p="3" bg="green-50" class="brick-border" font="bold" text="sm">
+            {{ t("sets.setsAddedCount").value.replace("{count}", String(setsAddedCount)) }}
+        </p>
 
         <BarcodeScanner
             :reset-key="resetKey"
@@ -169,6 +185,12 @@ const goBack = async () => {
             </template>
 
             <PrimaryButton @click="scanAgain">{{ t("sets.scanAgain").value }}</PrimaryButton>
+        </div>
+
+        <PrimaryButton v-if="setsAddedCount > 0" m="t-6" @click="goBack">{{ t("sets.scanDone").value }}</PrimaryButton>
+
+        <div fixed="~" bottom="4" right="4" z="50" flex="~ col" gap="2" w="sm" max-w="[calc(100vw-2rem)]">
+            <component :is="toastService.ToastContainerComponent" />
         </div>
     </div>
 </template>
