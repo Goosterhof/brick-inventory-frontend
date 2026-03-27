@@ -59,6 +59,7 @@ Before auditing, know what each ADR protects. This table prevents you from flagg
 | 010 | Test isolation via execution-time guard, collect-duration guard, factory mocking | Slow tests fail by design; mocks use factories — not over-testing, it's the standard                                                                      |
 | 011 | Domain-based Vitest project split with factory config                            | Tests split per domain with shared config factory — not fragmentation, it's the decision                                                                  |
 | 012 | Typed mock helpers with `MockedService<T>` mapped type                           | Tests use typed factory helpers instead of inline `vi.fn()` casts — not over-abstraction, it eliminates duplication and adds compile-time drift detection |
+| 013 | Page integration tests with real component composition                           | Integration tests mount pages with real child components, mocked services — separate suite from unit tests, not redundant coverage                        |
 
 **Maintenance**: When a new ADR is accepted, the CFO adds a row here. If this table drifts from the decision log index, that itself is a finding.
 
