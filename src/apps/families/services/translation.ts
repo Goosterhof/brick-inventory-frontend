@@ -50,6 +50,7 @@ const translations = {
             sets: "My Sets",
             storage: "Storage",
             parts: "Parts",
+            brickDna: "Brick DNA",
         },
         pageTitle: {
             home: "Home",
@@ -68,6 +69,7 @@ const translations = {
             editStorage: "Edit Storage",
             parts: "Parts",
             settings: "Settings",
+            brickDna: "Brick DNA",
         },
         home: {
             title: "Brick Inventory",
@@ -191,6 +193,17 @@ const translations = {
             orphanParts: "Orphan parts",
             noResults: "No parts match your search or filters.",
         },
+        brickDna: {
+            title: "Brick DNA",
+            empty: "No collection data available yet. Add some sets to see your Brick DNA profile.",
+            diversityTitle: "Collection Diversity",
+            diversityHigh: "Highly Diverse",
+            diversityMedium: "Moderately Diverse",
+            diversityLow: "Low Diversity",
+            topColorsTitle: "Top Colors",
+            topPartTypesTitle: "Top Part Types",
+            rarestPartsTitle: "Rarest Parts",
+        },
         settings: {
             title: "Settings",
             membersTitle: "Family members",
@@ -278,6 +291,7 @@ const translations = {
             sets: "Mijn Sets",
             storage: "Opslag",
             parts: "Onderdelen",
+            brickDna: "Brick DNA",
         },
         pageTitle: {
             home: "Home",
@@ -296,6 +310,7 @@ const translations = {
             editStorage: "Opslag Bewerken",
             parts: "Onderdelen",
             settings: "Instellingen",
+            brickDna: "Brick DNA",
         },
         home: {
             title: "Brick Inventory",
@@ -419,6 +434,17 @@ const translations = {
             allColors: "Alle kleuren",
             orphanParts: "Weesonderdelen",
             noResults: "Geen onderdelen gevonden voor deze zoekopdracht of filters.",
+        },
+        brickDna: {
+            title: "Brick DNA",
+            empty: "Nog geen collectiegegevens beschikbaar. Voeg sets toe om je Brick DNA profiel te zien.",
+            diversityTitle: "Collectiediversiteit",
+            diversityHigh: "Zeer Divers",
+            diversityMedium: "Matig Divers",
+            diversityLow: "Lage Diversiteit",
+            topColorsTitle: "Top Kleuren",
+            topPartTypesTitle: "Top Onderdelen",
+            rarestPartsTitle: "Zeldzaamste Onderdelen",
         },
         settings: {
             title: "Instellingen",

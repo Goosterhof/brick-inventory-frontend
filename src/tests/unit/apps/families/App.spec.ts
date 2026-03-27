@@ -63,13 +63,24 @@ describe("App", () => {
 
         // Assert
         const links = wrapper.findAllComponents({name: "FamilyRouterLink"});
-        expect(links).toHaveLength(8);
-        const [homeLink, aboutLink, setsLink, storageLink, partsLink, settingsLink, loginLink, registerLink] = links;
+        expect(links).toHaveLength(9);
+        const [
+            homeLink,
+            aboutLink,
+            setsLink,
+            storageLink,
+            partsLink,
+            brickDnaLink,
+            settingsLink,
+            loginLink,
+            registerLink,
+        ] = links;
         expect(homeLink?.text()).toBe("navigation.home");
         expect(aboutLink?.text()).toBe("navigation.about");
         expect(setsLink?.text()).toContain("navigation.sets");
         expect(storageLink?.text()).toContain("navigation.storage");
         expect(partsLink?.text()).toContain("navigation.parts");
+        expect(brickDnaLink?.text()).toContain("navigation.brickDna");
         expect(settingsLink?.text()).toContain("navigation.settings");
         expect(loginLink?.text()).toContain("auth.logIn");
         expect(registerLink?.text()).toContain("auth.register");
@@ -81,15 +92,16 @@ describe("App", () => {
 
         // Assert
         const mobileLinks = wrapper.findAllComponents({name: "NavMobileLink"});
-        expect(mobileLinks).toHaveLength(8);
-        expect(mobileLinks[0]?.text()).toBe("navigation.home");
-        expect(mobileLinks[1]?.text()).toBe("navigation.about");
-        expect(mobileLinks[2]?.text()).toContain("navigation.sets");
-        expect(mobileLinks[3]?.text()).toContain("navigation.storage");
-        expect(mobileLinks[4]?.text()).toContain("navigation.parts");
-        expect(mobileLinks[5]?.text()).toContain("navigation.settings");
-        expect(mobileLinks[6]?.text()).toContain("auth.logIn");
-        expect(mobileLinks[7]?.text()).toContain("auth.register");
+        expect(mobileLinks).toHaveLength(9);
+        expect(mobileLinks.find((l) => l.text() === "navigation.home")?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text() === "navigation.about")?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text().includes("navigation.sets"))?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text().includes("navigation.storage"))?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text().includes("navigation.parts"))?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text().includes("navigation.brickDna"))?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text().includes("navigation.settings"))?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text().includes("auth.logIn"))?.exists()).toBe(true);
+        expect(mobileLinks.find((l) => l.text().includes("auth.register"))?.exists()).toBe(true);
     });
 
     it("should mark active mobile link based on current route", () => {

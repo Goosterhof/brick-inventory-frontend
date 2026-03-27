@@ -188,6 +188,9 @@
             "category": null,
             "consumers": {
                 "families": {
+                    "brick-dna": [
+                        "src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"
+                    ],
                     "home": [
                         "src/apps/families/domains/home/pages/HomePage.vue"
                     ]
@@ -200,7 +203,7 @@
             },
             "adoption": {
                 "apps": 2,
-                "domains": 1
+                "domains": 2
             },
             "apiSurface": {
                 "props": [],
@@ -478,6 +481,9 @@
             "category": null,
             "consumers": {
                 "families": {
+                    "brick-dna": [
+                        "src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"
+                    ],
                     "parts": [
                         "src/apps/families/domains/parts/pages/PartsPage.vue"
                     ],
@@ -497,7 +503,7 @@
             },
             "adoption": {
                 "apps": 2,
-                "domains": 3
+                "domains": 4
             },
             "apiSurface": {
                 "props": [
@@ -1096,6 +1102,9 @@
             "category": null,
             "consumers": {
                 "families": {
+                    "brick-dna": [
+                        "src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"
+                    ],
                     "home": [
                         "src/apps/families/domains/home/pages/HomePage.vue"
                     ],
@@ -1122,7 +1131,7 @@
             },
             "adoption": {
                 "apps": 2,
-                "domains": 5
+                "domains": 6
             },
             "apiSurface": {
                 "props": [
@@ -1287,6 +1296,11 @@
             "path": "src/shared/components/SectionDivider.vue",
             "category": null,
             "consumers": {
+                "families": {
+                    "brick-dna": [
+                        "src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"
+                    ]
+                },
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/ComponentGallery.vue"
@@ -1294,8 +1308,8 @@
                 }
             },
             "adoption": {
-                "apps": 1,
-                "domains": 0
+                "apps": 2,
+                "domains": 1
             },
             "apiSurface": {
                 "props": [],
@@ -1373,6 +1387,9 @@
             "category": null,
             "consumers": {
                 "families": {
+                    "brick-dna": [
+                        "src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"
+                    ],
                     "home": [
                         "src/apps/families/domains/home/pages/HomePage.vue"
                     ]
@@ -1385,7 +1402,7 @@
             },
             "adoption": {
                 "apps": 2,
-                "domains": 1
+                "domains": 2
             },
             "apiSurface": {
                 "props": [
