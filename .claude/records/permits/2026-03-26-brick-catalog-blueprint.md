@@ -52,5 +52,6 @@ Three inspections running. This is operational debt, not a feature. The Showcase
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Voided
+**Voided:** 2026-03-27
+**Reason:** CEO previously deleted brick-catalog.md (superseded by ADR-009 component health registry). All codebase references (domain-map link, lint:catalog script, validate-brick-catalog.mjs) were cleaned in PR #133. Permit was filed based on stale inspector findings that hadn't caught up to the cleanup. No work required.
