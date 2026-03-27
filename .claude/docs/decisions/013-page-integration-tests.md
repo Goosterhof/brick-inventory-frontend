@@ -19,12 +19,12 @@ The question: how do we test that pages work with their real child components, w
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|---|---|---|---|
-| **Rely on unit tests alone** | Already in place, fast, 100% coverage | Cannot catch prop/slot/event contract mismatches between parent and child. The exact failure mode we're experiencing | Eliminated — known gap, recurring breakage |
-| **E2E tests (Cypress/Playwright against running app)** | Tests the full stack including routing, API, and rendering | Slow, flaky, requires backend, high maintenance. Overkill for catching component composition issues | Eliminated — wrong tool for the problem |
-| **Browser integration tests for all pages** | Real browser rendering, catches CSS/layout issues too | 2-10x slower than happy-dom. Playwright setup overhead. `wrapper.emitted()` bug requires workarounds. WSL2 requires system deps. Most pages don't use browser-native APIs | Eliminated — cost disproportionate to value for non-browser-API pages |
-| **Page integration tests in happy-dom with real components, mocked services** | Catches composition failures. Same speed class as unit tests. No browser infrastructure needed. Shares the existing happy-dom environment | Does not catch browser-native API issues (covered by browser tests separately). Adds a second test pass over page code | **Chosen** — directly addresses the gap at minimal infrastructure cost |
+| Option                                                                        | Pros                                                                                                                                      | Cons                                                                                                                                                                      | Why eliminated / Why chosen                                            |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **Rely on unit tests alone**                                                  | Already in place, fast, 100% coverage                                                                                                     | Cannot catch prop/slot/event contract mismatches between parent and child. The exact failure mode we're experiencing                                                      | Eliminated — known gap, recurring breakage                             |
+| **E2E tests (Cypress/Playwright against running app)**                        | Tests the full stack including routing, API, and rendering                                                                                | Slow, flaky, requires backend, high maintenance. Overkill for catching component composition issues                                                                       | Eliminated — wrong tool for the problem                                |
+| **Browser integration tests for all pages**                                   | Real browser rendering, catches CSS/layout issues too                                                                                     | 2-10x slower than happy-dom. Playwright setup overhead. `wrapper.emitted()` bug requires workarounds. WSL2 requires system deps. Most pages don't use browser-native APIs | Eliminated — cost disproportionate to value for non-browser-API pages  |
+| **Page integration tests in happy-dom with real components, mocked services** | Catches composition failures. Same speed class as unit tests. No browser infrastructure needed. Shares the existing happy-dom environment | Does not catch browser-native API issues (covered by browser tests separately). Adds a second test pass over page code                                                    | **Chosen** — directly addresses the gap at minimal infrastructure cost |
 
 ## Decision
 
@@ -32,13 +32,13 @@ The question: how do we test that pages work with their real child components, w
 
 A new test layer that mounts each domain page with **real child components** and **mocked services/HTTP**. The distinction from unit tests:
 
-| Concern | Unit tests (existing) | Page integration tests (new) |
-|---|---|---|
-| Child components | Stubbed/mocked | Real |
-| Services (HTTP, auth, router) | Mocked | Mocked |
-| Mounting strategy | `shallowMount` | `mount` |
-| What they prove | Page logic in isolation | Component composition works |
-| Coverage accounting | Counts toward 100% threshold | Separate — does not count |
+| Concern                       | Unit tests (existing)        | Page integration tests (new) |
+| ----------------------------- | ---------------------------- | ---------------------------- |
+| Child components              | Stubbed/mocked               | Real                         |
+| Services (HTTP, auth, router) | Mocked                       | Mocked                       |
+| Mounting strategy             | `shallowMount`               | `mount`                      |
+| What they prove               | Page logic in isolation      | Component composition works  |
+| Coverage accounting           | Counts toward 100% threshold | Separate — does not count    |
 
 ### What gets a page integration test
 
@@ -117,11 +117,11 @@ Page integration tests are a **separate suite** that does not contribute to the 
 
 Browser tests (`src/tests/browser/`) remain for components that use browser-native APIs. Page integration tests and browser tests are complementary, not overlapping:
 
-| Test type | Environment | Purpose |
-|---|---|---|
-| Unit | happy-dom | Prove isolated logic and coverage |
-| Page integration | happy-dom | Prove component composition |
-| Browser | Playwright/Chromium | Prove browser-native API behavior |
+| Test type        | Environment         | Purpose                           |
+| ---------------- | ------------------- | --------------------------------- |
+| Unit             | happy-dom           | Prove isolated logic and coverage |
+| Page integration | happy-dom           | Prove component composition       |
+| Browser          | Playwright/Chromium | Prove browser-native API behavior |
 
 A component like `ModalDialog` has all three: unit tests (logic), page integration (composes correctly inside pages), and browser tests (`showModal()` works).
 
@@ -136,12 +136,12 @@ A component like `ModalDialog` has all three: unit tests (logic), page integrati
 
 ## Enforcement
 
-| What | Mechanism | Scope |
-|---|---|---|
-| Every domain page has an integration test | Architecture test (extend existing) | All `src/apps/*/domains/*/pages/*.vue` files |
-| Integration tests use real child components | Code review + lint rule prohibiting `vi.mock()` of `@shared/components/` paths | All `src/tests/integration/**/*.spec.ts` files |
-| Services are mocked (no real HTTP) | Test-guard reporter catches slow tests from real I/O | All integration test files |
-| Separate coverage accounting | Separate vitest config with own coverage settings (no thresholds or separate thresholds) | `vitest.integration.config.ts` |
+| What                                        | Mechanism                                                                                | Scope                                          |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Every domain page has an integration test   | Architecture test (extend existing)                                                      | All `src/apps/*/domains/*/pages/*.vue` files   |
+| Integration tests use real child components | Code review + lint rule prohibiting `vi.mock()` of `@shared/components/` paths           | All `src/tests/integration/**/*.spec.ts` files |
+| Services are mocked (no real HTTP)          | Test-guard reporter catches slow tests from real I/O                                     | All integration test files                     |
+| Separate coverage accounting                | Separate vitest config with own coverage settings (no thresholds or separate thresholds) | `vitest.integration.config.ts`                 |
 
 ## Resolved Questions
 
@@ -151,12 +151,12 @@ A component like `ModalDialog` has all three: unit tests (logic), page integrati
 
 Four options were evaluated:
 
-| Option | Pros | Cons | Verdict |
-|---|---|---|---|
-| Global stub in integration setup.ts | Simple, one-time | Breaks "no mocks in setup" rule (ADR-011). Mixes test infrastructure concerns into setup file | Eliminated |
-| Vite resolve.alias in vitest config | Config-level, no test file pollution, no setup file mocking. Automatic for all transitive imports | Requires maintaining a stub module | **Chosen** |
-| Switch source code to deep imports | Fixes root cause for all consumers | Package doesn't expose individual imports via `exports` field. Depends on internal package structure | Eliminated — fragile dependency on undocumented internals |
-| Accept the cost | Zero effort | ~13s of icon tax across 16 page tests, grows linearly with pages | Eliminated — unnecessary overhead with a clean alternative |
+| Option                              | Pros                                                                                              | Cons                                                                                                 | Verdict                                                    |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Global stub in integration setup.ts | Simple, one-time                                                                                  | Breaks "no mocks in setup" rule (ADR-011). Mixes test infrastructure concerns into setup file        | Eliminated                                                 |
+| Vite resolve.alias in vitest config | Config-level, no test file pollution, no setup file mocking. Automatic for all transitive imports | Requires maintaining a stub module                                                                   | **Chosen**                                                 |
+| Switch source code to deep imports  | Fixes root cause for all consumers                                                                | Package doesn't expose individual imports via `exports` field. Depends on internal package structure | Eliminated — fragile dependency on undocumented internals  |
+| Accept the cost                     | Zero effort                                                                                       | ~13s of icon tax across 16 page tests, grows linearly with pages                                     | Eliminated — unnecessary overhead with a clean alternative |
 
 The implementation: `vitest.integration.config.ts` adds a Vite `resolve.alias` that redirects `@phosphor-icons/vue` to a lightweight module exporting stub components (`{template: "<i />"}`) for each used icon. This operates at the build/transform level — test files and source files are unchanged. The stub module lives in `src/tests/integration/stubs/` and only needs updating when a new icon is added to the codebase (rare — 7 icons over the project's lifetime so far).
 

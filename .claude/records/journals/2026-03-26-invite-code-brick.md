@@ -11,25 +11,25 @@
 
 The production code (SettingsPage.vue, RegisterPage.vue, inviteCode.ts, auth/types.ts) was already implemented on the branch. This shift focused on completing the test coverage for the new invite code functionality and adding the missing translation keys.
 
-| Action   | File                                                                                        | Notes                                                                                                          |
-| -------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Modified | `src/tests/unit/apps/families/domains/settings/pages/SettingsPage.spec.ts`                  | Added 18 new tests for invite code section: fetch, 404 handling, head/non-head visibility, copy, generate, revoke, error states. Added mockDeleteRequest, mockUserId, URL-based mockGetRequest routing. Total: 36 tests (was 18). |
-| Modified | `src/tests/unit/apps/families/domains/auth/pages/RegisterPage.spec.ts`                      | Updated field count from 5 to 6, switched from index-based to label-based `.find()` patterns, added invite code optional test, added empty invite code sends undefined test. Total: 11 tests (was 9). |
-| Modified | `src/apps/families/services/translation.ts`                                                 | Added 9 translation keys for both EN and NL: auth.inviteCode, settings.inviteCodeTitle, settings.inviteCodeDescription, settings.generateInviteCode, settings.revokeCode, settings.copyCode, settings.codeCopied, settings.codeExpires, settings.inviteCodeError |
+| Action   | File                                                                       | Notes                                                                                                                                                                                                                                                            |
+| -------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Modified | `src/tests/unit/apps/families/domains/settings/pages/SettingsPage.spec.ts` | Added 18 new tests for invite code section: fetch, 404 handling, head/non-head visibility, copy, generate, revoke, error states. Added mockDeleteRequest, mockUserId, URL-based mockGetRequest routing. Total: 36 tests (was 18).                                |
+| Modified | `src/tests/unit/apps/families/domains/auth/pages/RegisterPage.spec.ts`     | Updated field count from 5 to 6, switched from index-based to label-based `.find()` patterns, added invite code optional test, added empty invite code sends undefined test. Total: 11 tests (was 9).                                                            |
+| Modified | `src/apps/families/services/translation.ts`                                | Added 9 translation keys for both EN and NL: auth.inviteCode, settings.inviteCodeTitle, settings.inviteCodeDescription, settings.generateInviteCode, settings.revokeCode, settings.copyCode, settings.codeCopied, settings.codeExpires, settings.inviteCodeError |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                             | Met | Notes                                                                     |
-| ---------------------------------------------------------------- | --- | ------------------------------------------------------------------------- |
-| Family head sees "Generate Invite Code" on settings page         | Yes | Covered by `isHead` computed + v-if, tested                               |
-| Generated code is displayed with copy-to-clipboard               | Yes | Code display + navigator.clipboard.writeText, tested                      |
-| Family head can revoke/regenerate the code                       | Yes | POST generate + DELETE revoke, both tested                                |
-| Registration form has an optional invite code field              | Yes | TextInput with `:optional="true"`, tested                                 |
-| Entering a valid code during registration joins user to family   | Yes | inviteCode passed in register call, tested with value and empty           |
-| Invalid/expired code shows clear error message                   | Yes | Validation errors bound via useValidationErrors composable                |
-| Non-head members cannot see the generate button                  | Yes | v-if="isHead" + userId comparison, tested for non-head user              |
-| 100% test coverage on new code                                   | Yes | 100% lines, branches, functions, statements                              |
-| All quality gates pass                                           | Yes | All 7 gauntlet checks pass                                               |
+| Acceptance Criterion                                           | Met | Notes                                                           |
+| -------------------------------------------------------------- | --- | --------------------------------------------------------------- |
+| Family head sees "Generate Invite Code" on settings page       | Yes | Covered by `isHead` computed + v-if, tested                     |
+| Generated code is displayed with copy-to-clipboard             | Yes | Code display + navigator.clipboard.writeText, tested            |
+| Family head can revoke/regenerate the code                     | Yes | POST generate + DELETE revoke, both tested                      |
+| Registration form has an optional invite code field            | Yes | TextInput with `:optional="true"`, tested                       |
+| Entering a valid code during registration joins user to family | Yes | inviteCode passed in register call, tested with value and empty |
+| Invalid/expired code shows clear error message                 | Yes | Validation errors bound via useValidationErrors composable      |
+| Non-head members cannot see the generate button                | Yes | v-if="isHead" + userId comparison, tested for non-head user     |
+| 100% test coverage on new code                                 | Yes | 100% lines, branches, functions, statements                     |
+| All quality gates pass                                         | Yes | All 7 gauntlet checks pass                                      |
 
 ## Decisions Made
 
@@ -41,15 +41,15 @@ The production code (SettingsPage.vue, RegisterPage.vue, inviteCode.ts, auth/typ
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                        |
-| ------------- | ------ | ---------------------------- |
-| format:check  | Pass   |                              |
+| Check         | Result | Notes                               |
+| ------------- | ------ | ----------------------------------- |
+| format:check  | Pass   |                                     |
 | lint          | Pass   | 0 errors, 5 warnings (pre-existing) |
-| lint:vue      | Pass   |                              |
-| type-check    | Pass   |                              |
-| test:coverage | Pass   | 100% all metrics, 1167 tests |
-| knip          | Pass   |                              |
-| size          | Pass   | families: 104.72kB / 350kB   |
+| lint:vue      | Pass   |                                     |
+| type-check    | Pass   |                                     |
+| test:coverage | Pass   | 100% all metrics, 1167 tests        |
+| knip          | Pass   |                                     |
+| size          | Pass   | families: 104.72kB / 350kB          |
 
 ## Showcase Readiness
 
@@ -81,8 +81,8 @@ Solid. The invite code feature demonstrates a clean pattern for head-only settin
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                                        | Context                                                                                       | Shift Evidence               |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------- |
 | Before running type-check on modified Vue templates, grep translation keys used in the template against the translation schema file to catch missing keys early | Hit 5 type errors for missing translation keys that required adding to both EN and NL schemas | 2026-03-26-invite-code-brick |
 
 ---
@@ -110,8 +110,8 @@ Both decisions (URL-based mock routing, label-based find) are sound. No objectio
 
 ### Training Evaluation
 
-| Proposal | Verdict | Reason |
-| --- | --- | --- |
+| Proposal                                                                                                                                   | Verdict   | Reason                                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Before running type-check on modified Vue templates, grep translation keys against the translation schema file to catch missing keys early | Candidate | Valid observation -- translation key mismatches are a predictable failure mode when adding UI with i18n. One shift so far; needs a second confirming observation before graduation. |
 
 ### Graduation Check

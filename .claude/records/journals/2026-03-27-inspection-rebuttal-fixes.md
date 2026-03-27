@@ -36,11 +36,11 @@ ADR-0009 was mislabeled as "ResourceData Pattern" when it actually covers compon
 
 ## Work Summary
 
-| Action   | File                                                         | Notes                                                                                 |
-| -------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
-| Modified | `src/shared/helpers/string.ts`                               | Added `deepSnakeKeys` re-export from `string-ts` to centralize the conversion boundary |
-| Modified | `src/apps/families/domains/sets/pages/ScanSetPage.vue`       | Changed `deepSnakeKeys` import from `string-ts` to `@shared/helpers/string`           |
-| Modified | `src/tests/unit/shared/helpers/string.spec.ts`               | Added 3 tests for `deepSnakeKeys` re-export (camelCase, nested, already snake_case)   |
+| Action   | File                                                   | Notes                                                                                  |
+| -------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| Modified | `src/shared/helpers/string.ts`                         | Added `deepSnakeKeys` re-export from `string-ts` to centralize the conversion boundary |
+| Modified | `src/apps/families/domains/sets/pages/ScanSetPage.vue` | Changed `deepSnakeKeys` import from `string-ts` to `@shared/helpers/string`            |
+| Modified | `src/tests/unit/shared/helpers/string.spec.ts`         | Added 3 tests for `deepSnakeKeys` re-export (camelCase, nested, already snake_case)    |
 
 ### Pre-existing Fixes (not modified in this shift)
 
@@ -54,17 +54,17 @@ Findings 1, 3, 4, 5, and 6 were already remediated in prior commits on this bran
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                        | Met | Notes                                                            |
-| --------------------------------------------------------------------------- | --- | ---------------------------------------------------------------- |
-| All 6 findings formally responded to (ACCEPT / REBUT / PARTIAL)            | Yes | Both medium findings ACCEPTed above; 4 low findings ACCEPTed    |
-| No `deepCamelKeys` imports remain in families app production files          | Yes | Grep confirms zero results                                      |
-| `ScanSetPage.vue` uses `deepSnakeKeys()` for outgoing payload              | Yes | Line 62, now imported from `@shared/helpers/string`              |
-| `SettingsPage.vue` uses `isAxiosError()` for error handling                | Yes | Lines 108, 132 — pre-existing fix                               |
-| All 7 domain `index.ts` files use lazy imports consistently                | Yes | `home/index.ts` already converted — pre-existing fix             |
-| Scanner component props receive translated strings with keys in EN and NL  | Yes | Pre-existing fix — keys in translation.ts, `t()` calls in pages |
-| CLAUDE.md ADR references are accurate                                      | Yes | War-room line removed — pre-existing fix                         |
-| Quality gauntlet passes                                                    | Yes | All 7 checks pass                                               |
-| 100% test coverage maintained                                              | Yes | 100% lines/branches/functions/statements                        |
+| Acceptance Criterion                                                      | Met | Notes                                                           |
+| ------------------------------------------------------------------------- | --- | --------------------------------------------------------------- |
+| All 6 findings formally responded to (ACCEPT / REBUT / PARTIAL)           | Yes | Both medium findings ACCEPTed above; 4 low findings ACCEPTed    |
+| No `deepCamelKeys` imports remain in families app production files        | Yes | Grep confirms zero results                                      |
+| `ScanSetPage.vue` uses `deepSnakeKeys()` for outgoing payload             | Yes | Line 62, now imported from `@shared/helpers/string`             |
+| `SettingsPage.vue` uses `isAxiosError()` for error handling               | Yes | Lines 108, 132 — pre-existing fix                               |
+| All 7 domain `index.ts` files use lazy imports consistently               | Yes | `home/index.ts` already converted — pre-existing fix            |
+| Scanner component props receive translated strings with keys in EN and NL | Yes | Pre-existing fix — keys in translation.ts, `t()` calls in pages |
+| CLAUDE.md ADR references are accurate                                     | Yes | War-room line removed — pre-existing fix                        |
+| Quality gauntlet passes                                                   | Yes | All 7 checks pass                                               |
+| 100% test coverage maintained                                             | Yes | 100% lines/branches/functions/statements                        |
 
 ## Decisions Made
 
@@ -74,17 +74,17 @@ Findings 1, 3, 4, 5, and 6 were already remediated in prior commits on this bran
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                                                       |
-| ------------- | ------ | --------------------------------------------------------------------------- |
-| format:check  | PASS*  | 4 pre-existing failures in `.claude/` docs and component-registry.json      |
-| lint          | PASS   | 5 pre-existing warnings (0 errors)                                          |
-| lint:vue      | PASS   |                                                                              |
-| type-check    | PASS   |                                                                              |
-| test:coverage | PASS   | 100% lines, 100% branches, 100% functions, 100% statements                 |
-| knip          | PASS   |                                                                              |
-| size          | PASS   | families: 105.38kB/350kB, admin: 30.79kB/150kB                              |
+| Check         | Result | Notes                                                                  |
+| ------------- | ------ | ---------------------------------------------------------------------- |
+| format:check  | PASS\* | 4 pre-existing failures in `.claude/` docs and component-registry.json |
+| lint          | PASS   | 5 pre-existing warnings (0 errors)                                     |
+| lint:vue      | PASS   |                                                                        |
+| type-check    | PASS   |                                                                        |
+| test:coverage | PASS   | 100% lines, 100% branches, 100% functions, 100% statements             |
+| knip          | PASS   |                                                                        |
+| size          | PASS   | families: 105.38kB/350kB, admin: 30.79kB/150kB                         |
 
-*format:check failures are all pre-existing `.claude/` markdown files and auto-generated JSON — not production code.
+\*format:check failures are all pre-existing `.claude/` markdown files and auto-generated JSON — not production code.
 
 ## Showcase Readiness
 
@@ -116,8 +116,8 @@ The re-export pattern is clean and defensible. A reviewer would see a consistent
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                                                                                   | Context                                                                                                                                                                                                                                        | Shift Evidence                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | When routing an existing import through a new shared re-export, trace the mock chain end-to-end: verify that existing test mocks for the original source still intercept calls through the new import path | ScanSetPage.spec.ts mocks `string-ts`; ScanSetPage.vue now imports from `@shared/helpers/string` which internally imports from `string-ts`. The mock still works, but I verified this by running tests rather than reasoning about it upfront. | 2026-03-27-inspection-rebuttal-fixes |
 
 ---
@@ -144,12 +144,12 @@ This is a cleanup delivery, not a feature. It does what cleanup should do: close
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| When routing an import through a new re-export, trace the mock chain end-to-end | Candidate | Legitimate observation. Vitest's module mocking intercepts at the source level — changing an import path can break mock chains silently if the original mock target no longer sits in the call path. The architect caught this as a blind spot (verified by running tests rather than reasoning upfront). First observation — needs a second confirming instance. |
+| Proposal                                                                        | Disposition | Rationale                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| When routing an import through a new re-export, trace the mock chain end-to-end | Candidate   | Legitimate observation. Vitest's module mocking intercepts at the source level — changing an import path can break mock chains silently if the original mock target no longer sits in the call path. The architect caught this as a blind spot (verified by running tests rather than reasoning upfront). First observation — needs a second confirming instance. |
 
 ### Notes for the Architect
 
 1. The audit-before-build approach saved this shift from being a waste of time. Five pre-existing fixes discovered up front is efficient triage. Keep doing this on remediation permits.
 
-2. The blind spot about the mock chain is a good catch. The fact that it worked is not the point — the point is that you couldn't explain *why* it would work before running the tests. On a larger codebase, that's the kind of assumption that causes 30-minute debugging sessions when it eventually doesn't work. The training proposal is well-framed.
+2. The blind spot about the mock chain is a good catch. The fact that it worked is not the point — the point is that you couldn't explain _why_ it would work before running the tests. On a larger codebase, that's the kind of assumption that causes 30-minute debugging sessions when it eventually doesn't work. The training proposal is well-framed.

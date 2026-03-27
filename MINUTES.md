@@ -531,3 +531,28 @@ _Captured by the Meeting Minutes Secretary (1x1 translucent-clear brick, with cl
 - Whether modals/sub-views need integration tests — evaluate after first cycle of page tests reveals weak points
 
 ---
+
+## 2026-03-27 — Page Integration Test Suite Delivery (ADR-013 Implementation)
+
+### Decisions
+
+- **Permit scope excluded architecture enforcement test**: The architecture test that enforces "every domain page has an integration test" was deliberately excluded from the permit — it's enforcement tooling, not the test suite itself, and warrants its own permit once the suite is running.
+- **Domain-local modals are legitimate mock targets**: `AssignPartModal.vue` (under `@app/domains/sets/modals/`) was mocked in `SetDetailPage` integration test. It's domain-local, not `@shared/components/`, so ADR-013's "no mocking shared components" rule doesn't apply. Mocking avoids its own onMounted HTTP calls.
+- **HTMLDialogElement polyfilled in setup, not mocked**: Real `ConfirmDialog` -> `ModalDialog` calls `showModal()` which happy-dom doesn't implement. Polyfilled in `setup.ts` to keep the component tree real rather than stubbing ModalDialog.
+- **CSV helper mocked for DOM API side effects**: `@shared/helpers/csv`'s `downloadCsv` calls `document.createElement('a')` and `URL.createObjectURL` — mocked in integration tests since CSV export is business logic already covered by unit tests.
+- **Vue ref auto-unwrapping requires real `ref()` in mock stores**: Pages using `getAll.length` in templates need Vue auto-unwrapping. Mock stores must use real `ref()` created inside async `vi.mock()` factories, assigned to `vi.hoisted()` holders. Plain `{value: []}` doesn't auto-unwrap.
+
+### Action Items
+
+- [ ] CEO: Approve knowledge update — Vue ref auto-unwrapping gotcha for mock stores
+- [ ] CFO: File separate permit for architecture test enforcing "every page has integration test"
+- [ ] CFO: Monitor convergence of "check enforcement rules before adding test infrastructure files" candidate pattern (knip 2026-03-26 + architecture test 2026-03-27)
+
+### Notes
+
+- Delivery: 16 files, 90 tests, 4.81s total execution time. All acceptance criteria met. Full quality gauntlet passes.
+- Three training proposals logged as candidates in graduation log. No graduations this round.
+- CFO concern: architect wrote 16 files without `vi.hoisted()`, watched 15 fail, then rewrote all of them. The unit test codebase already demonstrates the pattern — this was a pre-work discipline failure, not a knowledge gap.
+- Previous action items resolved: architect infrastructure + 16 page tests complete. Architecture enforcement test remains open (separate permit).
+
+---

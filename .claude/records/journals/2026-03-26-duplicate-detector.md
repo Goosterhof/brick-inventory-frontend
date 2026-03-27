@@ -16,25 +16,25 @@ The duplicate detection feature was already partially implemented in the codebas
 3. Adding comprehensive test coverage for both pages' duplicate detection flows
 4. Adding the missing `@app/stores` mock to `ScanSetPage.spec.ts` (the test was broken without it)
 
-| Action   | File                                                                          | Notes                                                                     |
-| -------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Modified | `src/apps/families/domains/sets/pages/AddSetPage.vue`                         | Added `watch` import, watcher to reset `duplicateDismissed` on setNum change |
-| Modified | `src/apps/families/domains/sets/pages/ScanSetPage.vue`                        | Added duplicate warning banner template (matching AddSetPage pattern)     |
-| Modified | `src/tests/unit/apps/families/domains/sets/pages/AddSetPage.spec.ts`          | Added 6 duplicate detection tests, hoisted mockStoreGetAll for mutability |
-| Modified | `src/tests/unit/apps/families/domains/sets/pages/ScanSetPage.spec.ts`         | Added `@app/stores` mock (was missing), 6 duplicate detection tests       |
+| Action   | File                                                                  | Notes                                                                        |
+| -------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Modified | `src/apps/families/domains/sets/pages/AddSetPage.vue`                 | Added `watch` import, watcher to reset `duplicateDismissed` on setNum change |
+| Modified | `src/apps/families/domains/sets/pages/ScanSetPage.vue`                | Added duplicate warning banner template (matching AddSetPage pattern)        |
+| Modified | `src/tests/unit/apps/families/domains/sets/pages/AddSetPage.spec.ts`  | Added 6 duplicate detection tests, hoisted mockStoreGetAll for mutability    |
+| Modified | `src/tests/unit/apps/families/domains/sets/pages/ScanSetPage.spec.ts` | Added `@app/stores` mock (was missing), 6 duplicate detection tests          |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                        | Met | Notes                                                              |
-| --------------------------------------------------------------------------- | --- | ------------------------------------------------------------------ |
-| Warning appears when entering a set number that already exists              | Yes | Tested in both AddSetPage and ScanSetPage                          |
-| Warning shows existing set's quantity and status                            | Yes | Template uses `{quantity}` and `{status}` replacement              |
-| User can dismiss the warning and proceed with adding                        | Yes | Dismiss button hides warning, form/add button still works          |
-| Warning does not appear for set numbers not in the family                   | Yes | Tested: non-matching set num, empty set num, empty store           |
-| Same check works on ScanSetPage after barcode resolves                      | Yes | Template added, tested with 6 scenarios                            |
-| Store data is available at check time                                       | Yes | Uses `familySetStoreModule.getAll` which is already cached         |
-| 100% test coverage on new code                                              | Yes | 100% lines, branches, functions, statements                        |
-| All quality gates pass                                                      | Yes | See gauntlet below                                                 |
+| Acceptance Criterion                                           | Met | Notes                                                      |
+| -------------------------------------------------------------- | --- | ---------------------------------------------------------- |
+| Warning appears when entering a set number that already exists | Yes | Tested in both AddSetPage and ScanSetPage                  |
+| Warning shows existing set's quantity and status               | Yes | Template uses `{quantity}` and `{status}` replacement      |
+| User can dismiss the warning and proceed with adding           | Yes | Dismiss button hides warning, form/add button still works  |
+| Warning does not appear for set numbers not in the family      | Yes | Tested: non-matching set num, empty set num, empty store   |
+| Same check works on ScanSetPage after barcode resolves         | Yes | Template added, tested with 6 scenarios                    |
+| Store data is available at check time                          | Yes | Uses `familySetStoreModule.getAll` which is already cached |
+| 100% test coverage on new code                                 | Yes | 100% lines, branches, functions, statements                |
+| All quality gates pass                                         | Yes | See gauntlet below                                         |
 
 ## Decisions Made
 
@@ -44,15 +44,15 @@ The duplicate detection feature was already partially implemented in the codebas
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                        |
-| ------------- | ------ | -------------------------------------------- |
+| Check         | Result | Notes                                                                   |
+| ------------- | ------ | ----------------------------------------------------------------------- |
 | format:check  | Pass   | My files pass; 2 pre-existing failures in `.claude/` and generated JSON |
-| lint          | Pass   | 0 errors, 5 pre-existing warnings            |
-| lint:vue      | Pass   |                                               |
-| type-check    | Pass   |                                               |
-| test:coverage | Pass   | 100% lines, branches, functions, statements  |
-| knip          | Pass   |                                               |
-| size          | Pass   | families: 105.38 kB, admin: 30.79 kB         |
+| lint          | Pass   | 0 errors, 5 pre-existing warnings                                       |
+| lint:vue      | Pass   |                                                                         |
+| type-check    | Pass   |                                                                         |
+| test:coverage | Pass   | 100% lines, branches, functions, statements                             |
+| knip          | Pass   |                                                                         |
+| size          | Pass   | families: 105.38 kB, admin: 30.79 kB                                    |
 
 ## Showcase Readiness
 
@@ -83,8 +83,8 @@ Solid. The duplicate detection is a straightforward reactive computed check -- n
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                                              | Context                                                                       | Shift Evidence                |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------- |
 | When a feature is partially implemented, diff the script and template sections independently -- computed/reactive logic without corresponding template usage is a gap | ScanSetPage had duplicate detection logic in script but no template rendering | 2026-03-26-duplicate-detector |
 
 ---
@@ -111,9 +111,9 @@ Good. The feature is small, follows existing patterns exactly, and the bug fix d
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| When a feature is partially implemented, diff the script and template sections independently — computed/reactive logic without corresponding template usage is a gap | Candidate | Valid observation. ScanSetPage had all the logic but no template. This is a Vue-specific variant of the existing "check if work is partially done" candidate but distinct enough — it's about *completeness auditing within a file*, not about checking git history. First occurrence; needs a second confirming shift. |
+| Proposal                                                                                                                                                             | Disposition | Rationale                                                                                                                                                                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| When a feature is partially implemented, diff the script and template sections independently — computed/reactive logic without corresponding template usage is a gap | Candidate   | Valid observation. ScanSetPage had all the logic but no template. This is a Vue-specific variant of the existing "check if work is partially done" candidate but distinct enough — it's about _completeness auditing within a file_, not about checking git history. First occurrence; needs a second confirming shift. |
 
 ### Notes for the Architect
 

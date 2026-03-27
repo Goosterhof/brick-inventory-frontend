@@ -9,24 +9,24 @@
 
 ## Work Summary
 
-| Action   | File                                                                                      | Notes                                                                       |
-| -------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Modified | `src/apps/families/domains/settings/pages/SettingsPage.vue`                               | Added removal logic, ConfirmDialog, DangerButton per non-head member        |
-| Modified | `src/apps/families/services/translation.ts`                                               | Added 8 translation keys (EN + NL) for removal flow                        |
-| Modified | `src/tests/unit/apps/families/domains/settings/pages/SettingsPage.spec.ts`                | Added 10 new tests for removal flow; fixed 3 existing tests broken by change |
+| Action   | File                                                                       | Notes                                                                        |
+| -------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Modified | `src/apps/families/domains/settings/pages/SettingsPage.vue`                | Added removal logic, ConfirmDialog, DangerButton per non-head member         |
+| Modified | `src/apps/families/services/translation.ts`                                | Added 8 translation keys (EN + NL) for removal flow                          |
+| Modified | `src/tests/unit/apps/families/domains/settings/pages/SettingsPage.spec.ts` | Added 10 new tests for removal flow; fixed 3 existing tests broken by change |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                   | Met | Notes                                                                      |
-| ------------------------------------------------------ | --- | -------------------------------------------------------------------------- |
-| Remove button next to each non-head family member      | Yes | DangerButton with `v-if="isHead && !member.isHead"`                       |
-| Remove button NOT shown for family head                | Yes | Tested explicitly                                                          |
-| Only family head sees remove buttons                   | Yes | Conditional on `isHead` computed, tested with non-head userId              |
-| Confirmation dialog warns about consequences           | Yes | Uses ConfirmDialog with specified message text                             |
-| Successful removal updates member list immediately     | Yes | Filters member from reactive `members` ref                                |
-| Error states handled (422, 403, 404, network)          | Yes | 422=self-removal, 404=not found (also removes from list), 403/other=generic |
-| 100% test coverage on new code                         | Yes | 48 tests total, 10 new                                                    |
-| All quality gates pass                                 | Yes | Pre-existing test guard failure on 3 unrelated files                       |
+| Acceptance Criterion                               | Met | Notes                                                                       |
+| -------------------------------------------------- | --- | --------------------------------------------------------------------------- |
+| Remove button next to each non-head family member  | Yes | DangerButton with `v-if="isHead && !member.isHead"`                         |
+| Remove button NOT shown for family head            | Yes | Tested explicitly                                                           |
+| Only family head sees remove buttons               | Yes | Conditional on `isHead` computed, tested with non-head userId               |
+| Confirmation dialog warns about consequences       | Yes | Uses ConfirmDialog with specified message text                              |
+| Successful removal updates member list immediately | Yes | Filters member from reactive `members` ref                                  |
+| Error states handled (422, 403, 404, network)      | Yes | 422=self-removal, 404=not found (also removes from list), 403/other=generic |
+| 100% test coverage on new code                     | Yes | 48 tests total, 10 new                                                      |
+| All quality gates pass                             | Yes | Pre-existing test guard failure on 3 unrelated files                        |
 
 ## Decisions Made
 
@@ -38,15 +38,15 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                                                          |
-| ------------- | ------ | ------------------------------------------------------------------------------ |
-| format:check  | Pass   | oxfmt via lint-staged                                                          |
-| lint          | Pass   | oxlint via lint-staged, 0 errors (3 pre-existing warnings in unrelated files)  |
-| lint:vue      | Pass   | All conventions passed                                                         |
-| type-check    | Pass   | vue-tsc clean                                                                  |
-| test:coverage | Pass*  | 48/48 pass, 100% coverage. *Pre-existing test guard failure on 3 unrelated files (SetsOverviewTheme, ComponentGallery, ComponentHealth >1000ms). Confirmed same failure on base branch. |
-| knip          | Pass   | No dead code                                                                   |
-| size          | Pass   | families: 105.71 kB, admin: 30.79 kB                                          |
+| Check         | Result | Notes                                                                                                                                                                                    |
+| ------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| format:check  | Pass   | oxfmt via lint-staged                                                                                                                                                                    |
+| lint          | Pass   | oxlint via lint-staged, 0 errors (3 pre-existing warnings in unrelated files)                                                                                                            |
+| lint:vue      | Pass   | All conventions passed                                                                                                                                                                   |
+| type-check    | Pass   | vue-tsc clean                                                                                                                                                                            |
+| test:coverage | Pass\* | 48/48 pass, 100% coverage. \*Pre-existing test guard failure on 3 unrelated files (SetsOverviewTheme, ComponentGallery, ComponentHealth >1000ms). Confirmed same failure on base branch. |
+| knip          | Pass   | No dead code                                                                                                                                                                             |
+| size          | Pass   | families: 105.71 kB, admin: 30.79 kB                                                                                                                                                     |
 
 ## Showcase Readiness
 
@@ -79,8 +79,8 @@ The pre-existing test guard failures on the base branch are a concern for portfo
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| -------- | ------- | -------------- |
+| Proposal                                                                                                                                                                                                                                            | Context                                                                                                | Shift Evidence                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------- |
 | When adding a new instance of a shared component (e.g., DangerButton) to a page that already uses it, grep the existing test file for `findComponent(ComponentName)` (singular) calls -- these will break if they relied on being the only instance | Adding remove DangerButtons broke 3 existing revoke-code tests that used `findComponent(DangerButton)` | 2026-03-27-member-removal-wrench |
 
 ---
@@ -116,6 +116,6 @@ All three decisions (404 list cleanup, 403 as generic error, findAllComponents t
 
 ### Training Disposition
 
-| Proposal | Disposition | Notes |
-| --- | --- | --- |
+| Proposal                                                                | Disposition                 | Notes                                                          |
+| ----------------------------------------------------------------------- | --------------------------- | -------------------------------------------------------------- |
 | Grep for singular `findComponent` calls when adding component instances | Candidate (1st observation) | Logged in graduation tracker. Needs a second confirming shift. |

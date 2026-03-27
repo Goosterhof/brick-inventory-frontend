@@ -20,22 +20,22 @@ Build a page integration test suite that mounts each domain page with real child
 - `src/tests/integration/setup.ts` — integration test setup file
 - `src/tests/integration/stubs/phosphorIcons.ts` — lightweight icon stub module for Vite alias
 - Integration test files for all 16 domain pages:
-  - `about/pages/AboutPage.spec.ts`
-  - `auth/pages/LoginPage.spec.ts`
-  - `auth/pages/RegisterPage.spec.ts`
-  - `home/pages/HomePage.spec.ts`
-  - `parts/pages/PartsPage.spec.ts`
-  - `sets/pages/AddSetPage.spec.ts`
-  - `sets/pages/EditSetPage.spec.ts`
-  - `sets/pages/IdentifyBrickPage.spec.ts`
-  - `sets/pages/ScanSetPage.spec.ts`
-  - `sets/pages/SetDetailPage.spec.ts`
-  - `sets/pages/SetsOverviewPage.spec.ts`
-  - `storage/pages/AddStoragePage.spec.ts`
-  - `storage/pages/EditStoragePage.spec.ts`
-  - `storage/pages/StorageDetailPage.spec.ts`
-  - `storage/pages/StorageOverviewPage.spec.ts`
-  - `settings/pages/SettingsPage.spec.ts`
+    - `about/pages/AboutPage.spec.ts`
+    - `auth/pages/LoginPage.spec.ts`
+    - `auth/pages/RegisterPage.spec.ts`
+    - `home/pages/HomePage.spec.ts`
+    - `parts/pages/PartsPage.spec.ts`
+    - `sets/pages/AddSetPage.spec.ts`
+    - `sets/pages/EditSetPage.spec.ts`
+    - `sets/pages/IdentifyBrickPage.spec.ts`
+    - `sets/pages/ScanSetPage.spec.ts`
+    - `sets/pages/SetDetailPage.spec.ts`
+    - `sets/pages/SetsOverviewPage.spec.ts`
+    - `storage/pages/AddStoragePage.spec.ts`
+    - `storage/pages/EditStoragePage.spec.ts`
+    - `storage/pages/StorageDetailPage.spec.ts`
+    - `storage/pages/StorageOverviewPage.spec.ts`
+    - `settings/pages/SettingsPage.spec.ts`
 - npm scripts: `test:integration` (watch) and `test:integration:run` (single run)
 - Vite `resolve.alias` for `@phosphor-icons/vue` pointing to the stub module
 
@@ -78,5 +78,5 @@ This is a large permit (16 test files + infrastructure). The architect may want 
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** [2026-03-27-page-integration-tests](../journals/2026-03-27-page-integration-tests.md)

@@ -18,12 +18,12 @@ Formally rebut or accept the 6 findings from the 2026-03-26 families app audit (
 
 - Formal rebuttal response (ACCEPT / REBUT / PARTIAL) for both medium findings
 - Code fixes for all 6 findings:
-  1. **Finding 1 (medium):** Replace `deepCamelKeys(data) as T` with `toCamelCaseTyped<T>(data)` in `HomePage.vue`, `SettingsPage.vue`, `SetDetailPage.vue`, `PartsPage.vue`. Remove direct `string-ts` imports.
-  2. **Finding 2 (low):** Replace manual `set_num` in `ScanSetPage.vue` with `deepSnakeKeys()`.
-  3. **Finding 3 (low):** Replace raw type cast in `SettingsPage.vue` with `isAxiosError()`.
-  4. **Finding 4 (low):** Convert eager import in `home/index.ts` to lazy import.
-  5. **Finding 5 (low):** Replace hardcoded English strings in `ScanSetPage.vue` and `IdentifyBrickPage.vue` scanner props with translation service calls. Add required translation keys to EN and NL schemas.
-  6. **Finding 6 (medium):** Fix CLAUDE.md — correct ADR-0009 mislabeling and resolve the ADR-0014 dead reference.
+    1. **Finding 1 (medium):** Replace `deepCamelKeys(data) as T` with `toCamelCaseTyped<T>(data)` in `HomePage.vue`, `SettingsPage.vue`, `SetDetailPage.vue`, `PartsPage.vue`. Remove direct `string-ts` imports.
+    2. **Finding 2 (low):** Replace manual `set_num` in `ScanSetPage.vue` with `deepSnakeKeys()`.
+    3. **Finding 3 (low):** Replace raw type cast in `SettingsPage.vue` with `isAxiosError()`.
+    4. **Finding 4 (low):** Convert eager import in `home/index.ts` to lazy import.
+    5. **Finding 5 (low):** Replace hardcoded English strings in `ScanSetPage.vue` and `IdentifyBrickPage.vue` scanner props with translation service calls. Add required translation keys to EN and NL schemas.
+    6. **Finding 6 (medium):** Fix CLAUDE.md — correct ADR-0009 mislabeling and resolve the ADR-0014 dead reference.
 - Updated tests for any behavioral changes (translation keys, error handling)
 - Full quality gauntlet pass
 
