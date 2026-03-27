@@ -4,6 +4,7 @@ import type {FamilyMember} from "@app/types/profile";
 
 import {familyAuthService, familyHttpService, familyTranslationService} from "@app/services";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
+import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
@@ -26,6 +27,49 @@ const isHead = computed(() => {
     const userId = familyAuthService.userId();
     return members.value.some((member) => member.id === userId && member.isHead);
 });
+
+const memberToRemove = ref<FamilyMember | null>(null);
+const showRemoveConfirm = ref(false);
+const memberRemoved = ref(false);
+const removeMemberError = ref("");
+
+const confirmRemoveMember = (member: FamilyMember) => {
+    memberToRemove.value = member;
+    showRemoveConfirm.value = true;
+    memberRemoved.value = false;
+    removeMemberError.value = "";
+};
+
+const cancelRemoveMember = () => {
+    showRemoveConfirm.value = false;
+    memberToRemove.value = null;
+};
+
+const removeMember = async () => {
+    if (!memberToRemove.value) return;
+
+    const memberId = memberToRemove.value.id;
+    showRemoveConfirm.value = false;
+
+    try {
+        await familyHttpService.deleteRequest(`/family/members/${String(memberId)}`);
+        members.value = members.value.filter((m) => m.id !== memberId);
+        memberRemoved.value = true;
+        removeMemberError.value = "";
+    } catch (error: unknown) {
+        const status = isAxiosError(error) ? error.response?.status : undefined;
+        if (status === 422) {
+            removeMemberError.value = t("settings.removeMemberSelfError").value;
+        } else if (status === 404) {
+            removeMemberError.value = t("settings.removeMemberNotFound").value;
+            members.value = members.value.filter((m) => m.id !== memberId);
+        } else {
+            removeMemberError.value = t("settings.removeMemberError").value;
+        }
+    } finally {
+        memberToRemove.value = null;
+    }
+};
 
 const rebrickableToken = ref("");
 const tokenSaving = ref(false);
@@ -171,8 +215,27 @@ const importSets = async () => {
                         <BadgeLabel v-if="member.isHead" variant="highlight">
                             {{ t("settings.familyHead").value }}
                         </BadgeLabel>
+                        <DangerButton v-if="isHead && !member.isHead" @click="confirmRemoveMember(member)">
+                            {{ t("settings.removeMember").value }}
+                        </DangerButton>
                     </div>
+
+                    <p v-if="memberRemoved" text="baseplate-green" font="bold">
+                        {{ t("settings.memberRemoved").value }}
+                    </p>
+                    <p v-if="removeMemberError" text="brick-red-dark" font="bold">{{ removeMemberError }}</p>
                 </div>
+
+                <ConfirmDialog
+                    :open="showRemoveConfirm"
+                    :title="t('settings.removeMemberTitle').value"
+                    :message="t('settings.removeMemberMessage').value"
+                    @confirm="removeMember"
+                    @cancel="cancelRemoveMember"
+                >
+                    <template #confirm>{{ t("settings.removeMember").value }}</template>
+                    <template #cancel>{{ t("common.cancel").value }}</template>
+                </ConfirmDialog>
             </section>
 
             <hr border="t-3 black" />

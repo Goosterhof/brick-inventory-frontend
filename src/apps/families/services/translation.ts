@@ -216,6 +216,14 @@ const translations = {
             codeCopied: "Code copied to clipboard!",
             codeExpires: "Expires at",
             inviteCodeError: "Could not load invite code. Please try again.",
+            removeMember: "Remove",
+            removeMemberTitle: "Remove family member",
+            removeMemberMessage:
+                "This member will be moved to their own family. Sets and parts they added will remain in your family's collection.",
+            memberRemoved: "Member removed successfully.",
+            removeMemberError: "Could not remove member. Please try again.",
+            removeMemberSelfError: "You cannot remove yourself from the family.",
+            removeMemberNotFound: "This member is no longer part of the family.",
         },
     },
     nl: {
@@ -435,6 +443,14 @@ const translations = {
             codeCopied: "Code gekopieerd naar klembord!",
             codeExpires: "Verloopt op",
             inviteCodeError: "Kon uitnodigingscode niet laden. Probeer het opnieuw.",
+            removeMember: "Verwijderen",
+            removeMemberTitle: "Gezinslid verwijderen",
+            removeMemberMessage:
+                "Dit lid wordt verplaatst naar een eigen gezin. Sets en onderdelen die zij hebben toegevoegd blijven in de collectie van je gezin.",
+            memberRemoved: "Gezinslid succesvol verwijderd.",
+            removeMemberError: "Kon gezinslid niet verwijderen. Probeer het opnieuw.",
+            removeMemberSelfError: "Je kunt jezelf niet uit het gezin verwijderen.",
+            removeMemberNotFound: "Dit lid maakt geen deel meer uit van het gezin.",
         },
     },
 } as const;
