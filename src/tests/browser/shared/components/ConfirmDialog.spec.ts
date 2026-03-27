@@ -7,8 +7,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 let wrapper: VueWrapper;
 let container: HTMLDivElement;
-let onConfirm: ReturnType<typeof vi.fn>;
-let onCancel: ReturnType<typeof vi.fn>;
+let onConfirm: () => void;
+let onCancel: () => void;
 
 const mountDialog = (open = false) =>
     mount(ConfirmDialog, {

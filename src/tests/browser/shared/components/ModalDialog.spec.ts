@@ -6,7 +6,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 let wrapper: VueWrapper;
 let container: HTMLDivElement;
-let onClose: ReturnType<typeof vi.fn>;
+let onClose: () => void;
 
 const mountModal = (open = false) =>
     mount(ModalDialog, {
