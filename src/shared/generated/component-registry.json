@@ -349,7 +349,8 @@
                 },
                 "showcase": {
                     "_root": [
-                        "src/apps/showcase/components/ComponentGallery.vue"
+                        "src/apps/showcase/components/ComponentGallery.vue",
+                        "src/apps/showcase/components/ResourceAdapterPlayground.vue"
                     ]
                 }
             },
@@ -1041,7 +1042,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/ComponentGallery.vue",
-                        "src/apps/showcase/components/FormValidationWorkbench.vue"
+                        "src/apps/showcase/components/FormValidationWorkbench.vue",
+                        "src/apps/showcase/components/ResourceAdapterPlayground.vue"
                     ]
                 }
             },
@@ -1262,6 +1264,7 @@
                         "src/apps/showcase/components/ComponentGallery.vue",
                         "src/apps/showcase/components/DialogServiceDemo.vue",
                         "src/apps/showcase/components/FormValidationWorkbench.vue",
+                        "src/apps/showcase/components/ResourceAdapterPlayground.vue",
                         "src/apps/showcase/components/ToastServiceDemo.vue"
                     ]
                 }
@@ -1524,7 +1527,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/ComponentGallery.vue",
-                        "src/apps/showcase/components/FormValidationWorkbench.vue"
+                        "src/apps/showcase/components/FormValidationWorkbench.vue",
+                        "src/apps/showcase/components/ResourceAdapterPlayground.vue"
                     ]
                 }
             },
