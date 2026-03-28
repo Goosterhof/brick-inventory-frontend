@@ -39,7 +39,7 @@ const dismissDuplicate = () => {
 type AddSetField = "setNum" | "quantity" | "status" | "purchaseDate" | "notes";
 const validationErrors = useValidationErrors<AddSetField>(familyHttpService);
 const {errors} = validationErrors;
-const {handleSubmit} = useFormSubmit(validationErrors);
+const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 const statusOptions: {
     value: FamilySetStatus;
@@ -118,7 +118,7 @@ const onSubmit = () =>
 
             <TextareaInput v-model="adapted.mutable.value.notes" :label="t('sets.notes').value" optional />
 
-            <PrimaryButton type="submit">{{ t("sets.add").value }}</PrimaryButton>
+            <PrimaryButton type="submit" :disabled="submitting">{{ t("sets.add").value }}</PrimaryButton>
         </form>
     </div>
 </template>

@@ -24,7 +24,7 @@ const showDeleteConfirm = ref(false);
 type EditSetField = "quantity" | "status" | "purchaseDate" | "notes";
 const validationErrors = useValidationErrors<EditSetField>(familyHttpService);
 const {errors} = validationErrors;
-const {handleSubmit} = useFormSubmit(validationErrors);
+const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 const statusOptions: {
     value: FamilySetStatus;
@@ -91,7 +91,7 @@ const handleDelete = async () => {
                 <TextareaInput v-model="adapted.mutable.notes" :label="t('sets.notes').value" optional />
 
                 <div flex gap="4">
-                    <PrimaryButton type="submit">{{ t("sets.save").value }}</PrimaryButton>
+                    <PrimaryButton type="submit" :disabled="submitting">{{ t("sets.save").value }}</PrimaryButton>
                     <DangerButton @click="showDeleteConfirm = true">{{ t("sets.delete").value }}</DangerButton>
                 </div>
             </form>

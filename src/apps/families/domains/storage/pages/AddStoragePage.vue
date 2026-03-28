@@ -14,7 +14,7 @@ const adapted = storageOptionStoreModule.generateNew();
 type AddStorageField = "name" | "description" | "parentId" | "row" | "column";
 const validationErrors = useValidationErrors<AddStorageField>(familyHttpService);
 const {errors} = validationErrors;
-const {handleSubmit} = useFormSubmit(validationErrors);
+const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 const onSubmit = () =>
     handleSubmit(async () => {
@@ -57,7 +57,7 @@ const onSubmit = () =>
                 </div>
             </div>
 
-            <PrimaryButton type="submit">{{ t("storage.add").value }}</PrimaryButton>
+            <PrimaryButton type="submit" :disabled="submitting">{{ t("storage.add").value }}</PrimaryButton>
         </form>
     </div>
 </template>
