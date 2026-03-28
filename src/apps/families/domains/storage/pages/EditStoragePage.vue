@@ -23,7 +23,7 @@ const showDeleteConfirm = ref(false);
 type EditStorageField = "name" | "description" | "parentId" | "row" | "column";
 const validationErrors = useValidationErrors<EditStorageField>(familyHttpService);
 const {errors} = validationErrors;
-const {handleSubmit} = useFormSubmit(validationErrors);
+const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
@@ -88,7 +88,7 @@ const handleDelete = async () => {
                 </div>
 
                 <div flex gap="4">
-                    <PrimaryButton type="submit">{{ t("storage.save").value }}</PrimaryButton>
+                    <PrimaryButton type="submit" :disabled="submitting">{{ t("storage.save").value }}</PrimaryButton>
                     <DangerButton @click="showDeleteConfirm = true">{{ t("storage.delete").value }}</DangerButton>
                 </div>
             </form>

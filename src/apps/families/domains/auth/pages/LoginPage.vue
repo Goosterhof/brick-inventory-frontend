@@ -19,7 +19,7 @@ const password = ref("");
 type LoginField = "email" | "password";
 const validationErrors = useValidationErrors<LoginField>(familyHttpService);
 const {errors} = validationErrors;
-const {handleSubmit} = useFormSubmit(validationErrors);
+const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 const onSubmit = () =>
     handleSubmit(async () => {
@@ -37,7 +37,7 @@ const onSubmit = () =>
 
             <TextInput v-model="password" :label="t('auth.password').value" type="password" :error="errors.password" />
 
-            <PrimaryButton type="submit">{{ t("auth.logIn").value }}</PrimaryButton>
+            <PrimaryButton type="submit" :disabled="submitting">{{ t("auth.logIn").value }}</PrimaryButton>
         </form>
 
         <p m="t-6" text="center">

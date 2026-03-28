@@ -23,7 +23,7 @@ const passwordConfirmation = ref("");
 type RegistrationField = "inviteCode" | "familyName" | "name" | "email" | "password" | "passwordConfirmation";
 const validationErrors = useValidationErrors<RegistrationField>(familyHttpService);
 const {errors} = validationErrors;
-const {handleSubmit} = useFormSubmit(validationErrors);
+const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 const onSubmit = () =>
     handleSubmit(async () => {
@@ -66,7 +66,7 @@ const onSubmit = () =>
                 :error="errors.passwordConfirmation"
             />
 
-            <PrimaryButton type="submit">{{ t("auth.register").value }}</PrimaryButton>
+            <PrimaryButton type="submit" :disabled="submitting">{{ t("auth.register").value }}</PrimaryButton>
         </form>
 
         <p m="t-6" text="center">
