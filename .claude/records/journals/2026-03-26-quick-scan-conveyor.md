@@ -11,24 +11,24 @@
 
 The conveyor flow was already substantially implemented in ScanSetPage.vue on this branch (the `addToCollection` function calls `scanAgain()` instead of navigating to `sets-detail`, toast service is wired, session counter and "Done scanning" button are present, and translations exist in both EN and NL). The primary gap was the **unit test file**, which still asserted the old navigate-to-detail behavior after adding a set.
 
-| Action   | File                                                                               | Notes                                                                                       |
-| -------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Modified | `src/tests/unit/apps/families/domains/sets/pages/ScanSetPage.spec.ts`              | Replaced stale "navigate to detail" test with 9 conveyor-flow tests covering the full cycle |
-| Modified | `src/tests/integration/apps/families/domains/sets/pages/ScanSetPage.spec.ts`        | Added conveyor integration test verifying reset-after-add behavior                          |
+| Action   | File                                                                         | Notes                                                                                       |
+| -------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Modified | `src/tests/unit/apps/families/domains/sets/pages/ScanSetPage.spec.ts`        | Replaced stale "navigate to detail" test with 9 conveyor-flow tests covering the full cycle |
+| Modified | `src/tests/integration/apps/families/domains/sets/pages/ScanSetPage.spec.ts` | Added conveyor integration test verifying reset-after-add behavior                          |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                          | Met | Notes                                                                               |
-| ----------------------------------------------------------------------------- | --- | ----------------------------------------------------------------------------------- |
-| After adding a set via barcode, the camera remains active for the next scan   | Yes | `addToCollection` calls `scanAgain()` which increments `resetKey`                   |
-| Success toast confirms the added set (name + set number)                      | Yes | Toast shows `scanAddedToast` with name and setNum replacements                      |
-| Running session count displayed ("X sets added this session")                 | Yes | `setsAddedCount` ref increments on add; template shows count when > 0              |
-| "Done" button navigates back to sets overview                                 | Yes | PrimaryButton with `scanDone` text calls `goBack()` -> `goToRoute("sets")`         |
-| Scanner works reliably across consecutive scans                               | Yes | Tests verify consecutive scan-add-scan cycle works                                  |
-| Error on one scan doesn't kill the conveyor                                   | Yes | Error sets `addError` but scanner stays mounted; test verifies this                 |
-| Translations (EN/NL) for new UI text                                          | Yes | `scanAddedToast`, `setsAddedCount`, `scanDone` present in both locales             |
-| 100% test coverage on new code                                                | Yes | 100% lines, branches, functions, statements                                        |
-| All quality gates pass                                                        | Yes | All 7 checks pass                                                                  |
+| Acceptance Criterion                                                        | Met | Notes                                                                      |
+| --------------------------------------------------------------------------- | --- | -------------------------------------------------------------------------- |
+| After adding a set via barcode, the camera remains active for the next scan | Yes | `addToCollection` calls `scanAgain()` which increments `resetKey`          |
+| Success toast confirms the added set (name + set number)                    | Yes | Toast shows `scanAddedToast` with name and setNum replacements             |
+| Running session count displayed ("X sets added this session")               | Yes | `setsAddedCount` ref increments on add; template shows count when > 0      |
+| "Done" button navigates back to sets overview                               | Yes | PrimaryButton with `scanDone` text calls `goBack()` -> `goToRoute("sets")` |
+| Scanner works reliably across consecutive scans                             | Yes | Tests verify consecutive scan-add-scan cycle works                         |
+| Error on one scan doesn't kill the conveyor                                 | Yes | Error sets `addError` but scanner stays mounted; test verifies this        |
+| Translations (EN/NL) for new UI text                                        | Yes | `scanAddedToast`, `setsAddedCount`, `scanDone` present in both locales     |
+| 100% test coverage on new code                                              | Yes | 100% lines, branches, functions, statements                                |
+| All quality gates pass                                                      | Yes | All 7 checks pass                                                          |
 
 ## Decisions Made
 
@@ -38,15 +38,15 @@ The conveyor flow was already substantially implemented in ScanSetPage.vue on th
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                                    |
-| ------------- | ------ | -------------------------------------------------------- |
-| format:check  | Pass   |                                                          |
-| lint          | Pass   | 1 pre-existing error in InviteCodeSection (unrelated)    |
-| lint:vue      | Pass   |                                                          |
-| type-check    | Pass   |                                                          |
-| test:coverage | Pass   | 100% across all metrics, 1201 tests, 93 files           |
-| knip          | Pass   |                                                          |
-| size          | Pass   | families: 107.53 kB, admin: 30.79 kB                    |
+| Check         | Result | Notes                                                 |
+| ------------- | ------ | ----------------------------------------------------- |
+| format:check  | Pass   |                                                       |
+| lint          | Pass   | 1 pre-existing error in InviteCodeSection (unrelated) |
+| lint:vue      | Pass   |                                                       |
+| type-check    | Pass   |                                                       |
+| test:coverage | Pass   | 100% across all metrics, 1201 tests, 93 files         |
+| knip          | Pass   |                                                       |
+| size          | Pass   | families: 107.53 kB, admin: 30.79 kB                  |
 
 ## Showcase Readiness
 
@@ -77,8 +77,8 @@ The conveyor flow itself is well-structured: clean state machine (scan -> found 
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                        | Context                                                                                 | Shift Evidence                 |
+| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------ |
 | When a permit targets a specific page, immediately check ALL test files for that page (unit + integration) before planning work | Found the integration test also had stale assertions after already fixing the unit test | 2026-03-26-quick-scan-conveyor |
 
 ---

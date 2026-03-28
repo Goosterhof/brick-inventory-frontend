@@ -9,28 +9,28 @@
 
 ## Work Summary
 
-| Action   | File                                                                | Notes                                                    |
-| -------- | ------------------------------------------------------------------- | -------------------------------------------------------- |
-| Modified | `src/shared/composables/useFormSubmit.ts`                           | Added `submitting` ref, guard, finally block, return     |
-| Modified | `src/tests/unit/shared/composables/useFormSubmit.spec.ts`           | Added 5 tests for submitting lifecycle and double-submit |
-| Modified | `src/apps/families/domains/auth/pages/LoginPage.vue`               | Wired `:disabled="submitting"` to submit button          |
-| Modified | `src/apps/families/domains/auth/pages/RegisterPage.vue`            | Wired `:disabled="submitting"` to submit button          |
-| Modified | `src/apps/families/domains/sets/pages/AddSetPage.vue`              | Wired `:disabled="submitting"` to submit button          |
-| Modified | `src/apps/families/domains/sets/pages/EditSetPage.vue`             | Wired `:disabled="submitting"` to submit button          |
-| Modified | `src/apps/families/domains/storage/pages/AddStoragePage.vue`       | Wired `:disabled="submitting"` to submit button          |
-| Modified | `src/apps/families/domains/storage/pages/EditStoragePage.vue`      | Wired `:disabled="submitting"` to submit button          |
+| Action   | File                                                          | Notes                                                    |
+| -------- | ------------------------------------------------------------- | -------------------------------------------------------- |
+| Modified | `src/shared/composables/useFormSubmit.ts`                     | Added `submitting` ref, guard, finally block, return     |
+| Modified | `src/tests/unit/shared/composables/useFormSubmit.spec.ts`     | Added 5 tests for submitting lifecycle and double-submit |
+| Modified | `src/apps/families/domains/auth/pages/LoginPage.vue`          | Wired `:disabled="submitting"` to submit button          |
+| Modified | `src/apps/families/domains/auth/pages/RegisterPage.vue`       | Wired `:disabled="submitting"` to submit button          |
+| Modified | `src/apps/families/domains/sets/pages/AddSetPage.vue`         | Wired `:disabled="submitting"` to submit button          |
+| Modified | `src/apps/families/domains/sets/pages/EditSetPage.vue`        | Wired `:disabled="submitting"` to submit button          |
+| Modified | `src/apps/families/domains/storage/pages/AddStoragePage.vue`  | Wired `:disabled="submitting"` to submit button          |
+| Modified | `src/apps/families/domains/storage/pages/EditStoragePage.vue` | Wired `:disabled="submitting"` to submit button          |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                        | Met | Notes                                                               |
-| --------------------------------------------------------------------------- | --- | ------------------------------------------------------------------- |
-| `useFormSubmit` returns a `submitting` Ref<boolean>                         | Yes | Returned alongside `handleSubmit`                                   |
-| `submitting` is `true` during action execution, `false` before and after    | Yes | Verified via test capturing value during action callback            |
-| Calling `handleSubmit` while `submitting` is `true` is a no-op             | Yes | Guard clause at top of `handleSubmit`, tested with pending promise  |
-| `submitting` resets to `false` even when the action throws a non-422 error  | Yes | `finally` block ensures reset, tested for 422 and non-422 errors   |
-| All form pages pass `submitting` as `:disabled` to submit button            | Yes | All 6 form pages wired: Login, Register, AddSet, EditSet, AddStorage, EditStorage |
-| 100% test coverage maintained                                               | Yes | 100% lines, branches, functions, statements                        |
-| Full gauntlet passes                                                        | Yes | type-check, knip, lint, lint:vue, format:check, build, size all pass |
+| Acceptance Criterion                                                       | Met | Notes                                                                             |
+| -------------------------------------------------------------------------- | --- | --------------------------------------------------------------------------------- |
+| `useFormSubmit` returns a `submitting` Ref<boolean>                        | Yes | Returned alongside `handleSubmit`                                                 |
+| `submitting` is `true` during action execution, `false` before and after   | Yes | Verified via test capturing value during action callback                          |
+| Calling `handleSubmit` while `submitting` is `true` is a no-op             | Yes | Guard clause at top of `handleSubmit`, tested with pending promise                |
+| `submitting` resets to `false` even when the action throws a non-422 error | Yes | `finally` block ensures reset, tested for 422 and non-422 errors                  |
+| All form pages pass `submitting` as `:disabled` to submit button           | Yes | All 6 form pages wired: Login, Register, AddSet, EditSet, AddStorage, EditStorage |
+| 100% test coverage maintained                                              | Yes | 100% lines, branches, functions, statements                                       |
+| Full gauntlet passes                                                       | Yes | type-check, knip, lint, lint:vue, format:check, build, size all pass              |
 
 ## Decisions Made
 
@@ -38,14 +38,14 @@ No non-trivial decisions were needed. The composable changes followed the permit
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                              |
-| ------------- | ------ | ---------------------------------- |
-| format:check  | Pass   | Fixed formatting on test file      |
-| lint          | Pass   | 0 errors, 8 pre-existing warnings  |
-| lint:vue      | Pass   |                                    |
-| type-check    | Pass   |                                    |
-| test:coverage | Pass   | 100% all metrics                   |
-| knip          | Pass   |                                    |
+| Check         | Result | Notes                                |
+| ------------- | ------ | ------------------------------------ |
+| format:check  | Pass   | Fixed formatting on test file        |
+| lint          | Pass   | 0 errors, 8 pre-existing warnings    |
+| lint:vue      | Pass   |                                      |
+| type-check    | Pass   |                                      |
+| test:coverage | Pass   | 100% all metrics                     |
+| knip          | Pass   |                                      |
 | size          | Pass   | families: 109.29 kB, admin: 30.79 kB |
 
 Note: test guard showed intermittent timing flakiness on pre-existing files (ComponentGallery.spec.ts, SetsOverviewTheme.spec.ts, SettingsPage.spec.ts) during some runs. These files were not touched by this permit. The guard passed on the final run. This is environment-level CPU pressure, not a regression.
@@ -79,8 +79,8 @@ Yes. The implementation is textbook composable design: a single concern (submiss
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| -------- | ------- | -------------- |
+| Proposal                                                                                                             | Context                                                | Shift Evidence                       |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------ |
 | When a branch already has uncommitted changes, run `git diff` before planning implementation to avoid duplicate work | Found the composable already implemented on the branch | 2026-03-28-form-submit-loading-guard |
 
 ---
@@ -99,8 +99,8 @@ Test quality is strong. The double-submit test using a pending promise (`let res
 
 ### Training Evaluation
 
-| Proposal | Verdict | Reason |
-| --- | --- | --- |
+| Proposal                               | Verdict       | Reason                                                                                                                                                                                                                                                                      |
+| -------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Check branch state before implementing | **Graduated** | Second confirming observation (first: 2026-03-25-decade-dial). Merged with existing candidate. Test scenarios pass — the behavior is objectively verifiable (first action after reading permit is a git state check). Promoted to "When You Build" implementation approach. |
 
 ### Graduation Check

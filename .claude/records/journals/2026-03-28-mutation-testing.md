@@ -11,23 +11,23 @@
 
 All deliverables were already present on the branch when work began. The prior commit(s) installed Stryker packages, created the configuration, added the npm script, and updated `.gitignore`. This journal documents verification of those deliverables and confirmation that all acceptance criteria are met.
 
-| Action   | File                   | Notes                                                                                          |
-| -------- | ---------------------- | ---------------------------------------------------------------------------------------------- |
-| Verified | `package.json`         | `@stryker-mutator/core` and `@stryker-mutator/vitest-runner` in devDeps; `test:mutation` script |
-| Verified | `stryker.config.json`  | Targets `src/shared/` TS files, excludes `.d.ts` and `types.ts`, Vitest runner, 80% break threshold |
-| Verified | `.gitignore`           | `.stryker-tmp/` and `reports/mutation/` entries present                                         |
+| Action   | File                  | Notes                                                                                               |
+| -------- | --------------------- | --------------------------------------------------------------------------------------------------- |
+| Verified | `package.json`        | `@stryker-mutator/core` and `@stryker-mutator/vitest-runner` in devDeps; `test:mutation` script     |
+| Verified | `stryker.config.json` | Targets `src/shared/` TS files, excludes `.d.ts` and `types.ts`, Vitest runner, 80% break threshold |
+| Verified | `.gitignore`          | `.stryker-tmp/` and `reports/mutation/` entries present                                             |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                          | Met | Notes                                                              |
-| ----------------------------------------------------------------------------- | --- | ------------------------------------------------------------------ |
-| `npm run test:mutation` executes Stryker against `src/shared/` TS files       | Yes | Dry-run confirmed: 25 files, 784 mutants, 886 tests               |
-| Stryker configuration uses the Vitest runner                                  | Yes | `"testRunner": "vitest"` in config                                 |
-| Mutation score threshold set to reasonable level (80%+)                       | Yes | `"break": 80` in thresholds                                       |
-| All existing quality gates pass                                               | Yes | All 7 checks pass (see gauntlet below)                             |
-| No new lint warnings or type errors introduced                                | Yes | 0 lint errors, 7 pre-existing warnings; 0 type errors             |
-| Stryker temp/output files excluded from version control                       | Yes | `.stryker-tmp/` and `reports/mutation/` in `.gitignore`            |
-| Changes committed and pushed to designated branch                             | Yes | Committed and pushed with this journal                             |
+| Acceptance Criterion                                                    | Met | Notes                                                   |
+| ----------------------------------------------------------------------- | --- | ------------------------------------------------------- |
+| `npm run test:mutation` executes Stryker against `src/shared/` TS files | Yes | Dry-run confirmed: 25 files, 784 mutants, 886 tests     |
+| Stryker configuration uses the Vitest runner                            | Yes | `"testRunner": "vitest"` in config                      |
+| Mutation score threshold set to reasonable level (80%+)                 | Yes | `"break": 80` in thresholds                             |
+| All existing quality gates pass                                         | Yes | All 7 checks pass (see gauntlet below)                  |
+| No new lint warnings or type errors introduced                          | Yes | 0 lint errors, 7 pre-existing warnings; 0 type errors   |
+| Stryker temp/output files excluded from version control                 | Yes | `.stryker-tmp/` and `reports/mutation/` in `.gitignore` |
+| Changes committed and pushed to designated branch                       | Yes | Committed and pushed with this journal                  |
 
 ## Decisions Made
 
@@ -41,15 +41,15 @@ All deliverables were already present on the branch when work began. The prior c
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                |
-| ------------- | ------ | ------------------------------------ |
-| format:check  | Pass   | Known `.claude/` md drift only       |
+| Check         | Result | Notes                               |
+| ------------- | ------ | ----------------------------------- |
+| format:check  | Pass   | Known `.claude/` md drift only      |
 | lint          | Pass   | 0 errors, 7 pre-existing warnings   |
-| lint:vue      | Pass   | All conventions passed               |
-| type-check    | Pass   | Clean                                |
-| test:coverage | Pass   | 100% lines/branches/functions/stmts  |
-| knip          | Pass   | No unused code detected              |
-| size          | Pass   | families 109kB, admin 31kB (brotli)  |
+| lint:vue      | Pass   | All conventions passed              |
+| type-check    | Pass   | Clean                               |
+| test:coverage | Pass   | 100% lines/branches/functions/stmts |
+| knip          | Pass   | No unused code detected             |
+| size          | Pass   | families 109kB, admin 31kB (brotli) |
 
 ## Showcase Readiness
 
@@ -79,8 +79,8 @@ Strong. The configuration demonstrates good practices: scoped mutation targets (
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| -------- | ------- | -------------- |
+| Proposal                                                                                                                                       | Context                                                                                                  | Shift Evidence              |
+| ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------- |
 | When picking up a permit on a feature branch, run `git diff main --stat` first to understand what's already built before planning from scratch | Branch already had all deliverables; without the diff check, would have started redundant implementation | 2026-03-28-mutation-testing |
 
 ---
@@ -94,6 +94,7 @@ The deliverables are solid: Stryker config is correctly scoped to `src/shared/` 
 **On the "verification only" nature of this shift:** The architect correctly identified that the implementation was already on the branch and pivoted to verification rather than rebuilding. This is the right call. The journal is honest about this — no padding, no pretending work was harder than it was.
 
 **Decisions review:**
+
 - JSON config over JS: Correct. No dynamic config needed.
 - Concurrency at 2: Conservative but safe. Fine as a starting default.
 - HTML + clear-text + progress reporters: Standard combo, no issues.
@@ -102,5 +103,6 @@ The deliverables are solid: Stryker config is correctly scoped to `src/shared/` 
 **Training proposal disposition:** The proposal ("run `git diff main --stat` first") is a second confirmation of the existing candidate "Before starting implementation, run `git log --oneline -5` on the target branch to check if work is partially done" (2026-03-25, decade-dial). Same insight, better command. Eligible for graduation — see dispatch report.
 
 **Knowledge update review:**
+
 - Pulse update (add mutation testing to quality metrics): **Approved.** Will update after this evaluation.
 - No ADR needed: **Agreed.** Tool configuration, not architectural choice. Revisit if scope expands or thresholds are debated.

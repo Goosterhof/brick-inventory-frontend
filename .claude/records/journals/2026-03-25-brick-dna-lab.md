@@ -9,32 +9,32 @@
 
 ## Work Summary
 
-| Action   | File                                                                                  | Notes                                                        |
-| -------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Created  | `src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue`                         | Main analytics page with 4 sections                          |
-| Modified | `src/apps/families/services/router.ts`                                                | Added brick-dna routes to router                             |
-| Modified | `src/apps/families/services/translation.ts`                                           | Added EN/NL translations for navigation, pageTitle, brickDna |
-| Modified | `src/apps/families/App.vue`                                                           | Added desktop + mobile nav links for Brick DNA               |
-| Modified | `src/tests/unit/apps/families/App.spec.ts`                                            | Updated nav link counts from 8 to 9                          |
-| Created  | `src/tests/unit/apps/families/domains/brick-dna/pages/BrickDnaPage.spec.ts`          | 22 unit tests covering all branches                          |
-| Modified | `vitest.config.ts`                                                                    | Added families/brick-dna project entry                       |
-| Existed  | `src/apps/families/domains/brick-dna/index.ts`                                        | Route definition (pre-existing on branch)                    |
-| Existed  | `src/apps/families/types/brickDna.ts`                                                 | Type definitions (pre-existing on branch, untracked)         |
+| Action   | File                                                                        | Notes                                                        |
+| -------- | --------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Created  | `src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue`                | Main analytics page with 4 sections                          |
+| Modified | `src/apps/families/services/router.ts`                                      | Added brick-dna routes to router                             |
+| Modified | `src/apps/families/services/translation.ts`                                 | Added EN/NL translations for navigation, pageTitle, brickDna |
+| Modified | `src/apps/families/App.vue`                                                 | Added desktop + mobile nav links for Brick DNA               |
+| Modified | `src/tests/unit/apps/families/App.spec.ts`                                  | Updated nav link counts from 8 to 9                          |
+| Created  | `src/tests/unit/apps/families/domains/brick-dna/pages/BrickDnaPage.spec.ts` | 22 unit tests covering all branches                          |
+| Modified | `vitest.config.ts`                                                          | Added families/brick-dna project entry                       |
+| Existed  | `src/apps/families/domains/brick-dna/index.ts`                              | Route definition (pre-existing on branch)                    |
+| Existed  | `src/apps/families/types/brickDna.ts`                                       | Type definitions (pre-existing on branch, untracked)         |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                     | Met | Notes                                                                 |
-| -------------------------------------------------------- | --- | --------------------------------------------------------------------- |
-| New page accessible from navigation                      | Yes | Desktop + mobile nav links added, auth-gated with v-show             |
-| Top 10 colors with visual swatches and counts            | Yes | StatCard grid with colored circle swatches using hex values           |
-| Top 10 part types with counts                            | Yes | StatCard grid showing name, count, and category                       |
-| Rarest parts section                                     | Yes | CardContainer list with part name, color, quantity                    |
-| Diversity score visually displayed                       | Yes | Large percentage, label (High/Medium/Low), and progress bar           |
-| Loading state while data is fetched                      | Yes | "Loading..." text shown via `loading` ref                             |
-| Empty state when no data available                       | Yes | EmptyState component on API error or null data                        |
-| Responsive and follows neo-brutalist design system       | Yes | Grid responsive breakpoints, brick-border, brick-shadow, brand colors |
-| 100% test coverage on new code                           | Yes | 22 tests, 100% lines/branches/functions/statements                   |
-| All quality gates pass                                   | Yes | Full gauntlet passed including pre-push hooks                         |
+| Acceptance Criterion                               | Met | Notes                                                                 |
+| -------------------------------------------------- | --- | --------------------------------------------------------------------- |
+| New page accessible from navigation                | Yes | Desktop + mobile nav links added, auth-gated with v-show              |
+| Top 10 colors with visual swatches and counts      | Yes | StatCard grid with colored circle swatches using hex values           |
+| Top 10 part types with counts                      | Yes | StatCard grid showing name, count, and category                       |
+| Rarest parts section                               | Yes | CardContainer list with part name, color, quantity                    |
+| Diversity score visually displayed                 | Yes | Large percentage, label (High/Medium/Low), and progress bar           |
+| Loading state while data is fetched                | Yes | "Loading..." text shown via `loading` ref                             |
+| Empty state when no data available                 | Yes | EmptyState component on API error or null data                        |
+| Responsive and follows neo-brutalist design system | Yes | Grid responsive breakpoints, brick-border, brick-shadow, brand colors |
+| 100% test coverage on new code                     | Yes | 22 tests, 100% lines/branches/functions/statements                    |
+| All quality gates pass                             | Yes | Full gauntlet passed including pre-push hooks                         |
 
 ## Decisions Made
 
@@ -54,9 +54,9 @@
 | lint          | Pass   | 0 errors (7 pre-existing warnings from other files)               |
 | lint:vue      | Pass   | All conventions passed                                            |
 | type-check    | Pass   | Clean                                                             |
-| test:coverage | Pass   | 94 files, 1223 tests, 100% all thresholds                        |
+| test:coverage | Pass   | 94 files, 1223 tests, 100% all thresholds                         |
 | knip          | Pass   | No unused code                                                    |
-| size          | Pass   | families: 109.15 kB (limit 350 kB)                               |
+| size          | Pass   | families: 109.15 kB (limit 350 kB)                                |
 
 ## Showcase Readiness
 
@@ -89,9 +89,9 @@ The one area that could be stronger for maximum portfolio impact would be animat
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
-| When adding a new domain, immediately check vitest.config.ts for the project entry -- the test runner won't find tests without it | First test run failed with "No projects matched the filter" because the vitest config didn't have a brick-dna project entry | This journal |
+| Proposal                                                                                                                          | Context                                                                                                                     | Shift Evidence |
+| --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| When adding a new domain, immediately check vitest.config.ts for the project entry -- the test runner won't find tests without it | First test run failed with "No projects matched the filter" because the vitest config didn't have a brick-dna project entry | This journal   |
 
 ---
 
