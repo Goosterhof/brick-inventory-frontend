@@ -78,20 +78,20 @@ Ideas planted but deferred — revisit when the trigger condition is met. Seeds 
 
 **Assessed:** 2026-03-25
 
-| Metric                   | Value    | Threshold |
-| ------------------------ | -------- | --------- |
-| Test coverage (lines)    | 100%     | 100%      |
-| Test coverage (branches) | 100%     | 100%      |
-| Test files               | 90       | —         |
-| Test count               | 1081     | —         |
-| Shared components        | 31       | —         |
-| Showcase components      | 12       | —         |
-| Architecture tests       | 18 cases | —         |
-| ADRs documented          | 12       | —         |
-| Domains (Families)       | 7        | —         |
-| Mutation testing (Stryker) | configured | 80% break |
-| Mutation scope           | src/shared/ TS (25 files, 784 mutants) | — |
-| knip violations          | 0        | 0         |
-| Permits filed            | 3        | —         |
-| Journals filed           | 2        | —         |
-| Inspection reports filed | 2        | —         |
+| Metric                     | Value                                  | Threshold |
+| -------------------------- | -------------------------------------- | --------- |
+| Test coverage (lines)      | 100%                                   | 100%      |
+| Test coverage (branches)   | 100%                                   | 100%      |
+| Test files                 | 90                                     | —         |
+| Test count                 | 1081                                   | —         |
+| Shared components          | 31                                     | —         |
+| Showcase components        | 12                                     | —         |
+| Architecture tests         | 18 cases                               | —         |
+| ADRs documented            | 12                                     | —         |
+| Domains (Families)         | 7                                      | —         |
+| Mutation testing (Stryker) | configured                             | 80% break |
+| Mutation scope             | src/shared/ TS (25 files, 784 mutants) | —         |
+| knip violations            | 0                                      | 0         |
+| Permits filed              | 3                                      | —         |
+| Journals filed             | 2                                      | —         |
+| Inspection reports filed   | 2                                      | —         |
