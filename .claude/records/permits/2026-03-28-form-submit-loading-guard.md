@@ -52,5 +52,5 @@ This is a bug fix disguised as a feature. Every form page currently allows submi
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-03-28-form-submit-loading-guard.md`

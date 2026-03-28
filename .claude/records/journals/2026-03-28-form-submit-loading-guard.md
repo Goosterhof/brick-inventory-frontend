@@ -87,4 +87,26 @@ Yes. The implementation is textbook composable design: a single concern (submiss
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
+### Verdict: Accepted — clean, focused delivery.
+
+### Code Review
+
+The composable is exactly what we asked for. 29 lines, under budget. The guard-at-top pattern (`if (submitting.value) return`) is the right call — no need for a queue or deferred execution. The `finally` block covers all exit paths correctly, including the early `return` on 422 (the `finally` still fires, which is correct JS semantics — verified in the test suite).
+
+The architect correctly identified 6 form pages (not the 5 I listed in the permit — LoginPage and RegisterPage were missed in my scope notes but the architect caught them). Good initiative.
+
+Test quality is strong. The double-submit test using a pending promise (`let resolveAction!: () => void`) is the correct way to test concurrent guard behavior — it doesn't rely on timing, it controls the promise resolution explicitly.
+
+### Training Evaluation
+
+| Proposal | Verdict | Reason |
+| --- | --- | --- |
+| Check branch state before implementing | **Graduated** | Second confirming observation (first: 2026-03-25-decade-dial). Merged with existing candidate. Test scenarios pass — the behavior is objectively verifiable (first action after reading permit is a git state check). Promoted to "When You Build" implementation approach. |
+
+### Graduation Check
+
+The "check branch state before starting" candidate hit its second confirmation this shift. Graduation tests drafted and passed in the dispatch report. Promoted to graduated table with updated wording: "Before starting implementation on any branch, run `git status` and `git log --oneline -5` to check for uncommitted changes or prior commits. Adapt your plan to complete existing work rather than reimplementing from scratch."
+
+### Concerns
+
+The test flakiness on ComponentGallery, SetsOverviewTheme, and SettingsPage specs keeps showing up. The architect is right that it's environment-level, not a regression. But "it passed eventually" is not a sustainable answer. Flagged for pulse update.
