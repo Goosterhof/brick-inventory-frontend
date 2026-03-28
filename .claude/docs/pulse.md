@@ -89,6 +89,8 @@ Ideas planted but deferred — revisit when the trigger condition is met. Seeds 
 | Architecture tests       | 18 cases | —         |
 | ADRs documented          | 12       | —         |
 | Domains (Families)       | 7        | —         |
+| Mutation testing (Stryker) | configured | 80% break |
+| Mutation scope           | src/shared/ TS (25 files, 784 mutants) | — |
 | knip violations          | 0        | 0         |
 | Permits filed            | 3        | —         |
 | Journals filed           | 2        | —         |

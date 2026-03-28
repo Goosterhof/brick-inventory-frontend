@@ -87,4 +87,20 @@ Strong. The configuration demonstrates good practices: scoped mutation targets (
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
+**Verdict: Permit fulfilled. Clean delivery.**
+
+The deliverables are solid: Stryker config is correctly scoped to `src/shared/` TS files, the Vitest runner is wired up, thresholds are sensible (80% break, 90% high), and all 7 quality gates pass. The dry-run confirmed 25 source files and 784 mutants are instrumented — the infrastructure works end-to-end.
+
+**On the "verification only" nature of this shift:** The architect correctly identified that the implementation was already on the branch and pivoted to verification rather than rebuilding. This is the right call. The journal is honest about this — no padding, no pretending work was harder than it was.
+
+**Decisions review:**
+- JSON config over JS: Correct. No dynamic config needed.
+- Concurrency at 2: Conservative but safe. Fine as a starting default.
+- HTML + clear-text + progress reporters: Standard combo, no issues.
+- Excluding `types.ts`: Correct — no runtime behavior to mutate.
+
+**Training proposal disposition:** The proposal ("run `git diff main --stat` first") is a second confirmation of the existing candidate "Before starting implementation, run `git log --oneline -5` on the target branch to check if work is partially done" (2026-03-25, decade-dial). Same insight, better command. Eligible for graduation — see dispatch report.
+
+**Knowledge update review:**
+- Pulse update (add mutation testing to quality metrics): **Approved.** Will update after this evaluation.
+- No ADR needed: **Agreed.** Tool configuration, not architectural choice. Revisit if scope expands or thresholds are debated.

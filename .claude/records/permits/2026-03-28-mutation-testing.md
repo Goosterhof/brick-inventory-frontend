@@ -56,5 +56,5 @@ The Stryker report output should go to a directory that's gitignored. We want th
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** [2026-03-28-mutation-testing](../journals/2026-03-28-mutation-testing.md)
