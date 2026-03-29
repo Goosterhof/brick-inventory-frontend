@@ -63,5 +63,5 @@ The format fixes are trivial but verify the pre-commit hook doesn't fight the fo
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _pending_

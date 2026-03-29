@@ -54,5 +54,5 @@ This is a portfolio piece — the adapter pattern is our strongest architectural
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _link to construction journal when filed_

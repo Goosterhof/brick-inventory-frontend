@@ -53,5 +53,5 @@ Small piece count. The main risk is the BarcodeScanner component lifecycle — t
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _link to construction journal when filed_

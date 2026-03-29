@@ -56,5 +56,5 @@ The composables gap is the most visible weakness in the showcase right now. We h
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _link to construction journal when filed_

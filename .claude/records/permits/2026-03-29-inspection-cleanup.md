@@ -68,5 +68,5 @@ The Vue Router fix (Finding 1) should be straightforward but verify the middlewa
 
 ---
 
-**Status:** Open
+**Status:** In Progress
 **Journal:** _link to construction journal when filed_
