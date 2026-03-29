@@ -2,8 +2,6 @@ import SettingsPage from "@app/domains/settings/pages/SettingsPage.vue";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
@@ -25,9 +23,8 @@ vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
 
-const {mockGetRequest, mockPutRequest, mockPostRequest, mockDeleteRequest, mockUserId} = vi.hoisted(() => ({
+const {mockGetRequest, mockPostRequest, mockDeleteRequest, mockUserId} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
-    mockPutRequest: vi.fn(),
     mockPostRequest: vi.fn(),
     mockDeleteRequest: vi.fn(),
     mockUserId: vi.fn(),
@@ -35,12 +32,7 @@ const {mockGetRequest, mockPutRequest, mockPostRequest, mockDeleteRequest, mockU
 
 vi.mock("@app/services", () =>
     createMockFamilyServices({
-        familyHttpService: {
-            getRequest: mockGetRequest,
-            postRequest: mockPostRequest,
-            putRequest: mockPutRequest,
-            deleteRequest: mockDeleteRequest,
-        },
+        familyHttpService: {getRequest: mockGetRequest, postRequest: mockPostRequest, deleteRequest: mockDeleteRequest},
         familyAuthService: {isLoggedIn: {value: true}, userId: mockUserId},
     }),
 );
@@ -78,7 +70,7 @@ const mockMembersAndNoInviteCode = () => {
     });
 };
 
-describe("SettingsPage", () => {
+describe("SettingsPage — members", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockUserId.mockReturnValue(1);
@@ -88,33 +80,6 @@ describe("SettingsPage", () => {
             writable: true,
             configurable: true,
         });
-    });
-
-    it("should render page header with title", () => {
-        // Arrange & Act
-        const wrapper = shallowMount(SettingsPage);
-
-        // Assert
-        expect(wrapper.findComponent(PageHeader).props("title")).toBe("settings.title");
-    });
-
-    it("should render rebrickable token input", () => {
-        // Arrange & Act
-        const wrapper = shallowMount(SettingsPage);
-
-        // Assert
-        const input = wrapper.findComponent(TextInput);
-        expect(input.exists()).toBe(true);
-        expect(input.props("label")).toBe("settings.rebrickableToken");
-    });
-
-    it("should render save token button", () => {
-        // Arrange & Act
-        const wrapper = shallowMount(SettingsPage);
-
-        // Assert
-        const saveButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "settings.saveToken");
-        expect(saveButton?.exists()).toBe(true);
     });
 
     it("should fetch and display family members", async () => {
@@ -138,17 +103,6 @@ describe("SettingsPage", () => {
         expect(badge.exists()).toBe(true);
         expect(badge.text()).toBe("settings.familyHead");
         expect(badge.props("variant")).toBe("highlight");
-    });
-
-    it("should render import button", () => {
-        // Arrange & Act
-        const wrapper = shallowMount(SettingsPage);
-
-        // Assert
-        const importButton = wrapper
-            .findAllComponents(PrimaryButton)
-            .find((btn) => btn.text() === "settings.importButton");
-        expect(importButton?.exists()).toBe(true);
     });
 
     describe("invite code", () => {
@@ -425,82 +379,6 @@ describe("SettingsPage", () => {
         });
     });
 
-    describe("save token", () => {
-        it("should save token via PUT request", async () => {
-            // Arrange
-            mockPutRequest.mockResolvedValue({});
-            const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue("my-secret-token");
-
-            // Act
-            await wrapper.find("form").trigger("submit");
-            await flushPromises();
-
-            // Assert
-            expect(mockPutRequest).toHaveBeenCalledWith("/family/rebrickable-token", {
-                rebrickable_user_token: "my-secret-token",
-            });
-        });
-
-        it("should show success message after saving", async () => {
-            // Arrange
-            mockPutRequest.mockResolvedValue({});
-            const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue("my-secret-token");
-
-            // Act
-            await wrapper.find("form").trigger("submit");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.text()).toContain("settings.tokenSaved");
-        });
-
-        it("should clear token input after saving", async () => {
-            // Arrange
-            mockPutRequest.mockResolvedValue({});
-            const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue("my-secret-token");
-
-            // Act
-            await wrapper.find("form").trigger("submit");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.findComponent(TextInput).props("modelValue")).toBe("");
-        });
-
-        it("should show error when not family head (403)", async () => {
-            // Arrange
-            const axiosError = new MockAxiosError("Forbidden");
-            axiosError.response = {status: 403, data: null, statusText: "Forbidden", headers: {}, config: {}};
-            mockPutRequest.mockRejectedValue(axiosError);
-            const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue("my-secret-token");
-
-            // Act
-            await wrapper.find("form").trigger("submit");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.findComponent(TextInput).props("error")).toBe("settings.notFamilyHead");
-        });
-
-        it("should show generic error on failure", async () => {
-            // Arrange
-            mockPutRequest.mockRejectedValue(new Error("Network error"));
-            const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue("my-secret-token");
-
-            // Act
-            await wrapper.find("form").trigger("submit");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.findComponent(TextInput).props("error")).toBe("settings.tokenSaveError");
-        });
-    });
-
     describe("member removal", () => {
         it("should show remove button for non-head members when user is head", async () => {
             // Arrange
@@ -766,195 +644,6 @@ describe("SettingsPage", () => {
 
             // Assert — success message is cleared when dialog opens
             expect(wrapper2.text()).not.toContain("settings.memberRemoved");
-        });
-    });
-
-    describe("import sets", () => {
-        it("should call import endpoint", async () => {
-            // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import completed successfully",
-                    created: 5,
-                    updated: 2,
-                    skipped: 0,
-                    total: 7,
-                    complete: true,
-                },
-            });
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            expect(mockPostRequest).toHaveBeenCalledWith("/family-sets/import-from-rebrickable", {});
-        });
-
-        it("should display import results", async () => {
-            // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import completed successfully",
-                    created: 5,
-                    updated: 2,
-                    skipped: 1,
-                    total: 7,
-                    complete: true,
-                },
-            });
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.text()).toContain("Import completed successfully");
-            expect(wrapper.text()).toContain("settings.importCreated");
-            expect(wrapper.text()).toContain("settings.importUpdated");
-            expect(wrapper.text()).toContain("settings.importSkipped");
-        });
-
-        it("should not show skipped count when zero", async () => {
-            // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import completed successfully",
-                    created: 5,
-                    updated: 2,
-                    skipped: 0,
-                    total: 7,
-                    complete: true,
-                },
-            });
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.text()).not.toContain("settings.importSkipped");
-        });
-
-        it("should show error when not family head (403)", async () => {
-            // Arrange
-            const axiosError = new MockAxiosError("Forbidden");
-            axiosError.response = {status: 403, data: null, statusText: "Forbidden", headers: {}, config: {}};
-            mockPostRequest.mockRejectedValue(axiosError);
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.text()).toContain("settings.notFamilyHead");
-        });
-
-        it("should show no token error (422)", async () => {
-            // Arrange
-            const axiosError = new MockAxiosError("Unprocessable Entity");
-            axiosError.response = {
-                status: 422,
-                data: null,
-                statusText: "Unprocessable Entity",
-                headers: {},
-                config: {},
-            };
-            mockPostRequest.mockRejectedValue(axiosError);
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.text()).toContain("settings.noTokenConfigured");
-        });
-
-        it("should show generic error on failure", async () => {
-            // Arrange
-            mockPostRequest.mockRejectedValue(new Error("Network error"));
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.text()).toContain("settings.importError");
-        });
-
-        it("should show importing state while in progress", async () => {
-            // Arrange
-            let resolveRequest: ((value: unknown) => void) | undefined;
-            mockPostRequest.mockReturnValue(
-                new Promise((resolve) => {
-                    resolveRequest = resolve;
-                }),
-            );
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            const updatedButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importing");
-            expect(updatedButton?.exists()).toBe(true);
-            resolveRequest?.({data: {message: "done", created: 0, updated: 0, skipped: 0, total: 0, complete: true}});
-        });
-
-        it("should display import error from response", async () => {
-            // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import partially completed",
-                    created: 3,
-                    updated: 0,
-                    skipped: 0,
-                    total: 3,
-                    complete: false,
-                    error: "Some sets failed to import",
-                },
-            });
-            const wrapper = shallowMount(SettingsPage);
-
-            // Act
-            const importButton = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((btn) => btn.text() === "settings.importButton");
-            await importButton?.trigger("click");
-            await flushPromises();
-
-            // Assert
-            expect(wrapper.text()).toContain("Some sets failed to import");
         });
     });
 });

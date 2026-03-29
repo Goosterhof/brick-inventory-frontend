@@ -508,6 +508,57 @@ describe("Architecture", () => {
         });
     });
 
+    describe("page integration test coverage — ADR-013", () => {
+        it("every domain page should have a corresponding integration test", () => {
+            const integrationDir = join(SRC_DIR, "tests/integration/apps");
+            const appNames = getAppNames();
+            const violations: string[] = [];
+
+            for (const appName of appNames) {
+                const appIntegrationDir = join(integrationDir, appName);
+                if (!dirExists(appIntegrationDir)) continue;
+
+                const domainsDir = join(APPS_DIR, appName, "domains");
+                if (!dirExists(domainsDir)) continue;
+
+                const domainNames = readdirSync(domainsDir, {withFileTypes: true})
+                    .filter((entry) => entry.isDirectory())
+                    .map((entry) => entry.name);
+
+                for (const domainName of domainNames) {
+                    const pagesDir = join(domainsDir, domainName, "pages");
+                    if (!dirExists(pagesDir)) continue;
+
+                    const pageFiles = readdirSync(pagesDir, {encoding: "utf-8"}).filter((file) =>
+                        file.endsWith(".vue"),
+                    );
+
+                    for (const pageFile of pageFiles) {
+                        const specName = pageFile.replace(".vue", ".spec.ts");
+                        const expectedSpecPath = join(
+                            integrationDir,
+                            appName,
+                            "domains",
+                            domainName,
+                            "pages",
+                            specName,
+                        );
+
+                        try {
+                            readFileSync(expectedSpecPath);
+                        } catch {
+                            violations.push(
+                                `${appName}/domains/${domainName}/pages/${pageFile} has no integration test at tests/integration/apps/${appName}/domains/${domainName}/pages/${specName}`,
+                            );
+                        }
+                    }
+                }
+            }
+
+            expect(violations, "Every domain page must have a corresponding integration test (ADR-013)").toEqual([]);
+        });
+    });
+
     describe("ADR sync — decision log index must match inspector Quick Reference", () => {
         const parseAdrNumbers = (content: string): string[] => {
             const numbers: string[] = [];
