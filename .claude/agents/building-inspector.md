@@ -119,6 +119,7 @@ Check each documented convention from CLAUDE.md and ADRs:
 - **RouterService usage** — no raw Vue Router (`useRouter`, `useRoute`, `RouterLink`) outside the service wrapper
 - **Coverage ignore comments** — none allowed (ADR-005; see ADR Quick Reference for full list of protected patterns)
 - **Barrel exports** — domains import from `@app/services`, not deep paths
+- **ADR-004 case conversion** — grep for `deepCamelKeys` in production code; any call outside `@shared/helpers/string.ts` is a potential ADR-004 violation _(Graduated 2026-03-29 from 2026-03-26-families-app-audit + 2026-03-29-post-delivery-audit)_
 
 For each rule: does the architecture test exist? Does it pass? Are there gaps the test doesn't cover?
 
@@ -129,6 +130,7 @@ For each rule: does the architecture test exist? Does it pass? Are there gaps th
 Compare documentation against the actual codebase:
 
 - **Domain Map** — does it match the actual domains, routes, pages, and components?
+- **Numeric count verification** — for any count claims in docs (components, tests, ADRs, domains), verify against the canonical source of truth: registry JSON, directory listing, or test runner output. Numbers drift silently. _(Graduated 2026-03-29 from 2026-03-26-families-app-audit + 2026-03-29-post-delivery-audit)_
 - **Component Registry** — does the auto-generated registry match reality? Run `npm run registry:check`.
 - **Pulse** — are the active concerns still accurate? Has pattern maturity changed? Are quality metrics current?
 - **CLAUDE.md** — do the stated conventions match what the code actually does?
@@ -325,8 +327,10 @@ Training proposals from inspection reports are tracked here. A proposal must pro
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Before SOP 7 (test sampling), cross-reference source files against spec files — any source without a corresponding spec should be flagged even if coverage shows 100% | 2026-03-20     | _(pre-records)_               | Shared components audit: found `useFormSubmit` had 100% coverage via integration but no isolated spec documenting its contract |
 | SOP 6 (showcase readiness) should compare sibling components in the same category for pattern consistency — single-component reviews miss divergence                  | 2026-03-20     | _(pre-records)_               | Shared components audit: caught CameraCapture/BarcodeScanner slot inconsistency by reading both side-by-side                   |
-| SOP 2 should add: grep for `deepCamelKeys` in production code — any call outside `@shared/helpers/string.ts` is a potential ADR-004 violation                         | 2026-03-26     | 2026-03-26-families-app-audit | Found 4 ADR-004 violations by explicit grep; without this step the violations could be missed by page-by-page reading          |
-| SOP 3 should add: for numeric count claims in docs, verify against canonical source of truth (registry, directory listing, test runner output)                        | 2026-03-26     | 2026-03-26-families-app-audit | Domain map said 31 components (registry: 32), Pulse said 1081 tests (actual: 1147) — numbers drift silently                    |
+| ~~SOP 2 should add: grep for `deepCamelKeys` in production code — any call outside `@shared/helpers/string.ts` is a potential ADR-004 violation~~                     | 2026-03-26     | 2026-03-26-families-app-audit | **Graduated 2026-03-29.** Second confirmation: 2026-03-29-post-delivery-audit Finding 2 caught `useValidationErrors.ts` via this exact grep technique. |
+| ~~SOP 3 should add: for numeric count claims in docs, verify against canonical source of truth (registry, directory listing, test runner output)~~                    | 2026-03-26     | 2026-03-26-families-app-audit | **Graduated 2026-03-29.** Second confirmation: 2026-03-29-post-delivery-audit Finding 6 caught Pulse counts (1081→1342 tests, 12→13 ADRs, 7→8 domains). |
+| SOP 3: After verifying domain map against docs, reverse-verify — list actual `src/apps/*/domains/` directories and confirm each appears in the domain map            | 2026-03-29     | 2026-03-29-post-delivery-audit | `brick-dna` domain fully active in code but absent from domain map. Found only by listing directories independently.           |
+| SOP 1: Capture full collect guard reporter output separately from pass/fail in gauntlet results table                                                                 | 2026-03-29     | 2026-03-29-post-delivery-audit | Collect guard warns but doesn't fail suite. SettingsPage breach only visible by reading reporter output, not exit codes.        |
 
 ### Graduated
 
@@ -334,6 +338,8 @@ Training proposals from inspection reports are tracked here. A proposal must pro
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ---------------------------------------------------------- | ----------- |
 | SOP 3 should add a "verify document exists" step before comparing — if a referenced doc is missing, flag its absence as a finding rather than silently skipping    | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 3       |
 | SOP 1 should add a failure classification step: for each gauntlet failure, note whether caused by inspected scope or pre-existing/unrelated to prevent scope bleed | 2026-03-25 | 2026-03-24-showcase-app, 2026-03-25-shared-directory-audit | SOP 1       |
+| SOP 2: grep for `deepCamelKeys` in production code — any call outside `@shared/helpers/string.ts` is a potential ADR-004 violation | 2026-03-29 | 2026-03-26-families-app-audit, 2026-03-29-post-delivery-audit | SOP 2 |
+| SOP 3: for numeric count claims in docs, verify against canonical source of truth (registry, directory listing, test runner output) | 2026-03-29 | 2026-03-26-families-app-audit, 2026-03-29-post-delivery-audit | SOP 3 |
 
 ### Dropped
 
