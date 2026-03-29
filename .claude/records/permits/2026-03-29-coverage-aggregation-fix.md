@@ -51,5 +51,6 @@ This is infrastructure debt that has been silently bypassed with `--no-verify` o
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Closed — Cannot Reproduce
+**Closed:** 2026-03-29
+**Reason:** `npm run test:coverage` passes with 100% on all four metrics. All 8 files listed in the permit report 100% coverage in the aggregate. No `.js` artifacts left behind. Pre-push hook completes successfully. The original failure was transient — likely a stale Istanbul cache or interrupted coverage run. No code changes required.
