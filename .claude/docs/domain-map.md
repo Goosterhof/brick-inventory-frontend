@@ -12,6 +12,7 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 | **parts**    | The Parts Bin — individual bricks across your collection             | `/parts`                                                                            | Yes                        |
 | **storage**  | The Drawer System — where bricks live when they are not being built  | `/storage`, `/storage/add`, `/storage/:id`, `/storage/:id/edit`                     | Yes                        |
 | **settings** | The Workbench — family preferences and configuration                 | `/settings`                                                                         | Yes                        |
+| **brick-dna** | The DNA Lab — color diversity, top parts, and rarest bricks in your collection | `/brick-dna`                                                                        | Yes                        |
 | **about**    | About page                                                           | `/about`                                                                            | No                         |
 
 ### Domain Details
@@ -58,6 +59,13 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 - **Modals**: —
 - **API**: —
 
+#### brick-dna
+
+- **Pages**: BrickDnaPage
+- **Components**: —
+- **Modals**: —
+- **API**: `GET /family/brick-dna`
+
 #### about
 
 - **Pages**: AboutPage
@@ -84,12 +92,12 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 
 The design system specimen — Brick Brutalism on display. No domains, no routing, no auth. A single-page exhibition of every design token, component, and interaction pattern.
 
-- **Components**: ShowcaseHero, ColorPalette, TypographySpecimen, BrickDimensions, SnapDemo, ComponentGallery, BrandVoice, AntiPatterns, SectionHeading, ComponentHealth, DialogServiceDemo, ToastServiceDemo
+- **Components**: ShowcaseHero, ColorPalette, TypographySpecimen, BrickDimensions, SnapDemo, ComponentGallery, BrandVoice, AntiPatterns, SectionHeading, ComponentHealth, DialogServiceDemo, ToastServiceDemo, FormValidationWorkbench, MiddlewarePipelineVisualizer, ResourceAdapterPlayground
 - **Deployed at**: showcase.brick-inventory.com
 
 ## Shared Components
 
-31 components available to all apps via `@shared/components/`. The component registry (`src/shared/generated/component-registry.json`) is auto-generated and tracks all shared components.
+Shared components are available to all apps via `@shared/components/`. The component registry (`src/shared/generated/component-registry.json`) is auto-generated and is the canonical source for component count and details.
 
 ## Adding a New Domain
 
