@@ -64,7 +64,7 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 - **Pages**: BrickDnaPage
 - **Components**: —
 - **Modals**: —
-- **API**: `GET /family-brick-dna`
+- **API**: `GET /family/brick-dna`
 
 #### about
 

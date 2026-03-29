@@ -68,5 +68,5 @@ The brick-dna domain map entry is bundled here because it's the same class of wo
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-03-29-pulse-refresh.md`
