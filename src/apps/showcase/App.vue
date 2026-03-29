@@ -7,6 +7,7 @@ import ComponentGallery from "./components/ComponentGallery.vue";
 import ComponentHealth from "./components/ComponentHealth.vue";
 import DialogServiceDemo from "./components/DialogServiceDemo.vue";
 import FormValidationWorkbench from "./components/FormValidationWorkbench.vue";
+import MiddlewarePipelineVisualizer from "./components/MiddlewarePipelineVisualizer.vue";
 import ResourceAdapterPlayground from "./components/ResourceAdapterPlayground.vue";
 import ShowcaseHero from "./components/ShowcaseHero.vue";
 import ToastServiceDemo from "./components/ToastServiceDemo.vue";
@@ -31,6 +32,7 @@ import TypographySpecimen from "./components/TypographySpecimen.vue";
             <ToastServiceDemo />
             <FormValidationWorkbench />
             <ResourceAdapterPlayground />
+            <MiddlewarePipelineVisualizer />
         </div>
 
         <footer p="y-16 x-4" border="t-3 black" m="t-24">
