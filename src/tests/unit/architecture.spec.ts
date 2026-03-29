@@ -482,6 +482,32 @@ describe("Architecture", () => {
         });
     });
 
+    describe("domain map completeness — every domain directory must be documented", () => {
+        it("every domain directory should have a corresponding entry in domain-map.md", () => {
+            const domainMap = readFileSync(join(ROOT_DIR, ".claude/docs/domain-map.md"), "utf-8");
+            const appNames = getAppNames();
+            const violations: string[] = [];
+
+            for (const appName of appNames) {
+                const domainsDir = join(APPS_DIR, appName, "domains");
+                if (!dirExists(domainsDir)) continue;
+
+                const domainNames = readdirSync(domainsDir, {withFileTypes: true})
+                    .filter((entry) => entry.isDirectory())
+                    .map((entry) => entry.name);
+
+                for (const domainName of domainNames) {
+                    const hasTableEntry = new RegExp(`\\|\\s*\\*\\*${domainName}\\*\\*\\s*\\|`).test(domainMap);
+                    if (!hasTableEntry) {
+                        violations.push(`${appName}/domains/${domainName} is not documented in domain-map.md`);
+                    }
+                }
+            }
+
+            expect(violations, "Every domain directory must have a corresponding entry in domain-map.md").toEqual([]);
+        });
+    });
+
     describe("ADR sync — decision log index must match inspector Quick Reference", () => {
         const parseAdrNumbers = (content: string): string[] => {
             const numbers: string[] = [];
