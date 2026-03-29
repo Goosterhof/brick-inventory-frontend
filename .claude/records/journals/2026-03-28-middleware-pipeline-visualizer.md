@@ -96,26 +96,31 @@ This implementation demonstrates the middleware pipeline architecture clearly. A
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
 
-**Overall Assessment:** _pending_
+**Overall Assessment:** Strong delivery. All 9 acceptance criteria met, all 7 quality gates green, 56 tests with 100% coverage. The component is well-structured, the scenario design is thoughtful, and the refactoring decisions were sound.
 
 ### Permit Fulfillment Review
 
-_pending_
+Full compliance. The permit asked for 3 scenarios minimum; the architect delivered 4 (adding network error). Each scenario walks through 6 numbered stages with before/after JSON state, animated sequentially. The "How It Works" section at the bottom provides the conceptual framing — request middleware, response middleware, error middleware — that ties the visualization back to the actual codebase patterns. No scope creep, no missing items.
 
 ### Decision Review
 
-_pending_
+1. **v-show over v-if for scenarioLabel** — Pragmatic. The alternative (artificial test gymnastics to cover a dead branch under v-if) would have been worse. The v-show approach is semantically equivalent for the user and eliminates a coverage gap without test contortions. Approved.
+2. **Three extracted helper functions** — Correct response to the 80-line limit. The decomposition is clean: `buildRequestStages` (shared), `buildResponseStages` (branching), `buildErrorStage` (scenario-specific). The `buildStagesForScenario` compositor is a 1-liner that reads clearly. Good.
+3. **ErrorScenario type narrowing** — This is the kind of TypeScript precision we want to showcase. Using a discriminated union to avoid `Record<string, T>` and its `T | undefined` access is textbook. Good.
+4. **for...of with entries()** — Minor but correct. Avoids strict-mode array indexing issues while maintaining readability. Fine.
+5. **vi.advanceTimersByTimeAsync** — Necessary for the async sleep pattern. The sync variant is a known footgun with async timer code. This should become training (see below).
 
 ### Showcase Assessment
 
-_pending_
+The middleware pipeline trifecta is now complete: Form Validation Workbench (composable patterns), Resource Adapter Playground (data patterns), Middleware Pipeline Visualizer (service composition). A senior engineer reviewing this showcase gets a walkthrough of: how forms handle validation errors end-to-end, how data transforms at API boundaries, and how middleware layers compose and execute in order. That's a comprehensive infrastructure story. The 30-second comprehension target from the permit notes is met — the numbered stages with color-coded status badges make the ordering immediately obvious.
 
 ### Training Proposal Dispositions
 
 | Proposal | Disposition | Rationale |
 | --- | --- | --- |
-| _pending_ | | |
+| Use `vi.advanceTimersByTimeAsync` instead of sync variant when testing async timer code | **Candidate** | Legitimate footgun. The sync/async distinction in Vitest timer APIs is non-obvious and causes silent test failures. First observation — needs a second confirming shift. |
+| Run `npm run lint` before writing implementation to catch complexity limits early | **Dropped** | This is general "check your work early" advice, not a specific architectural insight. The architect already has a defined build cycle (Unbox, Sort, Build, Inspect, Display). The lint check belongs in the Inspect phase, and running it earlier is just common sense that doesn't need to be codified as training. The 80-line limit is documented in CLAUDE.md — the architect should internalize it, not rely on a procedural reminder. |
 
 ### Notes for the Architect
 
-_pending_
+Clean shift. The self-debrief was honest — acknowledging the v-if/v-show iteration and the late lint discovery. The 113-line function being caught only after tests were written is the real lesson: know your constraints before you build, not after. That said, the recovery was efficient — the refactoring produced a better structure than the original would have been, so the iteration wasn't wasted.
