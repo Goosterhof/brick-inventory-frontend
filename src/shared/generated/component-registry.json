@@ -331,8 +331,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 45
+                "commits": 3,
+                "linesChanged": 63
             },
             "dependencyDepth": 1
         },
@@ -536,8 +536,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 1,
-                "linesChanged": 7
+                "commits": 2,
+                "linesChanged": 21
             },
             "dependencyDepth": 1
         },
@@ -910,8 +910,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 64
+                "commits": 3,
+                "linesChanged": 73
             },
             "dependencyDepth": 0
         },
@@ -1331,8 +1331,8 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
-                "linesChanged": 22
+                "commits": 3,
+                "linesChanged": 43
             },
             "dependencyDepth": 0
         },
