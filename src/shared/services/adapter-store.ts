@@ -1,3 +1,4 @@
+import type {HttpService} from "@script-development/fs-http";
 import type {Item} from "@shared/types/item";
 import type {ComputedRef, Ref} from "vue";
 
@@ -5,7 +6,6 @@ import {EntryNotFoundError} from "@shared/errors/entry-not-found";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {computed, ref} from "vue";
 
-import type {HttpService} from "./http";
 import type {LoadingService} from "./loading";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "./resource-adapter";
 import type {StorageService} from "./storage";

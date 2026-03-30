@@ -1,5 +1,5 @@
+import {createHttpService} from "@script-development/fs-http";
 import {createAuthService} from "@shared/services/auth";
-import {createHttpService} from "@shared/services/http";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import {describe, expect, it} from "vitest";

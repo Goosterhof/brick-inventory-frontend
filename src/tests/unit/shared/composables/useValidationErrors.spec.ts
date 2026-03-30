@@ -1,4 +1,4 @@
-import type {AxiosResponseError, HttpService, ResponseErrorMiddlewareFunc} from "@shared/services/http";
+import type {AxiosResponseError, HttpService, ResponseErrorMiddlewareFunc} from "@script-development/fs-http";
 import type {AxiosError} from "axios";
 import type {Mock} from "vitest";
 

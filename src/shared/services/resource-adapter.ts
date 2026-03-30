@@ -1,5 +1,5 @@
+import type {HttpService} from "@script-development/fs-http";
 import type {Writable} from "@shared/helpers/copy";
-import type {HttpService} from "@shared/services/http";
 import type {New, Updatable} from "@shared/types/generics";
 import type {Item} from "@shared/types/item";
 import type {DeepSnakeKeys} from "string-ts";
