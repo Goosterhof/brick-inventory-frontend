@@ -11,21 +11,22 @@
 
 ## Quality Gauntlet Results
 
-| Check         | Result      | Notes                                                                                        |
-| ------------- | ----------- | -------------------------------------------------------------------------------------------- |
-| format:check  | FAIL        | 5 files: 4 `.claude/` docs + `component-registry.json` — all pre-existing, no new failures  |
-| lint          | PASS        | 9 warnings, 0 errors — pre-existing                                                         |
-| lint:vue      | PASS        | All conventions passed                                                                       |
-| type-check    | PASS        | Clean                                                                                        |
-| test:coverage | PASS*       | 97 files, 1342 tests, 100% lines/branches/functions/statements. *Collect guard: 3 violations |
-| knip          | PASS        | 2 configuration hints (Stryker entries removable) — not failures                            |
-| size          | PASS        | families: 109.29 kB / 350 kB; admin: 30.79 kB / 150 kB                                     |
+| Check         | Result | Notes                                                                                         |
+| ------------- | ------ | --------------------------------------------------------------------------------------------- |
+| format:check  | FAIL   | 5 files: 4 `.claude/` docs + `component-registry.json` — all pre-existing, no new failures    |
+| lint          | PASS   | 9 warnings, 0 errors — pre-existing                                                           |
+| lint:vue      | PASS   | All conventions passed                                                                        |
+| type-check    | PASS   | Clean                                                                                         |
+| test:coverage | PASS\* | 97 files, 1342 tests, 100% lines/branches/functions/statements. \*Collect guard: 3 violations |
+| knip          | PASS   | 2 configuration hints (Stryker entries removable) — not failures                              |
+| size          | PASS   | families: 109.29 kB / 350 kB; admin: 30.79 kB / 150 kB                                        |
 
 ### Gauntlet Failure Classification
 
 **format:check (out of scope):** All 5 failures are `.claude/` ops documentation and the auto-generated component registry. No new failures since the prior inspection. All pre-existing.
 
 **test:coverage collect guard — partial scope:**
+
 - `ComponentGallery.spec.ts`: 1298ms delta (threshold: 1000ms). Pre-existing. Not caused by this delivery batch.
 - `SettingsPage.spec.ts`: 1060ms delta (threshold: 1000ms). **New violation.** The member removal wrench delivery added 10 tests and significant setup logic, pushing the file to 960 lines. Root cause is within the scope of the member-removal-wrench delivery.
 - A third file also exceeded threshold during the run (SetsOverviewTheme); this is intermittent and pre-existing.
@@ -91,15 +92,15 @@
 - **Standard:** Pulse is the "living snapshot" — sections carry assessment dates to make staleness visible.
 - **Observation:** The Pulse was last assessed 2026-03-25. Since then, 8 deliveries have landed. Current vs Pulse values:
 
-| Metric | Pulse (2026-03-25) | Actual |
-| --- | --- | --- |
-| ADRs documented | 12 | 13 (ADR-013 added 2026-03-27) |
-| Test files | 90 | 97 unit + 16 integration = 113 total (new test layer not counted) |
-| Test count | 1081 | 1342 unit tests |
-| Shared components | 31 | 32 |
-| Showcase components | 12 | 15 (FormValidationWorkbench, ResourceAdapterPlayground, MiddlewarePipelineVisualizer added) |
-| Domains (Families) | 7 | 8 (brick-dna) |
-| Overall health rating | 9/10 | Not re-assessed |
+| Metric                | Pulse (2026-03-25) | Actual                                                                                      |
+| --------------------- | ------------------ | ------------------------------------------------------------------------------------------- |
+| ADRs documented       | 12                 | 13 (ADR-013 added 2026-03-27)                                                               |
+| Test files            | 90                 | 97 unit + 16 integration = 113 total (new test layer not counted)                           |
+| Test count            | 1081               | 1342 unit tests                                                                             |
+| Shared components     | 31                 | 32                                                                                          |
+| Showcase components   | 12                 | 15 (FormValidationWorkbench, ResourceAdapterPlayground, MiddlewarePipelineVisualizer added) |
+| Domains (Families)    | 7                  | 8 (brick-dna)                                                                               |
+| Overall health rating | 9/10               | Not re-assessed                                                                             |
 
 The Pulse also does not mention: the new page integration test layer (ADR-013), mutation testing infrastructure (Stryker), or the form submit loading guard on useFormSubmit. Active concerns do not reflect the new SettingsPage collect guard breach.
 
@@ -141,12 +142,12 @@ Every test run that exercises router code emits multiple `[Vue Router warn]: The
 
 ## Doc Drift
 
-| Document           | Accurate | Drift Found |
-| ------------------ | -------- | ----------- |
-| Domain Map         | No       | `brick-dna` domain missing entirely (8 domains in code, 7 documented). Showcase components list stale (12 listed, 15 actual). Shared components count stale (31, actual: 32). |
-| Component Registry | Yes      | 32 components, matches registry output. Only format issue (pre-existing). |
+| Document           | Accurate | Drift Found                                                                                                                                                                                          |
+| ------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Domain Map         | No       | `brick-dna` domain missing entirely (8 domains in code, 7 documented). Showcase components list stale (12 listed, 15 actual). Shared components count stale (31, actual: 32).                        |
+| Component Registry | Yes      | 32 components, matches registry output. Only format issue (pre-existing).                                                                                                                            |
 | Pulse              | No       | Assessed 2026-03-25. ADR count, test count, test files, showcase components, domain count, pattern maturity all stale. New patterns (integration tests, mutation testing, loading guard) unrecorded. |
-| CLAUDE.md          | Yes      | Conventions accurate. No dead ADR references (fixed in rebuttal-fixes delivery). |
+| CLAUDE.md          | Yes      | Conventions accurate. No dead ADR references (fixed in rebuttal-fixes delivery).                                                                                                                     |
 
 ---
 
@@ -157,9 +158,9 @@ Every test run that exercises router code emits multiple `[Vue Router warn]: The
 2. **Active Concerns:** Add `SettingsPage.spec.ts collect guard breach` — severity Medium, status Active. Update ComponentGallery entry to reflect it persists through 4 inspections.
 
 3. **Pattern Maturity:** Add two new patterns:
-   - Page integration tests (ADR-013) — Maturity: Battle-tested (16 page tests, separate config, all passing)
-   - Mutation testing infrastructure (Stryker) — Maturity: Configured, not yet run (dry-run confirmed, threshold set at 80%)
-   - Form submit loading guard — update useFormSubmit entry to reflect `submitting` ref now returned
+    - Page integration tests (ADR-013) — Maturity: Battle-tested (16 page tests, separate config, all passing)
+    - Mutation testing infrastructure (Stryker) — Maturity: Configured, not yet run (dry-run confirmed, threshold set at 80%)
+    - Form submit loading guard — update useFormSubmit entry to reflect `submitting` ref now returned
 
 4. **In-Progress Work:** Clear any stale entries. The integration test suite and mutation testing are complete.
 
@@ -207,10 +208,10 @@ The Vue Router `next()` deprecation (Finding 1) touches ADR-001 territory but is
 
 ### Training Proposals
 
-| Proposal | Context | Report Evidence |
-| --- | --- | --- |
-| SOP 3 should add: after verifying domain map against docs, list actual domain directories and verify each appears in the map. The current check finds docs that reference missing things; this reverse check finds things that docs don't reference. | `brick-dna` domain was fully active in code but absent from the domain map. Found only because I listed the domains directory independently, not through a systematic doc audit step. | 2026-03-29-post-delivery-audit |
-| SOP 1 should add: capture the full collect guard reporter output including which files exceeded thresholds and by how much. Record this separately from the test:coverage pass/fail row. | SettingsPage.spec.ts collect guard breach was only visible by running the gauntlet and reading the reporter output lines. The pass/fail row alone would show PASS (since the collect guard doesn't fail the suite — it only warns). | 2026-03-29-post-delivery-audit |
+| Proposal                                                                                                                                                                                                                                             | Context                                                                                                                                                                                                                             | Report Evidence                |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| SOP 3 should add: after verifying domain map against docs, list actual domain directories and verify each appears in the map. The current check finds docs that reference missing things; this reverse check finds things that docs don't reference. | `brick-dna` domain was fully active in code but absent from the domain map. Found only because I listed the domains directory independently, not through a systematic doc audit step.                                               | 2026-03-29-post-delivery-audit |
+| SOP 1 should add: capture the full collect guard reporter output including which files exceeded thresholds and by how much. Record this separately from the test:coverage pass/fail row.                                                             | SettingsPage.spec.ts collect guard breach was only visible by running the gauntlet and reading the reporter output lines. The pass/fail row alone would show PASS (since the collect guard doesn't fail the suite — it only warns). | 2026-03-29-post-delivery-audit |
 
 ---
 
@@ -231,10 +232,10 @@ Findings 7–8 correctly rated low. The observations are appropriate — correct
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| SOP 3: Reverse-verify domain map against actual directories | Candidate | Valid methodology gap. Forward-checking docs finds dead references; only reverse-checking finds undocumented reality. The `brick-dna` omission is proof of concept. First observation — needs second confirming session to graduate. |
-| SOP 1: Capture full collect guard reporter output separately from pass/fail | Candidate | The collect guard warns but doesn't fail the suite. If the inspector only checks exit codes, threshold breaches are invisible. The SettingsPage catch validates the approach. First observation — needs second confirming session to graduate. |
+| Proposal                                                                    | Disposition | Rationale                                                                                                                                                                                                                                      |
+| --------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SOP 3: Reverse-verify domain map against actual directories                 | Candidate   | Valid methodology gap. Forward-checking docs finds dead references; only reverse-checking finds undocumented reality. The `brick-dna` omission is proof of concept. First observation — needs second confirming session to graduate.           |
+| SOP 1: Capture full collect guard reporter output separately from pass/fail | Candidate   | The collect guard warns but doesn't fail the suite. If the inspector only checks exit codes, threshold breaches are invisible. The SettingsPage catch validates the approach. First observation — needs second confirming session to graduate. |
 
 ### Notes for the Inspector
 

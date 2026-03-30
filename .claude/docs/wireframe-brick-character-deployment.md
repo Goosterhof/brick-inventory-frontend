@@ -22,12 +22,12 @@ Everything described here uses components and design tokens that already exist i
 
 **Location:** `src/shared/components/LegoBrick.vue`
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `color` | `string` | `#DC2626` | Hex background color for the brick and studs |
-| `shadow` | `boolean` | `true` | Whether to show the hard offset shadow |
-| `columns` | `number` | `4` | Number of stud columns |
-| `rows` | `number` | `2` | Number of stud rows |
+| Prop      | Type      | Default   | Description                                  |
+| --------- | --------- | --------- | -------------------------------------------- |
+| `color`   | `string`  | `#DC2626` | Hex background color for the brick and studs |
+| `shadow`  | `boolean` | `true`    | Whether to show the hard offset shadow       |
+| `columns` | `number`  | `4`       | Number of stud columns                       |
+| `rows`    | `number`  | `2`       | Number of stud rows                          |
 
 Renders an `inline-grid` of circular studs on a colored background with `brick-border`. A 4×2 is the classic LEGO brick. A 3×1 is a flat plate. A 2×2 is a small square brick.
 
@@ -101,11 +101,11 @@ Add three `LegoBrick` components beside the text — staggered like someone was 
 
 ### The Three Bricks
 
-| Brick | Columns | Rows | Color | Shadow | Purpose |
-|-------|---------|------|-------|--------|---------|
-| Primary | 4 | 2 | `#F5C518` (Brick Yellow) | Yes | The hero — largest, top of the stack |
-| Accent | 2 | 2 | `#C41A16` (Brick Red) | Yes | Offset right and down — smaller accent |
-| Support | 3 | 1 | `#0055BF` (Brick Blue) | Yes | Offset left and further down — a flat plate |
+| Brick   | Columns | Rows | Color                    | Shadow | Purpose                                     |
+| ------- | ------- | ---- | ------------------------ | ------ | ------------------------------------------- |
+| Primary | 4       | 2    | `#F5C518` (Brick Yellow) | Yes    | The hero — largest, top of the stack        |
+| Accent  | 2       | 2    | `#C41A16` (Brick Red)    | Yes    | Offset right and down — smaller accent      |
+| Support | 3       | 1    | `#0055BF` (Brick Blue)   | Yes    | Offset left and further down — a flat plate |
 
 ### Why Staggered, Not Aligned
 
@@ -146,6 +146,7 @@ Replace the current logged-out `<template>` block:
 ```
 
 **Key details:**
+
 - `order="-1 sm:0"` puts bricks on top on mobile, on the right on desktop
 - `m="t-[-4px] r-8"` and `m="t-[-4px] l-4"` create the stagger — negative top margin overlaps vertically, left/right margin offsets horizontally
 - `items="end"` right-aligns the brick stack within its container
@@ -182,7 +183,7 @@ The current `EmptyState.vue` shows a text message on a `brick-stud-grid` backgro
 
 ### Why `shadow: false`?
 
-A brick with shadow looks confident — stacked, placed, part of a structure. A brick without shadow looks flat — lying on a surface, waiting to be picked up. The empty state brick is *waiting for the user to start building*. The missing shadow is the visual cue that this collection hasn't begun yet.
+A brick with shadow looks confident — stacked, placed, part of a structure. A brick without shadow looks flat — lying on a surface, waiting to be picked up. The empty state brick is _waiting for the user to start building_. The missing shadow is the visual cue that this collection hasn't begun yet.
 
 ### How to Implement — Enhance `EmptyState.vue`
 
@@ -203,13 +204,7 @@ const {
 
 <template>
     <div flex="~ col" items="center" gap="4" p="8" text-center class="brick-stud-grid">
-        <LegoBrick
-            v-if="showBrick"
-            :columns="4"
-            :rows="2"
-            :color="brickColor"
-            :shadow="false"
-        />
+        <LegoBrick v-if="showBrick" :columns="4" :rows="2" :color="brickColor" :shadow="false" />
         <p text="gray-600">{{ message }}</p>
         <slot />
     </div>
@@ -217,6 +212,7 @@ const {
 ```
 
 **Changes from current `EmptyState.vue`:**
+
 - Layout changed from single `<p>` to flex column (to stack brick → message → optional CTA slot)
 - Added `showBrick` prop (default `false` — existing usage unchanged)
 - Added `brickColor` prop (default `#F5C518`)
@@ -227,22 +223,17 @@ const {
 
 Each domain gets its own brick color — reinforcing the identity the design system already established:
 
-| Domain | Empty State Key | Brick Color | Hex | Why |
-|--------|----------------|-------------|-----|-----|
-| Sets | `sets.noSets` | Brick Yellow | `#F5C518` | The primary brand color — sets are the core |
-| Storage | `storage.noStorage` | Brick Blue | `#0055BF` | Blue = organization, structure, shelving |
-| Parts | `parts.noParts` | Brick Red | `#C41A16` | Red = individual pieces, small and specific |
-| Brick DNA | `brickDna.empty` | Baseplate Green | `#237841` | Green = the foundation everything sits on |
+| Domain    | Empty State Key     | Brick Color     | Hex       | Why                                         |
+| --------- | ------------------- | --------------- | --------- | ------------------------------------------- |
+| Sets      | `sets.noSets`       | Brick Yellow    | `#F5C518` | The primary brand color — sets are the core |
+| Storage   | `storage.noStorage` | Brick Blue      | `#0055BF` | Blue = organization, structure, shelving    |
+| Parts     | `parts.noParts`     | Brick Red       | `#C41A16` | Red = individual pieces, small and specific |
+| Brick DNA | `brickDna.empty`    | Baseplate Green | `#237841` | Green = the foundation everything sits on   |
 
 ### Usage Example (Sets Domain)
 
 ```vue
-<EmptyState
-    v-if="sets.length === 0"
-    :message="t('sets.noSets').value"
-    show-brick
-    brick-color="#F5C518"
->
+<EmptyState v-if="sets.length === 0" :message="t('sets.noSets').value" show-brick brick-color="#F5C518">
     <NavLink to="/sets/add" @click="goToAddSet">
         {{ t("sets.addSet").value }}
     </NavLink>
@@ -252,11 +243,7 @@ Each domain gets its own brick color — reinforcing the identity the design sys
 ### Usage Example (Storage Domain)
 
 ```vue
-<EmptyState
-    :message="t('storage.noStorage').value"
-    show-brick
-    brick-color="#0055BF"
->
+<EmptyState :message="t('storage.noStorage').value" show-brick brick-color="#0055BF">
     <NavLink to="/storage/add" @click="goToAddStorage">
         {{ t("storage.addStorage").value }}
     </NavLink>
@@ -267,23 +254,23 @@ Each domain gets its own brick color — reinforcing the identity the design sys
 
 ## Accessibility
 
-| Requirement | Implementation |
-|-------------|---------------|
-| Decorative bricks | `LegoBrick` renders `div` elements with no text content — invisible to screen readers by default |
-| Focus order | Bricks are not focusable. Tab order: nav → CTA button. Unchanged. |
-| Color independence | Bricks carry no information via color alone. They are visual decoration. |
+| Requirement        | Implementation                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| Decorative bricks  | `LegoBrick` renders `div` elements with no text content — invisible to screen readers by default |
+| Focus order        | Bricks are not focusable. Tab order: nav → CTA button. Unchanged.                                |
+| Color independence | Bricks carry no information via color alone. They are visual decoration.                         |
 
 ---
 
 ## Design Decisions Summary
 
-| Decision | Rationale |
-|----------|-----------|
-| Three bricks on landing, not one | One brick = logo. Three bricks = collection in progress. Matches the app's purpose. |
-| Staggered, not grid | "Under construction" mood. Someone was building and paused — inviting the visitor to continue. |
-| `shadow: false` on empty states | No shadow = flat = waiting. Shadow = stacked = placed. Empty states should feel *unfinished*. |
-| Enhance EmptyState with props | Centralized. One component change, every domain benefits. `showBrick` defaults to `false` — nothing breaks. |
-| Domain-specific colors | Yellow (sets), Blue (storage), Red (parts), Green (DNA). Maps to the four brand colors in `uno.config.ts`. |
+| Decision                         | Rationale                                                                                                   |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Three bricks on landing, not one | One brick = logo. Three bricks = collection in progress. Matches the app's purpose.                         |
+| Staggered, not grid              | "Under construction" mood. Someone was building and paused — inviting the visitor to continue.              |
+| `shadow: false` on empty states  | No shadow = flat = waiting. Shadow = stacked = placed. Empty states should feel _unfinished_.               |
+| Enhance EmptyState with props    | Centralized. One component change, every domain benefits. `showBrick` defaults to `false` — nothing breaks. |
+| Domain-specific colors           | Yellow (sets), Blue (storage), Red (parts), Green (DNA). Maps to the four brand colors in `uno.config.ts`.  |
 
 ---
 

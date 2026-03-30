@@ -19,11 +19,11 @@ The Pulse is 4 days stale and has been flagged in 4 consecutive inspections. The
 **Part 1 — The Refresh (immediate fix)**
 
 - Full Pulse refresh of qualitative sections:
-  - Update Pattern Maturity: add page integration tests (ADR-013), mutation testing (Stryker), form submit loading guard
-  - Update Active Concerns: add SettingsPage.spec.ts collect guard breach, update ComponentGallery entry (persists 4 inspections)
-  - Clear any stale In-Progress Work entries
-  - Re-assess Overall Health rating
-  - Update assessed date to 2026-03-29
+    - Update Pattern Maturity: add page integration tests (ADR-013), mutation testing (Stryker), form submit loading guard
+    - Update Active Concerns: add SettingsPage.spec.ts collect guard breach, update ComponentGallery entry (persists 4 inspections)
+    - Clear any stale In-Progress Work entries
+    - Re-assess Overall Health rating
+    - Update assessed date to 2026-03-29
 - Remove hardcoded numeric counts from the Pulse (test count, test files, component count, ADR count, domain count) — these are already verifiable from gauntlet output and `component-registry.json`. Numbers that exist in two places will always drift. Replace with pointers to the canonical sources (e.g., "see `meta.componentCount` in registry", "run `npm run test:unit` for current count").
 - Add `brick-dna` domain to domain map: table entry + domain details section (pages, routes, auth, API endpoints)
 - Remove any hardcoded numeric counts from domain map that duplicate the registry (component counts)

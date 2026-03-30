@@ -9,24 +9,24 @@
 
 ## Work Summary
 
-| Action   | File                                       | Notes                                                                                                     |
-| -------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Modified | `.claude/docs/pulse.md`                    | Removed hardcoded numeric counts, added canonical source pointers, refreshed all qualitative sections     |
-| Modified | `.claude/docs/domain-map.md`               | Added brick-dna domain (table + details), added 3 missing showcase components, removed hardcoded component count |
-| Modified | `src/tests/unit/architecture.spec.ts`      | Added domain map completeness architecture test (test #28)                                                |
+| Action   | File                                  | Notes                                                                                                            |
+| -------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Modified | `.claude/docs/pulse.md`               | Removed hardcoded numeric counts, added canonical source pointers, refreshed all qualitative sections            |
+| Modified | `.claude/docs/domain-map.md`          | Added brick-dna domain (table + details), added 3 missing showcase components, removed hardcoded component count |
+| Modified | `src/tests/unit/architecture.spec.ts` | Added domain map completeness architecture test (test #28)                                                       |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                   | Met | Notes                                                                                     |
-| ---------------------------------------------------------------------- | --- | ----------------------------------------------------------------------------------------- |
-| Pulse qualitative sections are current (Pattern Maturity, Active Concerns, Overall Health) | Yes | All three sections refreshed with 2026-03-29 content                                      |
-| Pulse contains no hardcoded numeric counts that duplicate gauntlet output or registry        | Yes | Test count, test files, component count, ADR count, domain count all replaced with source pointers |
-| Pulse assessed date is 2026-03-29                                                            | Yes | All sections updated                                                                       |
-| Domain map lists 8 Families domains (brick-dna added with full details)                      | Yes | Table entry + details section with pages, components, modals, API                          |
-| Domain map contains no hardcoded counts that duplicate the registry                          | Yes | "31 components" replaced with pointer to registry                                          |
-| Architecture test enforces: every domain directory has a domain map entry                    | Yes | New test reads domain-map.md and checks for `**domainName**` pattern in table rows         |
-| Architecture test fails when a domain directory exists without a domain map entry            | Yes | Verified by pattern — regex matches bold domain names in markdown table cells               |
-| All quality gates pass                                                                        | Yes | type-check, lint, test:coverage (100%, 1343 tests, 28 arch tests), knip, build all green  |
+| Acceptance Criterion                                                                       | Met | Notes                                                                                              |
+| ------------------------------------------------------------------------------------------ | --- | -------------------------------------------------------------------------------------------------- |
+| Pulse qualitative sections are current (Pattern Maturity, Active Concerns, Overall Health) | Yes | All three sections refreshed with 2026-03-29 content                                               |
+| Pulse contains no hardcoded numeric counts that duplicate gauntlet output or registry      | Yes | Test count, test files, component count, ADR count, domain count all replaced with source pointers |
+| Pulse assessed date is 2026-03-29                                                          | Yes | All sections updated                                                                               |
+| Domain map lists 8 Families domains (brick-dna added with full details)                    | Yes | Table entry + details section with pages, components, modals, API                                  |
+| Domain map contains no hardcoded counts that duplicate the registry                        | Yes | "31 components" replaced with pointer to registry                                                  |
+| Architecture test enforces: every domain directory has a domain map entry                  | Yes | New test reads domain-map.md and checks for `**domainName**` pattern in table rows                 |
+| Architecture test fails when a domain directory exists without a domain map entry          | Yes | Verified by pattern — regex matches bold domain names in markdown table cells                      |
+| All quality gates pass                                                                     | Yes | type-check, lint, test:coverage (100%, 1343 tests, 28 arch tests), knip, build all green           |
 
 ## Decisions Made
 
@@ -38,25 +38,25 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                                    |
-| ------------- | ------ | -------------------------------------------------------- |
-| format:check  | Fail   | Pre-existing: `.claude/` docs + component-registry.json  |
+| Check         | Result | Notes                                                   |
+| ------------- | ------ | ------------------------------------------------------- |
+| format:check  | Fail   | Pre-existing: `.claude/` docs + component-registry.json |
 | lint          | Pass   | 9 warnings, 0 errors — pre-existing                     |
-| lint:vue      | Pass   |                                                           |
-| type-check    | Pass   |                                                           |
+| lint:vue      | Pass   |                                                         |
+| type-check    | Pass   |                                                         |
 | test:coverage | Pass   | 100% all metrics, 1343 tests, 28 architecture tests     |
-| knip          | Pass   | 2 config hints (Stryker — addressed in cleanup permit)   |
-| build         | Pass   | families: 109kB, admin: 31kB                             |
+| knip          | Pass   | 2 config hints (Stryker — addressed in cleanup permit)  |
+| build         | Pass   | families: 109kB, admin: 31kB                            |
 
 ## Showcase Readiness
 
-This delivery strengthens the portfolio in a subtle but important way. A reviewer who looks at the architecture tests now sees 28 tests covering import boundaries, naming conventions, service patterns, domain structure, accessibility, ADR sync, and — newly — domain map completeness. The Pulse no longer has stale numbers because it no longer *has* numbers to go stale. The domain map is complete for the first time. These are the kind of infrastructure choices that signal maturity.
+This delivery strengthens the portfolio in a subtle but important way. A reviewer who looks at the architecture tests now sees 28 tests covering import boundaries, naming conventions, service patterns, domain structure, accessibility, ADR sync, and — newly — domain map completeness. The Pulse no longer has stale numbers because it no longer _has_ numbers to go stale. The domain map is complete for the first time. These are the kind of infrastructure choices that signal maturity.
 
 ## Proposed Knowledge Updates
 
 - **Learnings:** None — this was documentation and test infrastructure, not new patterns.
-- **Pulse:** N/A — this permit *was* the Pulse update.
-- **Domain Map:** N/A — this permit *was* the domain map update.
+- **Pulse:** N/A — this permit _was_ the Pulse update.
+- **Domain Map:** N/A — this permit _was_ the domain map update.
 - **Component Registry:** No changes needed — auto-generated.
 - **Decision Record:** Not warranted. The "single source of truth for numbers" principle is captured in the permit notes and the Pulse header. If it needs to be referenced again, it can be elevated to an ADR at that point.
 
@@ -78,10 +78,10 @@ This delivery strengthens the portfolio in a subtle but important way. A reviewe
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                         | Context                                                                        | Shift Evidence           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------ |
 | Before listing API endpoints for a domain, read the page component to confirm the actual HTTP calls rather than inferring from naming convention | brick-dna API endpoint was inferred, not verified from BrickDnaPage.vue source | 2026-03-29-pulse-refresh |
-| When updating the Pulse, check the Seeds section for triggers that may have been crossed by recent work | Seeds section has time-based triggers that could be silently satisfied | 2026-03-29-pulse-refresh |
+| When updating the Pulse, check the Seeds section for triggers that may have been crossed by recent work                                          | Seeds section has time-based triggers that could be silently satisfied         | 2026-03-29-pulse-refresh |
 
 ---
 
@@ -100,6 +100,7 @@ One correction applied during evaluation: the brick-dna API endpoint was listed 
 ### Decision Review
 
 All three decisions are sound:
+
 - The regex pattern for the architecture test is the right trade-off — coupling to table formatting is fine given that the format is stable and universally used in the domain map.
 - Keeping showcase components as a manual list is pragmatic. The showcase directory isn't domain-structured, so extending the architecture test would require different detection logic for marginal benefit.
 - The brick-dna API endpoint decision was the wrong call (convention inference vs. source verification), but the architect correctly identified this in their self-debrief before I caught it. Self-awareness counts.
@@ -110,10 +111,10 @@ The delivery strengthens the portfolio. A reviewer now sees: (1) a Pulse that po
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Before listing API endpoints for a domain, read the page component to confirm actual HTTP calls rather than inferring from convention | Candidate | Validated immediately — the inferred endpoint was wrong (`/family-brick-dna` vs actual `/family/brick-dna`). First observation, needs second confirmation to graduate. |
-| When updating the Pulse, check Seeds section for triggers that may have been crossed | Candidate | Valid observation — the inspector memory file seed trigger (3+ missions) has indeed been crossed (4 inspections now). First observation. |
+| Proposal                                                                                                                              | Disposition | Rationale                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Before listing API endpoints for a domain, read the page component to confirm actual HTTP calls rather than inferring from convention | Candidate   | Validated immediately — the inferred endpoint was wrong (`/family-brick-dna` vs actual `/family/brick-dna`). First observation, needs second confirmation to graduate. |
+| When updating the Pulse, check Seeds section for triggers that may have been crossed                                                  | Candidate   | Valid observation — the inspector memory file seed trigger (3+ missions) has indeed been crossed (4 inspections now). First observation.                               |
 
 ### Notes for the Architect
 

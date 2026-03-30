@@ -17,29 +17,29 @@ The Chaos Monkey audited the full Brick & Mortar frontend and scored it 7/10. Th
 ### In the Box
 
 1. **Voice overhaul (10 highest-visibility translation keys)** — Rewrite the 10 most-seen translation strings in both EN and NL to speak the Brick & Mortar voice. Target these keys specifically:
-   - `common.loading` — "Loading..." → something like "Stacking bricks..." / "Laden... steentjes stapelen..."
-   - `sets.noSets` — "No sets yet. Add your first set!" → voiced empty state
-   - `storage.noStorage` — "No storage locations yet..." → voiced empty state
-   - `parts.noParts` — "No parts stored yet..." → voiced empty state
-   - `brickDna.empty` — "No collection data available yet..." → voiced empty state
-   - `home.dashboardTitle` — "Dashboard" → something with domain identity
-   - `home.loadingStats` — "Loading your collection..." → voiced variant
-   - `errors.generic` — "An error occurred" → voiced error
-   - `parts.noResults` — "No parts match your search or filters." → voiced empty search
-   - `home.tagline` / `home.brandDescription` — landing page copy (already decent, sharpen if possible)
+    - `common.loading` — "Loading..." → something like "Stacking bricks..." / "Laden... steentjes stapelen..."
+    - `sets.noSets` — "No sets yet. Add your first set!" → voiced empty state
+    - `storage.noStorage` — "No storage locations yet..." → voiced empty state
+    - `parts.noParts` — "No parts stored yet..." → voiced empty state
+    - `brickDna.empty` — "No collection data available yet..." → voiced empty state
+    - `home.dashboardTitle` — "Dashboard" → something with domain identity
+    - `home.loadingStats` — "Loading your collection..." → voiced variant
+    - `errors.generic` — "An error occurred" → voiced error
+    - `parts.noResults` — "No parts match your search or filters." → voiced empty search
+    - `home.tagline` / `home.brandDescription` — landing page copy (already decent, sharpen if possible)
 
 2. **Validation error personality** — Rewrite all `errors.*` translation keys in both EN and NL to be warmer and more human. Keep them clear and helpful, add character.
 
 3. **Deploy LegoBrick into Families app** — Add the `LegoBrick.vue` component to:
-   - The logged-out landing page as a visual hero element
-   - At least one empty state (e.g., the "no sets" state)
-   - **See wireframe:** `.claude/docs/wireframe-brick-character-deployment.md` — contains ASCII wireframes, template stubs, component breakdowns, design rationale, and copy-paste starting points for both placements
+    - The logged-out landing page as a visual hero element
+    - At least one empty state (e.g., the "no sets" state)
+    - **See wireframe:** `.claude/docs/wireframe-brick-character-deployment.md` — contains ASCII wireframes, template stubs, component breakdowns, design rationale, and copy-paste starting points for both placements
 
 4. **Wire sound service into key interactions** — Add `play()` calls to these moments:
-   - `snap` on PrimaryButton click (add a `silent` prop to opt out for rapid-fire contexts like form submits)
-   - `pull` on ModalDialog open
-   - `thud` on destructive confirmation (ConfirmDialog confirm button)
-   - `cascade` on successful Rebrickable import
+    - `snap` on PrimaryButton click (add a `silent` prop to opt out for rapid-fire contexts like form submits)
+    - `pull` on ModalDialog open
+    - `thud` on destructive confirmation (ConfirmDialog confirm button)
+    - `cascade` on successful Rebrickable import
 
 5. **100% test coverage on all changes** — as always
 
@@ -81,7 +81,7 @@ The Chaos Monkey audited the full Brick & Mortar frontend and scored it 7/10. Th
 
 This permit comes from a Chaos Monkey autopsy run by the laboratory's General (the Mad Scientist). The CFO's rebuttal shaped the scope — the voice overhaul is phased (10 keys now, full sweep later if the pattern proves maintainable in two languages), the sound wiring includes a `silent` prop escape hatch, and the landing page scope is bounded to component addition rather than redesign.
 
-The core thesis: the infrastructure for character already exists in this codebase. `LegoBrick.vue` is built and tested. The sound service synthesizes four distinct sounds. The Brand Voice specification in the Showcase demonstrates what voiced copy looks like. This permit is about *deploying* what was built, not building new things. That makes it low-risk and high-impact.
+The core thesis: the infrastructure for character already exists in this codebase. `LegoBrick.vue` is built and tested. The sound service synthesizes four distinct sounds. The Brand Voice specification in the Showcase demonstrates what voiced copy looks like. This permit is about _deploying_ what was built, not building new things. That makes it low-risk and high-impact.
 
 The CFO should evaluate whether the 10-key voice overhaul creates acceptable maintenance overhead in the NL translations. If the Dutch voiced strings feel forced or unnatural, that's a signal to adjust the approach — not every English quip translates well.
 
