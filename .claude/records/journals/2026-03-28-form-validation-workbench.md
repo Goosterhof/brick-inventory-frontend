@@ -9,24 +9,24 @@
 
 ## Work Summary
 
-| Action   | File                                                                                     | Notes                                                                          |
-| -------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Created  | `src/apps/showcase/components/FormValidationWorkbench.vue`                               | New showcase section 11 demonstrating form composables end-to-end              |
-| Modified | `src/apps/showcase/App.vue`                                                              | Already had import and usage (pre-existing on branch); no additional changes   |
-| Created  | `src/tests/unit/apps/showcase/components/FormValidationWorkbench.spec.ts`                | 20 tests, 100% coverage                                                       |
+| Action   | File                                                                      | Notes                                                                        |
+| -------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Created  | `src/apps/showcase/components/FormValidationWorkbench.vue`                | New showcase section 11 demonstrating form composables end-to-end            |
+| Modified | `src/apps/showcase/App.vue`                                               | Already had import and usage (pre-existing on branch); no additional changes |
+| Created  | `src/tests/unit/apps/showcase/components/FormValidationWorkbench.spec.ts` | 20 tests, 100% coverage                                                      |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                      | Met | Notes                                                                                          |
-| ------------------------------------------------------------------------- | --- | ---------------------------------------------------------------------------------------------- |
-| Showcase includes a Form Validation Workbench section                     | Yes | Section 11, id `form-validation-workbench`                                                     |
-| Every shared input type is represented in the demo form                   | Yes | TextInput (x2), NumberInput, SelectInput, DateInput, TextareaInput                             |
-| Users can trigger a simulated 422 response and see field-level errors     | Yes | "Submit (422 Errors)" button triggers middleware with all 6 field errors, snake_case->camelCase |
-| Users can see errors clear as they interact with fields                   | Yes | Watch on all 6 form refs clears errors and server error on any field change                    |
-| Submit lifecycle is visible (idle -> submitting -> success/error)         | Yes | Submitting state shows "Submitting..." on button, success/error messages appear                |
-| An inspector panel shows the raw validation error state in real-time      | Yes | Dark-themed panel with live JSON of `errors.value`                                             |
-| All quality gates pass: type-check, knip, lint, test:coverage, build      | Yes | Full gauntlet passed                                                                           |
-| 100% test coverage on new code                                            | Yes | 100% statements, branches, functions, lines                                                    |
+| Acceptance Criterion                                                  | Met | Notes                                                                                           |
+| --------------------------------------------------------------------- | --- | ----------------------------------------------------------------------------------------------- |
+| Showcase includes a Form Validation Workbench section                 | Yes | Section 11, id `form-validation-workbench`                                                      |
+| Every shared input type is represented in the demo form               | Yes | TextInput (x2), NumberInput, SelectInput, DateInput, TextareaInput                              |
+| Users can trigger a simulated 422 response and see field-level errors | Yes | "Submit (422 Errors)" button triggers middleware with all 6 field errors, snake_case->camelCase |
+| Users can see errors clear as they interact with fields               | Yes | Watch on all 6 form refs clears errors and server error on any field change                     |
+| Submit lifecycle is visible (idle -> submitting -> success/error)     | Yes | Submitting state shows "Submitting..." on button, success/error messages appear                 |
+| An inspector panel shows the raw validation error state in real-time  | Yes | Dark-themed panel with live JSON of `errors.value`                                              |
+| All quality gates pass: type-check, knip, lint, test:coverage, build  | Yes | Full gauntlet passed                                                                            |
+| 100% test coverage on new code                                        | Yes | 100% statements, branches, functions, lines                                                     |
 
 ## Decisions Made
 
@@ -38,14 +38,14 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                       |
-| ------------- | ------ | --------------------------- |
-| format:check  | Pass   |                             |
-| lint          | Pass   | 0 errors (8 pre-existing warnings) |
-| lint:vue      | Pass   |                             |
-| type-check    | Pass   |                             |
-| test:coverage | Pass   | 100% across all metrics     |
-| knip          | Pass   | 0 violations                |
+| Check         | Result | Notes                                |
+| ------------- | ------ | ------------------------------------ |
+| format:check  | Pass   |                                      |
+| lint          | Pass   | 0 errors (8 pre-existing warnings)   |
+| lint:vue      | Pass   |                                      |
+| type-check    | Pass   |                                      |
+| test:coverage | Pass   | 100% across all metrics              |
+| knip          | Pass   | 0 violations                         |
 | size          | Pass   | families: 109.29 kB, admin: 30.79 kB |
 
 ## Showcase Readiness
@@ -78,8 +78,8 @@ Strong. The workbench demonstrates three distinct form submission scenarios (suc
 
 ### Training Proposals
 
-| Proposal                                                                                                              | Context                                                                                             | Shift Evidence                              |
-| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| Proposal                                                                                                                                                                                                     | Context                                                                                                                | Shift Evidence                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | When mocking a service interface for a showcase/demo component, only implement the methods actually called -- use `as unknown as T` to skip unused interface methods that would create uncoverable dead code | FormValidationWorkbench initially had 8 stub methods creating 8 uncovered functions; reduced to 1 actually-used method | 2026-03-28-form-validation-workbench |
 
 ---
@@ -108,9 +108,9 @@ The workbench tells the form composable story effectively. A senior reviewer wou
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| When mocking a service interface for a showcase/demo component, only implement the methods actually called — use `as unknown as T` to skip unused interface methods that would create uncoverable dead code | Candidate | Valid observation specific to showcase/demo contexts where full interface mocks are coverage liabilities. First shift. Needs a second confirming observation before graduation. |
+| Proposal                                                                                                                                                                                                    | Disposition | Rationale                                                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| When mocking a service interface for a showcase/demo component, only implement the methods actually called — use `as unknown as T` to skip unused interface methods that would create uncoverable dead code | Candidate   | Valid observation specific to showcase/demo contexts where full interface mocks are coverage liabilities. First shift. Needs a second confirming observation before graduation. |
 
 ### Notes for the Architect
 

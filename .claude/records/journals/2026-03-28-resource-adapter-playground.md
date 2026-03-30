@@ -9,23 +9,23 @@
 
 ## Work Summary
 
-| Action   | File                                                                                   | Notes                                                          |
-| -------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Created  | `src/apps/showcase/components/ResourceAdapterPlayground.vue`                           | Section 12 — interactive adapter + store demo with Minifig domain |
-| Created  | `src/tests/unit/apps/showcase/components/ResourceAdapterPlayground.spec.ts`            | 39 tests, 100% coverage on all 4 metrics                      |
-| Modified | `src/apps/showcase/App.vue`                                                            | Import and render new section                                  |
+| Action   | File                                                                        | Notes                                                             |
+| -------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Created  | `src/apps/showcase/components/ResourceAdapterPlayground.vue`                | Section 12 — interactive adapter + store demo with Minifig domain |
+| Created  | `src/tests/unit/apps/showcase/components/ResourceAdapterPlayground.spec.ts` | 39 tests, 100% coverage on all 4 metrics                          |
+| Modified | `src/apps/showcase/App.vue`                                                 | Import and render new section                                     |
 
 ## Permit Fulfillment
 
 | Acceptance Criterion                                                              | Met | Notes                                                                                                  |
 | --------------------------------------------------------------------------------- | --- | ------------------------------------------------------------------------------------------------------ |
-| Showcase includes a Resource Adapter Playground section                            | Yes | Section 12 in showcase, `id="resource-adapter-playground"`                                             |
-| Users can create a new resource, edit fields, see adapter state update reactively  | Yes | generateNew form with TextInput/NumberInput, reactive camelCase/snake_case panels                       |
-| Users can add resources to a store, retrieve by ID, see store contents             | Yes | Store grid shows all items, click-to-select, edit panel with getById                                   |
-| camelCase <-> snake_case conversion visually demonstrated                          | Yes | Side-by-side live panels for new form and selected item, using deepSnakeKeys                           |
+| Showcase includes a Resource Adapter Playground section                           | Yes | Section 12 in showcase, `id="resource-adapter-playground"`                                             |
+| Users can create a new resource, edit fields, see adapter state update reactively | Yes | generateNew form with TextInput/NumberInput, reactive camelCase/snake_case panels                      |
+| Users can add resources to a store, retrieve by ID, see store contents            | Yes | Store grid shows all items, click-to-select, edit panel with getById                                   |
+| camelCase <-> snake_case conversion visually demonstrated                         | Yes | Side-by-side live panels for new form and selected item, using deepSnakeKeys                           |
 | Reset functionality demonstrated                                                  | Yes | Reset on new form (back to defaults) and on existing items (back to frozen state)                      |
-| All quality gates pass                                                             | Yes | format, lint, lint:vue, type-check, knip, size, build all pass. test:coverage has pre-existing failure |
-| 100% test coverage on new code                                                    | Yes | 39 tests, 100/100/100/100 on the new component                                                        |
+| All quality gates pass                                                            | Yes | format, lint, lint:vue, type-check, knip, size, build all pass. test:coverage has pre-existing failure |
+| 100% test coverage on new code                                                    | Yes | 39 tests, 100/100/100/100 on the new component                                                         |
 
 ## Decisions Made
 
@@ -39,15 +39,15 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                                           |
-| ------------- | ------ | --------------------------------------------------------------- |
-| format:check  | Pass   |                                                                 |
-| lint          | Pass   | 0 errors on new files                                           |
-| lint:vue      | Pass   |                                                                 |
-| type-check    | Pass   |                                                                 |
+| Check         | Result | Notes                                                                 |
+| ------------- | ------ | --------------------------------------------------------------------- |
+| format:check  | Pass   |                                                                       |
+| lint          | Pass   | 0 errors on new files                                                 |
+| lint:vue      | Pass   |                                                                       |
+| type-check    | Pass   |                                                                       |
 | test:coverage | Fail   | Pre-existing Vitest multi-project aggregation bug (fails on main too) |
-| knip          | Pass   |                                                                 |
-| size          | Pass   |                                                                 |
+| knip          | Pass   |                                                                       |
+| size          | Pass   |                                                                       |
 
 ## Showcase Readiness
 
@@ -78,8 +78,8 @@ The main portfolio value: a senior engineer reviewing this can see the adapter p
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                                                        | Context                                                                                  | Shift Evidence                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------- |
 | When a permit lists multiple similar operations (update/patch, create/clone), explicitly note which are demonstrated and which are skipped with reasoning — don't silently omit | Permit said "update/patch" but only patch was implemented without documenting the choice | 2026-03-28-resource-adapter-playground |
 
 ---
@@ -97,6 +97,7 @@ All acceptance criteria met. The one gap — `update()` not demonstrated alongsi
 ### Decision Review
 
 All four decisions are well-reasoned:
+
 - Minifig domain: good choice, avoids confusion with real domains
 - Mock service type assertions: follows established precedent from FormValidationWorkbench
 - shallowRef: correct — the adapter handles deep reactivity internally
@@ -110,9 +111,9 @@ This strengthens the portfolio significantly. The adapter pattern is genuinely t
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| When a permit lists multiple similar operations, explicitly note which are demonstrated and which are skipped with reasoning | Candidate | Valid observation. Silent omission is a documentation gap, not a code gap. First observation — needs a second confirming shift before graduation. |
+| Proposal                                                                                                                     | Disposition | Rationale                                                                                                                                         |
+| ---------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| When a permit lists multiple similar operations, explicitly note which are demonstrated and which are skipped with reasoning | Candidate   | Valid observation. Silent omission is a documentation gap, not a code gap. First observation — needs a second confirming shift before graduation. |
 
 ### Notes for the Architect
 

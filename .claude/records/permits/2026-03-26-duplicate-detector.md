@@ -50,5 +50,5 @@ Trivially small. The store already has all family sets loaded. A computed check 
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _link to construction journal when filed_

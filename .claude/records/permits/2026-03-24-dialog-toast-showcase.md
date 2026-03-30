@@ -60,5 +60,5 @@ The dialog service uses render functions, `markRaw`, Suspense, and native `<dial
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _pending_

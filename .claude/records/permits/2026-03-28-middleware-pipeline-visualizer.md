@@ -58,5 +58,5 @@ This is the architectural story the other two permits don't tell. The adapter pl
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _link to construction journal when filed_

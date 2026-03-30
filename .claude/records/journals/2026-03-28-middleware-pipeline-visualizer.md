@@ -9,26 +9,26 @@
 
 ## Work Summary
 
-| Action   | File                                                                              | Notes                                                          |
-| -------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Created  | `src/apps/showcase/components/MiddlewarePipelineVisualizer.vue`                   | Interactive middleware pipeline visualization component         |
-| Created  | `src/tests/unit/apps/showcase/components/MiddlewarePipelineVisualizer.spec.ts`    | 56 tests, 100% coverage                                       |
-| Modified | `src/apps/showcase/App.vue`                                                       | Added import and rendered MiddlewarePipelineVisualizer (section 13) |
-| Modified | `src/shared/generated/component-registry.json`                                    | Auto-generated, reflects new component                         |
+| Action   | File                                                                           | Notes                                                               |
+| -------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Created  | `src/apps/showcase/components/MiddlewarePipelineVisualizer.vue`                | Interactive middleware pipeline visualization component             |
+| Created  | `src/tests/unit/apps/showcase/components/MiddlewarePipelineVisualizer.spec.ts` | 56 tests, 100% coverage                                             |
+| Modified | `src/apps/showcase/App.vue`                                                    | Added import and rendered MiddlewarePipelineVisualizer (section 13) |
+| Modified | `src/shared/generated/component-registry.json`                                 | Auto-generated, reflects new component                              |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                               | Met | Notes                                                                                                  |
-| ---------------------------------------------------------------------------------- | --- | ------------------------------------------------------------------------------------------------------ |
-| Showcase includes a Middleware Pipeline Visualizer section                          | Yes | Section 13 in the showcase, integrated into App.vue                                                    |
-| Users can see a request flow through each middleware stage with visible state       | Yes | 6 stages per scenario with before/after JSON snapshots at each step                                    |
-| At least 3 scenarios available: success, 401 auth error, 422 validation error      | Yes | 4 scenarios: success, auth-error, validation-error, network-error                                      |
-| Middleware ordering is unambiguous                                                  | Yes | Stages are numbered 1-6, animated sequentially with 600ms delay between steps                          |
-| Auth middleware's token injection is visible                                        | Yes | Stage 1 shows headers before (no auth) and after (Bearer token injected)                               |
-| Loading state middleware's start/stop lifecycle is visible                          | Yes | Stage 2 (start) and stage 5/6 (stop) show isLoading and activeCount transitions                       |
-| snake_case/camelCase transform is visible at request and response boundaries       | Yes | Stage 3 shows camelCase->snake_case, stage 5 (success) shows snake_case->camelCase                    |
-| All quality gates pass: type-check, knip, lint, test:coverage, build               | Yes | Full gauntlet passed                                                                                   |
-| 100% test coverage on new code                                                     | Yes | 100% statements, 100% branches, 100% functions, 100% lines                                            |
+| Acceptance Criterion                                                          | Met | Notes                                                                              |
+| ----------------------------------------------------------------------------- | --- | ---------------------------------------------------------------------------------- |
+| Showcase includes a Middleware Pipeline Visualizer section                    | Yes | Section 13 in the showcase, integrated into App.vue                                |
+| Users can see a request flow through each middleware stage with visible state | Yes | 6 stages per scenario with before/after JSON snapshots at each step                |
+| At least 3 scenarios available: success, 401 auth error, 422 validation error | Yes | 4 scenarios: success, auth-error, validation-error, network-error                  |
+| Middleware ordering is unambiguous                                            | Yes | Stages are numbered 1-6, animated sequentially with 600ms delay between steps      |
+| Auth middleware's token injection is visible                                  | Yes | Stage 1 shows headers before (no auth) and after (Bearer token injected)           |
+| Loading state middleware's start/stop lifecycle is visible                    | Yes | Stage 2 (start) and stage 5/6 (stop) show isLoading and activeCount transitions    |
+| snake_case/camelCase transform is visible at request and response boundaries  | Yes | Stage 3 shows camelCase->snake_case, stage 5 (success) shows snake_case->camelCase |
+| All quality gates pass: type-check, knip, lint, test:coverage, build          | Yes | Full gauntlet passed                                                               |
+| 100% test coverage on new code                                                | Yes | 100% statements, 100% branches, 100% functions, 100% lines                         |
 
 ## Decisions Made
 
@@ -44,15 +44,15 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                        |
-| ------------- | ------ | ---------------------------- |
-| format:check  | Pass   |                              |
-| lint          | Pass   | 0 errors, 9 warnings (pre-existing) |
-| lint:vue      | Pass   |                              |
-| type-check    | Pass   |                              |
-| test:coverage | Pass   | 97 files, 1342 tests, 100% all metrics |
+| Check         | Result | Notes                                   |
+| ------------- | ------ | --------------------------------------- |
+| format:check  | Pass   |                                         |
+| lint          | Pass   | 0 errors, 9 warnings (pre-existing)     |
+| lint:vue      | Pass   |                                         |
+| type-check    | Pass   |                                         |
+| test:coverage | Pass   | 97 files, 1342 tests, 100% all metrics  |
 | knip          | Pass   | Configuration hints only (pre-existing) |
-| size          | Pass   | families: 109.29kB, admin: 30.79kB |
+| size          | Pass   | families: 109.29kB, admin: 30.79kB      |
 
 ## Showcase Readiness
 
@@ -85,10 +85,10 @@ This implementation demonstrates the middleware pipeline architecture clearly. A
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                                                                                                                    | Context                                                                                                                    | Shift Evidence                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
 | When testing components with async loops that use `setTimeout` via `sleep()`/timers, always use `vi.advanceTimersByTimeAsync` instead of `vi.advanceTimersByTime` -- the async variant flushes both timer callbacks and the microtask queue | Used synchronous timer advance initially, all timer-dependent assertions failed because promise resolution was not flushed | 2026-03-28-middleware-pipeline-visualizer |
-| Before writing implementation, run `npm run lint` against the target file to check complexity limits (max-lines-per-function: 80) -- catches structural violations before tests are written against the wrong structure | Wrote tests against a 113-line function, then had to refactor both component and verify tests still passed | 2026-03-28-middleware-pipeline-visualizer |
+| Before writing implementation, run `npm run lint` against the target file to check complexity limits (max-lines-per-function: 80) -- catches structural violations before tests are written against the wrong structure                     | Wrote tests against a 113-line function, then had to refactor both component and verify tests still passed                 | 2026-03-28-middleware-pipeline-visualizer |
 
 ---
 
@@ -116,10 +116,10 @@ The middleware pipeline trifecta is now complete: Form Validation Workbench (com
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Use `vi.advanceTimersByTimeAsync` instead of sync variant when testing async timer code | **Candidate** | Legitimate footgun. The sync/async distinction in Vitest timer APIs is non-obvious and causes silent test failures. First observation — needs a second confirming shift. |
-| Run `npm run lint` before writing implementation to catch complexity limits early | **Dropped** | This is general "check your work early" advice, not a specific architectural insight. The architect already has a defined build cycle (Unbox, Sort, Build, Inspect, Display). The lint check belongs in the Inspect phase, and running it earlier is just common sense that doesn't need to be codified as training. The 80-line limit is documented in CLAUDE.md — the architect should internalize it, not rely on a procedural reminder. |
+| Proposal                                                                                | Disposition   | Rationale                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Use `vi.advanceTimersByTimeAsync` instead of sync variant when testing async timer code | **Candidate** | Legitimate footgun. The sync/async distinction in Vitest timer APIs is non-obvious and causes silent test failures. First observation — needs a second confirming shift.                                                                                                                                                                                                                                                                    |
+| Run `npm run lint` before writing implementation to catch complexity limits early       | **Dropped**   | This is general "check your work early" advice, not a specific architectural insight. The architect already has a defined build cycle (Unbox, Sort, Build, Inspect, Display). The lint check belongs in the Inspect phase, and running it earlier is just common sense that doesn't need to be codified as training. The 80-line limit is documented in CLAUDE.md — the architect should internalize it, not rely on a procedural reminder. |
 
 ### Notes for the Architect
 

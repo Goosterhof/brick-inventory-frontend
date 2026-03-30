@@ -2,7 +2,7 @@ import type {DeepSnakeKeys} from "string-ts";
 
 import {deepCamelKeys, deepSnakeKeys} from "string-ts";
 
-export {deepSnakeKeys};
+export {deepCamelKeys, deepSnakeKeys};
 
 // Helper to convert API (snake_case) response to the camelCase generic T.
 // We assert because the runtime transformation aligns keys with T's shape.

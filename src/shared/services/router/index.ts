@@ -28,14 +28,12 @@ const createRouteMiddleware = <Routes extends RouteRecordRaw[]>(
             return false;
         },
     ];
-    router.beforeEach(async (to, from, next) => {
+    router.beforeEach(async (to, from) => {
         const toNormalized = normalizedRouteToSpecificRoute(to);
         const fromNormalized = normalizedRouteToSpecificRoute(from);
 
         for (const middleware of beforeRouteMiddleware)
-            if (await middleware(toNormalized, fromNormalized)) return next(false);
-
-        next();
+            if (await middleware(toNormalized, fromNormalized)) return false;
     });
 
     const afterRouteMiddleware: NavigationHookAfter[] = [];

@@ -50,5 +50,5 @@ Tier 1 / Spark. The data is already there — this is pure UI work. The Muse's g
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _link to construction journal when filed_

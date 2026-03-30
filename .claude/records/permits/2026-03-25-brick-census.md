@@ -50,5 +50,5 @@ This is Tier 1 / Spark fuel cost. The patterns are well-established from Sets an
 
 ---
 
-**Status:** Open
+**Status:** Complete
 **Journal:** _link to construction journal when filed_

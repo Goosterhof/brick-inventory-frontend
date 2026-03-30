@@ -2,7 +2,7 @@ import type {HttpService} from "@shared/services/http";
 import type {AxiosError} from "axios";
 import type {Ref} from "vue";
 
-import {deepCamelKeys} from "string-ts";
+import {deepCamelKeys} from "@shared/helpers/string";
 import {onUnmounted, ref} from "vue";
 
 /** @public */
