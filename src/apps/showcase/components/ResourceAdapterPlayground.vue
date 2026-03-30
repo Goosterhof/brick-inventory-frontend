@@ -3,7 +3,7 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
-import type {HttpService} from "@shared/services/http";
+import type {HttpService} from "@script-development/fs-http";
 import type {LoadingService} from "@shared/services/loading";
 import type {StorageService} from "@shared/services/storage";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "@shared/services/resource-adapter";

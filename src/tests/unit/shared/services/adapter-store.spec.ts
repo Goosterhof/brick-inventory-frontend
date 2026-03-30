@@ -1,4 +1,4 @@
-import type {HttpService} from "@shared/services/http";
+import type {HttpService} from "@script-development/fs-http";
 import type {LoadingService} from "@shared/services/loading";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "@shared/services/resource-adapter";
 import type {StorageService} from "@shared/services/storage";

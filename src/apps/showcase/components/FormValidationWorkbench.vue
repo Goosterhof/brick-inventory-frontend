@@ -7,7 +7,7 @@ import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import {useFormSubmit} from "@shared/composables/useFormSubmit";
 import {useValidationErrors} from "@shared/composables/useValidationErrors";
-import type {HttpService} from "@shared/services/http";
+import type {HttpService} from "@script-development/fs-http";
 import type {AxiosError} from "axios";
 import {AxiosError as AxiosErrorClass} from "axios";
 import {computed, ref, watch} from "vue";

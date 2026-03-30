@@ -1,6 +1,6 @@
+import type {HttpService} from "@script-development/fs-http";
 import type {InternalAxiosRequestConfig} from "axios";
 
-import type {HttpService} from "./http";
 import type {LoadingService} from "./loading";
 
 /** @public */
