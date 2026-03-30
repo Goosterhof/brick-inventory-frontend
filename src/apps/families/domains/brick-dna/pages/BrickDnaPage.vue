@@ -41,7 +41,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
 
         <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
 
-        <EmptyState v-else-if="!dna" :message="t('brickDna.empty').value" />
+        <EmptyState v-else-if="!dna" :message="t('brickDna.empty').value" show-brick brick-color="#237841" />
 
         <template v-else>
             <!-- Diversity Score -->

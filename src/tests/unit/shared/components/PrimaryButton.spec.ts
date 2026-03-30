@@ -1,6 +1,9 @@
+import type {SoundService} from "@shared/services/sound";
+
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
+import {computed} from "vue";
 
 describe("PrimaryButton", () => {
     it("should render slot content", () => {
@@ -54,5 +57,50 @@ describe("PrimaryButton", () => {
         expect(wrapper.attributes("text")).toBe("white hover:black focus:black disabled:gray-600");
         expect(wrapper.attributes("font")).toBe("bold");
         expect(wrapper.attributes("uppercase")).toBeDefined();
+    });
+
+    describe("sound", () => {
+        it("should play snap sound on click when soundService is provided", async () => {
+            // Arrange
+            const mockPlay = vi.fn();
+            const mockSoundService: SoundService = {play: mockPlay, isEnabled: computed(() => true), toggle: vi.fn()};
+            const wrapper = shallowMount(PrimaryButton, {
+                props: {soundService: mockSoundService},
+                slots: {default: "Click"},
+            });
+
+            // Act
+            await wrapper.trigger("click");
+
+            // Assert
+            expect(mockPlay).toHaveBeenCalledWith("snap");
+        });
+
+        it("should not play sound when silent prop is true", async () => {
+            // Arrange
+            const mockPlay = vi.fn();
+            const mockSoundService: SoundService = {play: mockPlay, isEnabled: computed(() => true), toggle: vi.fn()};
+            const wrapper = shallowMount(PrimaryButton, {
+                props: {silent: true, soundService: mockSoundService},
+                slots: {default: "Click"},
+            });
+
+            // Act
+            await wrapper.trigger("click");
+
+            // Assert
+            expect(mockPlay).not.toHaveBeenCalled();
+        });
+
+        it("should not play sound when no soundService is provided", async () => {
+            // Arrange
+            const wrapper = shallowMount(PrimaryButton, {slots: {default: "Click"}});
+
+            // Act — should not throw
+            await wrapper.trigger("click");
+
+            // Assert
+            expect(wrapper.text()).toBe("Click");
+        });
     });
 });

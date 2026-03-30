@@ -1,6 +1,7 @@
 import YearDistributionChart from "@app/domains/home/components/YearDistributionChart.vue";
 import HomePage from "@app/domains/home/pages/HomePage.vue";
 import CardContainer from "@shared/components/CardContainer.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
 import NavLink from "@shared/components/NavLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import StatCard from "@shared/components/StatCard.vue";
@@ -60,6 +61,21 @@ describe("HomePage", () => {
             expect(wrapper.text()).toContain("home.brandTitle");
             expect(wrapper.text()).toContain("home.tagline");
             expect(wrapper.findComponent(NavLink).exists()).toBe(true);
+        });
+
+        it("should render three LegoBricks in hero section", () => {
+            // Arrange
+            mockIsLoggedIn.value = false;
+
+            // Act
+            const wrapper = shallowMount(HomePage);
+
+            // Assert
+            const bricks = wrapper.findAllComponents(LegoBrick);
+            expect(bricks).toHaveLength(3);
+            expect(bricks.find((b) => b.props("color") === "#F5C518")).toBeTruthy();
+            expect(bricks.find((b) => b.props("color") === "#C41A16")).toBeTruthy();
+            expect(bricks.find((b) => b.props("color") === "#0055BF")).toBeTruthy();
         });
 
         it("should not fetch stats", () => {

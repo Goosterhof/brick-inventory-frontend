@@ -1,5 +1,23 @@
 <script setup lang="ts">
-const {type = "button", disabled = false} = defineProps<{type?: "button" | "submit" | "reset"; disabled?: boolean}>();
+import type {SoundService} from "@shared/services/sound";
+
+const {
+    type = "button",
+    disabled = false,
+    silent = false,
+    soundService = undefined,
+} = defineProps<{
+    type?: "button" | "submit" | "reset";
+    disabled?: boolean;
+    silent?: boolean;
+    soundService?: SoundService;
+}>();
+
+const handleClick = () => {
+    if (!silent && soundService) {
+        soundService.play("snap");
+    }
+};
 </script>
 
 <template>
@@ -16,6 +34,7 @@ const {type = "button", disabled = false} = defineProps<{type?: "button" | "subm
         outline="none"
         focus-visible:brick-focus
         class="brick-border brick-shadow brick-transition hover:brick-shadow-hover focus:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px] disabled:brick-disabled"
+        @click="handleClick"
     >
         <slot />
     </button>

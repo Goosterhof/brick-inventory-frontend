@@ -2,7 +2,7 @@
 import type {StorageOption} from "@app/types/storageOption";
 import type {Adapted} from "@shared/services/resource-adapter";
 
-import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
 import {storageOptionStoreModule} from "@app/stores";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
@@ -88,7 +88,9 @@ const handleDelete = async () => {
                 </div>
 
                 <div flex gap="4">
-                    <PrimaryButton type="submit" :disabled="submitting">{{ t("storage.save").value }}</PrimaryButton>
+                    <PrimaryButton type="submit" :disabled="submitting" :sound-service="familySoundService" silent>{{
+                        t("storage.save").value
+                    }}</PrimaryButton>
                     <DangerButton @click="showDeleteConfirm = true">{{ t("storage.delete").value }}</DangerButton>
                 </div>
             </form>
@@ -97,6 +99,7 @@ const handleDelete = async () => {
                 :open="showDeleteConfirm"
                 :title="t('storage.delete').value"
                 :message="t('storage.confirmDelete').value"
+                :sound-service="familySoundService"
                 @confirm="handleDelete"
                 @cancel="showDeleteConfirm = false"
             >

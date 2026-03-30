@@ -306,6 +306,10 @@
                     {
                         "name": "message",
                         "required": true
+                    },
+                    {
+                        "name": "soundService",
+                        "required": false
                     }
                 ],
                 "emits": [
@@ -513,17 +517,29 @@
                     {
                         "name": "message",
                         "required": true
+                    },
+                    {
+                        "name": "showBrick",
+                        "required": false
+                    },
+                    {
+                        "name": "brickColor",
+                        "required": false
                     }
                 ],
                 "emits": [],
-                "slots": [],
+                "slots": [
+                    {
+                        "name": "default"
+                    }
+                ],
                 "models": []
             },
             "churn": {
                 "commits": 1,
                 "linesChanged": 7
             },
-            "dependencyDepth": 0
+            "dependencyDepth": 1
         },
         "FilterChip": {
             "path": "src/shared/components/FilterChip.vue",
@@ -710,6 +726,9 @@
                 "families": {
                     "about": [
                         "src/apps/families/domains/about/pages/AboutPage.vue"
+                    ],
+                    "home": [
+                        "src/apps/families/domains/home/pages/HomePage.vue"
                     ]
                 },
                 "showcase": {
@@ -717,11 +736,16 @@
                         "src/apps/showcase/components/BrickDimensions.vue",
                         "src/apps/showcase/components/ComponentGallery.vue"
                     ]
+                },
+                "shared": {
+                    "_root": [
+                        "src/shared/components/EmptyState.vue"
+                    ]
                 }
             },
             "adoption": {
                 "apps": 2,
-                "domains": 1
+                "domains": 2
             },
             "apiSurface": {
                 "props": [
@@ -864,6 +888,10 @@
                     {
                         "name": "open",
                         "required": true
+                    },
+                    {
+                        "name": "soundService",
+                        "required": false
                     }
                 ],
                 "emits": [
@@ -1283,6 +1311,14 @@
                     },
                     {
                         "name": "disabled",
+                        "required": false
+                    },
+                    {
+                        "name": "silent",
+                        "required": false
+                    },
+                    {
+                        "name": "soundService",
                         "required": false
                     }
                 ],

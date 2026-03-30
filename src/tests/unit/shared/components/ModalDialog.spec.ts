@@ -1,12 +1,17 @@
+import type {SoundService} from "@shared/services/sound";
+
 import ModalDialog from "@shared/components/ModalDialog.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
+import {computed} from "vue";
 
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
-const mountModal = (open = false) =>
+const createMockSoundService = (): SoundService => ({play: vi.fn(), isEnabled: computed(() => true), toggle: vi.fn()});
+
+const mountModal = (open = false, soundService?: SoundService) =>
     shallowMount(ModalDialog, {
-        props: {open},
+        props: {open, ...(soundService ? {soundService} : {})},
         slots: {title: "Test Title", default: "<p>Modal body</p>"},
         global: {stubs: {"ph-x": true}},
     });
@@ -123,5 +128,46 @@ describe("ModalDialog", () => {
         // Assert
         const closeButton = wrapper.find("button[aria-label='Close']");
         expect(closeButton.exists()).toBe(true);
+    });
+
+    describe("sound", () => {
+        it("should play pull sound when opened with soundService", () => {
+            // Arrange
+            HTMLDialogElement.prototype.showModal = vi.fn();
+            const soundService = createMockSoundService();
+
+            // Act
+            mountModal(true, soundService);
+
+            // Assert
+            expect(soundService.play).toHaveBeenCalledWith("pull");
+        });
+
+        it("should not play sound when no soundService is provided", () => {
+            // Arrange
+            HTMLDialogElement.prototype.showModal = vi.fn();
+
+            // Act — should not throw
+            mountModal(true);
+
+            // Assert
+            expect(true).toBe(true);
+        });
+
+        it("should play pull sound when open prop changes to true", async () => {
+            // Arrange
+            const soundService = createMockSoundService();
+            const showModalFn = vi.fn(function (this: HTMLDialogElement) {
+                Object.defineProperty(this, "open", {value: true, configurable: true});
+            });
+            HTMLDialogElement.prototype.showModal = showModalFn;
+            const wrapper = mountModal(false, soundService);
+
+            // Act
+            await wrapper.setProps({open: true});
+
+            // Assert
+            expect(soundService.play).toHaveBeenCalledWith("pull");
+        });
     });
 });

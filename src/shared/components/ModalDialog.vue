@@ -1,15 +1,20 @@
 <script setup lang="ts">
+import type {SoundService} from "@shared/services/sound";
+
 import {PhX} from "@phosphor-icons/vue";
 import {onMounted, ref, watch} from "vue";
 
-const {open} = defineProps<{open: boolean}>();
+const {open, soundService = undefined} = defineProps<{open: boolean; soundService?: SoundService}>();
 const emit = defineEmits<{close: []}>();
 
 const dialogRef = ref<HTMLDialogElement | null>(null);
 
 const syncDialog = (isOpen: boolean) => {
     const dialog = dialogRef.value;
-    if (isOpen && !dialog?.open) dialog?.showModal();
+    if (isOpen && !dialog?.open) {
+        dialog?.showModal();
+        soundService?.play("pull");
+    }
     if (!isOpen && dialog?.open) dialog.close();
 };
 

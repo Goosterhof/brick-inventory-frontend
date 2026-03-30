@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {FamilyPartEntry, GroupedFamilyPart} from "@app/types/part";
 
-import {familyHttpService, familyTranslationService} from "@app/services";
+import {familyHttpService, familySoundService, familyTranslationService} from "@app/services";
 import EmptyState from "@shared/components/EmptyState.vue";
 import FilterChip from "@shared/components/FilterChip.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -151,14 +151,19 @@ const allSortFields: SortField[] = ["name", "quantity", "color"];
 <template>
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('parts.title').value">
-            <PrimaryButton v-if="groupedParts.length > 0" @click="exportCsv">{{
+            <PrimaryButton v-if="groupedParts.length > 0" :sound-service="familySoundService" @click="exportCsv">{{
                 t("common.export").value
             }}</PrimaryButton>
         </PageHeader>
 
         <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
 
-        <EmptyState v-else-if="groupedParts.length === 0" :message="t('parts.noParts').value" />
+        <EmptyState
+            v-else-if="groupedParts.length === 0"
+            :message="t('parts.noParts').value"
+            show-brick
+            brick-color="#C41A16"
+        />
 
         <template v-else>
             <div flex="~ col" gap="4" m="b-4">

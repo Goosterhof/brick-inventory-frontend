@@ -2,7 +2,7 @@
 import type {StorageOption} from "@app/types/storageOption";
 import type {Adapted} from "@shared/services/resource-adapter";
 
-import {familyLoadingService, familyRouterService, familyTranslationService} from "@app/services";
+import {familyLoadingService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
 import {storageOptionStoreModule} from "@app/stores";
 import EmptyState from "@shared/components/EmptyState.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -49,12 +49,19 @@ const goToDetail = async (id: number) => {
 <template>
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('storage.title').value">
-            <PrimaryButton @click="goToAdd">{{ t("storage.addStorage").value }}</PrimaryButton>
+            <PrimaryButton :sound-service="familySoundService" @click="goToAdd">{{
+                t("storage.addStorage").value
+            }}</PrimaryButton>
         </PageHeader>
 
         <p v-if="isLoading" text="gray-600">{{ t("common.loading").value }}</p>
 
-        <EmptyState v-else-if="getAll.length === 0" :message="t('storage.noStorage').value" />
+        <EmptyState
+            v-else-if="getAll.length === 0"
+            :message="t('storage.noStorage').value"
+            show-brick
+            brick-color="#0055BF"
+        />
 
         <template v-else>
             <div m="b-4">

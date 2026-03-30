@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {FamilySetStatus} from "@app/types/familySet";
 
-import {familyLoadingService, familyRouterService, familyTranslationService} from "@app/services";
+import {familyLoadingService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
 import {familySetStoreModule} from "@app/stores";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import CollapsibleSection from "@shared/components/CollapsibleSection.vue";
@@ -157,9 +157,13 @@ const exportCsv = () => {
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('sets.title').value">
             <div flex gap="2" flex-wrap="wrap">
-                <PrimaryButton @click="goToScan">{{ t("sets.scanSet").value }}</PrimaryButton>
-                <PrimaryButton @click="goToAdd">{{ t("sets.addSet").value }}</PrimaryButton>
-                <PrimaryButton v-if="getAll.length > 0" @click="exportCsv">{{
+                <PrimaryButton :sound-service="familySoundService" @click="goToScan">{{
+                    t("sets.scanSet").value
+                }}</PrimaryButton>
+                <PrimaryButton :sound-service="familySoundService" @click="goToAdd">{{
+                    t("sets.addSet").value
+                }}</PrimaryButton>
+                <PrimaryButton v-if="getAll.length > 0" :sound-service="familySoundService" @click="exportCsv">{{
                     t("common.export").value
                 }}</PrimaryButton>
             </div>
@@ -167,7 +171,12 @@ const exportCsv = () => {
 
         <p v-if="isLoading" text="gray-600">{{ t("common.loading").value }}</p>
 
-        <EmptyState v-else-if="getAll.length === 0" :message="t('sets.noSets').value" />
+        <EmptyState
+            v-else-if="getAll.length === 0"
+            :message="t('sets.noSets').value"
+            show-brick
+            brick-color="#F5C518"
+        />
 
         <template v-else>
             <div flex="~ col" gap="4" m="b-4">
