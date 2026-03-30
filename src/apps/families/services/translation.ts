@@ -3,7 +3,7 @@ import {createTranslationService} from "@shared/services/translation";
 const translations = {
     en: {
         common: {
-            loading: "Loading...",
+            loading: "Stacking bricks...",
             save: "Save",
             cancel: "Cancel",
             delete: "Delete",
@@ -33,14 +33,14 @@ const translations = {
             inviteCode: "Invite Code",
         },
         errors: {
-            required: "This field is required",
-            invalidEmail: "Invalid email address",
-            minLength: "Must be at least {min} characters",
-            maxLength: "Must be at most {max} characters",
-            passwordMismatch: "Passwords do not match",
-            generic: "An error occurred",
-            notFound: "Not found",
-            unauthorized: "Unauthorized",
+            required: "This brick is missing — fill it in",
+            invalidEmail: "That doesn't look like a real email address",
+            minLength: "Too short — need at least {min} characters",
+            maxLength: "Too long — keep it under {max} characters",
+            passwordMismatch: "Those passwords don't click together",
+            generic: "Something came loose. Try that again.",
+            notFound: "We looked everywhere — nothing here",
+            unauthorized: "You'll need to log in first",
         },
         navigation: {
             home: "Home",
@@ -78,8 +78,8 @@ const translations = {
             tagline: "Every brick has a place.",
             brandDescription:
                 "Manage your LEGO collection, track where every part is stored, and build with confidence.",
-            dashboardTitle: "Dashboard",
-            loadingStats: "Loading your collection...",
+            dashboardTitle: "Build Control",
+            loadingStats: "Unpacking your collection...",
             statSets: "Sets",
             statStorageLocations: "Storage locations",
             statStoredParts: "Stored parts",
