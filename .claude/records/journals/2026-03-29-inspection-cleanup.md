@@ -89,4 +89,22 @@ No new training proposals from this shift. The graduated training ("check git st
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal._
+**Assessment:** Solid
+
+### Work Review
+
+All 6 findings resolved cleanly. The permit's suggested execution order was followed, and all 8 acceptance criteria are met. Two things stand out:
+
+1. **Router semantics got right.** The permit explicitly warned about inverted semantics between `next(false)` and `return false`. The architect navigated this correctly — middleware returning `true` ("I handled navigation") now maps to `return false` ("cancel navigation") in the Vue Router pattern. No logic inversion bugs.
+
+2. **ADR-013 architecture test scoping.** The decision to scope enforcement to apps with existing integration test infrastructure (not all apps) is sound. Hardcoding an admin exclusion would be brittle; checking for the directory's existence is self-maintaining. When admin gets integration tests, enforcement kicks in automatically. Clean design.
+
+The SettingsPage split is well-balanced (31/17) and the collect times dropped dramatically (251ms/146ms vs 1060ms combined). The blind spot about not running `test:integration:run` independently is the same gap the inspector flagged about themselves — worth noting but not a failure.
+
+### Training Proposal Dispositions
+
+No new proposals this shift. The graduated "check git status before starting" training was applied successfully — the architect recognized prior work on the branch and adapted rather than reimplementing. Training working as intended.
+
+### Notes
+
+The "What Went Poorly: Nothing significant" is acceptable for a well-scoped fix-list permit. No concerns.
