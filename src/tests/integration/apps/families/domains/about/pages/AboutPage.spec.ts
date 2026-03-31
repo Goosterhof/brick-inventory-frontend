@@ -1,13 +1,21 @@
 import AboutPage from "@app/domains/about/pages/AboutPage.vue";
+import {mockServer} from "@integration/helpers/mock-server";
 import LegoBrick from "@shared/components/LegoBrick.vue";
 import {mount} from "@vue/test-utils";
-import {describe, expect, it, vi} from "vitest";
+import {beforeEach, describe, expect, it, vi} from "vitest";
 
-vi.mock("@app/services", () => ({
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-}));
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("@integration/helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
 
 describe("AboutPage — integration", () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        mockServer.reset();
+        localStorage.clear();
+    });
+
     const mountPage = () => mount(AboutPage);
 
     it("renders real LegoBrick components with visible stud grids", () => {
@@ -42,10 +50,10 @@ describe("AboutPage — integration", () => {
         ]);
     });
 
-    it("renders translation keys for title and description", () => {
+    it("renders actual English text for title and description", () => {
         const wrapper = mountPage();
 
-        expect(wrapper.text()).toContain("about.title");
-        expect(wrapper.text()).toContain("about.description");
+        expect(wrapper.text()).toContain("About");
+        expect(wrapper.text()).toContain("This is the about page.");
     });
 });

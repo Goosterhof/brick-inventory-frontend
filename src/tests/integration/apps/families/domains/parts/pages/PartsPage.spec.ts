@@ -1,4 +1,5 @@
 import PartsPage from "@app/domains/parts/pages/PartsPage.vue";
+import {mockServer} from "@integration/helpers/mock-server";
 import EmptyState from "@shared/components/EmptyState.vue";
 import FilterChip from "@shared/components/FilterChip.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -8,57 +9,52 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, mount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockGetRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn()}));
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("@integration/helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
 
-vi.mock("axios", () => ({isAxiosError: () => false, AxiosError: Error}));
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(o: T): T => o, deepSnakeKeys: <T>(o: T): T => o}));
-vi.mock("@app/services", () => ({
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-}));
+/** CSV helpers don't run in happy-dom — mock to prevent file system access. */
 vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn(), toCsv: vi.fn(() => "")}));
 
+/**
+ * Snake_case fixtures — matching real API response format.
+ * toCamelCaseTyped() converts these to camelCase before they reach the component.
+ */
 const makePart = (overrides: Record<string, unknown> = {}) => ({
-    partId: 1,
-    partNum: "3001",
-    partName: "Brick 2x4",
-    partImageUrl: "http://example.com/brick.png",
-    colorId: 1,
-    colorName: "Red",
-    colorRgb: "FF0000",
+    part_id: 1,
+    part_num: "3001",
+    part_name: "Brick 2x4",
+    part_image_url: "http://example.com/brick.png",
+    color_id: 1,
+    color_name: "Red",
+    color_rgb: "FF0000",
     quantity: 5,
-    storageOptionId: 1,
-    storageOptionName: "Box A",
-    familySetId: 1,
+    storage_option_id: 1,
+    storage_option_name: "Box A",
+    family_set_id: 1,
     ...overrides,
 });
 
 describe("PartsPage — integration", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockServer.reset();
+        localStorage.clear();
     });
 
     it("renders empty state with real EmptyState component when no parts", async () => {
-        mockGetRequest.mockResolvedValue({data: []});
+        mockServer.onGet("/family/parts", []);
         const wrapper = mount(PartsPage);
         await flushPromises();
 
         const emptyState = wrapper.findComponent(EmptyState);
         expect(emptyState.exists()).toBe(true);
-        expect(emptyState.text()).toContain("parts.noParts");
+        expect(emptyState.text()).toContain("No parts stored yet");
     });
 
     it("renders real PartListItem components with correct props when parts exist", async () => {
-        mockGetRequest.mockResolvedValue({data: [makePart()]});
+        mockServer.onGet("/family/parts", [makePart()]);
         const wrapper = mount(PartsPage);
         await flushPromises();
 
@@ -73,21 +69,21 @@ describe("PartsPage — integration", () => {
     });
 
     it("renders PageHeader with export button when parts exist", async () => {
-        mockGetRequest.mockResolvedValue({data: [makePart()]});
+        mockServer.onGet("/family/parts", [makePart()]);
         const wrapper = mount(PartsPage);
         await flushPromises();
 
         const pageHeader = wrapper.findComponent(PageHeader);
         expect(pageHeader.exists()).toBe(true);
-        expect(pageHeader.find("h1").text()).toBe("parts.title");
+        expect(pageHeader.find("h1").text()).toBe("Parts Inventory");
 
         const exportBtn = pageHeader.findComponent(PrimaryButton);
         expect(exportBtn.exists()).toBe(true);
-        expect(exportBtn.text()).toBe("common.export");
+        expect(exportBtn.text()).toBe("Export CSV");
     });
 
     it("renders search input and filter chips for sorting and colors", async () => {
-        mockGetRequest.mockResolvedValue({data: [makePart()]});
+        mockServer.onGet("/family/parts", [makePart()]);
         const wrapper = mount(PartsPage);
         await flushPromises();
 
@@ -100,12 +96,10 @@ describe("PartsPage — integration", () => {
     });
 
     it("filters parts when clicking a color FilterChip", async () => {
-        mockGetRequest.mockResolvedValue({
-            data: [
-                makePart({partId: 1, colorId: 1, colorName: "Red"}),
-                makePart({partId: 2, colorId: 2, colorName: "Blue", colorRgb: "0000FF"}),
-            ],
-        });
+        mockServer.onGet("/family/parts", [
+            makePart({part_id: 1, color_id: 1, color_name: "Red"}),
+            makePart({part_id: 2, color_id: 2, color_name: "Blue", color_rgb: "0000FF"}),
+        ]);
         const wrapper = mount(PartsPage);
         await flushPromises();
 
@@ -119,9 +113,10 @@ describe("PartsPage — integration", () => {
     });
 
     it("shows loading text before API resolves", () => {
-        mockGetRequest.mockReturnValue(new Promise(() => {}));
+        // No route registered — getRequest will reject, but loading shows while pending
+        mockServer.onGet("/family/parts", [makePart()]);
         const wrapper = mount(PartsPage);
 
-        expect(wrapper.text()).toContain("common.loading");
+        expect(wrapper.text()).toContain("Loading...");
     });
 });

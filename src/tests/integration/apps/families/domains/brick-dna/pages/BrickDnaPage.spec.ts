@@ -1,4 +1,5 @@
 import BrickDnaPage from "@app/domains/brick-dna/pages/BrickDnaPage.vue";
+import {mockServer} from "@integration/helpers/mock-server";
 import CardContainer from "@shared/components/CardContainer.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
@@ -7,62 +8,54 @@ import StatCard from "@shared/components/StatCard.vue";
 import {flushPromises, mount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockGetRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn()}));
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("@integration/helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
 
-vi.mock("axios", () => ({isAxiosError: () => false, AxiosError: Error}));
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(o: T): T => o, deepSnakeKeys: <T>(o: T): T => o}));
-vi.mock("@app/services", () => ({
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {isLoggedIn: {value: true}, userId: vi.fn()},
-}));
-
+/**
+ * Snake_case fixtures — matching real API response format.
+ * toCamelCaseTyped() converts these to camelCase before they reach the component.
+ */
 const mockDna = {
-    diversityScore: {shannonIndex: 0.85},
-    topColors: [
+    diversity_score: {shannon_index: 0.85},
+    top_colors: [
         {name: "Red", hex: "#FF0000", count: 120},
         {name: "Blue", hex: "#0000FF", count: 95},
     ],
-    topPartTypes: [{name: "Brick 2x4", category: "Bricks", count: 200}],
-    rarestParts: [{part: "Chrome Gold Helmet", color: "Chrome Gold", quantity: 1}],
+    top_part_types: [{name: "Brick 2x4", category: "Bricks", count: 200}],
+    rarest_parts: [{part: "Chrome Gold Helmet", color: "Chrome Gold", quantity: 1}],
 };
 
 describe("BrickDnaPage — integration", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockServer.reset();
+        localStorage.clear();
     });
 
     it("renders real PageHeader with title", async () => {
-        mockGetRequest.mockResolvedValue({data: mockDna});
+        mockServer.onGet("/family/brick-dna", mockDna);
         const wrapper = mount(BrickDnaPage);
         await flushPromises();
 
         const pageHeader = wrapper.findComponent(PageHeader);
         expect(pageHeader.exists()).toBe(true);
-        expect(pageHeader.find("h1").text()).toBe("brickDna.title");
+        expect(pageHeader.find("h1").text()).toBe("Brick DNA");
     });
 
     it("renders real EmptyState when API returns no data", async () => {
-        mockGetRequest.mockRejectedValue(new Error("Network error"));
+        // No route registered — the getRequest will reject, triggering the catch branch
         const wrapper = mount(BrickDnaPage);
         await flushPromises();
 
         const emptyState = wrapper.findComponent(EmptyState);
         expect(emptyState.exists()).toBe(true);
-        expect(emptyState.text()).toContain("brickDna.empty");
+        expect(emptyState.text()).toContain("No collection data available yet");
     });
 
     it("renders real StatCards for top colors", async () => {
-        mockGetRequest.mockResolvedValue({data: mockDna});
+        mockServer.onGet("/family/brick-dna", mockDna);
         const wrapper = mount(BrickDnaPage);
         await flushPromises();
 
@@ -73,7 +66,7 @@ describe("BrickDnaPage — integration", () => {
     });
 
     it("renders real CardContainers for rarest parts", async () => {
-        mockGetRequest.mockResolvedValue({data: mockDna});
+        mockServer.onGet("/family/brick-dna", mockDna);
         const wrapper = mount(BrickDnaPage);
         await flushPromises();
 
@@ -83,7 +76,7 @@ describe("BrickDnaPage — integration", () => {
     });
 
     it("renders real SectionDividers between sections", async () => {
-        mockGetRequest.mockResolvedValue({data: mockDna});
+        mockServer.onGet("/family/brick-dna", mockDna);
         const wrapper = mount(BrickDnaPage);
         await flushPromises();
 
@@ -92,11 +85,11 @@ describe("BrickDnaPage — integration", () => {
     });
 
     it("displays diversity percentage from real component hierarchy", async () => {
-        mockGetRequest.mockResolvedValue({data: mockDna});
+        mockServer.onGet("/family/brick-dna", mockDna);
         const wrapper = mount(BrickDnaPage);
         await flushPromises();
 
         expect(wrapper.text()).toContain("85%");
-        expect(wrapper.text()).toContain("brickDna.diversityHigh");
+        expect(wrapper.text()).toContain("Highly Diverse");
     });
 });

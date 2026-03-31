@@ -11,6 +11,7 @@ export default mergeConfig(
                 "@phosphor-icons/vue": fileURLToPath(
                     new URL("./src/tests/integration/stubs/phosphorIcons.ts", import.meta.url),
                 ),
+                "@integration": fileURLToPath(new URL("./src/tests/integration", import.meta.url)),
             },
         },
         test: {
@@ -18,6 +19,7 @@ export default mergeConfig(
             include: ["src/tests/integration/**/*.spec.ts"],
             setupFiles: ["./src/tests/integration/setup.ts"],
             environment: "happy-dom",
+            fileParallelism: false,
         },
     }),
 );

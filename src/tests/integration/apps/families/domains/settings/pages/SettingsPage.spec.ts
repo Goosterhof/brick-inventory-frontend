@@ -1,4 +1,6 @@
 import SettingsPage from "@app/domains/settings/pages/SettingsPage.vue";
+import {familyAuthService} from "@app/services";
+import {mockServer} from "@integration/helpers/mock-server";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
@@ -8,45 +10,32 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, mount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockGetRequest, mockPostRequest, mockDeleteRequest, mockPutRequest, mockUserId} = vi.hoisted(() => ({
-    mockGetRequest: vi.fn(),
-    mockPostRequest: vi.fn(),
-    mockDeleteRequest: vi.fn(),
-    mockPutRequest: vi.fn(),
-    mockUserId: vi.fn(() => 1),
-}));
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("@integration/helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
 
-vi.mock("axios", () => ({isAxiosError: () => false, AxiosError: Error}));
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(o: T): T => o, deepSnakeKeys: <T>(o: T): T => o}));
-vi.mock("@app/services", () => ({
-    familyTranslationService: {
-        t: (key: string, _params?: Record<string, string>) => ({value: key}),
-        locale: {value: "en"},
-    },
-    familyHttpService: {
-        getRequest: mockGetRequest,
-        postRequest: mockPostRequest,
-        putRequest: mockPutRequest,
-        patchRequest: vi.fn(),
-        deleteRequest: mockDeleteRequest,
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {userId: mockUserId, isLoggedIn: {value: true}},
-}));
-
-const headMember = {id: 1, name: "Alice", email: "alice@test.com", isHead: true};
-const regularMember = {id: 2, name: "Bob", email: "bob@test.com", isHead: false};
+/**
+ * Snake_case fixtures — matching real API response format.
+ * toCamelCaseTyped() converts these to camelCase before they reach the component.
+ */
+const headMember = {id: 1, name: "Alice", email: "alice@test.com", is_head: true};
+const regularMember = {id: 2, name: "Bob", email: "bob@test.com", is_head: false};
 
 describe("SettingsPage — integration", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         vi.clearAllMocks();
-        mockUserId.mockReturnValue(1);
+        mockServer.reset();
+        localStorage.clear();
+        // Log the user in so familyAuthService.userId() works
+        mockServer.onPost("/login", {id: 1, name: "Alice", email: "alice@test.com"});
+        await familyAuthService.login({email: "alice@test.com", password: "secret"});
     });
 
     const mountWithMembers = async (members = [headMember, regularMember]) => {
-        mockGetRequest.mockResolvedValueOnce({data: members}).mockRejectedValueOnce({response: {status: 404}});
+        mockServer.onGet("/family/members", members);
+        // Invite code endpoint — 404 means no active code (caught by page)
+        // No route registered = rejection = simulates 404
         const wrapper = mount(SettingsPage);
         await flushPromises();
         return wrapper;
@@ -56,14 +45,14 @@ describe("SettingsPage — integration", () => {
         const wrapper = await mountWithMembers();
 
         const pageHeader = wrapper.findComponent(PageHeader);
-        expect(pageHeader.find("h1").text()).toBe("settings.title");
+        expect(pageHeader.find("h1").text()).toBe("Settings");
     });
 
     it("renders members with real BadgeLabel for family head", async () => {
         const wrapper = await mountWithMembers();
 
         const badges = wrapper.findAllComponents(BadgeLabel);
-        const headBadge = badges.find((b) => b.text().includes("settings.familyHead"));
+        const headBadge = badges.find((b) => b.text().includes("Head"));
         expect(headBadge).toBeDefined();
         expect(headBadge?.props("variant")).toBe("highlight");
     });
@@ -72,7 +61,7 @@ describe("SettingsPage — integration", () => {
         const wrapper = await mountWithMembers();
 
         const dangerButtons = wrapper.findAllComponents(DangerButton);
-        const removeBtn = dangerButtons.find((b) => b.text().includes("settings.removeMember"));
+        const removeBtn = dangerButtons.find((b) => b.text().includes("Remove"));
         expect(removeBtn).toBeDefined();
         expect(removeBtn?.find("button").exists()).toBe(true);
     });
@@ -81,19 +70,19 @@ describe("SettingsPage — integration", () => {
         const wrapper = await mountWithMembers();
 
         const dangerButtons = wrapper.findAllComponents(DangerButton);
-        const removeBtn = dangerButtons.find((b) => b.text().includes("settings.removeMember"));
+        const removeBtn = dangerButtons.find((b) => b.text().includes("Remove"));
         await removeBtn?.find("button").trigger("click");
 
         const confirmDialog = wrapper.findComponent(ConfirmDialog);
         expect(confirmDialog.props("open")).toBe(true);
-        expect(confirmDialog.props("title")).toBe("settings.removeMemberTitle");
+        expect(confirmDialog.props("title")).toBe("Remove family member");
     });
 
     it("renders real TextInput for rebrickable token", async () => {
         const wrapper = await mountWithMembers();
 
         const inputs = wrapper.findAllComponents(TextInput);
-        const tokenInput = inputs.find((i) => i.props("label") === "settings.rebrickableToken");
+        const tokenInput = inputs.find((i) => i.props("label") === "Rebrickable user token");
         expect(tokenInput).toBeDefined();
         expect(tokenInput?.find("input").exists()).toBe(true);
     });
@@ -102,16 +91,19 @@ describe("SettingsPage — integration", () => {
         const wrapper = await mountWithMembers();
 
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const generateBtn = buttons.find((b) => b.text().includes("settings.generateInviteCode"));
+        const generateBtn = buttons.find((b) => b.text().includes("Generate Invite Code"));
         expect(generateBtn).toBeDefined();
     });
 
     it("hides invite code section when user is not head", async () => {
-        mockUserId.mockReturnValue(2);
+        // Log in as non-head user
+        mockServer.onPost("/login", {id: 2, name: "Bob", email: "bob@test.com"});
+        await familyAuthService.login({email: "bob@test.com", password: "secret"});
+
         const wrapper = await mountWithMembers();
 
         const buttons = wrapper.findAllComponents(PrimaryButton);
-        const generateBtn = buttons.find((b) => b.text().includes("settings.generateInviteCode"));
+        const generateBtn = buttons.find((b) => b.text().includes("Generate Invite Code"));
         expect(generateBtn).toBeUndefined();
     });
 });
