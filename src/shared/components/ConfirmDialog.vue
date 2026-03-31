@@ -1,17 +1,29 @@
 <script setup lang="ts">
+import type {SoundService} from "@shared/services/sound";
+
 import ModalDialog from "@shared/components/ModalDialog.vue";
 
-const {open, title, message} = defineProps<{open: boolean; title: string; message: string}>();
+const {
+    open,
+    title,
+    message,
+    soundService = undefined,
+} = defineProps<{open: boolean; title: string; message: string; soundService?: SoundService}>();
 const emit = defineEmits<{confirm: []; cancel: []}>();
+
+const handleConfirm = () => {
+    soundService?.play("thud");
+    emit("confirm");
+};
 </script>
 
 <template>
-    <ModalDialog :open="open" @close="emit('cancel')">
+    <ModalDialog :open="open" :sound-service="soundService" @close="emit('cancel')">
         <template #title>{{ title }}</template>
         <p m="b-6">{{ message }}</p>
         <div flex gap="3">
             <button
-                @click="emit('confirm')"
+                @click="handleConfirm"
                 p="x-4 y-3"
                 border="3 brick-red"
                 bg="white hover:brick-red-light focus:brick-red-light"

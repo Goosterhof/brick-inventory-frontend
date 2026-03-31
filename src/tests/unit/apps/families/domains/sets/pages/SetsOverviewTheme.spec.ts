@@ -165,28 +165,20 @@ describe("SetsOverviewPage — theme grouping", () => {
         mockRetrieveAll.mockResolvedValue(undefined);
     });
 
-    it("should group sets by theme in collapsible sections", async () => {
-        // Arrange
-        mockAllItems.value = [mockStarWarsSet, mockTechnicSet];
-        const wrapper = shallowMount(SetsOverviewPage);
-        await flushPromises();
-
-        // Assert
-        const sections = wrapper.findAllComponents(CollapsibleSection);
-        expect(sections).toHaveLength(2);
-        const titles = sections.map((s) => s.props("title"));
-        expect(titles).toContain("Star Wars");
-        expect(titles).toContain("Technic");
-    });
-
-    it("should show set count per theme group", async () => {
+    it("should group sets by theme in collapsible sections with correct counts", async () => {
         // Arrange
         mockAllItems.value = [mockStarWarsSet, mockStarWarsSet2, mockTechnicSet];
         const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
-        // Assert
+        // Assert — grouping
         const sections = wrapper.findAllComponents(CollapsibleSection);
+        expect(sections).toHaveLength(2);
+        const titles = sections.map((s) => s.props("title"));
+        expect(titles).toContain("Star Wars");
+        expect(titles).toContain("Technic");
+
+        // Assert — counts
         const starWars = sections.find((s) => s.props("title") === "Star Wars");
         const technic = sections.find((s) => s.props("title") === "Technic");
         expect(starWars?.props("count")).toBe(2);
@@ -204,59 +196,35 @@ describe("SetsOverviewPage — theme grouping", () => {
         expect(titles).toEqual(["Star Wars", "Technic"]);
     });
 
-    it("should start with all groups collapsed", async () => {
+    it("should start collapsed and toggle on emit", async () => {
         // Arrange
         mockAllItems.value = [mockStarWarsSet, mockTechnicSet];
         const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
-        // Assert
+        // Assert — start collapsed
         const sections = wrapper.findAllComponents(CollapsibleSection);
         for (const section of sections) {
             expect(section.props("expanded")).toBe(false);
         }
-    });
 
-    it("should expand a group when toggle is emitted", async () => {
-        // Arrange
-        mockAllItems.value = [mockStarWarsSet, mockTechnicSet];
-        const wrapper = shallowMount(SetsOverviewPage);
-        await flushPromises();
-
-        // Act
-        const starWarsSection = wrapper
-            .findAllComponents(CollapsibleSection)
-            .find((s) => s.props("title") === "Star Wars");
+        // Act — expand
+        const starWarsSection = sections.find((s) => s.props("title") === "Star Wars");
         starWarsSection?.vm.$emit("toggle");
         await flushPromises();
 
-        // Assert
-        const sections = wrapper.findAllComponents(CollapsibleSection);
-        const starWars = sections.find((s) => s.props("title") === "Star Wars");
-        const technic = sections.find((s) => s.props("title") === "Technic");
-        expect(starWars?.props("expanded")).toBe(true);
-        expect(technic?.props("expanded")).toBe(false);
-    });
+        // Assert — expanded
+        const updated = wrapper.findAllComponents(CollapsibleSection);
+        expect(updated.find((s) => s.props("title") === "Star Wars")?.props("expanded")).toBe(true);
+        expect(updated.find((s) => s.props("title") === "Technic")?.props("expanded")).toBe(false);
 
-    it("should collapse a group when toggle is emitted on expanded group", async () => {
-        // Arrange
-        mockAllItems.value = [mockStarWarsSet, mockTechnicSet];
-        const wrapper = shallowMount(SetsOverviewPage);
-        await flushPromises();
-
-        // Act — expand then collapse
-        const starWarsSection = wrapper
-            .findAllComponents(CollapsibleSection)
-            .find((s) => s.props("title") === "Star Wars");
-        starWarsSection?.vm.$emit("toggle");
-        await flushPromises();
+        // Act — collapse
         starWarsSection?.vm.$emit("toggle");
         await flushPromises();
 
-        // Assert
-        const sections = wrapper.findAllComponents(CollapsibleSection);
-        const starWars = sections.find((s) => s.props("title") === "Star Wars");
-        expect(starWars?.props("expanded")).toBe(false);
+        // Assert — collapsed again
+        const final = wrapper.findAllComponents(CollapsibleSection);
+        expect(final.find((s) => s.props("title") === "Star Wars")?.props("expanded")).toBe(false);
     });
 
     it("should group sets with no theme under Unknown", async () => {
@@ -353,20 +321,34 @@ describe("SetsOverviewPage — theme filter chips", () => {
         expect(themeChips).toHaveLength(0);
     });
 
-    it("should filter by theme when a theme chip is clicked", async () => {
+    it("should filter by theme, mark active chips, and deselect on re-click", async () => {
         // Arrange
         mockAllItems.value = [mockStarWarsSet, mockTechnicSet];
         const wrapper = shallowMount(SetsOverviewPage);
         await flushPromises();
 
-        // Act
+        // Act — select Technic
         const technicChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "Technic");
         technicChip?.vm.$emit("click");
         await flushPromises();
 
-        // Assert
+        // Assert — filtered
         expect(wrapper.text()).toContain("Liebherr R 9800");
         expect(wrapper.text()).not.toContain("Millennium Falcon");
+
+        // Assert — active state
+        const updatedTechnicChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "Technic");
+        const starWarsChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "Star Wars");
+        expect(updatedTechnicChip?.props("active")).toBe(true);
+        expect(starWarsChip?.props("active")).toBe(false);
+
+        // Act — deselect Technic
+        technicChip?.vm.$emit("click");
+        await flushPromises();
+
+        // Assert — both visible again
+        expect(wrapper.text()).toContain("Millennium Falcon");
+        expect(wrapper.text()).toContain("Liebherr R 9800");
     });
 
     it("should support multi-select theme filtering", async () => {
@@ -404,41 +386,6 @@ describe("SetsOverviewPage — theme filter chips", () => {
         expect(wrapper.text()).toContain("Millennium Falcon");
         expect(wrapper.text()).toContain("Liebherr R 9800");
         expect(wrapper.text()).not.toContain("Police Station");
-    });
-
-    it("should deselect theme when clicked again", async () => {
-        // Arrange
-        mockAllItems.value = [mockStarWarsSet, mockTechnicSet];
-        const wrapper = shallowMount(SetsOverviewPage);
-        await flushPromises();
-
-        // Act — select then deselect Technic
-        const technicChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "Technic");
-        technicChip?.vm.$emit("click");
-        technicChip?.vm.$emit("click");
-        await flushPromises();
-
-        // Assert — both sets visible again
-        expect(wrapper.text()).toContain("Millennium Falcon");
-        expect(wrapper.text()).toContain("Liebherr R 9800");
-    });
-
-    it("should mark active theme chips correctly", async () => {
-        // Arrange
-        mockAllItems.value = [mockStarWarsSet, mockTechnicSet];
-        const wrapper = shallowMount(SetsOverviewPage);
-        await flushPromises();
-
-        // Act
-        const technicChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "Technic");
-        technicChip?.vm.$emit("click");
-        await flushPromises();
-
-        // Assert
-        const updatedTechnicChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "Technic");
-        const starWarsChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "Star Wars");
-        expect(updatedTechnicChip?.props("active")).toBe(true);
-        expect(starWarsChip?.props("active")).toBe(false);
     });
 
     it("should combine theme and status filters", async () => {

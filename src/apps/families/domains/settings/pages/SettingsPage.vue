@@ -2,7 +2,7 @@
 import type {InviteCode} from "@app/types/inviteCode";
 import type {FamilyMember} from "@app/types/profile";
 
-import {familyAuthService, familyHttpService, familyTranslationService} from "@app/services";
+import {familyAuthService, familyHttpService, familySoundService, familyTranslationService} from "@app/services";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
@@ -172,6 +172,7 @@ const importSets = async () => {
             error?: string;
         }>("/family-sets/import-from-rebrickable", {});
         importResult.value = response.data;
+        familySoundService.play("cascade");
     } catch (error: unknown) {
         const status = isAxiosError(error) ? error.response?.status : undefined;
         if (status === 403) {
@@ -230,6 +231,7 @@ const importSets = async () => {
                     :open="showRemoveConfirm"
                     :title="t('settings.removeMemberTitle').value"
                     :message="t('settings.removeMemberMessage').value"
+                    :sound-service="familySoundService"
                     @confirm="removeMember"
                     @cancel="cancelRemoveMember"
                 >
@@ -247,7 +249,7 @@ const importSets = async () => {
                 <div v-if="inviteCode" p="4" bg="white" class="brick-border" flex="~ col" gap="3">
                     <div flex items="center" gap="3">
                         <p font="mono bold" text="lg">{{ inviteCode.code }}</p>
-                        <PrimaryButton @click="copyCode">
+                        <PrimaryButton :sound-service="familySoundService" @click="copyCode">
                             {{ t("settings.copyCode").value }}
                         </PrimaryButton>
                     </div>
@@ -260,7 +262,12 @@ const importSets = async () => {
 
                 <p v-if="inviteCodeError" text="brick-red-dark" font="bold">{{ inviteCodeError }}</p>
 
-                <PrimaryButton v-if="!inviteCode" :disabled="inviteCodeLoading" @click="generateInviteCode">
+                <PrimaryButton
+                    v-if="!inviteCode"
+                    :disabled="inviteCodeLoading"
+                    :sound-service="familySoundService"
+                    @click="generateInviteCode"
+                >
                     {{ t("settings.generateInviteCode").value }}
                 </PrimaryButton>
             </section>
@@ -280,7 +287,12 @@ const importSets = async () => {
 
                     <p v-if="tokenSaved" text="baseplate-green" font="bold">{{ t("settings.tokenSaved").value }}</p>
 
-                    <PrimaryButton type="submit" :disabled="tokenSaving || !rebrickableToken">
+                    <PrimaryButton
+                        type="submit"
+                        :disabled="tokenSaving || !rebrickableToken"
+                        :sound-service="familySoundService"
+                        silent
+                    >
                         {{ t("settings.saveToken").value }}
                     </PrimaryButton>
                 </form>
@@ -306,7 +318,7 @@ const importSets = async () => {
 
                 <p v-if="importError" text="brick-red-dark" font="bold">{{ importError }}</p>
 
-                <PrimaryButton :disabled="importing" @click="importSets">
+                <PrimaryButton :disabled="importing" :sound-service="familySoundService" @click="importSets">
                     {{ importing ? t("settings.importing").value : t("settings.importButton").value }}
                 </PrimaryButton>
             </section>

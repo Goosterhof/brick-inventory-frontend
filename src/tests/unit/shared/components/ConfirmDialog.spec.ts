@@ -1,13 +1,23 @@
+import type {SoundService} from "@shared/services/sound";
+
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import ModalDialog from "@shared/components/ModalDialog.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
+import {computed} from "vue";
 
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
-const mountDialog = (open = false, slots?: Record<string, string>) =>
+const createMockSoundService = (): SoundService => ({play: vi.fn(), isEnabled: computed(() => true), toggle: vi.fn()});
+
+const mountDialog = (open = false, slots?: Record<string, string>, soundService?: SoundService) =>
     shallowMount(ConfirmDialog, {
-        props: {open, title: "Delete Item", message: "Are you sure you want to delete this?"},
+        props: {
+            open,
+            title: "Delete Item",
+            message: "Are you sure you want to delete this?",
+            ...(soundService ? {soundService} : {}),
+        },
         slots,
     });
 
@@ -124,6 +134,44 @@ describe("ConfirmDialog", () => {
 
             // Assert
             expect(wrapper.findComponent(ModalDialog).props("open")).toBe(true);
+        });
+    });
+
+    describe("sound", () => {
+        it("should play thud sound when confirm button is clicked with soundService", async () => {
+            // Arrange
+            const soundService = createMockSoundService();
+            const wrapper = mountDialog(false, undefined, soundService);
+            const buttons = wrapper.findAll("button");
+            const confirmButton = buttons.find((btn) => btn.attributes("border")?.includes("brick-red"));
+
+            // Act
+            await confirmButton?.trigger("click");
+
+            // Assert
+            expect(soundService.play).toHaveBeenCalledWith("thud");
+        });
+
+        it("should pass soundService to ModalDialog", () => {
+            // Arrange
+            const soundService = createMockSoundService();
+            const wrapper = mountDialog(false, undefined, soundService);
+
+            // Assert
+            expect(wrapper.findComponent(ModalDialog).props("soundService")).toBeTruthy();
+        });
+
+        it("should not play sound when confirm is clicked without soundService", async () => {
+            // Arrange
+            const wrapper = mountDialog();
+            const buttons = wrapper.findAll("button");
+            const confirmButton = buttons.find((btn) => btn.attributes("border")?.includes("brick-red"));
+
+            // Act — should not throw
+            await confirmButton?.trigger("click");
+
+            // Assert
+            expect(wrapper.emitted("confirm")).toHaveLength(1);
         });
     });
 });

@@ -4,6 +4,7 @@ import type {FamilyStats} from "@app/types/familyStats";
 import {familyAuthService, familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import {familySetStoreModule} from "@app/stores";
 import CardContainer from "@shared/components/CardContainer.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
 import NavLink from "@shared/components/NavLink.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import StatCard from "@shared/components/StatCard.vue";
@@ -67,13 +68,27 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
     <div max-w="6xl" m="x-auto">
         <!-- Logged out: landing page -->
         <template v-if="!familyAuthService.isLoggedIn.value">
-            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">{{ t("home.brandTitle").value }}</h1>
-            <p text="gray-600" m="b-2">{{ t("home.tagline").value }}</p>
-            <p text="gray-600" m="b-6">{{ t("home.brandDescription").value }}</p>
+            <div flex="~ col sm:row" items="center sm:start" gap="8 sm:12">
+                <!-- Copy block -->
+                <div flex="1 ~ col">
+                    <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">
+                        {{ t("home.brandTitle").value }}
+                    </h1>
+                    <p text="gray-600" m="b-2">{{ t("home.tagline").value }}</p>
+                    <p text="gray-600" m="b-6">{{ t("home.brandDescription").value }}</p>
 
-            <NavLink to="/register" @click="familyRouterService.goToRoute('register')">
-                {{ t("auth.createAccount").value }}
-            </NavLink>
+                    <NavLink to="/register" @click="familyRouterService.goToRoute('register')">
+                        {{ t("auth.createAccount").value }}
+                    </NavLink>
+                </div>
+
+                <!-- Brick hero — three staggered LegoBricks -->
+                <div flex="~ col" items="end" gap="0" shrink="0" order="-1 sm:0">
+                    <LegoBrick :columns="4" :rows="2" color="#F5C518" />
+                    <LegoBrick :columns="2" :rows="2" color="#C41A16" m="t-[-4px] r-8" />
+                    <LegoBrick :columns="3" :rows="1" color="#0055BF" m="t-[-4px] l-4" />
+                </div>
+            </div>
         </template>
 
         <!-- Logged in: dashboard -->

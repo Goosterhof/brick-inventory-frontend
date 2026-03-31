@@ -2,7 +2,7 @@
 import type {Adapted} from "@shared/services/resource-adapter";
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
 
-import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
+import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
 import {familySetStoreModule} from "@app/stores";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
@@ -91,7 +91,9 @@ const handleDelete = async () => {
                 <TextareaInput v-model="adapted.mutable.notes" :label="t('sets.notes').value" optional />
 
                 <div flex gap="4">
-                    <PrimaryButton type="submit" :disabled="submitting">{{ t("sets.save").value }}</PrimaryButton>
+                    <PrimaryButton type="submit" :disabled="submitting" :sound-service="familySoundService" silent>{{
+                        t("sets.save").value
+                    }}</PrimaryButton>
                     <DangerButton @click="showDeleteConfirm = true">{{ t("sets.delete").value }}</DangerButton>
                 </div>
             </form>
@@ -100,6 +102,7 @@ const handleDelete = async () => {
                 :open="showDeleteConfirm"
                 :title="t('sets.delete').value"
                 :message="t('sets.confirmDelete').value"
+                :sound-service="familySoundService"
                 @confirm="handleDelete"
                 @cancel="showDeleteConfirm = false"
             >

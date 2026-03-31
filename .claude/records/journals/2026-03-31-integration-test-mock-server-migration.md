@@ -9,38 +9,38 @@
 
 ## Work Summary
 
-| Action   | File | Notes |
-| -------- | ---- | ----- |
-| Modified | `src/tests/integration/apps/families/domains/about/pages/AboutPage.spec.ts` | Removed services barrel mock, assertions now use English text |
-| Modified | `src/tests/integration/apps/families/domains/auth/pages/LoginPage.spec.ts` | Replaced 4x vi.mock with mock-server, auth flows through real authService |
-| Modified | `src/tests/integration/apps/families/domains/auth/pages/RegisterPage.spec.ts` | Same pattern as LoginPage |
-| Modified | `src/tests/integration/apps/families/domains/brick-dna/pages/BrickDnaPage.spec.ts` | Mock-server for `/family/brick-dna`, snake_case fixtures |
-| Modified | `src/tests/integration/apps/families/domains/home/pages/HomePage.spec.ts` | Real auth login before mounting, mock-server for `/family/stats` and `family-sets` |
-| Modified | `src/tests/integration/apps/families/domains/parts/pages/PartsPage.spec.ts` | Mock-server for `/family/parts`, kept CSV mock (non-HTTP) |
-| Modified | `src/tests/integration/apps/families/domains/sets/pages/SetsOverviewPage.spec.ts` | Mock-server for `family-sets` store hydration, kept CSV mock |
-| Modified | `src/tests/integration/apps/families/domains/sets/pages/AddSetPage.spec.ts` | Mock-server for `family-sets` (store + create POST) |
-| Modified | `src/tests/integration/apps/families/domains/sets/pages/EditSetPage.spec.ts` | vi.spyOn for getOrFailById (Proxy invariant), real router navigation |
-| Modified | `src/tests/integration/apps/families/domains/sets/pages/SetDetailPage.spec.ts` | vi.spyOn for getOrFailById, kept AssignPartModal mock |
-| Modified | `src/tests/integration/apps/families/domains/sets/pages/IdentifyBrickPage.spec.ts` | Mock-server for `/identify-brick` POST, replaced pending state test |
-| Modified | `src/tests/integration/apps/families/domains/sets/pages/ScanSetPage.spec.ts` | Mock-server for EAN lookup + family-sets POST, kept barcode-detector mock |
-| Modified | `src/tests/integration/apps/families/domains/settings/pages/SettingsPage.spec.ts` | Real auth login, mock-server for `/family/members` |
-| Modified | `src/tests/integration/apps/families/domains/storage/pages/AddStoragePage.spec.ts` | Mock-server for `storage-options` POST |
-| Modified | `src/tests/integration/apps/families/domains/storage/pages/EditStoragePage.spec.ts` | vi.spyOn for getOrFailById, real router navigation |
-| Modified | `src/tests/integration/apps/families/domains/storage/pages/StorageDetailPage.spec.ts` | vi.spyOn for getOrFailById, mock-server for parts endpoint |
-| Modified | `src/tests/integration/apps/families/domains/storage/pages/StorageOverviewPage.spec.ts` | Already migrated (prototype) — only oxfmt import reordering |
-| Modified | `tsconfig.vitest.json` | Added `@integration/*` path alias for type-aware linting |
+| Action   | File                                                                                    | Notes                                                                              |
+| -------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Modified | `src/tests/integration/apps/families/domains/about/pages/AboutPage.spec.ts`             | Removed services barrel mock, assertions now use English text                      |
+| Modified | `src/tests/integration/apps/families/domains/auth/pages/LoginPage.spec.ts`              | Replaced 4x vi.mock with mock-server, auth flows through real authService          |
+| Modified | `src/tests/integration/apps/families/domains/auth/pages/RegisterPage.spec.ts`           | Same pattern as LoginPage                                                          |
+| Modified | `src/tests/integration/apps/families/domains/brick-dna/pages/BrickDnaPage.spec.ts`      | Mock-server for `/family/brick-dna`, snake_case fixtures                           |
+| Modified | `src/tests/integration/apps/families/domains/home/pages/HomePage.spec.ts`               | Real auth login before mounting, mock-server for `/family/stats` and `family-sets` |
+| Modified | `src/tests/integration/apps/families/domains/parts/pages/PartsPage.spec.ts`             | Mock-server for `/family/parts`, kept CSV mock (non-HTTP)                          |
+| Modified | `src/tests/integration/apps/families/domains/sets/pages/SetsOverviewPage.spec.ts`       | Mock-server for `family-sets` store hydration, kept CSV mock                       |
+| Modified | `src/tests/integration/apps/families/domains/sets/pages/AddSetPage.spec.ts`             | Mock-server for `family-sets` (store + create POST)                                |
+| Modified | `src/tests/integration/apps/families/domains/sets/pages/EditSetPage.spec.ts`            | vi.spyOn for getOrFailById (Proxy invariant), real router navigation               |
+| Modified | `src/tests/integration/apps/families/domains/sets/pages/SetDetailPage.spec.ts`          | vi.spyOn for getOrFailById, kept AssignPartModal mock                              |
+| Modified | `src/tests/integration/apps/families/domains/sets/pages/IdentifyBrickPage.spec.ts`      | Mock-server for `/identify-brick` POST, replaced pending state test                |
+| Modified | `src/tests/integration/apps/families/domains/sets/pages/ScanSetPage.spec.ts`            | Mock-server for EAN lookup + family-sets POST, kept barcode-detector mock          |
+| Modified | `src/tests/integration/apps/families/domains/settings/pages/SettingsPage.spec.ts`       | Real auth login, mock-server for `/family/members`                                 |
+| Modified | `src/tests/integration/apps/families/domains/storage/pages/AddStoragePage.spec.ts`      | Mock-server for `storage-options` POST                                             |
+| Modified | `src/tests/integration/apps/families/domains/storage/pages/EditStoragePage.spec.ts`     | vi.spyOn for getOrFailById, real router navigation                                 |
+| Modified | `src/tests/integration/apps/families/domains/storage/pages/StorageDetailPage.spec.ts`   | vi.spyOn for getOrFailById, mock-server for parts endpoint                         |
+| Modified | `src/tests/integration/apps/families/domains/storage/pages/StorageOverviewPage.spec.ts` | Already migrated (prototype) — only oxfmt import reordering                        |
+| Modified | `tsconfig.vitest.json`                                                                  | Added `@integration/*` path alias for type-aware linting                           |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion | Met | Notes |
-| --- | --- | --- |
-| All 17 integration test files use mock-server pattern | Yes | All use `vi.mock("@script-development/fs-http", ...)` |
-| Zero `vi.mock()` for axios, string-ts, @app/services barrel, or @app/stores | Yes | All removed across all 17 files |
-| Router service runs real in all tests | Yes | No `vi.mock("@app/services/router", ...)` anywhere |
-| All assertions use actual English text | Yes | Translation keys replaced with rendered English text |
-| All fixtures use snake_case | Yes | API response fixtures use snake_case (toCamelCaseTyped exercises on them) |
-| `npm run test:integration:run` passes | Yes | 17 files, 97 tests, 0 failures |
-| Full gauntlet passes | Partial | format, lint, lint:vue, type-check, knip, size all pass. test:coverage has pre-existing flaky test guard (SetsOverviewTheme.spec.ts) |
+| Acceptance Criterion                                                        | Met     | Notes                                                                                                                                |
+| --------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| All 17 integration test files use mock-server pattern                       | Yes     | All use `vi.mock("@script-development/fs-http", ...)`                                                                                |
+| Zero `vi.mock()` for axios, string-ts, @app/services barrel, or @app/stores | Yes     | All removed across all 17 files                                                                                                      |
+| Router service runs real in all tests                                       | Yes     | No `vi.mock("@app/services/router", ...)` anywhere                                                                                   |
+| All assertions use actual English text                                      | Yes     | Translation keys replaced with rendered English text                                                                                 |
+| All fixtures use snake_case                                                 | Yes     | API response fixtures use snake_case (toCamelCaseTyped exercises on them)                                                            |
+| `npm run test:integration:run` passes                                       | Yes     | 17 files, 97 tests, 0 failures                                                                                                       |
+| Full gauntlet passes                                                        | Partial | format, lint, lint:vue, type-check, knip, size all pass. test:coverage has pre-existing flaky test guard (SetsOverviewTheme.spec.ts) |
 
 ## Decisions Made
 
@@ -60,19 +60,20 @@
 
 ## Quality Gauntlet
 
-| Check | Result | Notes |
-| --- | --- | --- |
-| format:check | Pass | oxfmt reordered imports across all 17 files |
-| lint | Pass | 0 errors, 9 warnings (pre-existing) |
-| lint:vue | Pass | |
-| type-check | Pass | |
-| test:coverage | Pass* | 1324 tests pass; *pre-existing test guard flaky on SetsOverviewTheme |
-| knip | Pass | |
-| size | Pass | No production code changed |
+| Check         | Result | Notes                                                                 |
+| ------------- | ------ | --------------------------------------------------------------------- |
+| format:check  | Pass   | oxfmt reordered imports across all 17 files                           |
+| lint          | Pass   | 0 errors, 9 warnings (pre-existing)                                   |
+| lint:vue      | Pass   |                                                                       |
+| type-check    | Pass   |                                                                       |
+| test:coverage | Pass\* | 1324 tests pass; \*pre-existing test guard flaky on SetsOverviewTheme |
+| knip          | Pass   |                                                                       |
+| size          | Pass   | No production code changed                                            |
 
 ## Showcase Readiness
 
 Solid. The migration demonstrates three distinct mock boundaries with clear documentation:
+
 1. **Mock-server** (transport layer) — the standard boundary for all pages
 2. **vi.spyOn** (store method) — surgical boundary for the Proxy invariant limitation, with type-safe casts and explanatory comments
 3. **Non-HTTP mocks** (CSV, barcode, modal) — retained with justification comments
@@ -111,11 +112,11 @@ The one weakness is the `EnvironmentTeardownError` that appears when all 17 file
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
-| When pages store Adapted objects in `ref()`, use vi.spyOn on getOrFailById rather than hydrating the real store — the Adapted object's non-configurable Ref properties trigger a Vue Proxy invariant violation | Spent time trying to make real getOrFailById work, hit the invariant, then had to rewrite 4 tests | 2026-03-31-integration-test-mock-server-migration |
-| Before writing mock-server route registrations, read the page component to find the actual endpoint path — don't infer from domain naming conventions | IdentifyBrickPage POSTs to `/identify-brick`, not `/sets/identify` as I assumed from the domain name | 2026-03-31-integration-test-mock-server-migration |
-| When adding vitest resolve aliases, immediately add the corresponding path to tsconfig to prevent type-aware lint rules from seeing `any` | Added `@integration` alias to vitest config but forgot tsconfig.vitest.json — 146 lint errors appeared | 2026-03-31-integration-test-mock-server-migration |
+| Proposal                                                                                                                                                                                                       | Context                                                                                                | Shift Evidence                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------- |
+| When pages store Adapted objects in `ref()`, use vi.spyOn on getOrFailById rather than hydrating the real store — the Adapted object's non-configurable Ref properties trigger a Vue Proxy invariant violation | Spent time trying to make real getOrFailById work, hit the invariant, then had to rewrite 4 tests      | 2026-03-31-integration-test-mock-server-migration |
+| Before writing mock-server route registrations, read the page component to find the actual endpoint path — don't infer from domain naming conventions                                                          | IdentifyBrickPage POSTs to `/identify-brick`, not `/sets/identify` as I assumed from the domain name   | 2026-03-31-integration-test-mock-server-migration |
+| When adding vitest resolve aliases, immediately add the corresponding path to tsconfig to prevent type-aware lint rules from seeing `any`                                                                      | Added `@integration` alias to vitest config but forgot tsconfig.vitest.json — 146 lint errors appeared | 2026-03-31-integration-test-mock-server-migration |
 
 ---
 

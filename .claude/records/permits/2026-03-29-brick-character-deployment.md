@@ -87,5 +87,5 @@ The CFO should evaluate whether the 10-key voice overhaul creates acceptable mai
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Closed
+**Journal:** `.claude/records/journals/2026-03-30-brick-character-deployment.md`

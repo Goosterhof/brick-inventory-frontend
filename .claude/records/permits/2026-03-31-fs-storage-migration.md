@@ -53,7 +53,7 @@ Replace the local `createStorageService` implementation in `@shared/services/sto
 
 **Strategic context:** The Armory (`fs-packages`) was built to extract proven patterns from BIO and share them across territories. `fs-http` was the first package consumed by BIO (already installed). `fs-storage` is the second — completing the service extraction pipeline for this territory.
 
-**Why this is safe:** The `@script-development/fs-storage` implementation was extracted *from* BIO's local `storage.ts`. The function signatures, error handling, prefix strategy, and edge case behavior are identical. The package adds its own 100% test coverage and Stryker mutation testing at 90% — stronger quality guarantees than the local copy.
+**Why this is safe:** The `@script-development/fs-storage` implementation was extracted _from_ BIO's local `storage.ts`. The function signatures, error handling, prefix strategy, and edge case behavior are identical. The package adds its own 100% test coverage and Stryker mutation testing at 90% — stronger quality guarantees than the local copy.
 
 **Coverage impact:** Deleting the local `storage.ts` and its 99-test spec file will remove lines from the coverage denominator. Since the implementation is now tested by the package's own CI pipeline, this is a net improvement — BIO's test suite focuses on BIO's code, not on reusable infrastructure that lives elsewhere.
 
