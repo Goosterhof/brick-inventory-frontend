@@ -11,30 +11,30 @@
 
 Six findings from the 2026-03-29 post-delivery audit, executed in the permit's suggested order (6, 2, 1, 5, 3, 4).
 
-| Action   | File                                                                                       | Notes                                                                                      |
-| -------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| Modified | `knip.json`                                                                                | Removed stale `@stryker-mutator/core` from ignoreDependencies and `stryker` from ignoreBinaries |
-| Modified | `src/shared/helpers/string.ts`                                                             | Added `deepCamelKeys` to existing re-exports                                               |
-| Modified | `src/shared/composables/useValidationErrors.ts`                                            | Changed import from `string-ts` to `@shared/helpers/string`                                |
-| Modified | `src/shared/services/router/index.ts`                                                      | Replaced `(to, from, next)` callback with `(to, from)` return-value pattern                |
-| Created  | `src/tests/integration/apps/families/domains/brick-dna/pages/BrickDnaPage.spec.ts`         | Integration test following ADR-013 pattern                                                 |
-| Deleted  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPage.spec.ts`                 | Replaced by two split files                                                                |
-| Created  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPageMembers.spec.ts`          | 31 tests: member display, invite code (15), member removal (11), head badge                |
-| Created  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPageConfig.spec.ts`           | 17 tests: page header, token input, save token (5), import sets (9)                        |
-| Modified | `src/tests/unit/architecture.spec.ts`                                                      | Added ADR-013 enforcement: every domain page must have integration test                    |
+| Action   | File                                                                               | Notes                                                                                           |
+| -------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Modified | `knip.json`                                                                        | Removed stale `@stryker-mutator/core` from ignoreDependencies and `stryker` from ignoreBinaries |
+| Modified | `src/shared/helpers/string.ts`                                                     | Added `deepCamelKeys` to existing re-exports                                                    |
+| Modified | `src/shared/composables/useValidationErrors.ts`                                    | Changed import from `string-ts` to `@shared/helpers/string`                                     |
+| Modified | `src/shared/services/router/index.ts`                                              | Replaced `(to, from, next)` callback with `(to, from)` return-value pattern                     |
+| Created  | `src/tests/integration/apps/families/domains/brick-dna/pages/BrickDnaPage.spec.ts` | Integration test following ADR-013 pattern                                                      |
+| Deleted  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPage.spec.ts`         | Replaced by two split files                                                                     |
+| Created  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPageMembers.spec.ts`  | 31 tests: member display, invite code (15), member removal (11), head badge                     |
+| Created  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPageConfig.spec.ts`   | 17 tests: page header, token input, save token (5), import sets (9)                             |
+| Modified | `src/tests/unit/architecture.spec.ts`                                              | Added ADR-013 enforcement: every domain page must have integration test                         |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                                   | Met | Notes                                                        |
-| -------------------------------------------------------------------------------------- | --- | ------------------------------------------------------------ |
-| Zero Vue Router deprecation warnings in `npm run test:unit` output                     | Yes | Grep for "next()" in test output returns empty               |
-| `useValidationErrors.ts` imports from `@shared/helpers/string`, not `string-ts`        | Yes | Import changed, `deepCamelKeys` re-exported from string helper |
-| `SettingsPage.spec.ts` split into two files, both under 1000ms collect guard           | Yes | Members: 251ms, Config: 146ms (was 1060ms combined)          |
-| Architecture test verifies every domain page has integration test                      | Yes | New test in architecture.spec.ts, passes with 29 total tests |
-| `BrickDnaPage` has integration test following established pattern                      | Yes | 6 tests covering composition correctness                     |
-| `knip.json` has no stale Stryker overrides; `npm run knip` passes clean               | Yes | Both entries removed, knip passes with 0 hints               |
-| 100% test coverage maintained                                                          | Yes | Lines, branches, functions, statements all 100%              |
-| All quality gates pass                                                                 | Yes | All 7 gauntlet checks pass; pre-push hooks pass              |
+| Acceptance Criterion                                                            | Met | Notes                                                          |
+| ------------------------------------------------------------------------------- | --- | -------------------------------------------------------------- |
+| Zero Vue Router deprecation warnings in `npm run test:unit` output              | Yes | Grep for "next()" in test output returns empty                 |
+| `useValidationErrors.ts` imports from `@shared/helpers/string`, not `string-ts` | Yes | Import changed, `deepCamelKeys` re-exported from string helper |
+| `SettingsPage.spec.ts` split into two files, both under 1000ms collect guard    | Yes | Members: 251ms, Config: 146ms (was 1060ms combined)            |
+| Architecture test verifies every domain page has integration test               | Yes | New test in architecture.spec.ts, passes with 29 total tests   |
+| `BrickDnaPage` has integration test following established pattern               | Yes | 6 tests covering composition correctness                       |
+| `knip.json` has no stale Stryker overrides; `npm run knip` passes clean         | Yes | Both entries removed, knip passes with 0 hints                 |
+| 100% test coverage maintained                                                   | Yes | Lines, branches, functions, statements all 100%                |
+| All quality gates pass                                                          | Yes | All 7 gauntlet checks pass; pre-push hooks pass                |
 
 ## Decisions Made
 
@@ -44,14 +44,14 @@ Six findings from the 2026-03-29 post-delivery audit, executed in the permit's s
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                           |
-| ------------- | ------ | ----------------------------------------------- |
-| format:check  | Pass   | All 374 files clean                             |
-| lint          | Pass   | 9 warnings, 0 errors (pre-existing warnings)    |
-| lint:vue      | Pass   | All conventions passed                          |
-| type-check    | Pass   | Clean                                           |
-| test:coverage | Pass   | 100% lines/branches/functions/statements         |
-| knip          | Pass   | 0 hints                                         |
+| Check         | Result | Notes                                                  |
+| ------------- | ------ | ------------------------------------------------------ |
+| format:check  | Pass   | All 374 files clean                                    |
+| lint          | Pass   | 9 warnings, 0 errors (pre-existing warnings)           |
+| lint:vue      | Pass   | All conventions passed                                 |
+| type-check    | Pass   | Clean                                                  |
+| test:coverage | Pass   | 100% lines/branches/functions/statements               |
+| knip          | Pass   | 0 hints                                                |
 | size          | Pass   | families: 109.37 kB / 350 kB; admin: 30.85 kB / 150 kB |
 
 ## Showcase Readiness

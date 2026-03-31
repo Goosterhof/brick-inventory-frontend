@@ -22,15 +22,15 @@ This is not a discipline problem. It's a structural problem: when the convention
 
 ### Relationship to ADR-008
 
-ADR-008 (Domain Isolation) governs how domains interact — specifically, that they cannot import from each other. This ADR governs how domains are *structured*. ADR-008 enforces boundaries between domains; this ADR defines what a domain *is* and how it's laid out.
+ADR-008 (Domain Isolation) governs how domains interact — specifically, that they cannot import from each other. This ADR governs how domains are _structured_. ADR-008 enforces boundaries between domains; this ADR defines what a domain _is_ and how it's laid out.
 
 ## Options Considered
 
-| Option | Pros | Cons | Why eliminated / Why chosen |
-|--------|------|------|-----------------------------|
-| **Vertical slices by business domain** | Self-contained; adding a feature is additive (create one directory); removing is subtractive (delete one directory); AI agents can scaffold from any existing domain; architecture tests enforce the structure | Deep nesting (5+ levels for nested pages); cross-domain references require shared types at app level; unfamiliar to devs trained on flat tutorials | **Chosen** — the self-containment and predictability outweigh the nesting cost, especially for a team of 20+ juniors |
-| **Technical layers** (`components/`, `stores/`, `services/`) | Familiar from Vue tutorials; flat directory structure; easy to find "all components" | With 7+ domains, each layer becomes a flat list of unrelated files; adding a feature touches 4+ directories; AI agents scatter code by default; no structural protection against cross-domain coupling | Eliminated — doesn't scale for the team size or the domain count |
-| **Hybrid (technical layers + domain prefixes)** | Familiar structure; some grouping by domain via naming | Naming conventions are not enforceable; `components/SetsList.vue` and `components/StorageList.vue` still live side by side; the grouping is cosmetic, not structural | Eliminated — offers the appearance of organization without the structural guarantees |
+| Option                                                       | Pros                                                                                                                                                                                                           | Cons                                                                                                                                                                                                   | Why eliminated / Why chosen                                                                                          |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| **Vertical slices by business domain**                       | Self-contained; adding a feature is additive (create one directory); removing is subtractive (delete one directory); AI agents can scaffold from any existing domain; architecture tests enforce the structure | Deep nesting (5+ levels for nested pages); cross-domain references require shared types at app level; unfamiliar to devs trained on flat tutorials                                                     | **Chosen** — the self-containment and predictability outweigh the nesting cost, especially for a team of 20+ juniors |
+| **Technical layers** (`components/`, `stores/`, `services/`) | Familiar from Vue tutorials; flat directory structure; easy to find "all components"                                                                                                                           | With 7+ domains, each layer becomes a flat list of unrelated files; adding a feature touches 4+ directories; AI agents scatter code by default; no structural protection against cross-domain coupling | Eliminated — doesn't scale for the team size or the domain count                                                     |
+| **Hybrid (technical layers + domain prefixes)**              | Familiar structure; some grouping by domain via naming                                                                                                                                                         | Naming conventions are not enforceable; `components/SetsList.vue` and `components/StorageList.vue` still live side by side; the grouping is cosmetic, not structural                                   | Eliminated — offers the appearance of organization without the structural guarantees                                 |
 
 ## Decision
 
@@ -92,11 +92,11 @@ No cross-domain imports to untangle — ADR-008 guarantees isolation.
 
 ## Enforcement
 
-| What | Mechanism | Scope |
-|------|-----------|-------|
-| Domain directories follow the expected structure | Architecture test: `domain-structure.spec.ts` | `src/apps/*/domains/` |
-| Domain index files export only routes | Architecture test: `domain-structure.spec.ts` | `src/apps/*/domains/*/index.ts` |
-| Cross-domain imports prohibited | ADR-008 enforcement (oxlint + architecture test) | `src/apps/*/domains/` |
+| What                                             | Mechanism                                        | Scope                           |
+| ------------------------------------------------ | ------------------------------------------------ | ------------------------------- |
+| Domain directories follow the expected structure | Architecture test: `domain-structure.spec.ts`    | `src/apps/*/domains/`           |
+| Domain index files export only routes            | Architecture test: `domain-structure.spec.ts`    | `src/apps/*/domains/*/index.ts` |
+| Cross-domain imports prohibited                  | ADR-008 enforcement (oxlint + architecture test) | `src/apps/*/domains/`           |
 
 ## Resolved Questions
 
