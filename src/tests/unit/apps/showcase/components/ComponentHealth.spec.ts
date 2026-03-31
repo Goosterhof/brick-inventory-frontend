@@ -1,13 +1,14 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 
 import ComponentHealth from "@/apps/showcase/components/ComponentHealth.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 describe("ComponentHealth", () => {
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert
         expect(wrapper.text()).toContain("08");
@@ -16,7 +17,7 @@ describe("ComponentHealth", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert
         expect(wrapper.find("section#health").exists()).toBe(true);
@@ -24,7 +25,7 @@ describe("ComponentHealth", () => {
 
     it("should render the summary stats grid with component count from registry", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert
         const statCards = wrapper.findAll("[text='center']");
@@ -38,7 +39,7 @@ describe("ComponentHealth", () => {
 
     it("should render component entries sorted alphabetically", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert
         const nameElements = wrapper.findAll("[font='mono bold'][text='sm']");
@@ -54,7 +55,7 @@ describe("ComponentHealth", () => {
 
     it("should expand a component row when its button is clicked", async () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
         const firstButton = wrapper.find("button");
         expect(firstButton.attributes("aria-expanded")).toBe("false");
 
@@ -69,7 +70,7 @@ describe("ComponentHealth", () => {
 
     it("should collapse an expanded component row when its button is clicked again", async () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
         const firstButton = wrapper.find("button");
 
         await firstButton.trigger("click");
@@ -85,7 +86,7 @@ describe("ComponentHealth", () => {
 
     it("should display adoption badges for each component entry", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert — at least one badge with the pattern "XA / YD"
         expect(wrapper.text()).toMatch(/\dA \/ \d+D/);
@@ -93,7 +94,7 @@ describe("ComponentHealth", () => {
 
     it("should display API surface count badges for each component entry", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert — at least one badge with the pattern "X API"
         expect(wrapper.text()).toMatch(/\d+ API/);
@@ -101,7 +102,7 @@ describe("ComponentHealth", () => {
 
     it("should display churn badges for each component entry", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert — at least one badge with the pattern "Xc / YL"
         expect(wrapper.text()).toMatch(/\d+c \/ \d+L/);
@@ -109,7 +110,7 @@ describe("ComponentHealth", () => {
 
     it("should show depth badge only for composite components", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Assert — depth badges (d1, d2, etc.) are rendered conditionally
         // If there are composites, at least one depth badge exists
@@ -120,7 +121,7 @@ describe("ComponentHealth", () => {
 
     it("should show expanded detail with churn, depth, and path in the footer", async () => {
         // Arrange
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Act
         const firstButton = wrapper.find("button");
@@ -135,7 +136,7 @@ describe("ComponentHealth", () => {
 
     it("should show root domain label as (root) in consumer map", async () => {
         // Arrange
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Act — expand all entries to find one that has a _root consumer
         const buttons = wrapper.findAll("button");
@@ -150,7 +151,7 @@ describe("ComponentHealth", () => {
 
     it("should show 'No props, emits, slots, or models' for zero-API-surface components", async () => {
         // Arrange
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Act — find and expand SectionDivider (has 0 API surface)
         const buttons = wrapper.findAll("button");
@@ -165,7 +166,7 @@ describe("ComponentHealth", () => {
 
     it("should expand a component with models and show model names with required markers", async () => {
         // Arrange — expand a component that has models (e.g., TextInput has modelValue*)
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs: {SectionHeading}}});
 
         // Act — find and expand TextInput (has required model)
         const buttons = wrapper.findAll("button");

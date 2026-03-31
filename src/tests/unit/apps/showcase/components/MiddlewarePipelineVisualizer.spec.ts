@@ -1,10 +1,11 @@
 import DangerButton from "@shared/components/DangerButton.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import MiddlewarePipelineVisualizer from "@/apps/showcase/components/MiddlewarePipelineVisualizer.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 async function advanceAllStages(stageCount: number): Promise<void> {
     for (let i = 0; i < stageCount; i++) {
@@ -23,26 +24,26 @@ describe("MiddlewarePipelineVisualizer", () => {
     });
 
     it("should render the section heading with correct number and title", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         expect(wrapper.text()).toContain("13");
         expect(wrapper.text()).toContain("Middleware Pipeline Visualizer");
     });
 
     it("should render the section element with correct id", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         expect(wrapper.find("section#middleware-pipeline-visualizer").exists()).toBe(true);
     });
 
     it("should render the introductory description", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         expect(wrapper.text()).toContain("Step through how an HTTP request flows through the middleware pipeline");
     });
 
     it("should render all four scenario buttons", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         expect(wrapper.find('[data-testid="scenario-success"]').text()).toBe("200 Success");
         expect(wrapper.find('[data-testid="scenario-auth-error"]').text()).toBe("401 Auth Error");
@@ -51,7 +52,7 @@ describe("MiddlewarePipelineVisualizer", () => {
     });
 
     it("should render the Choose a Scenario label", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         const labels = wrapper.findAll(".brick-label");
         const labelTexts = labels.map((l) => l.text());
@@ -59,20 +60,20 @@ describe("MiddlewarePipelineVisualizer", () => {
     });
 
     it("should hide the active scenario label initially", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         const label = wrapper.find('[data-testid="active-scenario-label"]');
         expect(label.attributes("style")).toContain("display: none");
     });
 
     it("should not render pipeline stages initially", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         expect(wrapper.find('[data-testid="pipeline-stages"]').exists()).toBe(false);
     });
 
     it("should render the how-it-works section", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         const labels = wrapper.findAll(".brick-label");
         const labelTexts = labels.map((l) => l.text());
@@ -80,7 +81,7 @@ describe("MiddlewarePipelineVisualizer", () => {
     });
 
     it("should render three middleware type descriptions", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         expect(wrapper.text()).toContain("Request Middleware");
         expect(wrapper.text()).toContain("Response Middleware");
@@ -88,7 +89,7 @@ describe("MiddlewarePipelineVisualizer", () => {
     });
 
     it("should render code references in how-it-works", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         expect(wrapper.text()).toContain("registerRequestMiddleware");
         expect(wrapper.text()).toContain("registerResponseMiddleware");
@@ -96,7 +97,7 @@ describe("MiddlewarePipelineVisualizer", () => {
     });
 
     it("should use PrimaryButton for success scenario and reset", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         const primaryButtons = wrapper.findAllComponents(PrimaryButton);
         const primaryTexts = primaryButtons.map((b) => b.text());
@@ -105,7 +106,7 @@ describe("MiddlewarePipelineVisualizer", () => {
     });
 
     it("should use DangerButton for error scenarios", () => {
-        const wrapper = mount(MiddlewarePipelineVisualizer);
+        const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
         const dangerButtons = wrapper.findAllComponents(DangerButton);
         const dangerTexts = dangerButtons.map((b) => b.text());
@@ -116,7 +117,7 @@ describe("MiddlewarePipelineVisualizer", () => {
 
     describe("success scenario", () => {
         it("should show the active scenario label with Running state", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -128,7 +129,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should render 6 pipeline stages", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -140,7 +141,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show all stages as pending initially except the first which is active", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -150,7 +151,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show stage labels in correct order", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -164,7 +165,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show auth token injection before/after data", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -177,7 +178,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show camelCase to snake_case request transform", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -197,7 +198,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show snake_case to camelCase response transform", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -213,7 +214,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should advance stages through the pipeline with timer", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -230,7 +231,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should complete all stages and show Complete label", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -249,7 +250,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show BEFORE and AFTER labels in stage data", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -260,7 +261,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show status badges on each stage", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -270,7 +271,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show loading state before/after data", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -286,7 +287,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show network call with 200 success response", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -297,7 +298,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show the network call description for success", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -306,7 +307,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show loading state stop stage for success", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -322,7 +323,7 @@ describe("MiddlewarePipelineVisualizer", () => {
 
     describe("auth error scenario", () => {
         it("should show active scenario label with 401 Auth Error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-auth-error"]').trigger("click");
             await nextTick();
@@ -332,7 +333,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should render 6 stages for auth error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-auth-error"]').trigger("click");
             await nextTick();
@@ -342,7 +343,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show 401 in network response", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-auth-error"]').trigger("click");
             await nextTick();
@@ -353,7 +354,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show error handling stage with redirect to login", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-auth-error"]').trigger("click");
             await nextTick();
@@ -369,7 +370,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show network description for auth error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-auth-error"]').trigger("click");
             await nextTick();
@@ -380,7 +381,7 @@ describe("MiddlewarePipelineVisualizer", () => {
 
     describe("validation error scenario", () => {
         it("should show active scenario label with 422 Validation Error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-validation-error"]').trigger("click");
             await nextTick();
@@ -390,7 +391,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show 422 in network response", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-validation-error"]').trigger("click");
             await nextTick();
@@ -401,7 +402,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show validation error handling with field errors", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-validation-error"]').trigger("click");
             await nextTick();
@@ -417,7 +418,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show network description for validation error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-validation-error"]').trigger("click");
             await nextTick();
@@ -426,7 +427,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show the validation error before data with error messages", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-validation-error"]').trigger("click");
             await nextTick();
@@ -440,7 +441,7 @@ describe("MiddlewarePipelineVisualizer", () => {
 
     describe("network error scenario", () => {
         it("should show active scenario label with Network Error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-network-error"]').trigger("click");
             await nextTick();
@@ -451,7 +452,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show network error in network response", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-network-error"]').trigger("click");
             await nextTick();
@@ -462,7 +463,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show error handling stage for network error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-network-error"]').trigger("click");
             await nextTick();
@@ -478,7 +479,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show network description for network error", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-network-error"]').trigger("click");
             await nextTick();
@@ -489,7 +490,7 @@ describe("MiddlewarePipelineVisualizer", () => {
 
     describe("interactive controls", () => {
         it("should disable scenario buttons while pipeline is running", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -502,7 +503,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should disable the reset button while pipeline is running", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -512,7 +513,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should enable buttons after pipeline completes", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -523,7 +524,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should reset the pipeline to initial state", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -540,7 +541,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should allow running a different scenario after completion", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             // Run success scenario
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
@@ -558,7 +559,7 @@ describe("MiddlewarePipelineVisualizer", () => {
 
     describe("stage visual styling", () => {
         it("should show PENDING badge for pending stages", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -567,7 +568,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show DONE badge after stage completes", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -579,7 +580,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show ERROR badge for error handling stages", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-auth-error"]').trigger("click");
             await nextTick();
@@ -589,7 +590,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show connector arrows between completed stages", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -601,7 +602,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should not show connector arrow for the last stage", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -616,7 +617,7 @@ describe("MiddlewarePipelineVisualizer", () => {
 
     describe("edge cases", () => {
         it("should show the reset button when a scenario is active", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             // The reset button uses v-show, so it exists but might be hidden
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
@@ -631,7 +632,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should hide the reset button when no scenario is active", () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             const resetBtn = wrapper.find('[data-testid="reset-pipeline"]');
             // v-show keeps the element in DOM but hides it
@@ -640,7 +641,7 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should show the request body in network call before data", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
@@ -652,14 +653,14 @@ describe("MiddlewarePipelineVisualizer", () => {
         });
 
         it("should render description text about middleware patterns", () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             expect(wrapper.text()).toContain("registration order");
             expect(wrapper.text()).toContain("stuck spinners");
         });
 
         it("should display the opacity variation for pending vs active stage descriptions", async () => {
-            const wrapper = mount(MiddlewarePipelineVisualizer);
+            const wrapper = shallowMount(MiddlewarePipelineVisualizer, {global: {stubs: {SectionHeading}}});
 
             await wrapper.find('[data-testid="scenario-success"]').trigger("click");
             await nextTick();
