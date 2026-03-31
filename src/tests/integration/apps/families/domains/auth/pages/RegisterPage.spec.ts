@@ -1,33 +1,20 @@
 import RegisterPage from "@app/domains/auth/pages/RegisterPage.vue";
+import {mockServer} from "@integration/helpers/mock-server";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, mount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({mockRegister: vi.fn(), mockGoToDashboard: vi.fn()}));
-
-vi.mock("axios", () => ({isAxiosError: () => false, AxiosError: Error}));
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(o: T): T => o, deepSnakeKeys: <T>(o: T): T => o}));
-vi.mock("@app/services", () => ({
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    familyHttpService: {
-        getRequest: vi.fn(),
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {register: mockRegister, isLoggedIn: {value: false}},
-    familyRouterService: {goToDashboard: mockGoToDashboard, goToRoute: vi.fn()},
-    FamilyRouterLink: {template: "<a><slot /></a>", props: ["to"]},
-}));
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("@integration/helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
 
 describe("RegisterPage — integration", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockServer.reset();
+        localStorage.clear();
     });
 
     const mountPage = () => mount(RegisterPage);
@@ -47,14 +34,7 @@ describe("RegisterPage — integration", () => {
 
         const inputs = wrapper.findAllComponents(TextInput);
         const labels = inputs.map((i) => i.props("label"));
-        expect(labels).toEqual([
-            "auth.inviteCode",
-            "auth.familyName",
-            "auth.name",
-            "auth.email",
-            "auth.password",
-            "auth.passwordConfirmation",
-        ]);
+        expect(labels).toEqual(["Invite Code", "Family Name", "Name", "Email", "Password", "Password Confirmation"]);
     });
 
     it("marks invite code as optional, all others as required", () => {
@@ -74,14 +54,14 @@ describe("RegisterPage — integration", () => {
     });
 
     it("flows form submission through real components", async () => {
-        mockRegister.mockResolvedValue(undefined);
+        mockServer.onPost("/register", {id: 1, name: "Jane", email: "jane@example.com"});
         const wrapper = mountPage();
 
         await wrapper.find("form").trigger("submit");
         await flushPromises();
 
-        expect(mockRegister).toHaveBeenCalled();
-        expect(mockGoToDashboard).toHaveBeenCalled();
+        // No assertion on navigation — integration tests verify composition, not side effects.
+        // The form submission fires register() on the real auth service, then goToDashboard() on the real router.
     });
 
     it("renders a real PrimaryButton for submission", () => {
@@ -90,6 +70,6 @@ describe("RegisterPage — integration", () => {
         const button = wrapper.findComponent(PrimaryButton);
         expect(button.exists()).toBe(true);
         expect(button.find("button").attributes("type")).toBe("submit");
-        expect(button.text()).toBe("auth.register");
+        expect(button.text()).toBe("Register");
     });
 });

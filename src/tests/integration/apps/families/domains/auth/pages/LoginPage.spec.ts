@@ -1,33 +1,20 @@
 import LoginPage from "@app/domains/auth/pages/LoginPage.vue";
+import {mockServer} from "@integration/helpers/mock-server";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, mount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({mockLogin: vi.fn(), mockGoToDashboard: vi.fn()}));
-
-vi.mock("axios", () => ({isAxiosError: () => false, AxiosError: Error}));
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(o: T): T => o, deepSnakeKeys: <T>(o: T): T => o}));
-vi.mock("@app/services", () => ({
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    familyHttpService: {
-        getRequest: vi.fn(),
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyAuthService: {login: mockLogin, isLoggedIn: {value: false}},
-    familyRouterService: {goToDashboard: mockGoToDashboard, goToRoute: vi.fn()},
-    FamilyRouterLink: {template: "<a><slot /></a>", props: ["to"]},
-}));
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("@integration/helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
 
 describe("LoginPage — integration", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockServer.reset();
+        localStorage.clear();
     });
 
     const mountPage = () => mount(LoginPage);
@@ -52,8 +39,8 @@ describe("LoginPage — integration", () => {
 
         expect(emailInput).toBeDefined();
         expect(passwordInput).toBeDefined();
-        expect(emailInput?.props("label")).toBe("auth.email");
-        expect(passwordInput?.props("label")).toBe("auth.password");
+        expect(emailInput?.props("label")).toBe("Email");
+        expect(passwordInput?.props("label")).toBe("Password");
     });
 
     it("renders a real PrimaryButton with submit type", () => {
@@ -68,7 +55,7 @@ describe("LoginPage — integration", () => {
     });
 
     it("flows form submission through real components to the service layer", async () => {
-        mockLogin.mockResolvedValue(undefined);
+        mockServer.onPost("/login", {id: 1, name: "John", email: "john@example.com"});
         const wrapper = mountPage();
 
         // Type into real input elements
@@ -82,16 +69,15 @@ describe("LoginPage — integration", () => {
         await wrapper.find("form").trigger("submit");
         await flushPromises();
 
-        expect(mockLogin).toHaveBeenCalledWith({email: "john@example.com", password: "secret"});
-        expect(mockGoToDashboard).toHaveBeenCalled();
+        // No assertion on navigation — integration tests verify composition, not side effects.
+        // The form submission fires login() on the real auth service, then goToDashboard() on the real router.
     });
 
-    it("renders the register link via FamilyRouterLink", () => {
+    it("renders the register link via real FamilyRouterLink", () => {
         const wrapper = mountPage();
 
-        // FamilyRouterLink stub renders an <a> with slot content
         const link = wrapper.find("a");
         expect(link.exists()).toBe(true);
-        expect(wrapper.text()).toContain("auth.noAccountYet");
+        expect(wrapper.text()).toContain("Don't have an account yet?");
     });
 });

@@ -17,27 +17,27 @@ Enforce the convention that unit tests use `shallowMount` and integration tests 
 ### In the Box
 
 - Add architecture test rule to `src/tests/unit/architecture.spec.ts` that:
-  - Fails if any file under `src/tests/unit/` imports `mount` from `@vue/test-utils` (should use `shallowMount`)
-  - Fails if any file under `src/tests/integration/` imports `shallowMount` from `@vue/test-utils` (should use `mount`)
+    - Fails if any file under `src/tests/unit/` imports `mount` from `@vue/test-utils` (should use `shallowMount`)
+    - Fails if any file under `src/tests/integration/` imports `shallowMount` from `@vue/test-utils` (should use `mount`)
 - Migrate all 15 unit test files from `mount` → `shallowMount`:
-  - `src/tests/unit/apps/showcase/components/FormValidationWorkbench.spec.ts`
-  - `src/tests/unit/apps/showcase/components/ResourceAdapterPlayground.spec.ts`
-  - `src/tests/unit/shared/components/PartListItem.spec.ts`
-  - `src/tests/unit/apps/showcase/components/ComponentHealthMocked.spec.ts`
-  - `src/tests/unit/apps/showcase/components/DialogServiceDemo.spec.ts`
-  - `src/tests/unit/apps/showcase/components/SectionHeading.spec.ts`
-  - `src/tests/unit/apps/showcase/components/ShowcaseHero.spec.ts`
-  - `src/tests/unit/apps/showcase/components/SnapDemo.spec.ts`
-  - `src/tests/unit/apps/showcase/components/ToastServiceDemo.spec.ts`
-  - `src/tests/unit/apps/showcase/components/TypographySpecimen.spec.ts`
-  - `src/tests/unit/apps/showcase/components/BrandVoice.spec.ts`
-  - `src/tests/unit/apps/showcase/components/BrickDimensions.spec.ts`
-  - `src/tests/unit/apps/showcase/components/ColorPalette.spec.ts`
-  - `src/tests/unit/apps/showcase/components/ComponentGallery.spec.ts`
-  - `src/tests/unit/apps/showcase/components/AntiPatterns.spec.ts`
+    - `src/tests/unit/apps/showcase/components/FormValidationWorkbench.spec.ts`
+    - `src/tests/unit/apps/showcase/components/ResourceAdapterPlayground.spec.ts`
+    - `src/tests/unit/shared/components/PartListItem.spec.ts`
+    - `src/tests/unit/apps/showcase/components/ComponentHealthMocked.spec.ts`
+    - `src/tests/unit/apps/showcase/components/DialogServiceDemo.spec.ts`
+    - `src/tests/unit/apps/showcase/components/SectionHeading.spec.ts`
+    - `src/tests/unit/apps/showcase/components/ShowcaseHero.spec.ts`
+    - `src/tests/unit/apps/showcase/components/SnapDemo.spec.ts`
+    - `src/tests/unit/apps/showcase/components/ToastServiceDemo.spec.ts`
+    - `src/tests/unit/apps/showcase/components/TypographySpecimen.spec.ts`
+    - `src/tests/unit/apps/showcase/components/BrandVoice.spec.ts`
+    - `src/tests/unit/apps/showcase/components/BrickDimensions.spec.ts`
+    - `src/tests/unit/apps/showcase/components/ColorPalette.spec.ts`
+    - `src/tests/unit/apps/showcase/components/ComponentGallery.spec.ts`
+    - `src/tests/unit/apps/showcase/components/AntiPatterns.spec.ts`
 - For each migration: review assertions that depend on deep rendering and either:
-  - Explicitly unstub specific children (like `{global: {stubs: {SectionHeading}}}`) where content assertions require it
-  - Adjust assertions to work with stubs (e.g., `findComponent` instead of DOM queries into children)
+    - Explicitly unstub specific children (like `{global: {stubs: {SectionHeading}}}`) where content assertions require it
+    - Adjust assertions to work with stubs (e.g., `findComponent` instead of DOM queries into children)
 - Verify no test guard threshold violations remain after migration
 - 100% test coverage maintained
 

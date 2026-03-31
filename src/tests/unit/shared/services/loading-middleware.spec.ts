@@ -1,4 +1,4 @@
-import type {AxiosResponseError, HttpService} from "@shared/services/http";
+import type {AxiosResponseError, HttpService} from "@script-development/fs-http";
 import type {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from "axios";
 
 import {createLoadingService} from "@shared/services/loading";
@@ -42,6 +42,9 @@ const createMockHttpService = () => {
         putRequest: vi.fn(),
         patchRequest: vi.fn(),
         deleteRequest: vi.fn(),
+        downloadRequest: vi.fn(),
+        previewRequest: vi.fn(),
+        streamRequest: vi.fn(),
         registerRequestMiddleware: vi.fn((fn: RequestMiddleware) => {
             requestMiddlewares.push(fn);
             return () => {

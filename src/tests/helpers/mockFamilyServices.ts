@@ -1,5 +1,5 @@
+import type {HttpService} from "@script-development/fs-http";
 import type {AuthService} from "@shared/services/auth/types";
-import type {HttpService} from "@shared/services/http";
 
 import {vi} from "vitest";
 
@@ -29,6 +29,9 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
             putRequest: vi.fn(),
             patchRequest: vi.fn(),
             deleteRequest: vi.fn(),
+            downloadRequest: vi.fn(),
+            previewRequest: vi.fn(),
+            streamRequest: vi.fn(),
             registerRequestMiddleware: vi.fn(() => vi.fn()),
             registerResponseMiddleware: vi.fn(() => vi.fn()),
             registerResponseErrorMiddleware: vi.fn(() => vi.fn()),

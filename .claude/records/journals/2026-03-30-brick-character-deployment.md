@@ -9,15 +9,15 @@
 
 ## Work Summary
 
-| Action   | File                                                               | Notes                                                         |
-| -------- | ------------------------------------------------------------------ | ------------------------------------------------------------- |
-| Modified | `src/apps/families/services/translation.ts`                        | Rewrote 10 high-vis keys + all errors.* keys in EN and NL     |
-| Modified | `src/shared/components/EmptyState.vue`                             | Added showBrick, brickColor props + slot; flex col layout      |
-| Modified | `src/shared/components/PrimaryButton.vue`                          | Added silent + soundService props; snap on click               |
-| Modified | `src/shared/components/ModalDialog.vue`                            | Added soundService prop; pull on open                          |
-| Modified | `src/shared/components/ConfirmDialog.vue`                          | Added soundService prop; thud on confirm; passes to ModalDialog|
-| Modified | `src/shared/services/sound.ts`                                     | Exported SoundService interface                                |
-| Modified | `src/apps/families/domains/home/pages/HomePage.vue`                | LegoBrick hero on landing page (3 staggered bricks)            |
+| Action   | File                                                               | Notes                                                           |
+| -------- | ------------------------------------------------------------------ | --------------------------------------------------------------- |
+| Modified | `src/apps/families/services/translation.ts`                        | Rewrote 10 high-vis keys + all errors.\* keys in EN and NL      |
+| Modified | `src/shared/components/EmptyState.vue`                             | Added showBrick, brickColor props + slot; flex col layout       |
+| Modified | `src/shared/components/PrimaryButton.vue`                          | Added silent + soundService props; snap on click                |
+| Modified | `src/shared/components/ModalDialog.vue`                            | Added soundService prop; pull on open                           |
+| Modified | `src/shared/components/ConfirmDialog.vue`                          | Added soundService prop; thud on confirm; passes to ModalDialog |
+| Modified | `src/shared/services/sound.ts`                                     | Exported SoundService interface                                 |
+| Modified | `src/apps/families/domains/home/pages/HomePage.vue`                | LegoBrick hero on landing page (3 staggered bricks)             |
 | Modified | `src/apps/families/domains/sets/pages/SetsOverviewPage.vue`        | EmptyState showBrick + Yellow; PrimaryButton soundService       |
 | Modified | `src/apps/families/domains/storage/pages/StorageOverviewPage.vue`  | EmptyState showBrick + Blue; PrimaryButton soundService         |
 | Modified | `src/apps/families/domains/parts/pages/PartsPage.vue`              | EmptyState showBrick + Red; PrimaryButton soundService          |
@@ -33,19 +33,19 @@
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                  | Met | Notes                                                              |
-| --------------------------------------------------------------------- | --- | ------------------------------------------------------------------ |
-| 10 high-visibility translation keys rewritten in EN and NL            | Yes | All 10 keys voiced in both languages                               |
-| All errors.* keys rewritten in EN and NL with warmer tone             | Yes | 8 error keys rewritten with brick-themed personality               |
-| LegoBrick renders on logged-out landing page                          | Yes | 3 staggered bricks (Yellow 4x2, Red 2x2, Blue 3x1)               |
-| LegoBrick renders in at least one empty state                         | Yes | All 4 empty states: sets, storage, parts, brick DNA               |
-| PrimaryButton plays snap on click with silent prop                    | Yes | soundService prop, silent opt-out, tested                          |
-| ModalDialog plays pull on open                                        | Yes | soundService prop, plays on showModal and watch                    |
-| ConfirmDialog confirm plays thud                                      | Yes | handleConfirm plays thud, passes soundService to ModalDialog       |
-| Successful Rebrickable import plays cascade                           | Yes | Wired in SettingsPage importSets success path                      |
-| Sound respects prefers-reduced-motion and opt-in                      | Yes | Existing behavior via SoundService.isEnabled computed              |
-| All quality gates pass                                                | Yes | Full gauntlet clean                                                |
-| 100% test coverage maintained                                         | Yes | 1361 tests, 98 test files, 100% lines/branches/functions/stmts    |
+| Acceptance Criterion                                       | Met | Notes                                                          |
+| ---------------------------------------------------------- | --- | -------------------------------------------------------------- |
+| 10 high-visibility translation keys rewritten in EN and NL | Yes | All 10 keys voiced in both languages                           |
+| All errors.\* keys rewritten in EN and NL with warmer tone | Yes | 8 error keys rewritten with brick-themed personality           |
+| LegoBrick renders on logged-out landing page               | Yes | 3 staggered bricks (Yellow 4x2, Red 2x2, Blue 3x1)             |
+| LegoBrick renders in at least one empty state              | Yes | All 4 empty states: sets, storage, parts, brick DNA            |
+| PrimaryButton plays snap on click with silent prop         | Yes | soundService prop, silent opt-out, tested                      |
+| ModalDialog plays pull on open                             | Yes | soundService prop, plays on showModal and watch                |
+| ConfirmDialog confirm plays thud                           | Yes | handleConfirm plays thud, passes soundService to ModalDialog   |
+| Successful Rebrickable import plays cascade                | Yes | Wired in SettingsPage importSets success path                  |
+| Sound respects prefers-reduced-motion and opt-in           | Yes | Existing behavior via SoundService.isEnabled computed          |
+| All quality gates pass                                     | Yes | Full gauntlet clean                                            |
+| 100% test coverage maintained                              | Yes | 1361 tests, 98 test files, 100% lines/branches/functions/stmts |
 
 ## Decisions Made
 
@@ -61,19 +61,20 @@
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                          |
-| ------------- | ------ | ---------------------------------------------- |
-| format:check  | Pass   | After oxfmt run                                |
-| lint          | Pass   | 0 errors, 9 pre-existing warnings              |
-| lint:vue      | Pass   | All conventions passed                         |
-| type-check    | Pass   | Clean after exporting SoundService interface   |
-| test:coverage | Pass   | 100% lines, branches, functions, statements    |
-| knip          | Pass   | No unused exports or dead code                 |
-| size          | Pass   | families 110.31 kB, admin 30.85 kB             |
+| Check         | Result | Notes                                        |
+| ------------- | ------ | -------------------------------------------- |
+| format:check  | Pass   | After oxfmt run                              |
+| lint          | Pass   | 0 errors, 9 pre-existing warnings            |
+| lint:vue      | Pass   | All conventions passed                       |
+| type-check    | Pass   | Clean after exporting SoundService interface |
+| test:coverage | Pass   | 100% lines, branches, functions, statements  |
+| knip          | Pass   | No unused exports or dead code               |
+| size          | Pass   | families 110.31 kB, admin 30.85 kB           |
 
 ## Showcase Readiness
 
 Strong. The implementation demonstrates:
+
 - **Backward compatibility** -- EmptyState's new props default to false/yellow, no existing usage breaks
 - **Explicit dependency injection** -- Sound service passed as typed prop, no global state
 - **Domain identity** -- Each empty state has its own brand color (Yellow/Blue/Red/Green)
@@ -111,8 +112,8 @@ The prop-passing approach for sound is more verbose than provide/inject but alig
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                                                    | Context                                                                                                                                   | Shift Evidence                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | Before modifying a shared component's props, grep ALL test directories (unit + integration) for that component to map the full blast radius | Changed EmptyState from `<p>` to `<div flex col>` with LegoBrick -- integration tests may have structural assertions about the old layout | 2026-03-30-brick-character-deployment |
 
 ---
@@ -138,6 +139,7 @@ Solid delivery. All 5 deliverables complete, all 11 acceptance criteria met, ful
 ### Translation Quality — Dutch Review
 
 The NL translations are natural and well-crafted:
+
 - "Steentjes stapelen..." (loading) — idiomatic, playful, correct
 - "Dit steentje ontbreekt — vul het in" (required) — the "steentje" metaphor works in Dutch
 - "Die wachtwoorden klikken niet in elkaar" (passwordMismatch) — excellent, "inklikken" is the actual Dutch word for LEGO clicking
@@ -157,8 +159,8 @@ The architect flagged two blind spots:
 
 ### Training Evaluation
 
-| Proposal | Verdict | Reason |
-| --- | --- | --- |
+| Proposal                                                                                                                                    | Verdict   | Reason                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Before modifying a shared component's props, grep ALL test directories (unit + integration) for that component to map the full blast radius | Candidate | Valid instinct. Related to existing candidate "When a permit targets a specific page, check ALL test files (unit + integration)" but distinct — this is about shared component prop changes radiating across consumers, not page-specific test files. First observation. Needs a second confirming shift. |
 
 ### Graduation Check

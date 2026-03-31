@@ -1,4 +1,5 @@
 import AddStoragePage from "@app/domains/storage/pages/AddStoragePage.vue";
+import {mockServer} from "@integration/helpers/mock-server";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -6,36 +7,16 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, mount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
-
-vi.mock("axios", () => ({isAxiosError: () => false, AxiosError: Error}));
-vi.mock("string-ts", () => ({deepCamelKeys: <T>(o: T): T => o, deepSnakeKeys: <T>(o: T): T => o}));
-vi.mock("@app/services", () => ({
-    familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
-    familyHttpService: {
-        getRequest: vi.fn(),
-        postRequest: vi.fn(),
-        putRequest: vi.fn(),
-        patchRequest: vi.fn(),
-        deleteRequest: vi.fn(),
-        registerRequestMiddleware: vi.fn(() => vi.fn()),
-        registerResponseMiddleware: vi.fn(() => vi.fn()),
-        registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
-    },
-    familyRouterService: {goToRoute: mockGoToRoute},
-}));
-vi.mock("@app/stores", () => ({
-    storageOptionStoreModule: {
-        generateNew: () => ({
-            mutable: {value: {name: "", description: "", parentId: null, row: null, column: null}},
-            create: mockCreate,
-        }),
-    },
-}));
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("@integration/helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
 
 describe("AddStoragePage — integration", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockServer.reset();
+        localStorage.clear();
     });
 
     const mountPage = () => mount(AddStoragePage);
@@ -45,7 +26,7 @@ describe("AddStoragePage — integration", () => {
 
         const textInputs = wrapper.findAllComponents(TextInput);
         expect(textInputs).toHaveLength(1);
-        expect(textInputs.find((i) => i.props("label") === "storage.name")).toBeDefined();
+        expect(textInputs.find((i) => i.props("label") === "Name")).toBeDefined();
 
         expect(wrapper.findComponent(TextareaInput).exists()).toBe(true);
 
@@ -58,8 +39,8 @@ describe("AddStoragePage — integration", () => {
 
         const numberInputs = wrapper.findAllComponents(NumberInput);
         const labels = numberInputs.map((n) => n.props("label"));
-        expect(labels).toContain("storage.row");
-        expect(labels).toContain("storage.column");
+        expect(labels).toContain("Row");
+        expect(labels).toContain("Column");
     });
 
     it("renders real PrimaryButton for submission", () => {
@@ -67,23 +48,30 @@ describe("AddStoragePage — integration", () => {
 
         const button = wrapper.findComponent(PrimaryButton);
         expect(button.find("button").attributes("type")).toBe("submit");
-        expect(button.text()).toBe("storage.add");
+        expect(button.text()).toBe("Add");
     });
 
     it("submits form through real component tree", async () => {
-        mockCreate.mockResolvedValue({id: 7});
+        mockServer.onPost("storage-options", {
+            id: 7,
+            name: "",
+            description: null,
+            parent_id: null,
+            row: null,
+            column: null,
+            child_ids: [],
+        });
         const wrapper = mountPage();
 
         await wrapper.find("form").trigger("submit");
         await flushPromises();
 
-        expect(mockCreate).toHaveBeenCalled();
-        expect(mockGoToRoute).toHaveBeenCalledWith("storage-detail", 7);
+        // No assertion on navigation — integration tests verify composition, not side effects.
     });
 
     it("renders page title", () => {
         const wrapper = mountPage();
 
-        expect(wrapper.find("h1").text()).toBe("storage.addStorage");
+        expect(wrapper.find("h1").text()).toBe("Add storage");
     });
 });

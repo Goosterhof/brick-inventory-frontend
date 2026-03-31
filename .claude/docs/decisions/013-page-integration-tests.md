@@ -162,6 +162,71 @@ The implementation: `vitest.integration.config.ts` adds a Vite `resolve.alias` t
 
 This does NOT violate ADR-011's "no mocks in setup" rule because it operates at the Vite config level, not the Vitest setup file. The distinction matters: a Vite alias is a build-time module redirect (like a path alias), not a test-time mock that could silently change test behavior.
 
+## Mock Boundary Evolution
+
+**Amended 2026-03-31.** The original mocking strategy mocked at the store/service layer — stores were replaced with holder-ref stubs, translation returned raw keys, string transforms were identity functions. This worked for proving component composition but left significant real code untested: reactive store hydration, the `toCamelCaseTyped()` pipeline, and actual translated text rendering.
+
+### Original mock boundary (store/service layer)
+
+```
+                        MOCK BOUNDARY
+                             |
+Component ← stores (mocked) | ← HTTP service ← axios ← API
+           ← translation (mocked, returns keys)
+           ← string-ts (mocked, identity function)
+```
+
+Four `vi.mock()` calls per test file: `axios`, `string-ts`, `@app/services`, `@app/stores`. Assertions checked translation keys (`"storage.title"`) not user-visible text. Fixtures were pre-camelCased since string transforms were bypassed.
+
+### New mock boundary (HTTP transport layer via mock-server)
+
+```
+Component ← stores (REAL) ← adapter-store (REAL) ← HTTP service (mock-server) | ← API
+           ← translation (REAL, returns English text)
+           ← string-ts (REAL, toCamelCaseTyped exercises)
+           ← loading service (REAL, middleware no-ops on mock-server)
+```
+
+Two `vi.mock()` calls per test file: `@script-development/fs-http` (returns mock-server-backed HTTP service) and `@app/services/router` (navigation is a side-effect). Assertions check user-visible text (`"Storage"`, `"Add storage"`). Fixtures use snake_case matching real API responses.
+
+### Why axios-mock-adapter was not viable
+
+`@script-development/fs-http` encapsulates its axios instance via `axios.create()`. The returned instance is private — `MockAdapter` cannot intercept it without mocking the `axios` module itself at the import level, which defeats the purpose of respecting the package's encapsulation. The mock-server approach replaces `createHttpService` at the `@script-development/fs-http` import boundary with a functional in-memory implementation, preserving the encapsulation contract.
+
+### What goes real vs. what stays mocked
+
+| Concern                                          | Before                | After                        | Rationale                                                                  |
+| ------------------------------------------------ | --------------------- | ---------------------------- | -------------------------------------------------------------------------- |
+| Stores (adapter-store, storageOptionStoreModule) | Mocked (holder refs)  | **Real**                     | Exercises reactive wiring, Object.freeze, adapted cache                    |
+| Translation service                              | Mocked (returns keys) | **Real**                     | Catches translation key typos, verifies user-visible text                  |
+| string-ts transforms (toCamelCaseTyped)          | Mocked (identity)     | **Real**                     | Exercises the snake_case → camelCase pipeline                              |
+| Loading service                                  | Mocked                | **Real** (middleware no-ops) | Middleware registers on mock-server but never fires; isLoading stays false |
+| Router service                                   | Mocked                | **Mocked**                   | Navigation is a side-effect boundary                                       |
+| HTTP transport (@script-development/fs-http)     | Mocked (axios)        | **Mocked** (mock-server)     | The only mock boundary — everything above it runs real                     |
+
+### The mock-server helper
+
+`src/tests/integration/helpers/mock-server.ts` exports two things:
+
+- `mockHttpService` — Implements the `HttpService` interface backed by in-memory route maps. Middleware registration methods are no-ops (the mock bypasses axios entirely, so interceptors never fire).
+- `mockServer` — Route registration API (`onGet`, `onPost`, `reset`). Tests register routes before mounting, then the real store's `retrieveAll()` hits the mock-server and receives shaped data.
+
+Usage pattern in test files:
+
+```typescript
+vi.mock("@script-development/fs-http", async () => {
+    const {mockHttpService} = await import("../helpers/mock-server");
+    return {createHttpService: () => mockHttpService};
+});
+
+beforeEach(() => mockServer.reset());
+mockServer.onGet("storage-options", [
+    /* snake_case fixtures */
+]);
+```
+
+The async `vi.mock` with dynamic import is necessary because `vi.mock` factories are hoisted before static imports resolve — the mock-server module must be imported dynamically within the factory.
+
 ## Open Questions
 
 - **Threshold calibration** — the test-guard reporter (ADR-010) thresholds are calibrated for unit tests. Integration tests mounting real component trees will be heavier. May need separate thresholds or a separate reporter instance for the integration config.

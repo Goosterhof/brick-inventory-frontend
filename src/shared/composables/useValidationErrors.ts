@@ -1,4 +1,4 @@
-import type {HttpService} from "@shared/services/http";
+import type {HttpService} from "@script-development/fs-http";
 import type {AxiosError} from "axios";
 import type {Ref} from "vue";
 
