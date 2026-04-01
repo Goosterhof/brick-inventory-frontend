@@ -1,10 +1,14 @@
-import {mount} from "@vue/test-utils";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import {shallowMount} from "@vue/test-utils";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import DialogServiceDemo from "@/apps/showcase/components/DialogServiceDemo.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 describe("DialogServiceDemo", () => {
+    const stubs = {SectionHeading, PrimaryButton, DialogContainer: false as const};
+
     afterEach(() => {
         document.body.style.overflowY = "";
         vi.restoreAllMocks();
@@ -12,7 +16,7 @@ describe("DialogServiceDemo", () => {
 
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Assert
         expect(wrapper.text()).toContain("09");
@@ -23,7 +27,7 @@ describe("DialogServiceDemo", () => {
 
     it("should render all demo subsections", () => {
         // Act
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Assert
         const labels = wrapper.findAll(".brick-label");
@@ -38,7 +42,7 @@ describe("DialogServiceDemo", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Assert
         expect(wrapper.find("section#dialog-service").exists()).toBe(true);
@@ -49,7 +53,7 @@ describe("DialogServiceDemo", () => {
     it("should open a single dialog when clicking Open Dialog", async () => {
         // Arrange
         HTMLDialogElement.prototype.showModal = vi.fn();
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Act
         const openButton = wrapper.findAll("button").find((b) => b.text().includes("Open Dialog"));
@@ -66,7 +70,7 @@ describe("DialogServiceDemo", () => {
     it("should open a stackable dialog with Open Stacked button visible", async () => {
         // Arrange
         HTMLDialogElement.prototype.showModal = vi.fn();
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Act
         const stackButton = wrapper.findAll("button").find((b) => b.text().includes("Open Stackable"));
@@ -84,7 +88,7 @@ describe("DialogServiceDemo", () => {
     it("should stack a second dialog when clicking Open Stacked inside a dialog", async () => {
         // Arrange
         HTMLDialogElement.prototype.showModal = vi.fn();
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         const stackButton = wrapper.findAll("button").find((b) => b.text().includes("Open Stackable"));
         await stackButton?.trigger("click");
@@ -106,7 +110,7 @@ describe("DialogServiceDemo", () => {
     it("should close a dialog when clicking its Close button", async () => {
         // Arrange
         HTMLDialogElement.prototype.showModal = vi.fn();
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         const openButton = wrapper.findAll("button").find((b) => b.text().includes("Open Dialog"));
         await openButton?.trigger("click");
@@ -127,7 +131,7 @@ describe("DialogServiceDemo", () => {
     it("should close all dialogs when clicking Close All", async () => {
         // Arrange
         HTMLDialogElement.prototype.showModal = vi.fn();
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Open stackable + stacked
         const stackButton = wrapper.findAll("button").find((b) => b.text().includes("Open Stackable"));
@@ -152,7 +156,7 @@ describe("DialogServiceDemo", () => {
 
     it("should render the container usage code snippet", () => {
         // Act
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Assert
         expect(wrapper.find("pre").text()).toContain("DialogContainerComponent");
@@ -162,7 +166,7 @@ describe("DialogServiceDemo", () => {
 
     it("should include the DialogContainerComponent in the template", () => {
         // Act
-        const wrapper = mount(DialogServiceDemo, {attachTo: document.body});
+        const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Assert — the section contains the container component (renders no content when no dialogs open)
         const section = wrapper.find("section#dialog-service");

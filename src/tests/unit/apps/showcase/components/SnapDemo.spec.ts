@@ -1,12 +1,15 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 import SnapDemo from "@/apps/showcase/components/SnapDemo.vue";
 
 describe("SnapDemo", () => {
+    const stubs = {SectionHeading};
+
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("03");
@@ -15,7 +18,7 @@ describe("SnapDemo", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("section#snap").exists()).toBe(true);
@@ -23,7 +26,7 @@ describe("SnapDemo", () => {
 
     it("should render all four interaction demos", () => {
         // Act
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
 
         // Assert
         const labels = wrapper.findAll(".brick-label");
@@ -36,7 +39,7 @@ describe("SnapDemo", () => {
 
     it("should display all four state indicators as DEFAULT initially", () => {
         // Act
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
 
         // Assert
         const stateIndicators = wrapper.findAll("[font='bold mono']").filter((el) => el.text() === "DEFAULT");
@@ -45,7 +48,7 @@ describe("SnapDemo", () => {
 
     it("should update button state to HOVER on mouseenter", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const demoButton = wrapper.find("button[uppercase]");
 
         // Act
@@ -57,7 +60,7 @@ describe("SnapDemo", () => {
 
     it("should reset button state to DEFAULT on mouseleave", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const demoButton = wrapper.find("button[uppercase]");
 
         await demoButton.trigger("mouseenter");
@@ -73,7 +76,7 @@ describe("SnapDemo", () => {
 
     it("should update button state to FOCUS on focus", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const demoButton = wrapper.find("button[uppercase]");
 
         // Act
@@ -85,7 +88,7 @@ describe("SnapDemo", () => {
 
     it("should reset button state to DEFAULT on blur", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const demoButton = wrapper.find("button[uppercase]");
 
         await demoButton.trigger("focus");
@@ -100,7 +103,7 @@ describe("SnapDemo", () => {
 
     it("should update button state to ACTIVE on mousedown", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const demoButton = wrapper.find("button[uppercase]");
 
         // Act
@@ -112,7 +115,7 @@ describe("SnapDemo", () => {
 
     it("should return button state to HOVER on mouseup", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const demoButton = wrapper.find("button[uppercase]");
 
         await demoButton.trigger("mousedown");
@@ -126,7 +129,7 @@ describe("SnapDemo", () => {
 
     it("should update input state on focus and blur", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const input = wrapper.find("input");
 
         // Act
@@ -145,7 +148,7 @@ describe("SnapDemo", () => {
 
     it("should update input state to HOVER on mouseenter and DEFAULT on mouseleave", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const input = wrapper.find("input");
 
         // Act
@@ -164,7 +167,7 @@ describe("SnapDemo", () => {
 
     it("should update card state on mouseenter and mouseleave", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const card = wrapper.find("[tabindex='0']");
 
         // Act
@@ -183,7 +186,7 @@ describe("SnapDemo", () => {
 
     it("should update card state to ACTIVE on mousedown and HOVER on mouseup", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const card = wrapper.find("[tabindex='0']");
 
         // Act
@@ -201,7 +204,7 @@ describe("SnapDemo", () => {
 
     it("should update card state to FOCUS on focus and DEFAULT on blur", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const card = wrapper.find("[tabindex='0']");
 
         // Act
@@ -220,7 +223,7 @@ describe("SnapDemo", () => {
 
     it("should update link state on mouseenter and mouseleave", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const link = wrapper.find("a");
 
         // Act
@@ -239,7 +242,7 @@ describe("SnapDemo", () => {
 
     it("should update link state to ACTIVE on mousedown and HOVER on mouseup", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const link = wrapper.find("a");
 
         // Act
@@ -257,7 +260,7 @@ describe("SnapDemo", () => {
 
     it("should update link state to FOCUS on focus and DEFAULT on blur", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
         const link = wrapper.find("a");
 
         // Act
@@ -276,7 +279,7 @@ describe("SnapDemo", () => {
 
     it("should display shadow value that matches the current button state", async () => {
         // Act
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
 
         // Assert — default shadow
         expect(wrapper.text()).toContain("4px 4px 0px 0px rgba(0,0,0,1)");
@@ -291,7 +294,7 @@ describe("SnapDemo", () => {
 
     it("should display decoration info for link that changes on hover", async () => {
         // Arrange
-        const wrapper = mount(SnapDemo);
+        const wrapper = shallowMount(SnapDemo, {global: {stubs}});
 
         // Assert — default
         expect(wrapper.text()).toContain("#000000");

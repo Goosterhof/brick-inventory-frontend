@@ -1,12 +1,15 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 import ColorPalette from "@/apps/showcase/components/ColorPalette.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 describe("ColorPalette", () => {
+    const stubs = {SectionHeading};
+
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(ColorPalette);
+        const wrapper = shallowMount(ColorPalette, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("01");
@@ -15,7 +18,7 @@ describe("ColorPalette", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(ColorPalette);
+        const wrapper = shallowMount(ColorPalette, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("section#colors").exists()).toBe(true);
@@ -23,7 +26,7 @@ describe("ColorPalette", () => {
 
     it("should render all nine color tokens", () => {
         // Act
-        const wrapper = mount(ColorPalette);
+        const wrapper = shallowMount(ColorPalette, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("Ink");
@@ -39,7 +42,7 @@ describe("ColorPalette", () => {
 
     it("should render hex values for non-reserved colors", () => {
         // Act
-        const wrapper = mount(ColorPalette);
+        const wrapper = shallowMount(ColorPalette, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("#000000");
@@ -50,7 +53,7 @@ describe("ColorPalette", () => {
 
     it("should show reserved overlay for Blue and Baseplate Green", () => {
         // Act
-        const wrapper = mount(ColorPalette);
+        const wrapper = shallowMount(ColorPalette, {global: {stubs}});
 
         // Assert
         const reservedLabels = wrapper.findAll("span").filter((s) => s.text() === "Reserved");
@@ -59,7 +62,7 @@ describe("ColorPalette", () => {
 
     it("should apply reduced opacity to reserved color cards", () => {
         // Act
-        const wrapper = mount(ColorPalette);
+        const wrapper = shallowMount(ColorPalette, {global: {stubs}});
 
         // Assert — reserved cards have opacity-60
         const cards = wrapper.findAll(".brick-border.brick-shadow");
@@ -69,7 +72,7 @@ describe("ColorPalette", () => {
 
     it("should render contrast ratio badges for all colors", () => {
         // Act
-        const wrapper = mount(ColorPalette);
+        const wrapper = shallowMount(ColorPalette, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("21:1");
