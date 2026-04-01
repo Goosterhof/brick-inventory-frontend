@@ -1,4 +1,5 @@
 import type {HttpService} from "@script-development/fs-http";
+import type {StorageService} from "@script-development/fs-storage";
 import type {Item} from "@shared/types/item";
 import type {ComputedRef, Ref} from "vue";
 
@@ -8,7 +9,6 @@ import {computed, ref} from "vue";
 
 import type {LoadingService} from "./loading";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "./resource-adapter";
-import type {StorageService} from "./storage";
 
 export type {AdapterStoreModule};
 

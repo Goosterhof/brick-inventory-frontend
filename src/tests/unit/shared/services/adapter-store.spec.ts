@@ -1,7 +1,7 @@
 import type {HttpService} from "@script-development/fs-http";
+import type {StorageService} from "@script-development/fs-storage";
 import type {LoadingService} from "@shared/services/loading";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "@shared/services/resource-adapter";
-import type {StorageService} from "@shared/services/storage";
 import type {New} from "@shared/types/generics";
 import type {Item} from "@shared/types/item";
 import type {AxiosResponse} from "axios";

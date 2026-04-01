@@ -1,8 +1,7 @@
+import type {StorageService} from "@script-development/fs-storage";
 import type {ComputedRef} from "vue";
 
 import {computed, ref} from "vue";
-
-import type {StorageService} from "./storage";
 
 /** @public */
 export type SoundType = "snap" | "pull" | "cascade" | "thud";
