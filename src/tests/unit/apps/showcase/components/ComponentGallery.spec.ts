@@ -5,73 +5,62 @@ import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import ComponentGallery from "@/apps/showcase/components/ComponentGallery.vue";
-import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
+
+const SectionHeading = {
+    name: "SectionHeading",
+    props: {number: String, title: String},
+    template: "<div>{{ number }} {{ title }}</div>",
+};
 
 // Mock heavy shared components to keep import chain under 1000ms (ADR-010).
 // Using globalThis stubs: vi.mock factories are hoisted above imports, so we
 // use vi.hoisted to make the factory function available in the hoisted scope.
-const {mkStub, mkButtonStub, mkToastStub} = vi.hoisted(() => {
+const {mkStub, mkDialogStub, mkModelStub, mkButtonStub, mkToastStub} = vi.hoisted(() => {
     const mkStub = (name: string, slotted: boolean) => ({
         name,
-        props: {
-            open: Boolean,
-            to: String,
-            active: Boolean,
-            disabled: Boolean,
-            modelValue: [String, Number, Object],
-            label: String,
-            optional: Boolean,
-            min: Number,
-            max: Number,
-            for: String,
-            message: String,
-            variant: String,
-            title: String,
-            value: String,
-            name: String,
-            partNum: String,
-            quantity: Number,
-            colorName: String,
-            colorRgb: String,
-            spare: Boolean,
-            columns: Number,
-            rows: Number,
-            color: String,
-            shadow: Boolean,
-        },
-        emits: ["update:modelValue", "click", "close", "confirm", "cancel"],
         template: slotted
             ? `<div data-stub="${name}"><slot /><slot name="title" /><slot name="confirm" /><slot name="cancel" /><slot name="links" /><slot name="mobile-links" /><slot name="actions" /></div>`
             : `<div data-stub="${name}"><slot /></div>`,
     });
+    const mkDialogStub = (name: string) => ({
+        name,
+        props: {open: Boolean},
+        emits: ["close", "confirm", "cancel"],
+        template: `<div data-stub="${name}"><slot /><slot name="title" /><slot name="confirm" /><slot name="cancel" /></div>`,
+    });
+    const mkModelStub = (name: string) => ({
+        name,
+        props: {modelValue: [String, Number, Object]},
+        emits: ["update:modelValue"],
+        template: `<div data-stub="${name}"><slot /></div>`,
+    });
     const mkButtonStub = (name: string) => ({
         name,
-        props: {disabled: Boolean, active: Boolean, value: String},
         emits: ["click"],
-        template: `<button @click="$emit('click')" :disabled="disabled"><slot /></button>`,
+        template: `<button @click="$emit('click')"><slot /></button>`,
     });
     const mkToastStub = () => ({
         name: "ToastMessage",
-        props: {message: String, variant: String},
+        props: {message: String},
         emits: ["close"],
         template: `<div>{{ message }}<button aria-label="Dismiss" @click="$emit('close')">x</button></div>`,
     });
-    return {mkStub, mkButtonStub, mkToastStub};
+    return {mkStub, mkDialogStub, mkModelStub, mkButtonStub, mkToastStub};
 });
 
 vi.mock("@shared/components/scanner/BarcodeScanner.vue", () => ({default: mkStub("BarcodeScanner", false)}));
 vi.mock("@shared/components/scanner/CameraCapture.vue", () => ({default: mkStub("CameraCapture", false)}));
-vi.mock("@shared/components/ModalDialog.vue", () => ({default: mkStub("ModalDialog", true)}));
-vi.mock("@shared/components/ConfirmDialog.vue", () => ({default: mkStub("ConfirmDialog", true)}));
+vi.mock("@shared/components/ModalDialog.vue", () => ({default: mkDialogStub("ModalDialog")}));
+vi.mock("@shared/components/ConfirmDialog.vue", () => ({default: mkDialogStub("ConfirmDialog")}));
 vi.mock("@shared/components/NavHeader.vue", () => ({default: mkStub("NavHeader", true)}));
 vi.mock("@shared/components/NavLink.vue", () => ({default: mkStub("NavLink", false)}));
 vi.mock("@shared/components/NavMobileLink.vue", () => ({default: mkStub("NavMobileLink", false)}));
 vi.mock("@shared/components/LegoBrick.vue", () => ({default: mkStub("LegoBrick", false)}));
-vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({default: mkStub("TextInput", false)}));
-vi.mock("@shared/components/forms/inputs/NumberInput.vue", () => ({default: mkStub("NumberInput", false)}));
-vi.mock("@shared/components/forms/inputs/SelectInput.vue", () => ({default: mkStub("SelectInput", true)}));
-vi.mock("@shared/components/forms/inputs/DateInput.vue", () => ({default: mkStub("DateInput", false)}));
-vi.mock("@shared/components/forms/inputs/TextareaInput.vue", () => ({default: mkStub("TextareaInput", false)}));
+vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({default: mkModelStub("TextInput")}));
+vi.mock("@shared/components/forms/inputs/NumberInput.vue", () => ({default: mkModelStub("NumberInput")}));
+vi.mock("@shared/components/forms/inputs/SelectInput.vue", () => ({default: mkModelStub("SelectInput")}));
+vi.mock("@shared/components/forms/inputs/DateInput.vue", () => ({default: mkModelStub("DateInput")}));
+vi.mock("@shared/components/forms/inputs/TextareaInput.vue", () => ({default: mkModelStub("TextareaInput")}));
 vi.mock("@shared/components/forms/FormError.vue", () => ({default: mkStub("FormError", false)}));
 vi.mock("@shared/components/forms/FormField.vue", () => ({default: mkStub("FormField", true)}));
 vi.mock("@shared/components/forms/FormLabel.vue", () => ({default: mkStub("FormLabel", true)}));
