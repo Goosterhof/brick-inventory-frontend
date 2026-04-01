@@ -19,13 +19,15 @@ Install and wire `@script-development/fs-theme` into the Families app, giving us
 1. **Install the package** — `npm install @script-development/fs-theme` in the frontend workspace.
 
 2. **Create the service instance** — Add `src/apps/families/services/theme.ts` following the established pattern:
-   ```ts
-   import {createThemeService} from "@script-development/fs-theme";
-   import {familyStorageService} from "./storage";
 
-   export const familyThemeService = createThemeService(familyStorageService);
-   ```
-   The `familyStorageService` (fs-storage) satisfies fs-theme's `ThemeStorageContract` — no adapter needed. Theme will be stored under the key `families:theme` in localStorage.
+    ```ts
+    import {createThemeService} from "@script-development/fs-theme";
+    import {familyStorageService} from "./storage";
+
+    export const familyThemeService = createThemeService(familyStorageService);
+    ```
+
+    The `familyStorageService` (fs-storage) satisfies fs-theme's `ThemeStorageContract` — no adapter needed. Theme will be stored under the key `families:theme` in localStorage.
 
 3. **Export from service barrel** — Add `familyThemeService` to `src/apps/families/services/index.ts`.
 
