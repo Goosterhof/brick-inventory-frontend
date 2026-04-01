@@ -200,8 +200,10 @@ describe("ToastServiceDemo", () => {
 
         // Act — temporarily remove disabled to force the click through,
         // exercising the `if (lastToastId.value)` false branch.
-        (hideBtn?.element as HTMLButtonElement).disabled = false;
-        await hideBtn?.trigger("click");
+        expect(hideBtn).toBeDefined();
+        const btn = hideBtn as NonNullable<typeof hideBtn>;
+        (btn.element as HTMLButtonElement).disabled = false;
+        await btn.trigger("click");
         await nextTick();
 
         // Assert — no additional hide log (only the first hide)

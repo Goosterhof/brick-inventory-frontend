@@ -21,7 +21,7 @@ export type Writable<T> = T extends WritablePrimitive
  * depending on the type and size of an object.
  */
 export const deepCopy = <T>(toCopy: T): Writable<T> => {
-    if (typeof toCopy !== "object" || toCopy === null) return toCopy as Writable<T>;
+    if (toCopy === null || typeof toCopy !== "object") return toCopy as Writable<T>;
 
     if (toCopy instanceof Date) return new Date(toCopy.getTime()) as Writable<T>;
 

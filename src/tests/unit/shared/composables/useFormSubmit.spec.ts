@@ -145,7 +145,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
         let submittingDuringAction = false;
-        const action = vi.fn().mockImplementation(async () => {
+        const action = vi.fn().mockImplementation(() => {
             submittingDuringAction = submitting.value;
         });
 

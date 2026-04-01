@@ -19,27 +19,29 @@ Replace the local `loading.ts` and `loading-middleware.ts` shared services with 
 1. **Install the package** — `npm install @script-development/fs-loading` in the frontend workspace.
 
 2. **Replace the loading service import** — In `src/apps/families/services/loading.ts`, change:
-   ```ts
-   // Before
-   import {createLoadingService} from "@shared/services/loading";
-   import {registerLoadingMiddleware} from "@shared/services/loading-middleware";
 
-   // After
-   import {createLoadingService, registerLoadingMiddleware} from "@script-development/fs-loading";
-   ```
-   The rest of the file (`familyLoadingService` creation, middleware registration) stays identical.
+    ```ts
+    // Before
+    import {createLoadingService} from "@shared/services/loading";
+    import {registerLoadingMiddleware} from "@shared/services/loading-middleware";
+
+    // After
+    import {createLoadingService, registerLoadingMiddleware} from "@script-development/fs-loading";
+    ```
+
+    The rest of the file (`familyLoadingService` creation, middleware registration) stays identical.
 
 3. **Update any other direct imports** — Search for `@shared/services/loading` and `@shared/services/loading-middleware` across the codebase. Any import of `LoadingService` type, `createLoadingService`, or `registerLoadingMiddleware` should point to the package instead.
 
 4. **Remove the local files** — Once all imports are migrated:
-   - Delete `src/shared/services/loading.ts`
-   - Delete `src/shared/services/loading-middleware.ts`
+    - Delete `src/shared/services/loading.ts`
+    - Delete `src/shared/services/loading-middleware.ts`
 
 5. **Migrate tests** — The local test files test the now-packaged code. They should be removed:
-   - Delete `src/tests/unit/shared/services/loading.spec.ts`
-   - Delete `src/tests/unit/shared/services/loading-middleware.spec.ts`
-   
-   The package has 25 tests with 100% coverage — these are now the package's responsibility. The families app's `loading.ts` service file (3 lines of wiring) doesn't need its own test.
+    - Delete `src/tests/unit/shared/services/loading.spec.ts`
+    - Delete `src/tests/unit/shared/services/loading-middleware.spec.ts`
+
+    The package has 25 tests with 100% coverage — these are now the package's responsibility. The families app's `loading.ts` service file (3 lines of wiring) doesn't need its own test.
 
 6. **Run knip** — Verify no dead exports remain after removing the local files.
 

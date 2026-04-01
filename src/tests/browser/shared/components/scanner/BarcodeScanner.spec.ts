@@ -29,7 +29,7 @@ describe("BarcodeScanner (browser)", () => {
         mockGetUserMedia = vi.fn();
         mockDetect.mockReset();
 
-        vi.stubGlobal("navigator", {...navigator, mediaDevices: {getUserMedia: mockGetUserMedia}});
+        vi.stubGlobal("navigator", {mediaDevices: {getUserMedia: mockGetUserMedia}});
 
         originalSrcObjectDescriptor = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, "srcObject");
         Object.defineProperty(HTMLMediaElement.prototype, "srcObject", {
