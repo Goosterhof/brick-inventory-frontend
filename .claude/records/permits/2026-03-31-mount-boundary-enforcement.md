@@ -72,5 +72,5 @@ The architecture test is the real deliverable. The migrations are cleanup. Once 
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Closed
+**Journal:** `.claude/records/journals/2026-04-01-mount-boundary-enforcement.md`
