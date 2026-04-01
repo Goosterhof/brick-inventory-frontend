@@ -66,6 +66,17 @@ const dirExists = (dir: string): boolean => {
     }
 };
 
+const parseAdrNumbers = (content: string): string[] => {
+    const numbers: string[] = [];
+    for (const line of content.split("\n")) {
+        const match = /^\|\s*(\d{3})\s*\|/.exec(line);
+        if (match?.[1]) {
+            numbers.push(match[1]);
+        }
+    }
+    return numbers;
+};
+
 describe("Architecture", () => {
     describe("shared code must not import from app code", () => {
         it("should not contain imports from @app/ or app directories", () => {
@@ -560,17 +571,6 @@ describe("Architecture", () => {
     });
 
     describe("ADR sync — decision log index must match inspector Quick Reference", () => {
-        const parseAdrNumbers = (content: string): string[] => {
-            const numbers: string[] = [];
-            for (const line of content.split("\n")) {
-                const match = /^\|\s*(\d{3})\s*\|/.exec(line);
-                if (match?.[1]) {
-                    numbers.push(match[1]);
-                }
-            }
-            return numbers;
-        };
-
         it("every ADR in the decision log index should appear in the inspector Quick Reference", () => {
             const decisionLog = readFileSync(join(ROOT_DIR, ".claude/docs/decisions.md"), "utf-8");
             const inspector = readFileSync(join(ROOT_DIR, ".claude/agents/building-inspector.md"), "utf-8");

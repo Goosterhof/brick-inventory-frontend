@@ -5,15 +5,14 @@ import {nextTick} from "vue";
 import MiddlewarePipelineVisualizer from "@/apps/showcase/components/MiddlewarePipelineVisualizer.vue";
 
 // Mock shared components to cut import chain cost (ADR-010).
-const {mkButtonStub} = vi.hoisted(() => {
-    const mkButtonStub = (name: string) => ({
+const {mkButtonStub} = vi.hoisted(() => ({
+    mkButtonStub: (name: string) => ({
         name,
         props: {disabled: Boolean},
         emits: ["click"],
         template: `<button @click="$emit('click')" :disabled="disabled" :data-testid="$attrs['data-testid']"><slot /></button>`,
-    });
-    return {mkButtonStub};
-});
+    }),
+}));
 
 vi.mock("@shared/components/PrimaryButton.vue", () => ({default: mkButtonStub("PrimaryButton")}));
 vi.mock("@shared/components/DangerButton.vue", () => ({default: mkButtonStub("DangerButton")}));

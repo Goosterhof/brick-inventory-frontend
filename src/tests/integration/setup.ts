@@ -11,16 +11,12 @@
 // ConfirmDialog -> ModalDialog uses these. Stub them so mounting doesn't throw.
 if (typeof HTMLDialogElement !== "undefined") {
     const proto = HTMLDialogElement.prototype as unknown as Record<string, unknown>;
-    if (!proto.showModal) {
-        proto.showModal = function (this: HTMLDialogElement) {
-            this.setAttribute("open", "");
-        };
-    }
-    if (!proto.close) {
-        proto.close = function (this: HTMLDialogElement) {
-            this.removeAttribute("open");
-        };
-    }
+    proto.showModal ??= function (this: HTMLDialogElement) {
+        this.setAttribute("open", "");
+    };
+    proto.close ??= function (this: HTMLDialogElement) {
+        this.removeAttribute("open");
+    };
 }
 
 // happy-dom does not define HTMLMediaElement readyState constants.

@@ -15,38 +15,37 @@ const SectionHeading = {
 // Mock heavy shared components to keep import chain under 1000ms (ADR-010).
 // Using globalThis stubs: vi.mock factories are hoisted above imports, so we
 // use vi.hoisted to make the factory function available in the hoisted scope.
-const {mkStub, mkDialogStub, mkModelStub, mkButtonStub, mkToastStub} = vi.hoisted(() => {
-    const mkStub = (name: string, slotted: boolean) => ({
+const {mkStub, mkDialogStub, mkModelStub, mkButtonStub, mkToastStub} = vi.hoisted(() => ({
+    mkStub: (name: string, slotted: boolean) => ({
         name,
         template: slotted
             ? `<div data-stub="${name}"><slot /><slot name="title" /><slot name="confirm" /><slot name="cancel" /><slot name="links" /><slot name="mobile-links" /><slot name="actions" /></div>`
             : `<div data-stub="${name}"><slot /></div>`,
-    });
-    const mkDialogStub = (name: string) => ({
+    }),
+    mkDialogStub: (name: string) => ({
         name,
         props: {open: Boolean},
         emits: ["close", "confirm", "cancel"],
         template: `<div data-stub="${name}"><slot /><slot name="title" /><slot name="confirm" /><slot name="cancel" /></div>`,
-    });
-    const mkModelStub = (name: string) => ({
+    }),
+    mkModelStub: (name: string) => ({
         name,
         props: {modelValue: [String, Number, Object]},
         emits: ["update:modelValue"],
         template: `<div data-stub="${name}"><slot /></div>`,
-    });
-    const mkButtonStub = (name: string) => ({
+    }),
+    mkButtonStub: (name: string) => ({
         name,
         emits: ["click"],
         template: `<button @click="$emit('click')"><slot /></button>`,
-    });
-    const mkToastStub = () => ({
+    }),
+    mkToastStub: () => ({
         name: "ToastMessage",
         props: {message: String},
         emits: ["close"],
         template: `<div>{{ message }}<button aria-label="Dismiss" @click="$emit('close')">x</button></div>`,
-    });
-    return {mkStub, mkDialogStub, mkModelStub, mkButtonStub, mkToastStub};
-});
+    }),
+}));
 
 vi.mock("@shared/components/scanner/BarcodeScanner.vue", () => ({default: mkStub("BarcodeScanner", false)}));
 vi.mock("@shared/components/scanner/CameraCapture.vue", () => ({default: mkStub("CameraCapture", false)}));

@@ -409,7 +409,7 @@ describe("ResourceAdapterPlayground", () => {
         expect(wrapper.find('[data-testid="delete-btn"]').exists()).toBe(false);
     });
 
-    it("should handle patch when no item is selected (no-op)", async () => {
+    it("should handle patch when no item is selected (no-op)", () => {
         const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // No item selected, patch button not visible — but we can verify the component doesn't error

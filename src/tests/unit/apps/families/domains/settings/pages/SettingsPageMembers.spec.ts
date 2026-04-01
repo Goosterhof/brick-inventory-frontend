@@ -181,6 +181,7 @@ describe("SettingsPage — members", () => {
             await flushPromises();
 
             // Assert
+            // eslint-disable-next-line typescript/unbound-method -- writeText is a vi.fn() mock, not a real bound method
             expect(navigator.clipboard.writeText).toHaveBeenCalledWith("ABC123");
             expect(wrapper.text()).toContain("settings.codeCopied");
         });
