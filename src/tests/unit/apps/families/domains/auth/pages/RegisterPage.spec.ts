@@ -4,7 +4,7 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
     () => import("../../../../../../helpers"),
 );
 
@@ -12,6 +12,7 @@ const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({mockRegister: vi.fn
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyAuthService: {register: mockRegister},

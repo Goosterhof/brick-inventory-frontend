@@ -10,14 +10,20 @@ import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
-const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices, createMockFamilyStores} =
-    await vi.hoisted(() => import("../../../../../../helpers"));
+const {
+    createMockAxiosWithError,
+    createMockFsHelpers,
+    createMockStringTs,
+    createMockFamilyServices,
+    createMockFamilyStores,
+} = await vi.hoisted(() => import("../../../../../../helpers"));
 
 const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
 const mockStoreGetAll = vi.hoisted(() => ({value: [] as {setNum: string; quantity: number; status: string}[]}));
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyAuthService: {isLoggedIn: {value: true}},

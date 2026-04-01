@@ -20,7 +20,7 @@ vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn(), toCsv: vi.fn(() => 
 
 /**
  * Snake_case fixtures — matching real API response format.
- * The adapter-store's retrieveAll() applies toCamelCaseTyped() to each item.
+ * The HTTP response middleware converts snake_case to camelCase before data reaches the store.
  */
 const makeSet = (id: number, theme: string, status = "sealed") => ({
     id,

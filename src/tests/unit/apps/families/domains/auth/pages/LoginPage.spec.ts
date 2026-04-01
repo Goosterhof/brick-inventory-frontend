@@ -5,7 +5,7 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {AxiosError} from "axios";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxiosWithError, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+const {createMockAxiosWithError, createMockFsHelpers, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
     () => import("../../../../../../helpers"),
 );
 
@@ -13,6 +13,7 @@ const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({mockLogin: vi.fn(), mo
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyAuthService: {login: mockLogin},

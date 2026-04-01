@@ -8,6 +8,7 @@ import {beforeEach, describe, expect, it, vi} from "vitest";
 
 const {
     createMockAxios,
+    createMockFsHelpers,
     createMockStringTs,
     createMockFamilyServices,
     createMockFamilyStores,
@@ -18,6 +19,7 @@ const {
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
 vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());

@@ -6,9 +6,8 @@ import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
-    () => import("../../../../../../helpers"),
-);
+const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamilyServices, createMockFamilyStores} =
+    await vi.hoisted(() => import("../../../../../../helpers"));
 
 const {mockGetRequest, mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
@@ -22,6 +21,7 @@ vi.mock("barcode-detector", () => ({BarcodeDetector: vi.fn()}));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyHttpService: {getRequest: mockGetRequest, postRequest: mockPostRequest},

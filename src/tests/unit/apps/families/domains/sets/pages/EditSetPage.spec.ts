@@ -12,6 +12,7 @@ import {ref} from "vue";
 
 const {
     createMockAxiosWithError,
+    createMockFsHelpers,
     createMockStringTs,
     createMockFamilyServices,
     createMockFamilyStores,
@@ -22,6 +23,7 @@ const {
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 

@@ -5,7 +5,9 @@ import {flushPromises} from "@vue/test-utils";
 import {afterEach, describe, expect, it, vi} from "vitest";
 import {defineComponent, h} from "vue";
 
-const {createMockAxios, createMockStringTs} = await vi.hoisted(() => import("../../../../helpers"));
+const {createMockAxios, createMockFsHelpers, createMockStringTs} = await vi.hoisted(
+    () => import("../../../../helpers"),
+);
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => ({
@@ -13,6 +15,7 @@ vi.mock("string-ts", () => ({
     replace: (str: string, from: string, to: string) => str.replace(from, to),
     replaceAll: (str: string, from: string, to: string) => str.replace(new RegExp(from, "g"), to),
 }));
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 const HomeComponent = defineComponent({name: "Home", render: () => h("div", "Home")});
 const AboutComponent = defineComponent({name: "About", render: () => h("div", "About")});

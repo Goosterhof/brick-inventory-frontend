@@ -49,6 +49,8 @@
     },
     "dependencies": {
         "@phosphor-icons/vue": "^2.2.1",
+        "@script-development/fs-adapter-store": "^0.1.0",
+        "@script-development/fs-helpers": "^0.1.0",
         "@script-development/fs-http": "^0.1.0",
         "@script-development/fs-storage": "^0.1.0",
         "axios": "^1.13.6",
