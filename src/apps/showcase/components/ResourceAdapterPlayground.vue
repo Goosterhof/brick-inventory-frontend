@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {HttpService} from "@script-development/fs-http";
 import type {StorageService} from "@script-development/fs-storage";
-import type {LoadingService} from "@shared/services/loading";
+import type {LoadingService} from "@script-development/fs-loading";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "@script-development/fs-adapter-store";
 import type {Item} from "@shared/types/item";
 

@@ -1,5 +1,4 @@
-import {createLoadingService} from "@shared/services/loading";
-import {registerLoadingMiddleware} from "@shared/services/loading-middleware";
+import {createLoadingService, registerLoadingMiddleware} from "@script-development/fs-loading";
 
 import {familyHttpService} from "./http";
 
