@@ -63,5 +63,5 @@ Replace the local `createStorageService` implementation in `@shared/services/sto
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** [2026-03-31-fs-storage-migration.md](../journals/2026-03-31-fs-storage-migration.md)
