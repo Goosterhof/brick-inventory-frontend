@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type {Adapted} from "@shared/services/resource-adapter";
 import type {FamilySet, FamilySetStatus} from "@app/types/familySet";
+import type {Adapted} from "@shared/services/resource-adapter";
 
 import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
 import {familySetStoreModule} from "@app/stores";

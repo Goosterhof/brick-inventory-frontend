@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
-
 import registry from "@shared/generated/component-registry.json";
+import {computed, ref} from "vue";
 
 import SectionHeading from "./SectionHeading.vue";
 

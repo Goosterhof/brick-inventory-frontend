@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import {ref, onMounted, onUnmounted} from "vue";
-
 import {ensureRefValueExists} from "@shared/helpers/type-check";
+import {ref, onMounted, onUnmounted} from "vue";
 
 const {loadingText, retryText, captureText} = defineProps<{
     loadingText: string;
