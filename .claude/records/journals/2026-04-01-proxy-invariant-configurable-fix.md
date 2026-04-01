@@ -11,21 +11,21 @@
 
 Surgical fix: changed `configurable: false` to `configurable: true` on all 6 `Object.defineProperty` calls in the existing-resource branch of `resourceAdapter()`. Added two targeted unit tests proving the fix works and that `writable: false` still protects against reassignment. ADR-006 was already amended with the Proxy invariant constraint documentation.
 
-| Action   | File                                                         | Notes                                                                                       |
-| -------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| Modified | `src/shared/services/resource-adapter.ts`                    | Changed `configurable: false` to `configurable: true` on 6 `Object.defineProperty` calls    |
-| Modified | `src/tests/unit/shared/services/resource-adapter.spec.ts`    | Added 2 new tests: ref() wrapping without TypeError, writable:false still prevents assignment |
-| Modified | `.claude/docs/decisions/006-resource-adapter-frozen-mutable.md` | ADR amendment documenting Proxy invariant constraint (pre-existing, verified in scope)      |
+| Action   | File                                                            | Notes                                                                                         |
+| -------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Modified | `src/shared/services/resource-adapter.ts`                       | Changed `configurable: false` to `configurable: true` on 6 `Object.defineProperty` calls      |
+| Modified | `src/tests/unit/shared/services/resource-adapter.spec.ts`       | Added 2 new tests: ref() wrapping without TypeError, writable:false still prevents assignment |
+| Modified | `.claude/docs/decisions/006-resource-adapter-frozen-mutable.md` | ADR amendment documenting Proxy invariant constraint (pre-existing, verified in scope)        |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                        | Met | Notes                                                                                    |
-| --------------------------------------------------------------------------- | --- | ---------------------------------------------------------------------------------------- |
-| All 6 `Object.defineProperty` calls use `configurable: true`               | Yes | Lines 155, 162, 168, 174, 180, 186                                                      |
-| New unit test: `Adapted<T>` in `ref()`, access `.mutable` — no TypeError   | Yes | Test validates Vue auto-unwraps without Proxy invariant violation                        |
-| New unit test: `adapted.mutable = newValue` still throws (writable: false)  | Yes | Confirms `writable: false` is the real guard, not `configurable`                         |
-| ADR-006 amended with Proxy invariant section                                | Yes | Amendment section added with full explanation of the ECMAScript constraint                |
-| Full gauntlet passes                                                        | Yes | format, lint, lint:vue, type-check, knip, size, test:coverage all green                  |
+| Acceptance Criterion                                                       | Met | Notes                                                                      |
+| -------------------------------------------------------------------------- | --- | -------------------------------------------------------------------------- |
+| All 6 `Object.defineProperty` calls use `configurable: true`               | Yes | Lines 155, 162, 168, 174, 180, 186                                         |
+| New unit test: `Adapted<T>` in `ref()`, access `.mutable` — no TypeError   | Yes | Test validates Vue auto-unwraps without Proxy invariant violation          |
+| New unit test: `adapted.mutable = newValue` still throws (writable: false) | Yes | Confirms `writable: false` is the real guard, not `configurable`           |
+| ADR-006 amended with Proxy invariant section                               | Yes | Amendment section added with full explanation of the ECMAScript constraint |
+| Full gauntlet passes                                                       | Yes | format, lint, lint:vue, type-check, knip, size, test:coverage all green    |
 
 ## Decisions Made
 
@@ -45,7 +45,7 @@ Surgical fix: changed `configurable: false` to `configurable: true` on all 6 `Ob
 
 ## Showcase Readiness
 
-Yes. The fix is minimal and precisely targeted — exactly what a senior reviewer wants to see for a runtime invariant bug. The ADR amendment documents the *why* thoroughly, the tests cover both the positive case (fix works) and the invariant (protection still holds). The commit message is clean. This is a textbook defensive fix.
+Yes. The fix is minimal and precisely targeted — exactly what a senior reviewer wants to see for a runtime invariant bug. The ADR amendment documents the _why_ thoroughly, the tests cover both the positive case (fix works) and the invariant (protection still holds). The commit message is clean. This is a textbook defensive fix.
 
 ## Proposed Knowledge Updates
 
@@ -70,10 +70,10 @@ Yes. The fix is minimal and precisely targeted — exactly what a senior reviewe
 
 ### Training Proposals
 
-| Proposal                                                                                       | Context                                                        | Shift Evidence                                  |
-| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------- |
-| When testing Vue reactive wrapping, always verify auto-unwrap behavior before writing assertions | Initial test assertion was wrong due to not accounting for unwrap | 2026-04-01-proxy-invariant-configurable-fix     |
-| When a permit has investigation notes, address them explicitly even if not in acceptance criteria | E2E discrepancy was noted but not investigated or documented     | 2026-04-01-proxy-invariant-configurable-fix     |
+| Proposal                                                                                          | Context                                                           | Shift Evidence                              |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------- |
+| When testing Vue reactive wrapping, always verify auto-unwrap behavior before writing assertions  | Initial test assertion was wrong due to not accounting for unwrap | 2026-04-01-proxy-invariant-configurable-fix |
+| When a permit has investigation notes, address them explicitly even if not in acceptance criteria | E2E discrepancy was noted but not investigated or documented      | 2026-04-01-proxy-invariant-configurable-fix |
 
 ---
 
@@ -99,9 +99,9 @@ Strong. A senior reviewer seeing this diff would note: minimal change, well-test
 
 ### Training Proposal Dispositions
 
-| Proposal                                                                                       | Disposition | Rationale                                                                                                          |
-| ---------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| When testing Vue reactive wrapping, always verify auto-unwrap behavior before writing assertions | Candidate   | Valid — Vue's auto-unwrap is a common source of test assertion bugs. Needs second confirmation to graduate.         |
+| Proposal                                                                                          | Disposition | Rationale                                                                                                           |
+| ------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| When testing Vue reactive wrapping, always verify auto-unwrap behavior before writing assertions  | Candidate   | Valid — Vue's auto-unwrap is a common source of test assertion bugs. Needs second confirmation to graduate.         |
 | When a permit has investigation notes, address them explicitly even if not in acceptance criteria | Candidate   | Valid — permits include context for a reason. Investigation notes are soft requirements. Needs second confirmation. |
 
 ### Notes for the Architect
