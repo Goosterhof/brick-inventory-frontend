@@ -1,4 +1,4 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
@@ -6,7 +6,7 @@ import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 describe("SectionHeading", () => {
     it("should render the number and title", () => {
         // Act
-        const wrapper = mount(SectionHeading, {props: {number: "01", title: "Color Palette"}});
+        const wrapper = shallowMount(SectionHeading, {props: {number: "01", title: "Color Palette"}});
 
         // Assert
         expect(wrapper.text()).toContain("01");
@@ -15,7 +15,7 @@ describe("SectionHeading", () => {
 
     it("should render the number as aria-hidden decorative element", () => {
         // Act
-        const wrapper = mount(SectionHeading, {props: {number: "03", title: "The Snap Principle"}});
+        const wrapper = shallowMount(SectionHeading, {props: {number: "03", title: "The Snap Principle"}});
 
         // Assert
         const decorativeSpan = wrapper.find("[aria-hidden='true']");
@@ -25,7 +25,7 @@ describe("SectionHeading", () => {
 
     it("should render the title as an h2 heading", () => {
         // Act
-        const wrapper = mount(SectionHeading, {props: {number: "02", title: "Typography Specimen"}});
+        const wrapper = shallowMount(SectionHeading, {props: {number: "02", title: "Typography Specimen"}});
 
         // Assert
         const heading = wrapper.find("h2");

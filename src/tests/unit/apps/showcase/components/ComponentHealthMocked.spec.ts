@@ -1,8 +1,9 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import ComponentHealth from "@/apps/showcase/components/ComponentHealth.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 vi.mock("@shared/generated/component-registry.json", () => ({
     default: {
@@ -39,9 +40,11 @@ vi.mock("@shared/generated/component-registry.json", () => ({
 }));
 
 describe("ComponentHealth (mocked registry)", () => {
+    const stubs = {SectionHeading};
+
     it("should render non-required model without asterisk and required model with asterisk", async () => {
         // Arrange
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs}});
 
         // Act — expand ModelWidget
         const buttons = wrapper.findAll("button");
@@ -58,7 +61,7 @@ describe("ComponentHealth (mocked registry)", () => {
 
     it("should show zero API surface message for EmptyWidget", async () => {
         // Arrange
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs}});
 
         // Act — expand EmptyWidget
         const buttons = wrapper.findAll("button");
@@ -72,7 +75,7 @@ describe("ComponentHealth (mocked registry)", () => {
 
     it("should highlight churn badge when commits match max and max is above 1", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs}});
 
         // Assert — ModelWidget has 5 commits which equals maxChurnCommits
         // The churn badge should render with highlight background
@@ -81,7 +84,7 @@ describe("ComponentHealth (mocked registry)", () => {
 
     it("should show depth badge for composite components only", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs}});
 
         // Assert — ModelWidget has depth 2, EmptyWidget has depth 0
         const depthBadges = wrapper.findAll("span").filter((s) => /^d\d+$/.test(s.text()));
@@ -91,7 +94,7 @@ describe("ComponentHealth (mocked registry)", () => {
 
     it("should highlight multi-app components in adoption badge", () => {
         // Act
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs}});
 
         // Assert — summary shows 1 multi-app component
         expect(wrapper.text()).toContain("1"); // multiAppCount
@@ -99,7 +102,7 @@ describe("ComponentHealth (mocked registry)", () => {
 
     it("should show domain names and file names in consumer map", async () => {
         // Arrange
-        const wrapper = mount(ComponentHealth);
+        const wrapper = shallowMount(ComponentHealth, {global: {stubs}});
 
         // Act — expand ModelWidget to see consumer map
         const buttons = wrapper.findAll("button");

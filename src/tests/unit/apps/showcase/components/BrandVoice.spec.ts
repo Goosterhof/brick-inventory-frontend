@@ -1,12 +1,15 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 import BrandVoice from "@/apps/showcase/components/BrandVoice.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 describe("BrandVoice", () => {
+    const stubs = {SectionHeading};
+
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(BrandVoice);
+        const wrapper = shallowMount(BrandVoice, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("06");
@@ -15,7 +18,7 @@ describe("BrandVoice", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(BrandVoice);
+        const wrapper = shallowMount(BrandVoice, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("section#voice").exists()).toBe(true);
@@ -23,7 +26,7 @@ describe("BrandVoice", () => {
 
     it("should render all voice specimen categories", () => {
         // Act
-        const wrapper = mount(BrandVoice);
+        const wrapper = shallowMount(BrandVoice, {global: {stubs}});
 
         // Assert
         const labels = wrapper.findAll(".brick-label");

@@ -1,13 +1,18 @@
-import {mount} from "@vue/test-utils";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import ToastMessage from "@shared/components/ToastMessage.vue";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 import ToastServiceDemo from "@/apps/showcase/components/ToastServiceDemo.vue";
 
 describe("ToastServiceDemo", () => {
+    const stubs = {SectionHeading, PrimaryButton, ToastMessage, ToastContainer: false as const};
+
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("10");
@@ -16,7 +21,7 @@ describe("ToastServiceDemo", () => {
 
     it("should render all demo subsections", () => {
         // Act
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Assert
         const labels = wrapper.findAll(".brick-label");
@@ -29,7 +34,7 @@ describe("ToastServiceDemo", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("section#toast-service").exists()).toBe(true);
@@ -37,7 +42,7 @@ describe("ToastServiceDemo", () => {
 
     it("should show a success toast when clicking Success Toast", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Act
         const successBtn = wrapper.findAll("button").find((b) => b.text() === "Success Toast");
@@ -51,7 +56,7 @@ describe("ToastServiceDemo", () => {
 
     it("should show an error toast when clicking Error Toast", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Act
         const errorBtn = wrapper.findAll("button").find((b) => b.text() === "Error Toast");
@@ -64,7 +69,7 @@ describe("ToastServiceDemo", () => {
 
     it("should enforce FIFO max of 4 when showing 6 toasts", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Act
         const showManyBtn = wrapper.findAll("button").find((b) => b.text() === "Show 6 Toasts");
@@ -79,7 +84,7 @@ describe("ToastServiceDemo", () => {
 
     it("should display last toast ID after showing a toast", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Act
         const showBtn = wrapper.findAll("button").find((b) => b.text() === "Show Toast");
@@ -92,7 +97,7 @@ describe("ToastServiceDemo", () => {
 
     it("should hide last toast and clear lastToastId when clicking Hide Last", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         const showBtn = wrapper.findAll("button").find((b) => b.text() === "Show Toast");
         await showBtn?.trigger("click");
@@ -110,7 +115,7 @@ describe("ToastServiceDemo", () => {
 
     it("should disable Hide Last button when no toast ID is available", () => {
         // Act
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Assert
         const hideBtn = wrapper.findAll("button").find((b) => b.text() === "Hide Last");
@@ -119,7 +124,7 @@ describe("ToastServiceDemo", () => {
 
     it("should log hide events", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         const showBtn = wrapper.findAll("button").find((b) => b.text() === "Show Toast");
         await showBtn?.trigger("click");
@@ -136,7 +141,7 @@ describe("ToastServiceDemo", () => {
 
     it("should show and clear the event log", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         const successBtn = wrapper.findAll("button").find((b) => b.text() === "Success Toast");
         await successBtn?.trigger("click");
@@ -154,7 +159,7 @@ describe("ToastServiceDemo", () => {
 
     it("should render the container usage code snippet", () => {
         // Act
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("pre").text()).toContain("ToastContainerComponent");
@@ -162,7 +167,7 @@ describe("ToastServiceDemo", () => {
 
     it("should limit event log to 10 entries", async () => {
         // Arrange
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
         const successBtn = wrapper.findAll("button").find((b) => b.text() === "Success Toast");
 
         // Act — show 12 toasts to generate 12 log entries
@@ -179,7 +184,7 @@ describe("ToastServiceDemo", () => {
 
     it("should not attempt hide when lastToastId is null", async () => {
         // Arrange — show a toast and hide it so lastToastId becomes null
-        const wrapper = mount(ToastServiceDemo);
+        const wrapper = shallowMount(ToastServiceDemo, {global: {stubs}});
 
         const showBtn = wrapper.findAll("button").find((b) => b.text() === "Show Toast");
         await showBtn?.trigger("click");

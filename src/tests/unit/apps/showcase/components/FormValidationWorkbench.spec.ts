@@ -3,13 +3,17 @@ import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import {mount} from "@vue/test-utils";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import {shallowMount} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import FormValidationWorkbench from "@/apps/showcase/components/FormValidationWorkbench.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 describe("FormValidationWorkbench", () => {
+    const stubs = {SectionHeading, TextInput, NumberInput, SelectInput, DateInput, TextareaInput, PrimaryButton};
+
     beforeEach(() => {
         vi.useFakeTimers();
     });
@@ -20,7 +24,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("11");
@@ -29,7 +33,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("section#form-validation-workbench").exists()).toBe(true);
@@ -37,7 +41,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render all demo subsections", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         const labels = wrapper.findAll(".brick-label");
@@ -49,7 +53,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render all six form inputs", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("Set Name");
@@ -62,7 +66,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render three submit buttons", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         const buttons = wrapper.findAll("button");
@@ -74,7 +78,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render the inspector panel with empty initial state", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         const inspectorJson = wrapper.find('[data-testid="inspector-json"]');
@@ -84,7 +88,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render the how-it-works code snippet", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("useValidationErrors<SetFormField>(httpService)");
@@ -93,7 +97,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should show success message and reset form after successful submit", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
         const nameInput = wrapper.findAllComponents(TextInput).find((c) => c.props("label") === "Set Name");
         await nameInput?.setValue("Millennium Falcon");
 
@@ -122,7 +126,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should show submitting state during success submission", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Act
         const successBtn = wrapper.findAll("button").find((b) => b.text() === "Submit (Success)");
@@ -140,7 +144,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should display validation errors on all fields after 422 response", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Act
         const errorBtn = wrapper.findAll("button").find((b) => b.text() === "Submit (422 Errors)");
@@ -158,7 +162,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should show validation errors in inspector panel after 422 response", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Act
         const errorBtn = wrapper.findAll("button").find((b) => b.text() === "Submit (422 Errors)");
@@ -177,7 +181,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should display server error message after non-422 error", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Act
         const serverErrorBtn = wrapper.findAll("button").find((b) => b.text() === "Submit (Server Error)");
@@ -190,7 +194,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should clear validation errors when form fields change", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Trigger 422 errors first
         const errorBtn = wrapper.findAll("button").find((b) => b.text() === "Submit (422 Errors)");
@@ -212,7 +216,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should clear server error when form fields change", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Trigger server error first
         const serverErrorBtn = wrapper.findAll("button").find((b) => b.text() === "Submit (Server Error)");
@@ -231,7 +235,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should not show success message or server error initially", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).not.toContain("Set added successfully!");
@@ -240,7 +244,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render select input with theme options", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("Star Wars");
@@ -251,7 +255,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should render textarea with optional label", () => {
         // Act
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Assert
         const textarea = wrapper.findComponent(TextareaInput);
@@ -261,7 +265,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should trigger watcher without errors present to cover the no-op branch", async () => {
         // Arrange — mount with no errors (initial state)
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Act — change a form field when there are no errors
         const nameInput = wrapper.findAllComponents(TextInput).find((c) => c.props("label") === "Set Name");
@@ -275,7 +279,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should update all form field values via v-model", async () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Act — emit update:modelValue on each input component
         const setNumberInput = wrapper.findAllComponents(TextInput).find((c) => c.props("label") === "Set Number");
@@ -308,7 +312,7 @@ describe("FormValidationWorkbench", () => {
 
     it("should clean up middleware on unmount", () => {
         // Arrange
-        const wrapper = mount(FormValidationWorkbench);
+        const wrapper = shallowMount(FormValidationWorkbench, {global: {stubs}});
 
         // Act — unmount triggers onUnmounted which calls the unregister callback
         wrapper.unmount();

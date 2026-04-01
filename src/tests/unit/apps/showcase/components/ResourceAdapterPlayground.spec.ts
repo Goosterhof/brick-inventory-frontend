@@ -2,28 +2,31 @@ import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 
 import ResourceAdapterPlayground from "@/apps/showcase/components/ResourceAdapterPlayground.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 describe("ResourceAdapterPlayground", () => {
+    const stubs = {SectionHeading, TextInput, NumberInput, PrimaryButton, DangerButton};
+
     it("should render the section heading with correct number and title", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.text()).toContain("12");
         expect(wrapper.text()).toContain("Resource Adapter Playground");
     });
 
     it("should render the section element with correct id", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.find("section#resource-adapter-playground").exists()).toBe(true);
     });
 
     it("should render all subsections", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const labels = wrapper.findAll(".brick-label");
         const labelTexts = labels.map((l) => l.text());
@@ -35,7 +38,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should render the creation form with three inputs", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.text()).toContain("Display Name");
         expect(wrapper.text()).toContain("Part Count");
@@ -43,7 +46,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should render create and reset form buttons", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const createBtn = wrapper.find('[data-testid="create-btn"]');
         const resetNewBtn = wrapper.find('[data-testid="reset-new-btn"]');
@@ -52,7 +55,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show camelCase and snake_case views with default values", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const camelView = wrapper.find('[data-testid="camel-case-view"]');
         const snakeView = wrapper.find('[data-testid="snake-case-view"]');
@@ -67,32 +70,32 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show empty store message when no items exist", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.text()).toContain("No minifigs in store. Create one above.");
     });
 
     it("should not show last action bar initially", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.find('[data-testid="last-action"]').exists()).toBe(false);
     });
 
     it("should not show edit panel initially", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.find('[data-testid="patch-btn"]').exists()).toBe(false);
     });
 
     it("should show storage json initially as empty object", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const storageJson = wrapper.find('[data-testid="storage-json"]');
         expect(storageJson.text()).toBe("{}");
     });
 
     it("should render the how-it-works section content", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.text()).toContain("Resource Adapter");
         expect(wrapper.text()).toContain("Adapter Store Module");
@@ -101,7 +104,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should create a minifig and show it in the store", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Fill in the form
         const textInputs = wrapper.findAllComponents(TextInput);
@@ -124,7 +127,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show plural items label when multiple items exist", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create first item
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -138,7 +141,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should select a store item and show the edit panel", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create an item
         const textInputs = wrapper.findAllComponents(TextInput);
@@ -167,7 +170,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show display name of unnamed item as (unnamed)", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create with empty default name
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -177,7 +180,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should patch an existing item", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create an item
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -204,7 +207,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should reset an existing item to its saved state", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create an item with a name
         const textInputs = wrapper.findAllComponents(TextInput);
@@ -237,7 +240,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should delete an existing item", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create an item
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -264,7 +267,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should reset the new form to defaults", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Change the form values
         const textInputs = wrapper.findAllComponents(TextInput);
@@ -286,7 +289,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should clear the storage mock", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create an item to populate storage
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -309,7 +312,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should update the case conversion views reactively when form changes", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const textInputs = wrapper.findAllComponents(TextInput);
         const displayNameInput = textInputs.find((c) => c.props("label") === "Display Name");
@@ -324,7 +327,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show persist data in storage json after creating", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
         await nextTick();
@@ -335,7 +338,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should auto-select the created item", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const textInputs = wrapper.findAllComponents(TextInput);
         const displayNameInput = textInputs.find((c) => c.props("label") === "Display Name");
@@ -351,7 +354,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show frozen and mutable views for selected item", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const textInputs = wrapper.findAllComponents(TextInput);
         const displayNameInput = textInputs.find((c) => c.props("label") === "Display Name");
@@ -373,7 +376,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should highlight selected store card with different styling", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create two items
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -389,7 +392,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should clear selected item when the watcher detects deletion from store", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create and auto-select
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -407,14 +410,14 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should handle patch when no item is selected (no-op)", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // No item selected, patch button not visible — but we can verify the component doesn't error
         expect(wrapper.find('[data-testid="patch-btn"]').exists()).toBe(false);
     });
 
     it("should render the clear storage button", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const clearBtn = wrapper.find('[data-testid="clear-storage-btn"]');
         expect(clearBtn.exists()).toBe(true);
@@ -422,7 +425,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should use DangerButton for destructive actions", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const dangerButtons = wrapper.findAllComponents(DangerButton);
         const dangerTexts = dangerButtons.map((b) => b.text());
@@ -431,7 +434,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should use PrimaryButton for create action", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const primaryButtons = wrapper.findAllComponents(PrimaryButton);
         const primaryTexts = primaryButtons.map((b) => b.text());
@@ -439,7 +442,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should update part count via number input", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const numberInput = wrapper.findComponent(NumberInput);
         numberInput.vm.$emit("update:modelValue", 10);
@@ -450,7 +453,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show the watcher clearing selection when all items are deleted from store via clear storage", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create an item
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -470,7 +473,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should render descriptive text in intro paragraph", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.text()).toContain("resourceAdapter");
         expect(wrapper.text()).toContain("createAdapterStoreModule");
@@ -478,7 +481,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should render technical annotations in code panels", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.text()).toContain("storeModule.generateNew()");
         expect(wrapper.text()).toContain("NewAdapted<Minifig>");
@@ -487,13 +490,13 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should render store module description annotation", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.text()).toContain("ComputedRef<Adapted<Minifig>[]>");
     });
 
     it("should update theme group in create form", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         const textInputs = wrapper.findAllComponents(TextInput);
         const themeGroupInput = textInputs.find((c) => c.props("label") === "Theme Group");
@@ -505,7 +508,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should interact with all edit panel inputs", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         // Create and auto-select an item
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
@@ -530,7 +533,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should not render selected snake case view when no item selected", () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         expect(wrapper.find('[data-testid="selected-snake-view"]').exists()).toBe(false);
         expect(wrapper.find('[data-testid="frozen-view"]').exists()).toBe(false);
@@ -538,7 +541,7 @@ describe("ResourceAdapterPlayground", () => {
     });
 
     it("should show edit panel annotation text when item selected", async () => {
-        const wrapper = mount(ResourceAdapterPlayground);
+        const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});
 
         await wrapper.find('[data-testid="create-btn"]').trigger("click");
         await nextTick();

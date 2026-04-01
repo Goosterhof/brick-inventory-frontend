@@ -1,9 +1,85 @@
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import ComponentHealth from "@/apps/showcase/components/ComponentHealth.vue";
-import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
+
+const SectionHeading = {
+    name: "SectionHeading",
+    props: {number: String, title: String},
+    template: "<div>{{ number }} {{ title }}</div>",
+};
+
+// Mock the heavy component-registry.json (~54KB, 32 components) to cut import chain cost (ADR-010).
+// The mock provides enough structure for all 14 tests: alphabetical ordering, badges, expansion,
+// zero-API-surface, required models, consumer maps, depth badges, and root domain labels.
+vi.mock("@shared/generated/component-registry.json", () => ({
+    default: {
+        meta: {componentCount: 4, churnWindowDays: 30},
+        components: {
+            BackButton: {
+                path: "src/shared/components/BackButton.vue",
+                category: null,
+                consumers: {families: {sets: ["SetsPage.vue"]}},
+                adoption: {apps: 1, domains: 1},
+                apiSurface: {
+                    props: [{name: "disabled", required: false}],
+                    emits: [{name: "click"}],
+                    slots: [{name: "default"}],
+                    models: [],
+                },
+                churn: {commits: 2, linesChanged: 30},
+                dependencyDepth: 1,
+            },
+            SectionDivider: {
+                path: "src/shared/components/SectionDivider.vue",
+                category: null,
+                consumers: {showcase: {_root: ["App.vue"]}},
+                adoption: {apps: 1, domains: 1},
+                apiSurface: {props: [], emits: [], slots: [], models: []},
+                churn: {commits: 1, linesChanged: 5},
+                dependencyDepth: 0,
+            },
+            TextInput: {
+                path: "src/shared/components/forms/inputs/TextInput.vue",
+                category: "forms/inputs",
+                consumers: {
+                    families: {sets: ["CreateSetPage.vue"], storage: ["StoragePage.vue"]},
+                    admin: {_root: ["AdminForm.vue"]},
+                },
+                adoption: {apps: 2, domains: 3},
+                apiSurface: {
+                    props: [
+                        {name: "label", required: true},
+                        {name: "disabled", required: false},
+                    ],
+                    emits: [],
+                    slots: [],
+                    models: [{name: "modelValue", required: true}],
+                },
+                churn: {commits: 4, linesChanged: 80},
+                dependencyDepth: 0,
+            },
+            PrimaryButton: {
+                path: "src/shared/components/PrimaryButton.vue",
+                category: null,
+                consumers: {showcase: {_root: ["ShowcasePage.vue"]}, families: {home: ["HomePage.vue"]}},
+                adoption: {apps: 2, domains: 2},
+                apiSurface: {
+                    props: [
+                        {name: "disabled", required: false},
+                        {name: "type", required: false},
+                    ],
+                    emits: [{name: "click"}],
+                    slots: [{name: "default"}],
+                    models: [],
+                },
+                churn: {commits: 3, linesChanged: 50},
+                dependencyDepth: 0,
+            },
+        },
+    },
+}));
 
 describe("ComponentHealth", () => {
     it("should render the section heading with correct number and title", () => {

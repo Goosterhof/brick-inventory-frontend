@@ -1,4 +1,4 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 import {nextTick} from "vue";
 
@@ -7,7 +7,7 @@ import ShowcaseHero from "@/apps/showcase/components/ShowcaseHero.vue";
 describe("ShowcaseHero", () => {
     it("should render the hero section with title and subtitle", () => {
         // Act
-        const wrapper = mount(ShowcaseHero);
+        const wrapper = shallowMount(ShowcaseHero);
 
         // Assert
         expect(wrapper.text()).toContain("Brick");
@@ -17,7 +17,7 @@ describe("ShowcaseHero", () => {
 
     it("should render the tagline", () => {
         // Act
-        const wrapper = mount(ShowcaseHero);
+        const wrapper = shallowMount(ShowcaseHero);
 
         // Assert
         expect(wrapper.text()).toContain("Every brick has a place. This is where they're made.");
@@ -25,7 +25,7 @@ describe("ShowcaseHero", () => {
 
     it("should set isVisible to true on mount triggering animation classes", async () => {
         // Act
-        const wrapper = mount(ShowcaseHero);
+        const wrapper = shallowMount(ShowcaseHero);
         await nextTick();
 
         // Assert — after mount + tick, isVisible is true, so animated elements get translate-x-0
@@ -39,7 +39,7 @@ describe("ShowcaseHero", () => {
 
     it("should render three decorative brick blocks", () => {
         // Act
-        const wrapper = mount(ShowcaseHero);
+        const wrapper = shallowMount(ShowcaseHero);
 
         // Assert
         const brickBlocks = wrapper.findAll("[w='16'][h='16']");

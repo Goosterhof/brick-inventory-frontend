@@ -1,74 +1,126 @@
 import type {ComponentPublicInstance} from "vue";
 
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import ComponentGallery from "@/apps/showcase/components/ComponentGallery.vue";
 
+const SectionHeading = {
+    name: "SectionHeading",
+    props: {number: String, title: String},
+    template: "<div>{{ number }} {{ title }}</div>",
+};
+
 // Mock heavy shared components to keep import chain under 1000ms (ADR-010).
 // Using globalThis stubs: vi.mock factories are hoisted above imports, so we
 // use vi.hoisted to make the factory function available in the hoisted scope.
-const {mkStub} = vi.hoisted(() => {
+const {mkStub, mkDialogStub, mkModelStub, mkButtonStub, mkToastStub} = vi.hoisted(() => {
     const mkStub = (name: string, slotted: boolean) => ({
         name,
-        props: {
-            open: Boolean,
-            to: String,
-            active: Boolean,
-            disabled: Boolean,
-            modelValue: [String, Number, Object],
-            label: String,
-            optional: Boolean,
-            min: Number,
-            max: Number,
-            for: String,
-            message: String,
-            variant: String,
-            title: String,
-            value: String,
-            name: String,
-            partNum: String,
-            quantity: Number,
-            colorName: String,
-            colorRgb: String,
-            spare: Boolean,
-            columns: Number,
-            rows: Number,
-            color: String,
-            shadow: Boolean,
-        },
-        emits: ["update:modelValue", "click", "close", "confirm", "cancel"],
         template: slotted
             ? `<div data-stub="${name}"><slot /><slot name="title" /><slot name="confirm" /><slot name="cancel" /><slot name="links" /><slot name="mobile-links" /><slot name="actions" /></div>`
             : `<div data-stub="${name}"><slot /></div>`,
     });
-    return {mkStub};
+    const mkDialogStub = (name: string) => ({
+        name,
+        props: {open: Boolean},
+        emits: ["close", "confirm", "cancel"],
+        template: `<div data-stub="${name}"><slot /><slot name="title" /><slot name="confirm" /><slot name="cancel" /></div>`,
+    });
+    const mkModelStub = (name: string) => ({
+        name,
+        props: {modelValue: [String, Number, Object]},
+        emits: ["update:modelValue"],
+        template: `<div data-stub="${name}"><slot /></div>`,
+    });
+    const mkButtonStub = (name: string) => ({
+        name,
+        emits: ["click"],
+        template: `<button @click="$emit('click')"><slot /></button>`,
+    });
+    const mkToastStub = () => ({
+        name: "ToastMessage",
+        props: {message: String},
+        emits: ["close"],
+        template: `<div>{{ message }}<button aria-label="Dismiss" @click="$emit('close')">x</button></div>`,
+    });
+    return {mkStub, mkDialogStub, mkModelStub, mkButtonStub, mkToastStub};
 });
 
 vi.mock("@shared/components/scanner/BarcodeScanner.vue", () => ({default: mkStub("BarcodeScanner", false)}));
 vi.mock("@shared/components/scanner/CameraCapture.vue", () => ({default: mkStub("CameraCapture", false)}));
-vi.mock("@shared/components/ModalDialog.vue", () => ({default: mkStub("ModalDialog", true)}));
-vi.mock("@shared/components/ConfirmDialog.vue", () => ({default: mkStub("ConfirmDialog", true)}));
+vi.mock("@shared/components/ModalDialog.vue", () => ({default: mkDialogStub("ModalDialog")}));
+vi.mock("@shared/components/ConfirmDialog.vue", () => ({default: mkDialogStub("ConfirmDialog")}));
 vi.mock("@shared/components/NavHeader.vue", () => ({default: mkStub("NavHeader", true)}));
 vi.mock("@shared/components/NavLink.vue", () => ({default: mkStub("NavLink", false)}));
 vi.mock("@shared/components/NavMobileLink.vue", () => ({default: mkStub("NavMobileLink", false)}));
 vi.mock("@shared/components/LegoBrick.vue", () => ({default: mkStub("LegoBrick", false)}));
-vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({default: mkStub("TextInput", false)}));
-vi.mock("@shared/components/forms/inputs/NumberInput.vue", () => ({default: mkStub("NumberInput", false)}));
-vi.mock("@shared/components/forms/inputs/SelectInput.vue", () => ({default: mkStub("SelectInput", true)}));
-vi.mock("@shared/components/forms/inputs/DateInput.vue", () => ({default: mkStub("DateInput", false)}));
-vi.mock("@shared/components/forms/inputs/TextareaInput.vue", () => ({default: mkStub("TextareaInput", false)}));
+vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({default: mkModelStub("TextInput")}));
+vi.mock("@shared/components/forms/inputs/NumberInput.vue", () => ({default: mkModelStub("NumberInput")}));
+vi.mock("@shared/components/forms/inputs/SelectInput.vue", () => ({default: mkModelStub("SelectInput")}));
+vi.mock("@shared/components/forms/inputs/DateInput.vue", () => ({default: mkModelStub("DateInput")}));
+vi.mock("@shared/components/forms/inputs/TextareaInput.vue", () => ({default: mkModelStub("TextareaInput")}));
 vi.mock("@shared/components/forms/FormError.vue", () => ({default: mkStub("FormError", false)}));
 vi.mock("@shared/components/forms/FormField.vue", () => ({default: mkStub("FormField", true)}));
 vi.mock("@shared/components/forms/FormLabel.vue", () => ({default: mkStub("FormLabel", true)}));
 vi.mock("@shared/components/LoadingState.vue", () => ({default: mkStub("LoadingState", false)}));
 vi.mock("@shared/components/PartListItem.vue", () => ({default: mkStub("PartListItem", false)}));
+vi.mock("@shared/components/PrimaryButton.vue", () => ({default: mkButtonStub("PrimaryButton")}));
+vi.mock("@shared/components/DangerButton.vue", () => ({default: mkButtonStub("DangerButton")}));
+vi.mock("@shared/components/BackButton.vue", () => ({default: mkButtonStub("BackButton")}));
+vi.mock("@shared/components/FilterChip.vue", () => ({default: mkButtonStub("FilterChip")}));
+vi.mock("@shared/components/ToastMessage.vue", () => ({default: mkToastStub()}));
+vi.mock("@shared/components/EmptyState.vue", () => ({default: mkStub("EmptyState", true)}));
+vi.mock("@shared/components/PageHeader.vue", () => ({default: mkStub("PageHeader", true)}));
+vi.mock("@shared/components/StatCard.vue", () => ({default: mkStub("StatCard", true)}));
+vi.mock("@shared/components/DetailRow.vue", () => ({default: mkStub("DetailRow", true)}));
+vi.mock("@shared/components/CardContainer.vue", () => ({default: mkStub("CardContainer", true)}));
+vi.mock("@shared/components/BadgeLabel.vue", () => ({default: mkStub("BadgeLabel", true)}));
+vi.mock("@shared/components/SectionDivider.vue", () => ({default: mkStub("SectionDivider", false)}));
+vi.mock("@shared/components/ListItemButton.vue", () => ({default: mkStub("ListItemButton", true)}));
 
 describe("ComponentGallery", () => {
+    // Prevent shallowMount from auto-stubbing vi.mock'd components — they are already lightweight stubs.
+    const mockedComponentNames = [
+        "BarcodeScanner",
+        "CameraCapture",
+        "ModalDialog",
+        "ConfirmDialog",
+        "NavHeader",
+        "NavLink",
+        "NavMobileLink",
+        "LegoBrick",
+        "TextInput",
+        "NumberInput",
+        "SelectInput",
+        "DateInput",
+        "TextareaInput",
+        "FormError",
+        "FormField",
+        "FormLabel",
+        "LoadingState",
+        "PartListItem",
+        "PrimaryButton",
+        "DangerButton",
+        "BackButton",
+        "FilterChip",
+        "ToastMessage",
+        "EmptyState",
+        "PageHeader",
+        "StatCard",
+        "DetailRow",
+        "CardContainer",
+        "BadgeLabel",
+        "SectionDivider",
+        "ListItemButton",
+    ] as const;
+    const noAutoStub = Object.fromEntries(mockedComponentNames.map((name) => [name, false as const]));
+    const stubs = {SectionHeading, ...noAutoStub};
+
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("04");
@@ -77,7 +129,7 @@ describe("ComponentGallery", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("section#components").exists()).toBe(true);
@@ -85,7 +137,7 @@ describe("ComponentGallery", () => {
 
     it("should render all gallery category labels", () => {
         // Act
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Assert
         const labels = wrapper.findAll(".brick-label");
@@ -112,7 +164,7 @@ describe("ComponentGallery", () => {
 
     it("should toggle modalOpen state when Open Modal is clicked", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Act
         const openButton = wrapper.findAll("button").find((b) => b.text().includes("Open Modal"));
@@ -126,7 +178,7 @@ describe("ComponentGallery", () => {
 
     it("should close the modal when Remove is clicked inside it", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
         const openButton = wrapper.findAll("button").find((b) => b.text().includes("Open Modal"));
         await openButton?.trigger("click");
         await nextTick();
@@ -143,7 +195,7 @@ describe("ComponentGallery", () => {
 
     it("should close the modal when Cancel is clicked inside it", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
         const openButton = wrapper.findAll("button").find((b) => b.text().includes("Open Modal"));
         await openButton?.trigger("click");
         await nextTick();
@@ -160,7 +212,7 @@ describe("ComponentGallery", () => {
 
     it("should toggle confirmOpen state when Delete Storage is clicked", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Act
         const deleteButton = wrapper.findAll("button").find((b) => b.text().includes("Delete Storage"));
@@ -174,7 +226,7 @@ describe("ComponentGallery", () => {
 
     it("should close the confirm dialog on confirm", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
         const deleteButton = wrapper.findAll("button").find((b) => b.text().includes("Delete Storage"));
         await deleteButton?.trigger("click");
         await nextTick();
@@ -190,7 +242,7 @@ describe("ComponentGallery", () => {
 
     it("should close the confirm dialog on cancel", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
         const deleteButton = wrapper.findAll("button").find((b) => b.text().includes("Delete Storage"));
         await deleteButton?.trigger("click");
         await nextTick();
@@ -206,7 +258,7 @@ describe("ComponentGallery", () => {
 
     it("should hide success toast when close is triggered", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Assert — both toasts visible initially
         expect(wrapper.text()).toContain("Set added to your inventory.");
@@ -223,7 +275,7 @@ describe("ComponentGallery", () => {
 
     it("should reset toasts when clicking the reset button", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Close both toasts
         const dismissButtons = wrapper.findAll("[aria-label='Dismiss']");
@@ -246,7 +298,7 @@ describe("ComponentGallery", () => {
 
     it("should toggle filter chips on click for all filter values", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Act — click each filter chip to activate and deactivate
         const filterNames = ["Sealed", "Built", "In Progress", "Incomplete"];
@@ -267,7 +319,7 @@ describe("ComponentGallery", () => {
 
     it("should render scanner component placeholders", () => {
         // Act
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("BarcodeScanner");
@@ -277,7 +329,7 @@ describe("ComponentGallery", () => {
 
     it("should render navigation component demos", () => {
         // Act
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("NavHeader");
@@ -287,7 +339,7 @@ describe("ComponentGallery", () => {
 
     it("should render the LegoBrick demo with multiple variants", () => {
         // Act
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("4x2 Red");
@@ -297,7 +349,7 @@ describe("ComponentGallery", () => {
 
     it("should update v-model values when form inputs change", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Act — type in the raw input fields
         const demoInput = wrapper.find("#demo-input");
@@ -334,7 +386,7 @@ describe("ComponentGallery", () => {
 
     it("should close the modal via ModalDialog close event", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Open the modal
         const openButton = wrapper.findAll("button").find((b) => b.text().includes("Open Modal"));
@@ -352,7 +404,7 @@ describe("ComponentGallery", () => {
 
     it("should exercise nav link click handlers via noop", async () => {
         // Arrange
-        const wrapper = mount(ComponentGallery);
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
         // Act — trigger click events on stubbed NavLink components
         const navLinks = wrapper.findAllComponents({name: "NavLink"});

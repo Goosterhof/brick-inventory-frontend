@@ -1,12 +1,15 @@
-import {mount} from "@vue/test-utils";
+import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it} from "vitest";
 
 import AntiPatterns from "@/apps/showcase/components/AntiPatterns.vue";
+import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 describe("AntiPatterns", () => {
+    const stubs = {SectionHeading};
+
     it("should render the section heading with correct number and title", () => {
         // Act
-        const wrapper = mount(AntiPatterns);
+        const wrapper = shallowMount(AntiPatterns, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("05");
@@ -15,7 +18,7 @@ describe("AntiPatterns", () => {
 
     it("should render the section element with correct id", () => {
         // Act
-        const wrapper = mount(AntiPatterns);
+        const wrapper = shallowMount(AntiPatterns, {global: {stubs}});
 
         // Assert
         expect(wrapper.find("section#anti-patterns").exists()).toBe(true);
@@ -23,7 +26,7 @@ describe("AntiPatterns", () => {
 
     it("should render all four anti-pattern comparisons", () => {
         // Act
-        const wrapper = mount(AntiPatterns);
+        const wrapper = shallowMount(AntiPatterns, {global: {stubs}});
 
         // Assert
         expect(wrapper.text()).toContain("Wrong — Rounded corners");

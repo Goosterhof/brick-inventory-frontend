@@ -597,4 +597,67 @@ describe("Architecture", () => {
             ).toEqual([]);
         });
     });
+
+    describe("mount boundary enforcement — unit tests use shallowMount, integration tests use mount", () => {
+        const TESTS_DIR = join(SRC_DIR, "tests");
+
+        const getTestSpecFiles = (dir: string): string[] => {
+            if (!dirExists(dir)) return [];
+            return readdirSync(dir, {recursive: true, encoding: "utf-8"})
+                .filter((file) => file.endsWith(".spec.ts"))
+                .map((file) => join(dir, file));
+        };
+
+        const getImportedNames = (filePath: string, fromModule: string): string[] => {
+            const content = readFileSync(filePath, "utf-8");
+            const names: string[] = [];
+            const regex = new RegExp(`import\\s*\\{([^}]+)\\}\\s*from\\s*["']${fromModule}["']`, "g");
+            let match: RegExpExecArray | null = null;
+            while ((match = regex.exec(content)) !== null) {
+                const imports = match[1];
+                if (imports) {
+                    for (const name of imports.split(",")) {
+                        names.push(name.trim());
+                    }
+                }
+            }
+            return names;
+        };
+
+        it("unit test files should not import mount from @vue/test-utils", () => {
+            const unitDir = join(TESTS_DIR, "unit");
+            const specFiles = getTestSpecFiles(unitDir);
+            const violations: string[] = [];
+
+            for (const file of specFiles) {
+                const importedNames = getImportedNames(file, "@vue/test-utils");
+                if (importedNames.includes("mount")) {
+                    violations.push(relative(SRC_DIR, file));
+                }
+            }
+
+            expect(
+                violations,
+                "Unit tests must use shallowMount, not mount. Use shallowMount with explicit unstubbing where needed.",
+            ).toEqual([]);
+        });
+
+        it("integration test files should not import shallowMount from @vue/test-utils", () => {
+            const integrationDir = join(TESTS_DIR, "integration");
+            const specFiles = getTestSpecFiles(integrationDir);
+            const violations: string[] = [];
+
+            for (const file of specFiles) {
+                const importedNames = getImportedNames(file, "@vue/test-utils");
+                if (importedNames.includes("shallowMount")) {
+                    violations.push(relative(SRC_DIR, file));
+                }
+            }
+
+            expect(
+                violations,
+                "Integration tests must use mount, not shallowMount. Integration tests verify component composition.",
+            ).toEqual([]);
+        });
+    });
 });
