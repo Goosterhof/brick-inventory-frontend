@@ -9,24 +9,24 @@
 
 ## Work Summary
 
-| Action | File | Notes |
-| --- | --- | --- |
-| Modified | `src/apps/families/types/part.ts` | Added `CursorPaginatedParts` interface for the flat cursor envelope |
-| Modified | `src/apps/families/domains/parts/pages/PartsPage.vue` | Extracted `fetchParts()` helper with `per_page=100` and cursor support; added `loadMore()`, `loadingMore` ref, `nextCursor` ref; added "Load More" button in template |
-| Modified | `src/apps/families/services/translation.ts` | Added `parts.loadMore` and `parts.loadingMore` keys (EN + NL) |
-| Modified | `src/tests/unit/apps/families/domains/parts/pages/PartsPage.spec.ts` | Updated 29 existing test mocks from bare arrays to cursor envelope format via `makeEnvelope()` helper; added 6 new pagination tests |
-| Modified | `src/tests/integration/apps/families/domains/parts/pages/PartsPage.spec.ts` | Updated 6 existing test mocks to envelope format; added 5 new pagination integration tests |
+| Action   | File                                                                        | Notes                                                                                                                                                                 |
+| -------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Modified | `src/apps/families/types/part.ts`                                           | Added `CursorPaginatedParts` interface for the flat cursor envelope                                                                                                   |
+| Modified | `src/apps/families/domains/parts/pages/PartsPage.vue`                       | Extracted `fetchParts()` helper with `per_page=100` and cursor support; added `loadMore()`, `loadingMore` ref, `nextCursor` ref; added "Load More" button in template |
+| Modified | `src/apps/families/services/translation.ts`                                 | Added `parts.loadMore` and `parts.loadingMore` keys (EN + NL)                                                                                                         |
+| Modified | `src/tests/unit/apps/families/domains/parts/pages/PartsPage.spec.ts`        | Updated 29 existing test mocks from bare arrays to cursor envelope format via `makeEnvelope()` helper; added 6 new pagination tests                                   |
+| Modified | `src/tests/integration/apps/families/domains/parts/pages/PartsPage.spec.ts` | Updated 6 existing test mocks to envelope format; added 5 new pagination integration tests                                                                            |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion | Met | Notes |
-| --- | --- | --- |
-| Parts page displays all parts, not just first 25 | Yes | Requests `per_page=100`; "Load More" button fetches subsequent pages via cursor |
-| Pagination metadata consumed correctly | Yes | `next_cursor` drives button visibility; `cursor` param sent on subsequent requests |
+| Acceptance Criterion                                  | Met | Notes                                                                                   |
+| ----------------------------------------------------- | --- | --------------------------------------------------------------------------------------- |
+| Parts page displays all parts, not just first 25      | Yes | Requests `per_page=100`; "Load More" button fetches subsequent pages via cursor         |
+| Pagination metadata consumed correctly                | Yes | `next_cursor` drives button visibility; `cursor` param sent on subsequent requests      |
 | Loading state visible while fetching additional pages | Yes | Separate `loadingMore` ref; button shows "Loading..." text and is disabled during fetch |
-| Empty state still works correctly | Yes | Envelope with empty `data` array renders EmptyState as before |
-| All existing tests pass; new tests cover pagination | Yes | 35 unit tests, 11 integration tests — all passing |
-| Quality gauntlet passes | Yes | All 7 checks pass |
+| Empty state still works correctly                     | Yes | Envelope with empty `data` array renders EmptyState as before                           |
+| All existing tests pass; new tests cover pagination   | Yes | 35 unit tests, 11 integration tests — all passing                                       |
+| Quality gauntlet passes                               | Yes | All 7 checks pass                                                                       |
 
 ## Decisions Made
 
@@ -40,15 +40,15 @@
 
 ## Quality Gauntlet
 
-| Check | Result | Notes |
-| --- | --- | --- |
-| format:check | Pass | |
-| lint | Pass | 0 errors |
-| lint:vue | Pass | |
-| type-check | Pass | |
-| test:coverage | Pass | 100% lines, branches, functions, statements |
-| knip | Pass | |
-| size | Pass | families: 110.94kB / 350kB limit |
+| Check         | Result | Notes                                       |
+| ------------- | ------ | ------------------------------------------- |
+| format:check  | Pass   |                                             |
+| lint          | Pass   | 0 errors                                    |
+| lint:vue      | Pass   |                                             |
+| type-check    | Pass   |                                             |
+| test:coverage | Pass   | 100% lines, branches, functions, statements |
+| knip          | Pass   |                                             |
+| size          | Pass   | families: 110.94kB / 350kB limit            |
 
 ## Showcase Readiness
 
@@ -78,8 +78,8 @@ Solid. The implementation is minimal and correct — no over-abstraction, no pre
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
+| Proposal                                                                                                    | Context                                                                           | Shift Evidence |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------- |
 | When consuming a paginated API, always verify error handling on subsequent pages, not just the initial load | Page 2+ errors silently swallow — entries are preserved but user gets no feedback | This journal # |
 
 ---
@@ -109,9 +109,9 @@ Strengthens the portfolio. The implementation demonstrates disciplined consumpti
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Verify error handling on subsequent paginated pages | Candidate | Valid observation. Error swallowing on page 2+ is a real UX gap. First sighting — needs a second confirming session to graduate. |
+| Proposal                                            | Disposition | Rationale                                                                                                                        |
+| --------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Verify error handling on subsequent paginated pages | Candidate   | Valid observation. Error swallowing on page 2+ is a real UX gap. First sighting — needs a second confirming session to graduate. |
 
 ### Notes for the Architect
 
