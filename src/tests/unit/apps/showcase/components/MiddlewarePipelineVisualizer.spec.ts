@@ -16,12 +16,13 @@ const {mkButtonStub} = vi.hoisted(() => ({
 
 vi.mock("@shared/components/PrimaryButton.vue", () => ({default: mkButtonStub("PrimaryButton")}));
 vi.mock("@shared/components/DangerButton.vue", () => ({default: mkButtonStub("DangerButton")}));
-
-const SectionHeading = {
-    name: "SectionHeading",
-    props: {number: String, title: String},
-    template: "<div>{{ number }} {{ title }}</div>",
-};
+vi.mock("@/apps/showcase/components/SectionHeading.vue", () => ({
+    default: {
+        name: "SectionHeading",
+        props: {number: String, title: String},
+        template: "<div>{{ number }} {{ title }}</div>",
+    },
+}));
 
 async function advanceAllStages(stageCount: number): Promise<void> {
     for (let i = 0; i < stageCount; i++) {
@@ -31,7 +32,7 @@ async function advanceAllStages(stageCount: number): Promise<void> {
 }
 
 describe("MiddlewarePipelineVisualizer", () => {
-    const stubs = {SectionHeading, PrimaryButton: false as const, DangerButton: false as const};
+    const stubs = {SectionHeading: false as const, PrimaryButton: false as const, DangerButton: false as const};
 
     beforeEach(() => {
         vi.useFakeTimers();
