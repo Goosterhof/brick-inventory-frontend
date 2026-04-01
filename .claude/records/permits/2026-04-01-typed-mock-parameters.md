@@ -50,15 +50,15 @@ The rule itself adds genuine value: typed mocks catch argument/return-type misma
 
 **Affected files (50):**
 
-| Category | Count | Files |
-|---|---|---|
-| Test helpers | 2 | `mockAxios.ts`, `mockFamilyServices.ts` |
-| Browser tests | 3 | ConfirmDialog, ModalDialog, BarcodeScanner |
-| Integration tests | 7 | Parts, Sets (4), Storage (2) |
-| Unit tests — families | 18 | Auth (2), BrickDna, Home, Parts, Sets (7), Settings (2), Storage (4), App |
-| Unit tests — admin | 1 | App |
-| Unit tests — showcase | 1 | DialogServiceDemo |
-| Unit tests — shared | 18 | Components (7), Composables (2), Helpers (1), Services (8) |
+| Category              | Count | Files                                                                     |
+| --------------------- | ----- | ------------------------------------------------------------------------- |
+| Test helpers          | 2     | `mockAxios.ts`, `mockFamilyServices.ts`                                   |
+| Browser tests         | 3     | ConfirmDialog, ModalDialog, BarcodeScanner                                |
+| Integration tests     | 7     | Parts, Sets (4), Storage (2)                                              |
+| Unit tests — families | 18    | Auth (2), BrickDna, Home, Parts, Sets (7), Settings (2), Storage (4), App |
+| Unit tests — admin    | 1     | App                                                                       |
+| Unit tests — showcase | 1     | DialogServiceDemo                                                         |
+| Unit tests — shared   | 18    | Components (7), Composables (2), Helpers (1), Services (8)                |
 
 ---
 
