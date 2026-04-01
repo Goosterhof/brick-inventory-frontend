@@ -11,35 +11,35 @@
 
 Added architecture test rule enforcing `shallowMount` in unit tests and `mount` in integration tests. Migrated all 15 unit test files from `mount` to `shallowMount` with explicit unstubbing where assertions depend on child content.
 
-| Action   | File                                                                            | Notes                                                                                |
-| -------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Modified | `src/tests/unit/architecture.spec.ts`                                           | Added mount boundary enforcement rules (unit: no mount, integration: no shallowMount) |
-| Modified | `src/tests/unit/apps/showcase/components/AntiPatterns.spec.ts`                  | mount -> shallowMount, unstub SectionHeading                                         |
-| Modified | `src/tests/unit/apps/showcase/components/BrandVoice.spec.ts`                    | mount -> shallowMount, unstub SectionHeading                                         |
-| Modified | `src/tests/unit/apps/showcase/components/BrickDimensions.spec.ts`               | mount -> shallowMount, unstub SectionHeading                                         |
-| Modified | `src/tests/unit/apps/showcase/components/ColorPalette.spec.ts`                  | mount -> shallowMount, unstub SectionHeading                                         |
-| Modified | `src/tests/unit/apps/showcase/components/SnapDemo.spec.ts`                      | mount -> shallowMount, unstub SectionHeading                                         |
-| Modified | `src/tests/unit/apps/showcase/components/ComponentHealthMocked.spec.ts`         | mount -> shallowMount, unstub SectionHeading                                         |
-| Modified | `src/tests/unit/apps/showcase/components/FormValidationWorkbench.spec.ts`       | mount -> shallowMount, unstub SectionHeading + all form inputs + PrimaryButton       |
-| Modified | `src/tests/unit/apps/showcase/components/ResourceAdapterPlayground.spec.ts`     | mount -> shallowMount, unstub SectionHeading + TextInput/NumberInput/PrimaryButton/DangerButton |
-| Modified | `src/tests/unit/apps/showcase/components/ToastServiceDemo.spec.ts`              | mount -> shallowMount, unstub SectionHeading + PrimaryButton + ToastMessage + ToastContainer:false |
-| Modified | `src/tests/unit/apps/showcase/components/DialogServiceDemo.spec.ts`             | mount -> shallowMount, unstub SectionHeading + PrimaryButton + DialogContainer:false |
-| Modified | `src/tests/unit/apps/showcase/components/ComponentGallery.spec.ts`              | mount -> shallowMount, added 13 new vi.mock entries for button/toast/layout components, noAutoStub pattern |
-| Modified | `src/tests/unit/apps/showcase/components/SectionHeading.spec.ts`                | mount -> shallowMount (no children, trivial swap)                                    |
-| Modified | `src/tests/unit/apps/showcase/components/ShowcaseHero.spec.ts`                  | mount -> shallowMount (no children, trivial swap)                                    |
-| Modified | `src/tests/unit/apps/showcase/components/TypographySpecimen.spec.ts`            | Already migrated in prior session, committed as part of this batch                   |
-| Modified | `src/tests/unit/shared/components/PartListItem.spec.ts`                         | Already migrated in prior session, committed as part of this batch                   |
+| Action   | File                                                                        | Notes                                                                                                      |
+| -------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Modified | `src/tests/unit/architecture.spec.ts`                                       | Added mount boundary enforcement rules (unit: no mount, integration: no shallowMount)                      |
+| Modified | `src/tests/unit/apps/showcase/components/AntiPatterns.spec.ts`              | mount -> shallowMount, unstub SectionHeading                                                               |
+| Modified | `src/tests/unit/apps/showcase/components/BrandVoice.spec.ts`                | mount -> shallowMount, unstub SectionHeading                                                               |
+| Modified | `src/tests/unit/apps/showcase/components/BrickDimensions.spec.ts`           | mount -> shallowMount, unstub SectionHeading                                                               |
+| Modified | `src/tests/unit/apps/showcase/components/ColorPalette.spec.ts`              | mount -> shallowMount, unstub SectionHeading                                                               |
+| Modified | `src/tests/unit/apps/showcase/components/SnapDemo.spec.ts`                  | mount -> shallowMount, unstub SectionHeading                                                               |
+| Modified | `src/tests/unit/apps/showcase/components/ComponentHealthMocked.spec.ts`     | mount -> shallowMount, unstub SectionHeading                                                               |
+| Modified | `src/tests/unit/apps/showcase/components/FormValidationWorkbench.spec.ts`   | mount -> shallowMount, unstub SectionHeading + all form inputs + PrimaryButton                             |
+| Modified | `src/tests/unit/apps/showcase/components/ResourceAdapterPlayground.spec.ts` | mount -> shallowMount, unstub SectionHeading + TextInput/NumberInput/PrimaryButton/DangerButton            |
+| Modified | `src/tests/unit/apps/showcase/components/ToastServiceDemo.spec.ts`          | mount -> shallowMount, unstub SectionHeading + PrimaryButton + ToastMessage + ToastContainer:false         |
+| Modified | `src/tests/unit/apps/showcase/components/DialogServiceDemo.spec.ts`         | mount -> shallowMount, unstub SectionHeading + PrimaryButton + DialogContainer:false                       |
+| Modified | `src/tests/unit/apps/showcase/components/ComponentGallery.spec.ts`          | mount -> shallowMount, added 13 new vi.mock entries for button/toast/layout components, noAutoStub pattern |
+| Modified | `src/tests/unit/apps/showcase/components/SectionHeading.spec.ts`            | mount -> shallowMount (no children, trivial swap)                                                          |
+| Modified | `src/tests/unit/apps/showcase/components/ShowcaseHero.spec.ts`              | mount -> shallowMount (no children, trivial swap)                                                          |
+| Modified | `src/tests/unit/apps/showcase/components/TypographySpecimen.spec.ts`        | Already migrated in prior session, committed as part of this batch                                         |
+| Modified | `src/tests/unit/shared/components/PartListItem.spec.ts`                     | Already migrated in prior session, committed as part of this batch                                         |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                      | Met | Notes                                                    |
-| ------------------------------------------------------------------------- | --- | -------------------------------------------------------- |
-| Architecture test enforces shallowMount in unit/ and mount in integration/ | Yes | Two new test cases in architecture.spec.ts               |
-| All 15 unit test files migrated from mount to shallowMount                | Yes | All 15 files modified, 4 were pre-migrated from prior session |
-| All 1312+ tests still pass                                                | Yes | 1312 tests pass (96 files)                               |
-| No test guard violations at the 1000ms threshold                          | Yes | No execution threshold violations post-migration         |
-| 100% test coverage maintained                                             | Yes | 100% lines/branches/functions/statements                 |
-| All quality gates pass                                                    | Yes | format:check, lint, lint:vue, type-check, test:coverage, knip, size all pass |
+| Acceptance Criterion                                                       | Met | Notes                                                                        |
+| -------------------------------------------------------------------------- | --- | ---------------------------------------------------------------------------- |
+| Architecture test enforces shallowMount in unit/ and mount in integration/ | Yes | Two new test cases in architecture.spec.ts                                   |
+| All 15 unit test files migrated from mount to shallowMount                 | Yes | All 15 files modified, 4 were pre-migrated from prior session                |
+| All 1312+ tests still pass                                                 | Yes | 1312 tests pass (96 files)                                                   |
+| No test guard violations at the 1000ms threshold                           | Yes | No execution threshold violations post-migration                             |
+| 100% test coverage maintained                                              | Yes | 100% lines/branches/functions/statements                                     |
+| All quality gates pass                                                     | Yes | format:check, lint, lint:vue, type-check, test:coverage, knip, size all pass |
 
 ## Decisions Made
 
@@ -66,6 +66,7 @@ Added architecture test rule enforcing `shallowMount` in unit tests and `mount` 
 ## Showcase Readiness
 
 The architecture test enforcement is portfolio-grade. A senior reviewer would see:
+
 - Consistent boundary between unit and integration testing approaches
 - Architecture test that catches violations at commit time, not code review time
 - Practical unstubbing patterns that demonstrate understanding of vue-test-utils shallow rendering behavior
@@ -99,10 +100,10 @@ The one area that could be cleaner: ComponentGallery now mocks 31 components ind
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
-| When migrating tests from mount to shallowMount in a file that uses vi.mock, verify in one test first that the mock'd components render -- shallowMount auto-stubs override vi.mock | ComponentGallery needed noAutoStub pattern because shallowMount double-stubbed vi.mock'd components | This journal |
-| Before migrating tests that render dynamic components (`<component :is>`), grep the source template for `:is=` bindings and check the component name property to plan unstubbing | ToastServiceDemo and DialogServiceDemo both needed explicit `false` stubs for their service container components | This journal |
+| Proposal                                                                                                                                                                            | Context                                                                                                          | Shift Evidence |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------- |
+| When migrating tests from mount to shallowMount in a file that uses vi.mock, verify in one test first that the mock'd components render -- shallowMount auto-stubs override vi.mock | ComponentGallery needed noAutoStub pattern because shallowMount double-stubbed vi.mock'd components              | This journal   |
+| Before migrating tests that render dynamic components (`<component :is>`), grep the source template for `:is=` bindings and check the component name property to plan unstubbing    | ToastServiceDemo and DialogServiceDemo both needed explicit `false` stubs for their service container components | This journal   |
 
 ---
 

@@ -11,33 +11,33 @@
 
 Drop-in replacement of the local `createStorageService` implementation with the `@script-development/fs-storage` package. The package was extracted from this codebase — identical API surface, identical behavior.
 
-| Action | File | Notes |
-| --- | --- | --- |
-| Modified | `package.json` | Added `@script-development/fs-storage: ^0.1.0` dependency |
-| Modified | `package-lock.json` | Lock file updated by npm install |
-| Modified | `src/apps/families/services/storage.ts` | Import swapped from `@shared/services/storage` to `@script-development/fs-storage` |
-| Modified | `src/shared/services/adapter-store.ts` | `StorageService` type import swapped to package |
-| Modified | `src/shared/services/sound.ts` | `StorageService` type import swapped to package |
-| Modified | `src/apps/showcase/components/ResourceAdapterPlayground.vue` | `StorageService` type import swapped to package |
-| Modified | `src/tests/unit/shared/services/adapter-store.spec.ts` | `StorageService` type import swapped to package |
-| Modified | `src/tests/unit/shared/services/sound.spec.ts` | `StorageService` type import swapped to package |
-| Deleted | `src/shared/services/storage.ts` | Fully replaced by package |
-| Deleted | `src/tests/unit/shared/services/storage.spec.ts` | Package owns its own test coverage (100% coverage, 90% mutation score) |
-| Modified | `src/shared/generated/component-registry.json` | Reformatted by npm install side-effect (generated file) |
+| Action   | File                                                         | Notes                                                                              |
+| -------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| Modified | `package.json`                                               | Added `@script-development/fs-storage: ^0.1.0` dependency                          |
+| Modified | `package-lock.json`                                          | Lock file updated by npm install                                                   |
+| Modified | `src/apps/families/services/storage.ts`                      | Import swapped from `@shared/services/storage` to `@script-development/fs-storage` |
+| Modified | `src/shared/services/adapter-store.ts`                       | `StorageService` type import swapped to package                                    |
+| Modified | `src/shared/services/sound.ts`                               | `StorageService` type import swapped to package                                    |
+| Modified | `src/apps/showcase/components/ResourceAdapterPlayground.vue` | `StorageService` type import swapped to package                                    |
+| Modified | `src/tests/unit/shared/services/adapter-store.spec.ts`       | `StorageService` type import swapped to package                                    |
+| Modified | `src/tests/unit/shared/services/sound.spec.ts`               | `StorageService` type import swapped to package                                    |
+| Deleted  | `src/shared/services/storage.ts`                             | Fully replaced by package                                                          |
+| Deleted  | `src/tests/unit/shared/services/storage.spec.ts`             | Package owns its own test coverage (100% coverage, 90% mutation score)             |
+| Modified | `src/shared/generated/component-registry.json`               | Reformatted by npm install side-effect (generated file)                            |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion | Met | Notes |
-| --- | --- | --- |
-| `@script-development/fs-storage` is listed in `package.json` dependencies | Yes | `^0.1.0` |
-| `src/shared/services/storage.ts` is deleted | Yes | |
-| `src/tests/unit/shared/services/storage.spec.ts` is deleted | Yes | |
-| All imports reference the package, not local files | Yes | 6 files updated |
-| `npm run type-check` passes | Yes | |
-| `npm run knip` passes | Yes | |
-| `npm run test:coverage` passes at 100% | Yes | 100% lines, functions, branches, statements |
-| `npm run build` passes | Yes | |
-| No re-export wrapper files created | Yes | All consumers import directly from package |
+| Acceptance Criterion                                                      | Met | Notes                                       |
+| ------------------------------------------------------------------------- | --- | ------------------------------------------- |
+| `@script-development/fs-storage` is listed in `package.json` dependencies | Yes | `^0.1.0`                                    |
+| `src/shared/services/storage.ts` is deleted                               | Yes |                                             |
+| `src/tests/unit/shared/services/storage.spec.ts` is deleted               | Yes |                                             |
+| All imports reference the package, not local files                        | Yes | 6 files updated                             |
+| `npm run type-check` passes                                               | Yes |                                             |
+| `npm run knip` passes                                                     | Yes |                                             |
+| `npm run test:coverage` passes at 100%                                    | Yes | 100% lines, functions, branches, statements |
+| `npm run build` passes                                                    | Yes |                                             |
+| No re-export wrapper files created                                        | Yes | All consumers import directly from package  |
 
 ## Decisions Made
 
@@ -45,15 +45,15 @@ Drop-in replacement of the local `createStorageService` implementation with the 
 
 ## Quality Gauntlet
 
-| Check | Result | Notes |
-| --- | --- | --- |
-| format:check | Pass | |
-| lint | Pass | |
-| lint:vue | Pass | |
-| type-check | Pass | |
-| test:coverage | Pass | Lines: 100%, Branches: 100%, Functions: 100%, Statements: 100% |
-| knip | Pass | No dead code after deletion |
-| size | Pass | |
+| Check         | Result | Notes                                                          |
+| ------------- | ------ | -------------------------------------------------------------- |
+| format:check  | Pass   |                                                                |
+| lint          | Pass   |                                                                |
+| lint:vue      | Pass   |                                                                |
+| type-check    | Pass   |                                                                |
+| test:coverage | Pass   | Lines: 100%, Branches: 100%, Functions: 100%, Statements: 100% |
+| knip          | Pass   | No dead code after deletion                                    |
+| size          | Pass   |                                                                |
 
 ## Showcase Readiness
 
@@ -84,9 +84,9 @@ Yes. This is exactly the kind of dependency management a senior architect would 
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
-| When executing import migrations, grep for both the function name AND the type name across the entire codebase, not just the files listed in the permit | Permit listed 3 files but 6 needed changes | This journal |
+| Proposal                                                                                                                                                | Context                                    | Shift Evidence |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | -------------- |
+| When executing import migrations, grep for both the function name AND the type name across the entire codebase, not just the files listed in the permit | Permit listed 3 files but 6 needed changes | This journal   |
 
 ---
 
@@ -108,9 +108,9 @@ This strengthens the portfolio. The Armory extraction pipeline is now proven end
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Grep for both function and type names across full codebase during import migrations | Candidate | Reasonable. The architect did this correctly in practice, but it's worth codifying. First observation — needs a second confirming session to graduate. |
+| Proposal                                                                            | Disposition | Rationale                                                                                                                                              |
+| ----------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Grep for both function and type names across full codebase during import migrations | Candidate   | Reasonable. The architect did this correctly in practice, but it's worth codifying. First observation — needs a second confirming session to graduate. |
 
 ### Notes for the Architect
 
