@@ -11,31 +11,31 @@
 
 Drop-in replacement of the local `createLoadingService` and `registerLoadingMiddleware` implementations with the `@script-development/fs-loading` package. The package was extracted verbatim from this codebase — identical API surface, identical behavior.
 
-| Action   | File                                                     | Notes                                                                                      |
-| -------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Modified | `package.json`                                           | Added `@script-development/fs-loading: ^0.1.0` dependency                                  |
-| Modified | `package-lock.json`                                      | Lock file updated by npm install                                                           |
-| Modified | `src/apps/families/services/loading.ts`                  | Both imports consolidated to single `@script-development/fs-loading` import                 |
-| Modified | `src/apps/showcase/components/ResourceAdapterPlayground.vue` | `LoadingService` type import swapped to package                                         |
-| Deleted  | `src/shared/services/loading.ts`                         | Fully replaced by package (36 lines)                                                       |
-| Deleted  | `src/shared/services/loading-middleware.ts`               | Fully replaced by package (82 lines)                                                       |
-| Deleted  | `src/tests/unit/shared/services/loading.spec.ts`         | Package owns its own test coverage (187 lines removed)                                     |
-| Deleted  | `src/tests/unit/shared/services/loading-middleware.spec.ts` | Package owns its own test coverage (352 lines removed)                                  |
+| Action   | File                                                         | Notes                                                                       |
+| -------- | ------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| Modified | `package.json`                                               | Added `@script-development/fs-loading: ^0.1.0` dependency                   |
+| Modified | `package-lock.json`                                          | Lock file updated by npm install                                            |
+| Modified | `src/apps/families/services/loading.ts`                      | Both imports consolidated to single `@script-development/fs-loading` import |
+| Modified | `src/apps/showcase/components/ResourceAdapterPlayground.vue` | `LoadingService` type import swapped to package                             |
+| Deleted  | `src/shared/services/loading.ts`                             | Fully replaced by package (36 lines)                                        |
+| Deleted  | `src/shared/services/loading-middleware.ts`                  | Fully replaced by package (82 lines)                                        |
+| Deleted  | `src/tests/unit/shared/services/loading.spec.ts`             | Package owns its own test coverage (187 lines removed)                      |
+| Deleted  | `src/tests/unit/shared/services/loading-middleware.spec.ts`  | Package owns its own test coverage (352 lines removed)                      |
 
 **Net change:** 660 lines deleted, 14 lines added.
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                           | Met | Notes                                             |
-| ------------------------------------------------------------------------------ | --- | ------------------------------------------------- |
-| `@script-development/fs-loading` is installed and importable                   | Yes | `^0.1.0` in `package.json`                        |
-| `familyLoadingService` still works identically                                 | Yes | Same API surface, all consuming tests pass        |
-| Loading middleware still bridges to `familyHttpService`                         | Yes | `registerLoadingMiddleware` call unchanged         |
-| Local `loading.ts` and `loading-middleware.ts` deleted from `src/shared/services/` | Yes |                                                |
-| Local test files for loading and loading-middleware deleted                     | Yes |                                                   |
-| No references to `@shared/services/loading` or `@shared/services/loading-middleware` remain | Yes | Grep confirmed — only in permit docs   |
-| `npm run knip` reports no dead exports                                         | Yes |                                                   |
-| Full quality gauntlet passes                                                   | Yes | See gauntlet table below                          |
+| Acceptance Criterion                                                                        | Met | Notes                                      |
+| ------------------------------------------------------------------------------------------- | --- | ------------------------------------------ |
+| `@script-development/fs-loading` is installed and importable                                | Yes | `^0.1.0` in `package.json`                 |
+| `familyLoadingService` still works identically                                              | Yes | Same API surface, all consuming tests pass |
+| Loading middleware still bridges to `familyHttpService`                                     | Yes | `registerLoadingMiddleware` call unchanged |
+| Local `loading.ts` and `loading-middleware.ts` deleted from `src/shared/services/`          | Yes |                                            |
+| Local test files for loading and loading-middleware deleted                                 | Yes |                                            |
+| No references to `@shared/services/loading` or `@shared/services/loading-middleware` remain | Yes | Grep confirmed — only in permit docs       |
+| `npm run knip` reports no dead exports                                                      | Yes |                                            |
+| Full quality gauntlet passes                                                                | Yes | See gauntlet table below                   |
 
 ## Decisions Made
 
@@ -43,13 +43,13 @@ Drop-in replacement of the local `createLoadingService` and `registerLoadingMidd
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                                          |
-| ------------- | ------ | -------------------------------------------------------------- |
-| type-check    | Pass   |                                                                |
-| knip          | Pass   | No dead code after deletion                                    |
-| test:unit     | Pass   | 89 files, 1191 tests, all pass                                 |
+| Check         | Result | Notes                                                                                                       |
+| ------------- | ------ | ----------------------------------------------------------------------------------------------------------- |
+| type-check    | Pass   |                                                                                                             |
+| knip          | Pass   | No dead code after deletion                                                                                 |
+| test:unit     | Pass   | 89 files, 1191 tests, all pass                                                                              |
 | test:coverage | Note   | All tests pass with 100% coverage; test guard flags 6 pre-existing slow files (unrelated to this migration) |
-| build         | Pass   | (verified via pre-push hooks)                                  |
+| build         | Pass   | (verified via pre-push hooks)                                                                               |
 
 **Note on test guard:** The test guard reporter throws on 6 files exceeding 1000ms — all are pre-existing slow files (showcase components, sets overview pages). Running the same tests on the pre-migration commit shows the same failures. This is not a regression from this migration.
 
@@ -83,9 +83,9 @@ Yes. Third successful Armory package migration (`fs-http`, `fs-storage`, now `fs
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| -------- | ------- | -------------- |
-| None this round | Mechanical migration with no novel challenges | — |
+| Proposal        | Context                                       | Shift Evidence |
+| --------------- | --------------------------------------------- | -------------- |
+| None this round | Mechanical migration with no novel challenges | —              |
 
 ---
 

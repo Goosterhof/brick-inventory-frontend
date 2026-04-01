@@ -11,48 +11,48 @@
 
 Replaced 5 local source files and 5 test files with `@script-development/fs-helpers` and `@script-development/fs-adapter-store` packages. Updated all consumers across domain stores, page components, integration tests, and unit tests.
 
-| Action | File | Notes |
-| --- | --- | --- |
-| Deleted | `src/shared/helpers/copy.ts` | Replaced by `deepCopy`/`Writable` from `@script-development/fs-helpers` |
-| Deleted | `src/shared/services/adapter-store.ts` | Replaced by `createAdapterStoreModule`/`AdapterStoreModule` from `@script-development/fs-adapter-store` |
-| Deleted | `src/shared/services/resource-adapter.ts` | Replaced by `resourceAdapter`/`Adapted`/`NewAdapted` from `@script-development/fs-adapter-store` |
-| Deleted | `src/shared/errors/entry-not-found.ts` | Replaced by `EntryNotFoundError` from `@script-development/fs-adapter-store` |
-| Deleted | `src/shared/errors/missing-response-data.ts` | Replaced by `MissingResponseDataError` from `@script-development/fs-adapter-store` |
-| Deleted | `src/tests/unit/shared/helpers/copy.spec.ts` | 248 lines — package owns coverage |
-| Deleted | `src/tests/unit/shared/services/adapter-store.spec.ts` | 929 lines — package owns coverage |
-| Deleted | `src/tests/unit/shared/services/resource-adapter.spec.ts` | 812 lines — package owns coverage |
-| Deleted | `src/tests/unit/shared/errors/entry-not-found.spec.ts` | 32 lines — package owns coverage |
-| Deleted | `src/tests/unit/shared/errors/missing-response-data.spec.ts` | 31 lines — package owns coverage |
-| Modified | `src/shared/helpers/string.ts` | Re-exports `deepCamelKeys`, `deepSnakeKeys`, `toCamelCaseTyped` from `@script-development/fs-helpers` |
-| Modified | `src/shared/helpers/type-check.ts` | Removed `isExisting` (unused after migration), kept `ensureRefValueExists` |
-| Modified | `src/apps/families/stores/familySetStore.ts` | Imports from `@script-development/fs-adapter-store` |
-| Modified | `src/apps/families/stores/storageOptionStore.ts` | Imports from `@script-development/fs-adapter-store` |
-| Modified | `src/apps/families/services/dialog.ts` | `EntryNotFoundError` from package |
-| Modified | `src/apps/showcase/components/ResourceAdapterPlayground.vue` | Imports from package |
-| Modified | 5 page `.vue` files | `Adapted` type import path updates |
-| Modified | `src/tests/helpers/mockStringTs.ts` | Added `createMockFsHelpers` for bundled package mocking |
-| Modified | 21 test files | Added `createMockFsHelpers` mock for `@script-development/fs-helpers` |
-| Modified | 2 integration test files | Updated stale `toCamelCaseTyped` comment references |
-| Modified | `src/tests/unit/shared/helpers/type-check.spec.ts` | Removed `isExisting` tests |
-| Modified | `src/tests/unit/architecture.spec.ts` | Updated architecture assertions |
+| Action   | File                                                         | Notes                                                                                                   |
+| -------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Deleted  | `src/shared/helpers/copy.ts`                                 | Replaced by `deepCopy`/`Writable` from `@script-development/fs-helpers`                                 |
+| Deleted  | `src/shared/services/adapter-store.ts`                       | Replaced by `createAdapterStoreModule`/`AdapterStoreModule` from `@script-development/fs-adapter-store` |
+| Deleted  | `src/shared/services/resource-adapter.ts`                    | Replaced by `resourceAdapter`/`Adapted`/`NewAdapted` from `@script-development/fs-adapter-store`        |
+| Deleted  | `src/shared/errors/entry-not-found.ts`                       | Replaced by `EntryNotFoundError` from `@script-development/fs-adapter-store`                            |
+| Deleted  | `src/shared/errors/missing-response-data.ts`                 | Replaced by `MissingResponseDataError` from `@script-development/fs-adapter-store`                      |
+| Deleted  | `src/tests/unit/shared/helpers/copy.spec.ts`                 | 248 lines — package owns coverage                                                                       |
+| Deleted  | `src/tests/unit/shared/services/adapter-store.spec.ts`       | 929 lines — package owns coverage                                                                       |
+| Deleted  | `src/tests/unit/shared/services/resource-adapter.spec.ts`    | 812 lines — package owns coverage                                                                       |
+| Deleted  | `src/tests/unit/shared/errors/entry-not-found.spec.ts`       | 32 lines — package owns coverage                                                                        |
+| Deleted  | `src/tests/unit/shared/errors/missing-response-data.spec.ts` | 31 lines — package owns coverage                                                                        |
+| Modified | `src/shared/helpers/string.ts`                               | Re-exports `deepCamelKeys`, `deepSnakeKeys`, `toCamelCaseTyped` from `@script-development/fs-helpers`   |
+| Modified | `src/shared/helpers/type-check.ts`                           | Removed `isExisting` (unused after migration), kept `ensureRefValueExists`                              |
+| Modified | `src/apps/families/stores/familySetStore.ts`                 | Imports from `@script-development/fs-adapter-store`                                                     |
+| Modified | `src/apps/families/stores/storageOptionStore.ts`             | Imports from `@script-development/fs-adapter-store`                                                     |
+| Modified | `src/apps/families/services/dialog.ts`                       | `EntryNotFoundError` from package                                                                       |
+| Modified | `src/apps/showcase/components/ResourceAdapterPlayground.vue` | Imports from package                                                                                    |
+| Modified | 5 page `.vue` files                                          | `Adapted` type import path updates                                                                      |
+| Modified | `src/tests/helpers/mockStringTs.ts`                          | Added `createMockFsHelpers` for bundled package mocking                                                 |
+| Modified | 21 test files                                                | Added `createMockFsHelpers` mock for `@script-development/fs-helpers`                                   |
+| Modified | 2 integration test files                                     | Updated stale `toCamelCaseTyped` comment references                                                     |
+| Modified | `src/tests/unit/shared/helpers/type-check.spec.ts`           | Removed `isExisting` tests                                                                              |
+| Modified | `src/tests/unit/architecture.spec.ts`                        | Updated architecture assertions                                                                         |
 
 **Total: 54 files changed, +138/-2,602 lines**
 
 ## Permit Fulfillment
 
-| Acceptance Criterion | Met | Notes |
-| --- | --- | --- |
-| `@script-development/fs-helpers` and `@script-development/fs-adapter-store` installed | Yes | Both in `package.json` dependencies |
-| `shared/helpers/copy.ts` deleted | Yes | All imports switched to package |
-| `isExisting` imports from `@script-development/fs-helpers` | N/A | `isExisting` was unused — removed entirely. knip confirms no dead code. |
-| `shared/services/adapter-store.ts` deleted | Yes | All imports from package |
-| `shared/services/resource-adapter.ts` deleted | Yes | All imports from package |
-| BIO's `New<T>` passed as `N` generic parameter | N/A | Domain types (`FamilySet`, `StorageOption`) lack `createdAt`/`updatedAt` — package default `Omit<T, "id">` is functionally identical |
-| All domain stores function identically | Yes | No behavioral change |
-| Integration tests still pass | Yes | Mock-server pattern unaffected |
-| `toCamelCaseTyped`, `deepCamelKeys`, `deepSnakeKeys` from `@script-development/fs-helpers` | Yes | Re-exported via `shared/helpers/string.ts` |
-| knip reports no dead code | Yes | Clean |
-| Full quality gauntlet passes | Yes | All 7 checks green |
+| Acceptance Criterion                                                                       | Met | Notes                                                                                                                                |
+| ------------------------------------------------------------------------------------------ | --- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `@script-development/fs-helpers` and `@script-development/fs-adapter-store` installed      | Yes | Both in `package.json` dependencies                                                                                                  |
+| `shared/helpers/copy.ts` deleted                                                           | Yes | All imports switched to package                                                                                                      |
+| `isExisting` imports from `@script-development/fs-helpers`                                 | N/A | `isExisting` was unused — removed entirely. knip confirms no dead code.                                                              |
+| `shared/services/adapter-store.ts` deleted                                                 | Yes | All imports from package                                                                                                             |
+| `shared/services/resource-adapter.ts` deleted                                              | Yes | All imports from package                                                                                                             |
+| BIO's `New<T>` passed as `N` generic parameter                                             | N/A | Domain types (`FamilySet`, `StorageOption`) lack `createdAt`/`updatedAt` — package default `Omit<T, "id">` is functionally identical |
+| All domain stores function identically                                                     | Yes | No behavioral change                                                                                                                 |
+| Integration tests still pass                                                               | Yes | Mock-server pattern unaffected                                                                                                       |
+| `toCamelCaseTyped`, `deepCamelKeys`, `deepSnakeKeys` from `@script-development/fs-helpers` | Yes | Re-exported via `shared/helpers/string.ts`                                                                                           |
+| knip reports no dead code                                                                  | Yes | Clean                                                                                                                                |
+| Full quality gauntlet passes                                                               | Yes | All 7 checks green                                                                                                                   |
 
 ## Decisions Made
 
@@ -66,15 +66,15 @@ Replaced 5 local source files and 5 test files with `@script-development/fs-help
 
 ## Quality Gauntlet
 
-| Check | Result | Notes |
-| --- | --- | --- |
-| format:check | Pass | |
-| lint | Pass | |
-| lint:vue | Pass | |
-| type-check | Pass | |
-| test:coverage | Pass | 100% lines, branches, functions, statements — 1,216 tests in 91 files |
-| knip | Pass | No dead code |
-| size | Pass | |
+| Check         | Result | Notes                                                                 |
+| ------------- | ------ | --------------------------------------------------------------------- |
+| format:check  | Pass   |                                                                       |
+| lint          | Pass   |                                                                       |
+| lint:vue      | Pass   |                                                                       |
+| type-check    | Pass   |                                                                       |
+| test:coverage | Pass   | 100% lines, branches, functions, statements — 1,216 tests in 91 files |
+| knip          | Pass   | No dead code                                                          |
+| size          | Pass   |                                                                       |
 
 ## Showcase Readiness
 
@@ -104,10 +104,10 @@ Strong. The migration demonstrates disciplined package consumption — honest de
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
-| Before migrating a function to a package import, verify it has active consumers — dead code should be deleted, not migrated | `isExisting` had no consumers but the permit planned a migration path for it | This journal |
-| When mocking packages that bundle transitive dependencies, mock the package directly rather than the transitive dep | `vi.mock("string-ts")` didn't intercept `@script-development/fs-helpers` because it bundles string-ts | This journal |
+| Proposal                                                                                                                    | Context                                                                                               | Shift Evidence |
+| --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | -------------- |
+| Before migrating a function to a package import, verify it has active consumers — dead code should be deleted, not migrated | `isExisting` had no consumers but the permit planned a migration path for it                          | This journal   |
+| When mocking packages that bundle transitive dependencies, mock the package directly rather than the transitive dep         | `vi.mock("string-ts")` didn't intercept `@script-development/fs-helpers` because it bundles string-ts | This journal   |
 
 ---
 
@@ -141,10 +141,10 @@ This delivery strengthens the portfolio. 2,602 lines removed, 5 local implementa
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Verify active consumers before migrating to package import | Candidate | Good hygiene — prevents wasted effort migrating dead code. First observation, needs second confirmation. |
-| Mock packages directly when they bundle transitive deps | Candidate | Real technical insight with broad applicability. First observation, needs second confirmation. |
+| Proposal                                                   | Disposition | Rationale                                                                                                |
+| ---------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
+| Verify active consumers before migrating to package import | Candidate   | Good hygiene — prevents wasted effort migrating dead code. First observation, needs second confirmation. |
+| Mock packages directly when they bundle transitive deps    | Candidate   | Real technical insight with broad applicability. First observation, needs second confirmation.           |
 
 ### Notes for the Architect
 
