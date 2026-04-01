@@ -9,7 +9,7 @@ import {
     resourceAdapter,
 } from "@shared/services/resource-adapter";
 import {describe, expect, it, vi} from "vitest";
-import {isRef} from "vue";
+import {isRef, ref} from "vue";
 
 interface TestItem extends Item {
     id: number;
@@ -541,6 +541,52 @@ describe("resource adapter", () => {
 
             // Assert — uses id from getter
             expect(patchRequest).toHaveBeenCalledWith("users/1", {user_name: "patchedUser"});
+        });
+
+        it("should allow storing in a Vue ref() and accessing .mutable without TypeError", () => {
+            // Arrange
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
+            const adapted: Adapted<TestItem> = resourceAdapter(
+                () => existingResource,
+                "users",
+                storeModule,
+                httpService,
+            );
+
+            // Act — wrapping in ref() creates a Vue Proxy; accessing .mutable triggers the get trap
+            const wrapped = ref(adapted);
+
+            // Assert — no TypeError from Proxy invariant violation
+            // Vue auto-unwraps the inner Ref, so wrapped.value.mutable is the unwrapped value
+            expect(wrapped.value.mutable).toEqual({id: 1, userName: "testUser", createdAt: "2024-01-01"});
+        });
+
+        it("should still prevent direct assignment to mutable (writable: false protects)", () => {
+            // Arrange
+            const storeModule: AdapterStoreModule<TestItem> = {setById: vi.fn(), deleteById: vi.fn()};
+            const httpService = {
+                postRequest: vi.fn(),
+                putRequest: vi.fn(),
+                patchRequest: vi.fn(),
+                deleteRequest: vi.fn(),
+            };
+            const adapted: Adapted<TestItem> = resourceAdapter(
+                () => existingResource,
+                "users",
+                storeModule,
+                httpService,
+            );
+
+            // Act & Assert — writable: false still prevents reassignment
+            expect(() => {
+                (adapted as unknown as Record<string, string>).mutable = "overwritten";
+            }).toThrow(TypeError);
         });
     });
 

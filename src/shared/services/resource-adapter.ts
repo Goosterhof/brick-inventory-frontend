@@ -152,38 +152,38 @@ export function resourceAdapter<T extends Item>(
             Object.defineProperty(adapted, key, {
                 get: () => resourceGetter()[key as keyof T],
                 enumerable: true,
-                configurable: false,
+                configurable: true,
             });
         }
 
         Object.defineProperty(adapted, "mutable", {
             value: mutable,
             enumerable: true,
-            configurable: false,
+            configurable: true,
             writable: false,
         });
         Object.defineProperty(adapted, "reset", {
             value: () => (mutable.value = deepCopy(resourceGetter())),
             enumerable: true,
-            configurable: false,
+            configurable: true,
             writable: false,
         });
         Object.defineProperty(adapted, "update", {
             value: () => repository.update(resourceGetter().id, mutable.value as Updatable<T>),
             enumerable: true,
-            configurable: false,
+            configurable: true,
             writable: false,
         });
         Object.defineProperty(adapted, "patch", {
             value: (partialItem: Partial<New<T>>) => repository.patch(resourceGetter().id, partialItem),
             enumerable: true,
-            configurable: false,
+            configurable: true,
             writable: false,
         });
         Object.defineProperty(adapted, "delete", {
             value: () => repository.delete(resourceGetter().id),
             enumerable: true,
-            configurable: false,
+            configurable: true,
             writable: false,
         });
 
