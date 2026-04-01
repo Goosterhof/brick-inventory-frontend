@@ -10,8 +10,8 @@ import FormValidationWorkbench from "./components/FormValidationWorkbench.vue";
 import MiddlewarePipelineVisualizer from "./components/MiddlewarePipelineVisualizer.vue";
 import ResourceAdapterPlayground from "./components/ResourceAdapterPlayground.vue";
 import ShowcaseHero from "./components/ShowcaseHero.vue";
-import ToastServiceDemo from "./components/ToastServiceDemo.vue";
 import SnapDemo from "./components/SnapDemo.vue";
+import ToastServiceDemo from "./components/ToastServiceDemo.vue";
 import TypographySpecimen from "./components/TypographySpecimen.vue";
 </script>
 

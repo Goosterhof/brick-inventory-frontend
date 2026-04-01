@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import {ensureRefValueExists} from "@shared/helpers/type-check";
 import {BarcodeDetector} from "barcode-detector";
 import {ref, watch, onMounted, onUnmounted} from "vue";
-
-import {ensureRefValueExists} from "@shared/helpers/type-check";
 
 const {resetKey} = defineProps<{resetKey?: number; loadingText: string; retryText: string}>();
 const emit = defineEmits<{detect: [barcode: string]; error: [message: string]}>();

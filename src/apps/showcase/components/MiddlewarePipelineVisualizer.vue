@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {computed, ref} from "vue";
 
 import SectionHeading from "./SectionHeading.vue";

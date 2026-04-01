@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import DangerButton from "@shared/components/DangerButton.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import type {HttpService} from "@script-development/fs-http";
-import type {LoadingService} from "@shared/services/loading";
 import type {StorageService} from "@script-development/fs-storage";
+import type {LoadingService} from "@shared/services/loading";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "@shared/services/resource-adapter";
 import type {Item} from "@shared/types/item";
+
+import DangerButton from "@shared/components/DangerButton.vue";
+import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
+import {deepSnakeKeys} from "@shared/helpers/string";
 import {createAdapterStoreModule} from "@shared/services/adapter-store";
 import {resourceAdapter} from "@shared/services/resource-adapter";
-import {deepSnakeKeys} from "@shared/helpers/string";
 import {computed, ref, shallowRef, watch} from "vue";
 
 import SectionHeading from "./SectionHeading.vue";

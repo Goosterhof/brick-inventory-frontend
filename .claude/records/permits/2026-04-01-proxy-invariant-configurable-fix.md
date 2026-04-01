@@ -18,12 +18,12 @@ Vue's reactive system wraps objects in a `Proxy`. When a property holds a `Ref`,
 
 Two production pages are confirmed bombs:
 
-| Page | Pattern | Verdict |
-|------|---------|---------|
-| **EditSetPage** | Stores `Adapted<T>` in `ref()`, template reads `.mutable` | BOMB |
-| **EditStoragePage** | Stores `Adapted<T>` in `ref()`, template reads `.mutable` | BOMB |
-| SetDetailPage | Stores in `ref()` but template only reads accessor properties | Fragile-safe |
-| StorageDetailPage | Same as above | Fragile-safe |
+| Page                | Pattern                                                       | Verdict      |
+| ------------------- | ------------------------------------------------------------- | ------------ |
+| **EditSetPage**     | Stores `Adapted<T>` in `ref()`, template reads `.mutable`     | BOMB         |
+| **EditStoragePage** | Stores `Adapted<T>` in `ref()`, template reads `.mutable`     | BOMB         |
+| SetDetailPage       | Stores in `ref()` but template only reads accessor properties | Fragile-safe |
+| StorageDetailPage   | Same as above                                                 | Fragile-safe |
 
 The `NewAdapted<T>` path (spread + `Object.freeze`) is unaffected because frozen properties are `configurable: false` but hold plain values, not `Ref`s.
 
@@ -73,5 +73,5 @@ The `NewAdapted<T>` path (spread + `Object.freeze`) is unaffected because frozen
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Closed
+**Journal:** [2026-04-01-proxy-invariant-configurable-fix](../journals/2026-04-01-proxy-invariant-configurable-fix.md)
