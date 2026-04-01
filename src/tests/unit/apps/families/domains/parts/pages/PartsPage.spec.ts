@@ -73,7 +73,7 @@ vi.mock("@app/services", () =>
     }),
 );
 
-const mockPartsResponse = [
+const mockPartsData = [
     {
         partId: 10,
         partNum: "3001",
@@ -115,6 +115,15 @@ const mockPartsResponse = [
     },
 ];
 
+/** Wrap parts data in cursor pagination envelope. */
+const makeEnvelope = (data: Record<string, unknown>[] = mockPartsData, nextCursor: string | null = null) => ({
+    data,
+    next_cursor: nextCursor,
+    prev_cursor: null,
+    path: "/api/family/parts",
+    per_page: 100,
+});
+
 describe("PartsPage", () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -122,7 +131,7 @@ describe("PartsPage", () => {
 
     it("should render page header", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockGetRequest.mockResolvedValue({data: makeEnvelope([])});
 
         // Act
         const wrapper = shallowMount(PartsPage);
@@ -132,16 +141,16 @@ describe("PartsPage", () => {
         expect(wrapper.findComponent(PageHeader).props("title")).toBe("parts.title");
     });
 
-    it("should fetch parts on mount", async () => {
+    it("should fetch parts on mount with per_page=100", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockGetRequest.mockResolvedValue({data: makeEnvelope([])});
 
         // Act
         shallowMount(PartsPage);
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/family/parts");
+        expect(mockGetRequest).toHaveBeenCalledWith("/family/parts?per_page=100");
     });
 
     it("should show loading state initially", () => {
@@ -157,7 +166,7 @@ describe("PartsPage", () => {
 
     it("should show empty state when no parts", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: []});
+        mockGetRequest.mockResolvedValue({data: makeEnvelope([])});
 
         // Act
         const wrapper = shallowMount(PartsPage);
@@ -169,7 +178,7 @@ describe("PartsPage", () => {
 
     it("should group parts by part+color and show total quantity", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+        mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
         // Act
         const wrapper = shallowMount(PartsPage);
@@ -190,7 +199,7 @@ describe("PartsPage", () => {
 
     it("should display storage location badges", async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+        mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
         // Act
         const wrapper = shallowMount(PartsPage);
@@ -216,7 +225,7 @@ describe("PartsPage", () => {
     describe("search", () => {
         it("should filter parts by name", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -232,7 +241,7 @@ describe("PartsPage", () => {
 
         it("should filter parts by part number", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -248,7 +257,7 @@ describe("PartsPage", () => {
 
         it("should be case-insensitive", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -262,7 +271,7 @@ describe("PartsPage", () => {
 
         it("should show no results when search matches nothing", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -280,7 +289,7 @@ describe("PartsPage", () => {
     describe("color filter", () => {
         it("should display unique color chips", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -295,7 +304,7 @@ describe("PartsPage", () => {
 
         it("should show all-colors chip", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -310,7 +319,7 @@ describe("PartsPage", () => {
 
         it("should filter parts by color when a color chip is clicked", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -327,7 +336,7 @@ describe("PartsPage", () => {
 
         it("should toggle color filter off when clicked again", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -343,7 +352,7 @@ describe("PartsPage", () => {
 
         it("should clear color filter when all-colors chip is clicked", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -366,7 +375,7 @@ describe("PartsPage", () => {
     describe("sort", () => {
         it("should display sort chips", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -382,7 +391,7 @@ describe("PartsPage", () => {
 
         it("should sort by name by default (alphabetical)", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -395,7 +404,7 @@ describe("PartsPage", () => {
 
         it("should sort by quantity descending when quantity chip is clicked", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -411,7 +420,7 @@ describe("PartsPage", () => {
 
         it("should sort by color name when color sort chip is clicked", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -427,7 +436,7 @@ describe("PartsPage", () => {
 
         it("should mark the active sort chip", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -442,7 +451,7 @@ describe("PartsPage", () => {
     describe("orphan parts", () => {
         it("should mark parts without a family set as orphans", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -454,7 +463,7 @@ describe("PartsPage", () => {
 
         it("should filter to only orphan parts when orphan chip is clicked", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -471,7 +480,7 @@ describe("PartsPage", () => {
 
         it("should toggle orphan filter off when clicked again", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -487,7 +496,7 @@ describe("PartsPage", () => {
 
         it("should show orphan badge on orphan part items", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -502,7 +511,7 @@ describe("PartsPage", () => {
     describe("combined filters", () => {
         it("should apply search and color filter together", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -520,7 +529,7 @@ describe("PartsPage", () => {
 
         it("should apply search and orphan filter together", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
@@ -537,10 +546,129 @@ describe("PartsPage", () => {
         });
     });
 
+    describe("pagination", () => {
+        it("should not show load more button when next_cursor is null", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope(mockPartsData, null)});
+
+            // Act
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.find("[data-testid='load-more-button']").exists()).toBe(false);
+        });
+
+        it("should show load more button when next_cursor is present", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope(mockPartsData, "cursor-abc")});
+
+            // Act
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Assert
+            const button = wrapper.find("[data-testid='load-more-button']");
+            expect(button.exists()).toBe(true);
+            expect(button.text()).toBe("parts.loadMore");
+        });
+
+        it("should fetch next page and append results when load more is clicked", async () => {
+            // Arrange — first page with cursor
+            mockGetRequest.mockResolvedValueOnce({data: makeEnvelope(mockPartsData, "cursor-page-2")});
+
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            expect(wrapper.findAllComponents(PartListItem)).toHaveLength(2);
+
+            // Arrange — second page with no cursor
+            mockGetRequest.mockResolvedValueOnce({
+                data: makeEnvelope(
+                    [
+                        {
+                            partId: 30,
+                            partNum: "3003",
+                            partName: "Brick 1 x 2",
+                            partImageUrl: null,
+                            colorId: 3,
+                            colorName: "Green",
+                            colorRgb: "00CC00",
+                            storageOptionId: 7,
+                            storageOptionName: "Drawer C",
+                            quantity: 6,
+                            familySetId: 2,
+                        },
+                    ],
+                    null,
+                ),
+            });
+
+            // Act
+            await wrapper.find("[data-testid='load-more-button']").trigger("click");
+            await flushPromises();
+
+            // Assert — 2 original grouped + 1 new = 3
+            expect(wrapper.findAllComponents(PartListItem)).toHaveLength(3);
+            expect(mockGetRequest).toHaveBeenCalledWith("/family/parts?per_page=100&cursor=cursor-page-2");
+        });
+
+        it("should hide load more button after last page", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValueOnce({data: makeEnvelope(mockPartsData, "cursor-page-2")});
+
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            expect(wrapper.find("[data-testid='load-more-button']").exists()).toBe(true);
+
+            // Arrange — last page
+            mockGetRequest.mockResolvedValueOnce({data: makeEnvelope([], null)});
+
+            // Act
+            await wrapper.find("[data-testid='load-more-button']").trigger("click");
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.find("[data-testid='load-more-button']").exists()).toBe(false);
+        });
+
+        it("should show loading state on load more button while fetching", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValueOnce({data: makeEnvelope(mockPartsData, "cursor-page-2")});
+
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Arrange — next page hangs
+            mockGetRequest.mockReturnValueOnce(new Promise(() => {}));
+
+            // Act
+            await wrapper.find("[data-testid='load-more-button']").trigger("click");
+
+            // Assert — button shows loading text and is disabled
+            const button = wrapper.find("[data-testid='load-more-button']");
+            expect(button.text()).toBe("parts.loadingMore");
+            expect(button.attributes("disabled")).toBeDefined();
+        });
+
+        it("should not fetch when loadMore is called without a cursor", async () => {
+            // Arrange — no cursor
+            mockGetRequest.mockResolvedValue({data: makeEnvelope(mockPartsData, null)});
+
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Assert — no button, and only 1 call was made (the initial fetch)
+            expect(wrapper.find("[data-testid='load-more-button']").exists()).toBe(false);
+            expect(mockGetRequest).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe("export", () => {
         it("should show export button when parts exist", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: mockPartsResponse});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
 
             // Act
             const wrapper = shallowMount(PartsPage);
@@ -553,7 +681,7 @@ describe("PartsPage", () => {
 
         it("should not show export button when no parts exist", async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue({data: []});
+            mockGetRequest.mockResolvedValue({data: makeEnvelope([])});
 
             // Act
             const wrapper = shallowMount(PartsPage);
