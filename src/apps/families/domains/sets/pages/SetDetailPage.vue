@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {FamilySet} from "@app/types/familySet";
 import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
-import type {Adapted} from "@shared/services/resource-adapter";
+import type {Adapted} from "@script-development/fs-adapter-store";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import {familySetStoreModule} from "@app/stores";

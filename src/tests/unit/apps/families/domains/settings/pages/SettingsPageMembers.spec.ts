@@ -9,6 +9,7 @@ import {beforeEach, describe, expect, it, vi} from "vitest";
 const {
     createMockAxiosWithError,
     MockAxiosError,
+    createMockFsHelpers,
     createMockStringTs,
     createMockFamilyServices,
     createMockFormField,
@@ -22,6 +23,7 @@ vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 const {mockGetRequest, mockPostRequest, mockDeleteRequest, mockUserId} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),

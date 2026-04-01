@@ -4,12 +4,13 @@ import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
+const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamilyServices} = await vi.hoisted(
     () => import("../../../helpers"),
 );
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 vi.mock("@phosphor-icons/vue", () => ({
     PhSignOut: {template: "<i />"},

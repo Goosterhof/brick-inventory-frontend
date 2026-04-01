@@ -1,5 +1,5 @@
 import type {StorageOption} from "@app/types/storageOption";
-import type {Adapted} from "@shared/services/resource-adapter";
+import type {Adapted} from "@script-development/fs-adapter-store";
 
 import StorageDetailPage from "@app/domains/storage/pages/StorageDetailPage.vue";
 import {familyRouterService} from "@app/services";

@@ -2,16 +2,15 @@
 import type {HttpService} from "@script-development/fs-http";
 import type {StorageService} from "@script-development/fs-storage";
 import type {LoadingService} from "@shared/services/loading";
-import type {Adapted, AdapterStoreModule, NewAdapted} from "@shared/services/resource-adapter";
+import type {Adapted, AdapterStoreModule, NewAdapted} from "@script-development/fs-adapter-store";
 import type {Item} from "@shared/types/item";
 
+import {createAdapterStoreModule, resourceAdapter} from "@script-development/fs-adapter-store";
 import DangerButton from "@shared/components/DangerButton.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {deepSnakeKeys} from "@shared/helpers/string";
-import {createAdapterStoreModule} from "@shared/services/adapter-store";
-import {resourceAdapter} from "@shared/services/resource-adapter";
 import {computed, ref, shallowRef, watch} from "vue";
 
 import SectionHeading from "./SectionHeading.vue";

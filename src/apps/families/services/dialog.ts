@@ -1,4 +1,4 @@
-import {EntryNotFoundError} from "@shared/errors/entry-not-found";
+import {EntryNotFoundError} from "@script-development/fs-adapter-store";
 import {createDialogService} from "@shared/services/dialog";
 
 export const familyDialogService = createDialogService();

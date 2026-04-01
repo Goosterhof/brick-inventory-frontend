@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {StorageOptionPart} from "@app/types/part";
 import type {StorageOption} from "@app/types/storageOption";
-import type {Adapted} from "@shared/services/resource-adapter";
+import type {Adapted} from "@script-development/fs-adapter-store";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import {storageOptionStoreModule} from "@app/stores";

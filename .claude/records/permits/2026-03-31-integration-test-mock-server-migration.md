@@ -65,5 +65,5 @@ Migrate the remaining 16 integration test files from the old holder-ref mock pat
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** [2026-03-31-integration-test-mock-server-migration.md](../journals/2026-03-31-integration-test-mock-server-migration.md)

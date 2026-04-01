@@ -1,5 +1,5 @@
 import type {FamilySet} from "@app/types/familySet";
-import type {Adapted} from "@shared/services/resource-adapter";
+import type {Adapted} from "@script-development/fs-adapter-store";
 
 import SetDetailPage from "@app/domains/sets/pages/SetDetailPage.vue";
 import {familyRouterService} from "@app/services";

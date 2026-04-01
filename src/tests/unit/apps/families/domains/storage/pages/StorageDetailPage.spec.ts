@@ -9,12 +9,12 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import {ref} from "vue";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
-    () => import("../../../../../../helpers"),
-);
+const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamilyServices, createMockFamilyStores} =
+    await vi.hoisted(() => import("../../../../../../helpers"));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
     mockGetOrFailById: vi.fn(),

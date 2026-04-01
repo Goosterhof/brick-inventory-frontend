@@ -66,5 +66,5 @@ Replace the current integration test mock pattern (4x `vi.mock()` with holder re
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** [2026-03-31-integration-test-mock-server.md](../journals/2026-03-31-integration-test-mock-server.md)

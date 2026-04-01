@@ -15,8 +15,7 @@ vi.mock("@script-development/fs-http", async () => {
 
 /**
  * Snake_case fixtures — matching real API response format.
- * The adapter-store's retrieveAll() applies toCamelCaseTyped() to each item,
- * converting these to camelCase before they reach the component.
+ * The HTTP response middleware converts snake_case to camelCase before data reaches the store.
  */
 const makeStorage = (id: number, name: string, parentId: number | null = null) => ({
     id,

@@ -8,9 +8,8 @@ import StatCard from "@shared/components/StatCard.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-const {createMockAxios, createMockStringTs, createMockFamilyServices, createMockFamilyStores} = await vi.hoisted(
-    () => import("../../../../../../helpers"),
-);
+const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamilyServices, createMockFamilyStores} =
+    await vi.hoisted(() => import("../../../../../../helpers"));
 
 const {mockGetRequest, mockGoToRoute, mockIsLoggedIn, mockRetrieveAll, mockGetAll} = vi.hoisted(() => ({
     mockGetRequest: vi.fn(),
@@ -22,6 +21,7 @@ const {mockGetRequest, mockGoToRoute, mockIsLoggedIn, mockRetrieveAll, mockGetAl
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
+vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyHttpService: {getRequest: mockGetRequest},

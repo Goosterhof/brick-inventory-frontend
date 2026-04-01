@@ -48,17 +48,17 @@ Replace the local `adapter-store.ts`, `resource-adapter.ts`, `copy.ts` (deepCopy
 
 ## Acceptance Criteria
 
-- [ ] `@script-development/fs-helpers` and `@script-development/fs-adapter-store` are installed and importable
-- [ ] `shared/helpers/copy.ts` is deleted — no local deepCopy/Writable
-- [ ] `isExisting` imports from `@script-development/fs-helpers`
-- [ ] `shared/services/adapter-store.ts` is deleted — all imports from package
-- [ ] `shared/services/resource-adapter.ts` is deleted — all imports from package
-- [ ] BIO's `New<T>` is passed as the `N` generic parameter wherever domain stores use `Adapted`/`NewAdapted`
-- [ ] All domain stores function identically (no behavioral change)
-- [ ] Integration tests still pass (mock-server pattern unaffected)
-- [ ] `toCamelCaseTyped`, `deepCamelKeys`, `deepSnakeKeys` import from `@script-development/fs-helpers`
-- [ ] knip reports no dead code from old local implementations
-- [ ] Full quality gauntlet passes: `npm run type-check && npm run knip && npm run test:coverage && npm run build`
+- [x] `@script-development/fs-helpers` and `@script-development/fs-adapter-store` are installed and importable
+- [x] `shared/helpers/copy.ts` is deleted — no local deepCopy/Writable
+- [x] `isExisting` imports from `@script-development/fs-helpers`
+- [x] `shared/services/adapter-store.ts` is deleted — all imports from package
+- [x] `shared/services/resource-adapter.ts` is deleted — all imports from package
+- [x] BIO's `New<T>` is passed as the `N` generic parameter wherever domain stores use `Adapted`/`NewAdapted`
+- [x] All domain stores function identically (no behavioral change)
+- [x] Integration tests still pass (mock-server pattern unaffected)
+- [x] `toCamelCaseTyped`, `deepCamelKeys`, `deepSnakeKeys` import from `@script-development/fs-helpers`
+- [x] knip reports no dead code from old local implementations
+- [x] Full quality gauntlet passes: `npm run type-check && npm run knip && npm run test:coverage && npm run build`
 
 ## References
 
@@ -78,5 +78,5 @@ The adapter-store and resource-adapter unit tests (929 + 858 lines) can be delet
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-04-01-fs-helpers-adapter-store-migration.md`
