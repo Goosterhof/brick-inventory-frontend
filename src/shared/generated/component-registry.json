@@ -43,7 +43,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 18
             },
             "dependencyDepth": 0
@@ -132,7 +132,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
+                "commits": 2,
                 "linesChanged": 225
             },
             "dependencyDepth": 0
@@ -178,7 +178,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
+                "commits": 2,
                 "linesChanged": 235
             },
             "dependencyDepth": 0
@@ -331,7 +331,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
+                "commits": 2,
                 "linesChanged": 63
             },
             "dependencyDepth": 1
@@ -383,7 +383,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 23
             },
             "dependencyDepth": 0
@@ -438,7 +438,7 @@
                 ]
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 51
             },
             "dependencyDepth": 1
@@ -583,7 +583,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 23
             },
             "dependencyDepth": 0
@@ -813,7 +813,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 21
             },
             "dependencyDepth": 0
@@ -910,7 +910,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
+                "commits": 2,
                 "linesChanged": 73
             },
             "dependencyDepth": 0
@@ -951,7 +951,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 67
             },
             "dependencyDepth": 0
@@ -1000,7 +1000,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 27
             },
             "dependencyDepth": 0
@@ -1048,7 +1048,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 29
             },
             "dependencyDepth": 0
@@ -1125,7 +1125,7 @@
                 ]
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 75
             },
             "dependencyDepth": 1
@@ -1331,7 +1331,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 3,
+                "commits": 2,
                 "linesChanged": 43
             },
             "dependencyDepth": 0
@@ -1422,7 +1422,7 @@
                 ]
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 52
             },
             "dependencyDepth": 1
@@ -1532,7 +1532,7 @@
                 ]
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 52
             },
             "dependencyDepth": 1
@@ -1611,7 +1611,7 @@
                 ]
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 61
             },
             "dependencyDepth": 1
@@ -1656,7 +1656,7 @@
                 "models": []
             },
             "churn": {
-                "commits": 2,
+                "commits": 1,
                 "linesChanged": 33
             },
             "dependencyDepth": 0

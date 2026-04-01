@@ -18,7 +18,7 @@
         "no-template-curly-in-string": "error",
         "no-unreachable": "error",
         "no-unsafe-negation": "error",
-        "no-return-await": "off", // superseded by typescript/return-await (type-aware)
+        // no-return-await: removed from oxlint core in v1.58; superseded by typescript/return-await (type-aware, line ~95)
         "no-throw-literal": "error",
         "no-unneeded-ternary": "warn",
         "prefer-template": "warn",
@@ -129,7 +129,7 @@
         "unicorn/no-nested-ternary": "error",
         "unicorn/prefer-node-protocol": "warn",
         "unicorn/prefer-ternary": "off", // can reduce readability
-        "unicorn/no-array-push-splice": "warn",
+        // unicorn/no-array-push-splice: removed from oxlint v1.58; no replacement available
         "unicorn/prefer-spread": "warn",
         "unicorn/no-lonely-if": "warn",
         "unicorn/no-abusive-eslint-disable": "error",
@@ -157,9 +157,9 @@
         "vue/prefer-import-from-vue": "error",
         "vue/no-required-prop-with-default": "error",
         "vue/require-typed-ref": "error",
-        "vue/no-ref-as-operand": "error",
-        "vue/no-dupe-keys": "error",
-        "vue/no-template-shadow": "warn",
+        // vue/no-ref-as-operand: removed from oxlint v1.58; no replacement available
+        // vue/no-dupe-keys: removed from oxlint v1.58; no replacement available
+        // vue/no-template-shadow: removed from oxlint v1.58; no replacement available
         "vue/define-emits-declaration": "error",
         "vue/define-props-declaration": "error",
         "vue/define-props-destructuring": "error",
