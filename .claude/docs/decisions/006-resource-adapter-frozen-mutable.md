@@ -1,6 +1,6 @@
 # Decision: Resource adapter with frozen base and mutable ref
 
-**Date**: 2026-03-18 (revised 2026-03-18)
+**Date**: 2026-03-18 (revised 2026-04-01)
 **Feature**: Domain entity state management and CRUD operations
 **Status**: accepted
 **Transferability**: universal
@@ -70,6 +70,38 @@ This means updating one entity in a collection of 100 only recreates the adapted
 - **Type safety narrows the API**: impossible to call `delete()` on a new resource or `create()` on an existing one
 - **Memoization is cheap and correct**: `Object.freeze` gives us reference equality for free. Cache invalidation is deterministic — the only way a frozen reference changes is through `setById` or `retrieveAll`
 - **The `Ref` type assertion**: Vue's `UnwrapRef` widens generic `T` to `unknown`, requiring a cast. This is safe for POJOs but would break if someone passed a resource with nested Vue refs. The adapter is designed for API-sourced data, not arbitrary reactive objects
+- **`Object.defineProperty` must use `configurable: true` when the value is a `Ref`** — see amendment below
+
+## Amendment: Vue Proxy Invariant Constraint (2026-04-01)
+
+### Problem discovered
+
+When an `Adapted<T>` object is stored inside a Vue `ref()` or `reactive()`, Vue wraps it in a `Proxy`. Vue's `get` trap detects `Ref`-typed properties via `isRef()` and auto-unwraps them — returning `ref.value` instead of the `Ref` wrapper itself.
+
+The ECMAScript specification enforces a **Proxy invariant**: for non-configurable, non-writable data properties, the proxy's `get` trap must return the exact same value as the target's own property. The `mutable` property on `Adapted<T>` was defined with `configurable: false, writable: false`, and its value is a `Ref<Writable<T>>`. Vue's unwrapping returns a different value than what the target holds. The engine throws:
+
+```
+TypeError: 'get' on proxy: property 'mutable' is a read-only and non-configurable
+data property on the proxy target but the proxy did not return its actual value
+```
+
+This affects any page that stores an `Adapted<T>` in reactive state and accesses `.mutable` — specifically the edit pages that bind `v-model` to `adapted.mutable.name` or similar.
+
+The `NewAdapted<T>` path is unaffected because it uses object spread + `Object.freeze()`. Frozen properties are non-configurable, but their values are plain objects (not `Ref`s), so Vue has nothing to unwrap.
+
+### Fix
+
+Change `configurable: false` to `configurable: true` on all 6 `Object.defineProperty` calls in `resourceAdapter()` for the existing-resource branch (the properties: `id`-keyed accessors, `mutable`, `reset`, `update`, `patch`, `delete`).
+
+### Why this is safe
+
+The original `configurable: false` was defense-in-depth — preventing anyone from redefining the property descriptor after creation. But `writable: false` already prevents direct reassignment (`adapted.mutable = x` throws `TypeError`), and `Readonly<T>` prevents it at compile time. The only thing `configurable: true` permits that `configurable: false` didn't is calling `Object.defineProperty()` on the adapted object again — no production code does this, and doing so would be an obvious misuse caught in review.
+
+The trade-off: we lose one layer of runtime protection against property descriptor manipulation, but we gain compatibility with Vue's reactive system — which is the entire reason the adapter exists.
+
+### Constraint for future development
+
+Any property defined via `Object.defineProperty` on an adapted object **must** use `configurable: true` if the value is a `Ref` or any type Vue's reactivity system would auto-unwrap. This is a hard constraint imposed by the ECMAScript Proxy specification, not a Vue bug — it cannot be worked around without either changing the descriptor or opting out of reactivity entirely (e.g., `markRaw`).
 
 ## Open Questions
 
