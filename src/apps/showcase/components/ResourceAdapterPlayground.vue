@@ -5,7 +5,7 @@ import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import type {HttpService} from "@script-development/fs-http";
 import type {LoadingService} from "@shared/services/loading";
-import type {StorageService} from "@shared/services/storage";
+import type {StorageService} from "@script-development/fs-storage";
 import type {Adapted, AdapterStoreModule, NewAdapted} from "@shared/services/resource-adapter";
 import type {Item} from "@shared/types/item";
 import {createAdapterStoreModule} from "@shared/services/adapter-store";

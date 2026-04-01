@@ -1,4 +1,4 @@
-import type {StorageService} from "@shared/services/storage";
+import type {StorageService} from "@script-development/fs-storage";
 
 import {createSoundService} from "@shared/services/sound";
 import {beforeEach, describe, expect, it, vi} from "vitest";

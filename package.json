@@ -50,6 +50,7 @@
     "dependencies": {
         "@phosphor-icons/vue": "^2.2.1",
         "@script-development/fs-http": "^0.1.0",
+        "@script-development/fs-storage": "^0.1.0",
         "axios": "^1.13.6",
         "barcode-detector": "^3.1.1",
         "string-ts": "^2.3.1",
