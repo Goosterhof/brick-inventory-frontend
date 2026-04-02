@@ -8,10 +8,12 @@ import {describe, expect, it, vi} from "vitest";
 import {defineComponent} from "vue";
 
 const createMockHttpService = () => {
-    const unregister = vi.fn();
+    const unregister = vi.fn<() => void>();
 
     return {
-        httpService: {registerResponseErrorMiddleware: vi.fn(() => unregister)} as unknown as HttpService,
+        httpService: {
+            registerResponseErrorMiddleware: vi.fn<(fn: ResponseErrorMiddlewareFunc) => () => void>(() => unregister),
+        } as unknown as HttpService,
         unregister,
     };
 };
@@ -79,7 +81,7 @@ describe("useValidationErrors", () => {
         let capturedMiddleware: ResponseErrorMiddlewareFunc | undefined;
         (httpService.registerResponseErrorMiddleware as Mock).mockImplementation((fn: ResponseErrorMiddlewareFunc) => {
             capturedMiddleware = fn;
-            return vi.fn();
+            return vi.fn<() => void>();
         });
 
         const wrapper = shallowMount(
@@ -107,7 +109,7 @@ describe("useValidationErrors", () => {
         let capturedMiddleware: ResponseErrorMiddlewareFunc | undefined;
         (httpService.registerResponseErrorMiddleware as Mock).mockImplementation((fn: ResponseErrorMiddlewareFunc) => {
             capturedMiddleware = fn;
-            return vi.fn();
+            return vi.fn<() => void>();
         });
 
         const wrapper = shallowMount(
@@ -142,7 +144,7 @@ describe("useValidationErrors", () => {
         let capturedMiddleware: ResponseErrorMiddlewareFunc | undefined;
         (httpService.registerResponseErrorMiddleware as Mock).mockImplementation((fn: ResponseErrorMiddlewareFunc) => {
             capturedMiddleware = fn;
-            return vi.fn();
+            return vi.fn<() => void>();
         });
 
         const wrapper = shallowMount(
@@ -169,7 +171,7 @@ describe("useValidationErrors", () => {
         let capturedMiddleware: ResponseErrorMiddlewareFunc | undefined;
         (httpService.registerResponseErrorMiddleware as Mock).mockImplementation((fn: ResponseErrorMiddlewareFunc) => {
             capturedMiddleware = fn;
-            return vi.fn();
+            return vi.fn<() => void>();
         });
 
         const wrapper = shallowMount(
@@ -194,7 +196,7 @@ describe("useValidationErrors", () => {
         let capturedMiddleware: ResponseErrorMiddlewareFunc | undefined;
         (httpService.registerResponseErrorMiddleware as Mock).mockImplementation((fn: ResponseErrorMiddlewareFunc) => {
             capturedMiddleware = fn;
-            return vi.fn();
+            return vi.fn<() => void>();
         });
 
         const wrapper = shallowMount(
@@ -222,7 +224,7 @@ describe("useValidationErrors", () => {
         let capturedMiddleware: ResponseErrorMiddlewareFunc | undefined;
         (httpService.registerResponseErrorMiddleware as Mock).mockImplementation((fn: ResponseErrorMiddlewareFunc) => {
             capturedMiddleware = fn;
-            return vi.fn();
+            return vi.fn<() => void>();
         });
 
         const wrapper = shallowMount(

@@ -9,7 +9,10 @@ const {createMockAxiosWithError, createMockFsHelpers, createMockStringTs, create
     () => import("../../../../../../helpers"),
 );
 
-const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({mockLogin: vi.fn(), mockGoToDashboard: vi.fn()}));
+const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({
+    mockLogin: vi.fn<() => Promise<void>>(),
+    mockGoToDashboard: vi.fn<() => Promise<void>>(),
+}));
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
@@ -148,7 +151,7 @@ describe("LoginPage", () => {
         const wrapper = shallowMount(LoginPage);
 
         // Act
-        const errorHandler = vi.fn();
+        const errorHandler = vi.fn<(err: unknown, instance: unknown, info: string) => void>();
         wrapper.vm.$.appContext.config.errorHandler = errorHandler;
         await wrapper.find("form").trigger("submit");
         await flushPromises();

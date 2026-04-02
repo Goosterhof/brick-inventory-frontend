@@ -22,11 +22,11 @@ vi.mock("@app/domains/sets/modals/AssignPartModal.vue", () => ({
 }));
 
 const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockPatch} = vi.hoisted(() => ({
-    mockGetOrFailById: vi.fn(),
-    mockGetRequest: vi.fn(),
-    mockGoToRoute: vi.fn(),
+    mockGetOrFailById: vi.fn<() => Promise<unknown>>(),
+    mockGetRequest: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
     mockCurrentRouteId: {value: 42},
-    mockPatch: vi.fn(),
+    mockPatch: vi.fn<() => Promise<unknown>>(),
 }));
 
 vi.mock("@app/services", () =>
@@ -41,10 +41,10 @@ vi.mock("@app/stores", () =>
     createMockFamilyStores({
         familySetStoreModule: {
             getAll: {value: []},
-            retrieveAll: vi.fn(),
-            getById: vi.fn(),
+            retrieveAll: vi.fn<() => Promise<void>>(),
+            getById: vi.fn<() => unknown>(),
             getOrFailById: mockGetOrFailById,
-            generateNew: vi.fn(),
+            generateNew: vi.fn<() => unknown>(),
         },
     }),
 );
@@ -76,10 +76,10 @@ const createMockAdapted = (
         purchaseDate: overrides?.purchaseDate !== undefined ? overrides.purchaseDate : "2024-01-15",
         notes: overrides?.notes !== undefined ? overrides.notes : "Birthday gift",
     }),
-    reset: vi.fn(),
-    update: vi.fn(),
+    reset: vi.fn<() => void>(),
+    update: vi.fn<() => Promise<void>>(),
     patch: mockPatch,
-    delete: vi.fn(),
+    delete: vi.fn<() => Promise<void>>(),
 });
 
 const mockSetWithPartsResponse = {

@@ -8,7 +8,11 @@ import {computed} from "vue";
 
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
-const createMockSoundService = (): SoundService => ({play: vi.fn(), isEnabled: computed(() => true), toggle: vi.fn()});
+const createMockSoundService = (): SoundService => ({
+    play: vi.fn<SoundService["play"]>(),
+    isEnabled: computed(() => true),
+    toggle: vi.fn<() => void>(),
+});
 
 const mountDialog = (open = false, slots?: Record<string, string>, soundService?: SoundService) =>
     shallowMount(ConfirmDialog, {

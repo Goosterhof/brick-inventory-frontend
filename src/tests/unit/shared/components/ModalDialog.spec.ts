@@ -7,7 +7,11 @@ import {computed} from "vue";
 
 vi.mock("@phosphor-icons/vue", () => ({PhX: {template: "<i />"}}));
 
-const createMockSoundService = (): SoundService => ({play: vi.fn(), isEnabled: computed(() => true), toggle: vi.fn()});
+const createMockSoundService = (): SoundService => ({
+    play: vi.fn<SoundService["play"]>(),
+    isEnabled: computed(() => true),
+    toggle: vi.fn<() => void>(),
+});
 
 const mountModal = (open = false, soundService?: SoundService) =>
     shallowMount(ModalDialog, {
@@ -35,7 +39,7 @@ describe("ModalDialog", () => {
 
     it("should call showModal when open is true", () => {
         // Arrange
-        const showModal = vi.fn();
+        const showModal = vi.fn<() => void>();
         HTMLDialogElement.prototype.showModal = showModal;
 
         // Act
@@ -47,8 +51,8 @@ describe("ModalDialog", () => {
 
     it("should call dialog.close when open changes to false", async () => {
         // Arrange
-        const closeFn = vi.fn();
-        const showModalFn = vi.fn(function (this: HTMLDialogElement) {
+        const closeFn = vi.fn<() => void>();
+        const showModalFn = vi.fn<() => void>(function (this: HTMLDialogElement) {
             Object.defineProperty(this, "open", {value: true, configurable: true});
         });
         HTMLDialogElement.prototype.showModal = showModalFn;
@@ -133,7 +137,7 @@ describe("ModalDialog", () => {
     describe("sound", () => {
         it("should play pull sound when opened with soundService", () => {
             // Arrange
-            HTMLDialogElement.prototype.showModal = vi.fn();
+            HTMLDialogElement.prototype.showModal = vi.fn<() => void>();
             const soundService = createMockSoundService();
 
             // Act
@@ -145,7 +149,7 @@ describe("ModalDialog", () => {
 
         it("should not play sound when no soundService is provided", () => {
             // Arrange
-            HTMLDialogElement.prototype.showModal = vi.fn();
+            HTMLDialogElement.prototype.showModal = vi.fn<() => void>();
 
             // Act — should not throw
             mountModal(true);
@@ -157,7 +161,7 @@ describe("ModalDialog", () => {
         it("should play pull sound when open prop changes to true", async () => {
             // Arrange
             const soundService = createMockSoundService();
-            const showModalFn = vi.fn(function (this: HTMLDialogElement) {
+            const showModalFn = vi.fn<() => void>(function (this: HTMLDialogElement) {
                 Object.defineProperty(this, "open", {value: true, configurable: true});
             });
             HTMLDialogElement.prototype.showModal = showModalFn;

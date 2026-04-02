@@ -62,8 +62,12 @@ describe("PrimaryButton", () => {
     describe("sound", () => {
         it("should play snap sound on click when soundService is provided", async () => {
             // Arrange
-            const mockPlay = vi.fn();
-            const mockSoundService: SoundService = {play: mockPlay, isEnabled: computed(() => true), toggle: vi.fn()};
+            const mockPlay = vi.fn<SoundService["play"]>();
+            const mockSoundService: SoundService = {
+                play: mockPlay,
+                isEnabled: computed(() => true),
+                toggle: vi.fn<() => void>(),
+            };
             const wrapper = shallowMount(PrimaryButton, {
                 props: {soundService: mockSoundService},
                 slots: {default: "Click"},
@@ -78,8 +82,12 @@ describe("PrimaryButton", () => {
 
         it("should not play sound when silent prop is true", async () => {
             // Arrange
-            const mockPlay = vi.fn();
-            const mockSoundService: SoundService = {play: mockPlay, isEnabled: computed(() => true), toggle: vi.fn()};
+            const mockPlay = vi.fn<SoundService["play"]>();
+            const mockSoundService: SoundService = {
+                play: mockPlay,
+                isEnabled: computed(() => true),
+                toggle: vi.fn<() => void>(),
+            };
             const wrapper = shallowMount(PrimaryButton, {
                 props: {silent: true, soundService: mockSoundService},
                 slots: {default: "Click"},

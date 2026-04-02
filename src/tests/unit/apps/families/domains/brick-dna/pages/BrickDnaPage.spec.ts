@@ -17,7 +17,7 @@ const {
     createMockFormError,
 } = await vi.hoisted(() => import("../../../../../../helpers"));
 
-const {mockGetRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn()}));
+const {mockGetRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn<() => Promise<unknown>>()}));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());

@@ -15,7 +15,7 @@ vi.mock("@script-development/fs-http", async () => {
 });
 
 /** CSV helpers don't run in happy-dom — mock to prevent file system access. */
-vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn(), toCsv: vi.fn(() => "")}));
+vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn<() => void>(), toCsv: vi.fn<() => string>(() => "")}));
 
 /**
  * Snake_case fixtures — matching real API response format.

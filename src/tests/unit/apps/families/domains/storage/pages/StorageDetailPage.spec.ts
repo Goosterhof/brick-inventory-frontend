@@ -17,9 +17,9 @@ vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
-    mockGetOrFailById: vi.fn(),
-    mockGetRequest: vi.fn(),
-    mockGoToRoute: vi.fn(),
+    mockGetOrFailById: vi.fn<(id: number) => Promise<unknown>>(),
+    mockGetRequest: vi.fn<(endpoint: string) => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
     mockCurrentRouteId: {value: 5},
 }));
 
@@ -35,10 +35,10 @@ vi.mock("@app/stores", () =>
     createMockFamilyStores({
         storageOptionStoreModule: {
             getAll: {value: []},
-            retrieveAll: vi.fn(),
-            getById: vi.fn(),
+            retrieveAll: vi.fn<() => Promise<void>>(),
+            getById: vi.fn<() => unknown>(),
             getOrFailById: mockGetOrFailById,
-            generateNew: vi.fn(),
+            generateNew: vi.fn<() => unknown>(),
         },
     }),
 );
@@ -61,10 +61,10 @@ const createMockAdapted = (
         column: overrides?.column !== undefined ? overrides.column : 2,
         childIds: overrides?.childIds ?? [6, 7],
     }),
-    reset: vi.fn(),
-    update: vi.fn(),
-    patch: vi.fn(),
-    delete: vi.fn(),
+    reset: vi.fn<() => void>(),
+    update: vi.fn<() => Promise<void>>(),
+    patch: vi.fn<() => Promise<void>>(),
+    delete: vi.fn<() => Promise<void>>(),
 });
 
 const mockStoragePartsResponse = [

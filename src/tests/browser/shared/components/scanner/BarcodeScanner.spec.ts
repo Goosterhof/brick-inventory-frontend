@@ -3,7 +3,7 @@ import {flushPromises, mount} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 const {mockDetect, MockBarcodeDetector} = vi.hoisted(() => {
-    const mockDetect = vi.fn();
+    const mockDetect = vi.fn<() => Promise<{rawValue: string; format: string}[]>>();
     class MockBarcodeDetector {
         detect = mockDetect;
     }
@@ -15,8 +15,8 @@ vi.mock("barcode-detector", () => ({BarcodeDetector: MockBarcodeDetector}));
 const defaultProps = {loadingText: "Starting camera...", retryText: "Retry"};
 
 const createMockStream = () => {
-    const mockTrack = {stop: vi.fn()};
-    const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+    const mockTrack = {stop: vi.fn<() => void>()};
+    const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
     return {mockTrack, mockStream};
 };
 
@@ -26,15 +26,15 @@ describe("BarcodeScanner (browser)", () => {
     let originalSrcObjectDescriptor: PropertyDescriptor | undefined;
 
     beforeEach(() => {
-        mockGetUserMedia = vi.fn();
+        mockGetUserMedia = vi.fn<() => Promise<MediaStream>>();
         mockDetect.mockReset();
 
         vi.stubGlobal("navigator", {mediaDevices: {getUserMedia: mockGetUserMedia}});
 
         originalSrcObjectDescriptor = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, "srcObject");
         Object.defineProperty(HTMLMediaElement.prototype, "srcObject", {
-            set: vi.fn(),
-            get: vi.fn(() => null),
+            set: vi.fn<() => void>(),
+            get: vi.fn<() => null>(() => null),
             configurable: true,
         });
         vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);

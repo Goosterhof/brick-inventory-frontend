@@ -9,7 +9,7 @@ type TestField = "name" | "email";
 
 const createMockValidationErrors = (): UseValidationErrors<TestField> => ({
     errors: ref<ValidationErrors<TestField>>({}),
-    clearErrors: vi.fn(),
+    clearErrors: vi.fn<() => void>(),
 });
 
 const createAxiosError = (status: number): AxiosError => {
@@ -41,7 +41,7 @@ describe("useFormSubmit", () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
-        const action = vi.fn().mockResolvedValue(undefined);
+        const action = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
 
         // Act
         await handleSubmit(action);
@@ -55,7 +55,7 @@ describe("useFormSubmit", () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
-        const action = vi.fn().mockResolvedValue(undefined);
+        const action = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
 
         // Act
         await handleSubmit(action);
@@ -69,7 +69,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
         const error = createAxiosError(422);
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act & Assert
         await expect(handleSubmit(action)).resolves.toBeUndefined();
@@ -80,7 +80,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
         const error = createAxiosError(500);
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act & Assert
         await expect(handleSubmit(action)).rejects.toThrow(error);
@@ -91,7 +91,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
         const error = new Error("Network failure");
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act & Assert
         await expect(handleSubmit(action)).rejects.toThrow("Network failure");
@@ -102,7 +102,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
         const error = createAxiosError(422);
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act
         await handleSubmit(action);
@@ -116,7 +116,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
         const error = createAxiosError(500);
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act
         try {
@@ -134,7 +134,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
         const error = new AxiosError("Network Error", AxiosError.ERR_NETWORK);
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act & Assert
         await expect(handleSubmit(action)).rejects.toThrow(error);
@@ -145,8 +145,9 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
         let submittingDuringAction = false;
-        const action = vi.fn().mockImplementation(() => {
+        const action = vi.fn<() => Promise<void>>().mockImplementation((): Promise<void> => {
             submittingDuringAction = submitting.value;
+            return Promise.resolve();
         });
 
         // Act
@@ -162,7 +163,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
         const error = createAxiosError(422);
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act
         await handleSubmit(action);
@@ -176,7 +177,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
         const error = createAxiosError(500);
-        const action = vi.fn().mockRejectedValue(error);
+        const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act
         try {
@@ -194,7 +195,7 @@ describe("useFormSubmit", () => {
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
         let resolveAction!: () => void;
-        const action = vi.fn().mockImplementation(
+        const action = vi.fn<() => Promise<void>>().mockImplementation(
             () =>
                 new Promise<void>((resolve) => {
                     resolveAction = resolve;

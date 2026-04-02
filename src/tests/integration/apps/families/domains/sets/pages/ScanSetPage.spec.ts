@@ -13,7 +13,7 @@ vi.mock("@script-development/fs-http", async () => {
 });
 
 /** barcode-detector is a browser API not available in happy-dom. */
-vi.mock("barcode-detector", () => ({BarcodeDetector: vi.fn()}));
+vi.mock("barcode-detector", () => ({BarcodeDetector: vi.fn<() => void>()}));
 
 describe("ScanSetPage — integration", () => {
     beforeEach(() => {

@@ -52,7 +52,7 @@ describe("DialogServiceDemo", () => {
 
     it("should open a single dialog when clicking Open Dialog", async () => {
         // Arrange
-        HTMLDialogElement.prototype.showModal = vi.fn();
+        HTMLDialogElement.prototype.showModal = vi.fn<() => void>();
         const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Act
@@ -69,7 +69,7 @@ describe("DialogServiceDemo", () => {
 
     it("should open a stackable dialog with Open Stacked button visible", async () => {
         // Arrange
-        HTMLDialogElement.prototype.showModal = vi.fn();
+        HTMLDialogElement.prototype.showModal = vi.fn<() => void>();
         const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Act
@@ -87,7 +87,7 @@ describe("DialogServiceDemo", () => {
 
     it("should stack a second dialog when clicking Open Stacked inside a dialog", async () => {
         // Arrange
-        HTMLDialogElement.prototype.showModal = vi.fn();
+        HTMLDialogElement.prototype.showModal = vi.fn<() => void>();
         const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         const stackButton = wrapper.findAll("button").find((b) => b.text().includes("Open Stackable"));
@@ -109,7 +109,7 @@ describe("DialogServiceDemo", () => {
 
     it("should close a dialog when clicking its Close button", async () => {
         // Arrange
-        HTMLDialogElement.prototype.showModal = vi.fn();
+        HTMLDialogElement.prototype.showModal = vi.fn<() => void>();
         const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         const openButton = wrapper.findAll("button").find((b) => b.text().includes("Open Dialog"));
@@ -130,7 +130,7 @@ describe("DialogServiceDemo", () => {
 
     it("should close all dialogs when clicking Close All", async () => {
         // Arrange
-        HTMLDialogElement.prototype.showModal = vi.fn();
+        HTMLDialogElement.prototype.showModal = vi.fn<() => void>();
         const wrapper = shallowMount(DialogServiceDemo, {global: {stubs}, attachTo: document.body});
 
         // Open stackable + stacked

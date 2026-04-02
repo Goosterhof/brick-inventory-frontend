@@ -26,7 +26,10 @@ vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
-const {mockGetRequest, mockPostRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn(), mockPostRequest: vi.fn()}));
+const {mockGetRequest, mockPostRequest} = vi.hoisted(() => ({
+    mockGetRequest: vi.fn<() => Promise<unknown>>(),
+    mockPostRequest: vi.fn<() => Promise<unknown>>(),
+}));
 
 vi.mock("@app/services", () =>
     createMockFamilyServices({

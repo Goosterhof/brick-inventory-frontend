@@ -7,43 +7,55 @@ const createMockStorageService = (initialData: Record<string, unknown> = {}): St
     const store = new Map<string, unknown>(Object.entries(initialData));
 
     return {
-        put: vi.fn((key: string, value: unknown) => store.set(key, value)),
-        get: vi.fn(<T>(key: string): T | undefined => store.get(key) as T | undefined),
-        remove: vi.fn((key: string) => store.delete(key)),
-        clear: vi.fn(() => store.clear()),
+        put: vi.fn<(key: string, value: unknown) => void>((key: string, value: unknown) => store.set(key, value)),
+        get: vi.fn<(key: string) => unknown>((key: string) => store.get(key)) as unknown as StorageService["get"],
+        remove: vi.fn<(key: string) => void>((key: string) => {
+            store.delete(key);
+        }),
+        clear: vi.fn<() => void>(() => {
+            store.clear();
+        }),
     };
 };
 
 const mockMatchMedia = (matches: boolean) => {
-    Object.defineProperty(window, "matchMedia", {writable: true, value: vi.fn().mockReturnValue({matches})});
+    Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: vi.fn<() => {matches: boolean}>().mockReturnValue({matches}),
+    });
 };
 
 const createMockAudioContext = () => {
     const mockGainNode = {
         gain: {
             value: 0,
-            setValueAtTime: vi.fn(),
-            exponentialRampToValueAtTime: vi.fn(),
-            linearRampToValueAtTime: vi.fn(),
+            setValueAtTime: vi.fn<() => void>(),
+            exponentialRampToValueAtTime: vi.fn<() => void>(),
+            linearRampToValueAtTime: vi.fn<() => void>(),
         },
-        connect: vi.fn(),
+        connect: vi.fn<() => void>(),
     };
 
-    const mockFilter = {type: "", frequency: {value: 0}, Q: {value: 0}, connect: vi.fn()};
+    const mockFilter = {type: "", frequency: {value: 0}, Q: {value: 0}, connect: vi.fn<() => void>()};
 
-    const mockBufferSource = {buffer: null, connect: vi.fn(), start: vi.fn(), stop: vi.fn()};
+    const mockBufferSource = {
+        buffer: null,
+        connect: vi.fn<() => void>(),
+        start: vi.fn<() => void>(),
+        stop: vi.fn<() => void>(),
+    };
 
-    const mockBuffer = {getChannelData: vi.fn().mockReturnValue(new Float32Array(4800))};
+    const mockBuffer = {getChannelData: vi.fn<() => Float32Array>().mockReturnValue(new Float32Array(4800))};
 
     const mockContext = {
         currentTime: 0,
         sampleRate: 48000,
         destination: {},
-        createBufferSource: vi.fn().mockReturnValue(mockBufferSource),
-        createBiquadFilter: vi.fn().mockReturnValue(mockFilter),
-        createGain: vi.fn().mockReturnValue(mockGainNode),
-        createBuffer: vi.fn().mockReturnValue(mockBuffer),
-        close: vi.fn(),
+        createBufferSource: vi.fn<() => typeof mockBufferSource>().mockReturnValue(mockBufferSource),
+        createBiquadFilter: vi.fn<() => typeof mockFilter>().mockReturnValue(mockFilter),
+        createGain: vi.fn<() => typeof mockGainNode>().mockReturnValue(mockGainNode),
+        createBuffer: vi.fn<() => typeof mockBuffer>().mockReturnValue(mockBuffer),
+        close: vi.fn<() => void>(),
     };
 
     return mockContext;
@@ -55,7 +67,7 @@ describe("createSoundService", () => {
 
         vi.stubGlobal(
             "AudioContext",
-            vi.fn().mockImplementation(function () {
+            vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return createMockAudioContext();
             }),
         );
@@ -217,7 +229,7 @@ describe("createSoundService", () => {
         const mockContext = createMockAudioContext();
         vi.stubGlobal(
             "AudioContext",
-            vi.fn().mockImplementation(function () {
+            vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return mockContext;
             }),
         );
@@ -249,7 +261,7 @@ describe("createSoundService", () => {
         const mockContext = createMockAudioContext();
         vi.stubGlobal(
             "AudioContext",
-            vi.fn().mockImplementation(function () {
+            vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return mockContext;
             }),
         );
@@ -270,7 +282,7 @@ describe("createSoundService", () => {
         const mockContext = createMockAudioContext();
         vi.stubGlobal(
             "AudioContext",
-            vi.fn().mockImplementation(function () {
+            vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return mockContext;
             }),
         );

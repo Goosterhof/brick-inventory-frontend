@@ -9,7 +9,7 @@ describe("CameraCapture", () => {
     let restoreSrcObject: (() => void) | undefined;
 
     beforeEach(() => {
-        mockGetUserMedia = vi.fn();
+        mockGetUserMedia = vi.fn<() => Promise<MediaStream>>();
 
         Object.defineProperty(navigator, "mediaDevices", {
             value: {getUserMedia: mockGetUserMedia},
@@ -45,8 +45,8 @@ describe("CameraCapture", () => {
     describe("rendering", () => {
         it("should render video element and capture button", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -60,8 +60,8 @@ describe("CameraCapture", () => {
 
         it("should show loading state initially", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -73,8 +73,8 @@ describe("CameraCapture", () => {
 
         it("should hide loading state after camera starts", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -87,8 +87,8 @@ describe("CameraCapture", () => {
 
         it("should apply opacity-0 class to video when camera is not active", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -102,8 +102,8 @@ describe("CameraCapture", () => {
     describe("camera initialization", () => {
         it("should request camera access on mount with correct constraints", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -118,12 +118,15 @@ describe("CameraCapture", () => {
 
         it("should enable capture button when camera is active", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();
@@ -142,12 +145,15 @@ describe("CameraCapture", () => {
 
         it("should stop camera tracks on unmount", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();
@@ -249,8 +255,8 @@ describe("CameraCapture", () => {
 
         it("should retry camera access when retry button is clicked", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia.mockRejectedValueOnce(error).mockResolvedValueOnce(mockStream);
@@ -270,8 +276,8 @@ describe("CameraCapture", () => {
     describe("unmount during async initialization", () => {
         it("should clean up stream when component unmounts during getUserMedia", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             let resolveGetUserMedia: ((value: unknown) => void) | undefined;
             mockGetUserMedia.mockReturnValue(
                 new Promise((resolve) => {
@@ -291,8 +297,8 @@ describe("CameraCapture", () => {
 
         it("should not activate camera when component unmounts during video play", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             let resolvePlay: (() => void) | undefined;
             mockGetUserMedia.mockResolvedValue(mockStream);
 
@@ -300,7 +306,7 @@ describe("CameraCapture", () => {
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {
-                value: vi.fn(
+                value: vi.fn<() => Promise<void>>(
                     () =>
                         new Promise<void>((resolve) => {
                             resolvePlay = resolve;
@@ -321,13 +327,13 @@ describe("CameraCapture", () => {
     describe("race condition prevention", () => {
         it("should prevent concurrent camera starts", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             let resolveGetUserMedia: ((value: unknown) => void) | undefined;
             let callCount = 0;
-            mockGetUserMedia = vi.fn(() => {
+            mockGetUserMedia = vi.fn<() => Promise<unknown>>(() => {
                 callCount++;
                 if (callCount === 1) {
                     return Promise.reject(error);
@@ -357,10 +363,10 @@ describe("CameraCapture", () => {
 
         it("should stop existing stream before starting new one on retry", async () => {
             // Arrange
-            const firstTrack = {stop: vi.fn()};
-            const firstStream = {getTracks: vi.fn(() => [firstTrack])};
-            const secondTrack = {stop: vi.fn()};
-            const secondStream = {getTracks: vi.fn(() => [secondTrack])};
+            const firstTrack = {stop: vi.fn<() => void>()};
+            const firstStream = {getTracks: vi.fn<() => (typeof firstTrack)[]>(() => [firstTrack])};
+            const secondTrack = {stop: vi.fn<() => void>()};
+            const secondStream = {getTracks: vi.fn<() => (typeof secondTrack)[]>(() => [secondTrack])};
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia
@@ -369,7 +375,10 @@ describe("CameraCapture", () => {
                 .mockResolvedValueOnce(secondStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();
@@ -389,21 +398,29 @@ describe("CameraCapture", () => {
     describe("image capture", () => {
         it("should emit capture event with blob when capture button is clicked", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
-            const mockContext = {drawImage: vi.fn()};
+            const mockContext = {drawImage: vi.fn<() => void>()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            Object.defineProperty(canvasElement, "getContext", {
+                value: vi.fn<() => typeof mockContext>(() => mockContext),
+                writable: true,
+            });
             Object.defineProperty(canvasElement, "toBlob", {
-                value: vi.fn((callback: (blob: Blob | null) => void) => {
-                    callback(new Blob(["test"], {type: "image/jpeg"}));
-                }),
+                value: vi.fn<(callback: (blob: Blob | null) => void) => void>(
+                    (callback: (blob: Blob | null) => void) => {
+                        callback(new Blob(["test"], {type: "image/jpeg"}));
+                    },
+                ),
                 writable: true,
             });
             await flushPromises();
@@ -441,21 +458,29 @@ describe("CameraCapture", () => {
 
         it("should emit error event when toBlob returns null", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
-            const mockContext = {drawImage: vi.fn()};
+            const mockContext = {drawImage: vi.fn<() => void>()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            Object.defineProperty(canvasElement, "getContext", {
+                value: vi.fn<() => typeof mockContext>(() => mockContext),
+                writable: true,
+            });
             Object.defineProperty(canvasElement, "toBlob", {
-                value: vi.fn((callback: (blob: Blob | null) => void) => {
-                    callback(null);
-                }),
+                value: vi.fn<(callback: (blob: Blob | null) => void) => void>(
+                    (callback: (blob: Blob | null) => void) => {
+                        callback(null);
+                    },
+                ),
                 writable: true,
             });
             await flushPromises();
@@ -476,16 +501,19 @@ describe("CameraCapture", () => {
 
         it("should emit error when canvas context is not available", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => null), writable: true});
+            Object.defineProperty(canvasElement, "getContext", {value: vi.fn<() => null>(() => null), writable: true});
             await flushPromises();
             const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
             await retryButton?.trigger("click");
@@ -503,18 +531,24 @@ describe("CameraCapture", () => {
 
         it("should return early when video dimensions are zero and metadata is loaded", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 0, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 0, writable: true});
             Object.defineProperty(videoElement, "readyState", {value: HTMLMediaElement.HAVE_METADATA, writable: true});
-            const mockContext = {drawImage: vi.fn()};
+            const mockContext = {drawImage: vi.fn<() => void>()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            Object.defineProperty(canvasElement, "getContext", {
+                value: vi.fn<() => typeof mockContext>(() => mockContext),
+                writable: true,
+            });
             await flushPromises();
             const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
             await retryButton?.trigger("click");
@@ -531,12 +565,15 @@ describe("CameraCapture", () => {
 
         it("should wait for metadata when video dimensions are not available", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 0, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 0, writable: true});
             Object.defineProperty(videoElement, "readyState", {value: 0, writable: true});
@@ -552,9 +589,12 @@ describe("CameraCapture", () => {
                 writable: true,
                 configurable: true,
             });
-            const mockContext = {drawImage: vi.fn()};
+            const mockContext = {drawImage: vi.fn<() => void>()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            Object.defineProperty(canvasElement, "getContext", {
+                value: vi.fn<() => typeof mockContext>(() => mockContext),
+                writable: true,
+            });
             await flushPromises();
             const retryButton = wrapper.findAll("button").find((btn) => btn.text() === "Retry");
             await retryButton?.trigger("click");
@@ -573,12 +613,15 @@ describe("CameraCapture", () => {
 
         it("should capture image after loadedmetadata event fires", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             let videoWidth = 0;
             let videoHeight = 0;
             Object.defineProperty(videoElement, "videoWidth", {get: () => videoWidth, configurable: true});
@@ -596,13 +639,18 @@ describe("CameraCapture", () => {
                 writable: true,
                 configurable: true,
             });
-            const mockContext = {drawImage: vi.fn()};
+            const mockContext = {drawImage: vi.fn<() => void>()};
             const canvasElement = wrapper.find("canvas").element as HTMLCanvasElement;
-            Object.defineProperty(canvasElement, "getContext", {value: vi.fn(() => mockContext), writable: true});
+            Object.defineProperty(canvasElement, "getContext", {
+                value: vi.fn<() => typeof mockContext>(() => mockContext),
+                writable: true,
+            });
             Object.defineProperty(canvasElement, "toBlob", {
-                value: vi.fn((callback: (blob: Blob | null) => void) => {
-                    callback(new Blob(["test"], {type: "image/jpeg"}));
-                }),
+                value: vi.fn<(callback: (blob: Blob | null) => void) => void>(
+                    (callback: (blob: Blob | null) => void) => {
+                        callback(new Blob(["test"], {type: "image/jpeg"}));
+                    },
+                ),
                 writable: true,
             });
             await flushPromises();
@@ -627,8 +675,8 @@ describe("CameraCapture", () => {
     describe("props rendering", () => {
         it("should render loading text from prop", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -640,8 +688,8 @@ describe("CameraCapture", () => {
 
         it("should render custom loading text from prop", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -683,8 +731,8 @@ describe("CameraCapture", () => {
 
         it("should render capture text from prop", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -697,8 +745,8 @@ describe("CameraCapture", () => {
 
         it("should render custom capture text from prop", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -713,8 +761,8 @@ describe("CameraCapture", () => {
     describe("accessibility", () => {
         it("should have aria-label on video element", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -727,8 +775,8 @@ describe("CameraCapture", () => {
 
         it("should have aria-live polite region for loading state", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -773,12 +821,15 @@ describe("CameraCapture", () => {
 
         it("should update aria-label when camera becomes active", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(CameraCapture, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             Object.defineProperty(videoElement, "videoWidth", {value: 1280, writable: true});
             Object.defineProperty(videoElement, "videoHeight", {value: 720, writable: true});
             await flushPromises();

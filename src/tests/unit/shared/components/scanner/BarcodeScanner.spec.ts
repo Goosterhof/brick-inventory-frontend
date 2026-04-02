@@ -3,7 +3,7 @@ import {flushPromises, shallowMount} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 const {mockDetect, MockBarcodeDetector} = vi.hoisted(() => {
-    const mockDetect = vi.fn();
+    const mockDetect = vi.fn<() => Promise<{rawValue: string; format: string}[]>>();
     class MockBarcodeDetector {
         detect = mockDetect;
     }
@@ -19,7 +19,7 @@ describe("BarcodeScanner", () => {
     let restoreSrcObject: (() => void) | undefined;
 
     beforeEach(() => {
-        mockGetUserMedia = vi.fn();
+        mockGetUserMedia = vi.fn<() => Promise<MediaStream>>();
         mockDetect.mockReset();
 
         Object.defineProperty(navigator, "mediaDevices", {
@@ -59,8 +59,8 @@ describe("BarcodeScanner", () => {
     describe("rendering", () => {
         it("should render video element", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -72,8 +72,8 @@ describe("BarcodeScanner", () => {
 
         it("should show loading state initially", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -85,8 +85,8 @@ describe("BarcodeScanner", () => {
 
         it("should hide loading state after camera starts", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -99,8 +99,8 @@ describe("BarcodeScanner", () => {
 
         it("should apply opacity-0 class to video when camera is not active", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -114,8 +114,8 @@ describe("BarcodeScanner", () => {
     describe("camera initialization", () => {
         it("should request camera access on mount with correct constraints", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -130,12 +130,15 @@ describe("BarcodeScanner", () => {
 
         it("should stop camera tracks on unmount", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             await flushPromises();
 
             // Act
@@ -220,8 +223,8 @@ describe("BarcodeScanner", () => {
 
         it("should retry camera access when retry button is clicked", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             mockGetUserMedia.mockRejectedValueOnce(error).mockResolvedValueOnce(mockStream);
@@ -241,8 +244,8 @@ describe("BarcodeScanner", () => {
     describe("unmount during async initialization", () => {
         it("should clean up stream when component unmounts during getUserMedia", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             let resolveGetUserMedia: ((value: unknown) => void) | undefined;
             mockGetUserMedia.mockReturnValue(
                 new Promise((resolve) => {
@@ -262,8 +265,8 @@ describe("BarcodeScanner", () => {
 
         it("should not start scanning when component unmounts during video play", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             let resolvePlay: (() => void) | undefined;
             mockGetUserMedia.mockResolvedValue(mockStream);
 
@@ -271,7 +274,7 @@ describe("BarcodeScanner", () => {
             const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
             Object.defineProperty(videoElement, "play", {
-                value: vi.fn(
+                value: vi.fn<() => Promise<void>>(
                     () =>
                         new Promise<void>((resolve) => {
                             resolvePlay = resolve;
@@ -294,13 +297,13 @@ describe("BarcodeScanner", () => {
     describe("race condition prevention", () => {
         it("should prevent concurrent camera starts", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             const error = new Error("Permission denied");
             error.name = "NotAllowedError";
             let resolveGetUserMedia: ((value: unknown) => void) | undefined;
             let callCount = 0;
-            mockGetUserMedia = vi.fn(() => {
+            mockGetUserMedia = vi.fn<() => Promise<unknown>>(() => {
                 callCount++;
                 if (callCount === 1) {
                     return Promise.reject(error);
@@ -332,13 +335,16 @@ describe("BarcodeScanner", () => {
     describe("barcode detection", () => {
         it("should emit detect event when a barcode is found", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
             const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             await flushPromises();
 
             // Act
@@ -353,13 +359,16 @@ describe("BarcodeScanner", () => {
 
         it("should not emit detect when no barcode is found", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([]);
             const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             await flushPromises();
 
             // Act
@@ -372,13 +381,16 @@ describe("BarcodeScanner", () => {
 
         it("should stop detecting after first barcode is found", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
             const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             await flushPromises();
             vi.advanceTimersByTime(250);
             await flushPromises();
@@ -394,13 +406,16 @@ describe("BarcodeScanner", () => {
 
         it("should show detected code overlay when barcode is found", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
             const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             await flushPromises();
 
             // Act
@@ -413,13 +428,16 @@ describe("BarcodeScanner", () => {
 
         it("should handle detection errors gracefully", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockRejectedValue(new Error("Detection failed"));
             const wrapper = shallowMount(BarcodeScanner, {props: defaultProps});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             await flushPromises();
 
             // Act
@@ -467,13 +485,16 @@ describe("BarcodeScanner", () => {
 
         it("should clear detected code and resume scanning when resetKey changes", async () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
             mockDetect.mockResolvedValue([{rawValue: "5702015357197", format: "ean_13"}]);
             const wrapper = shallowMount(BarcodeScanner, {props: {...defaultProps, resetKey: 0}});
             const videoElement = wrapper.find("video").element as HTMLVideoElement;
-            Object.defineProperty(videoElement, "play", {value: vi.fn().mockResolvedValue(undefined), writable: true});
+            Object.defineProperty(videoElement, "play", {
+                value: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+                writable: true,
+            });
             await flushPromises();
             vi.advanceTimersByTime(250);
             await flushPromises();
@@ -492,8 +513,8 @@ describe("BarcodeScanner", () => {
     describe("accessibility", () => {
         it("should have aria-label on video element", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -506,8 +527,8 @@ describe("BarcodeScanner", () => {
 
         it("should have aria-live polite region for loading state", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act
@@ -537,8 +558,8 @@ describe("BarcodeScanner", () => {
 
         it("should have aria-label on viewfinder region", () => {
             // Arrange
-            const mockTrack = {stop: vi.fn()};
-            const mockStream = {getTracks: vi.fn(() => [mockTrack])};
+            const mockTrack = {stop: vi.fn<() => void>()};
+            const mockStream = {getTracks: vi.fn<() => (typeof mockTrack)[]>(() => [mockTrack])};
             mockGetUserMedia.mockResolvedValue(mockStream);
 
             // Act

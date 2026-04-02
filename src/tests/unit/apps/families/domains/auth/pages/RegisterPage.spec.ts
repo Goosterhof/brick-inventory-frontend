@@ -8,7 +8,10 @@ const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamil
     () => import("../../../../../../helpers"),
 );
 
-const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({mockRegister: vi.fn(), mockGoToDashboard: vi.fn()}));
+const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({
+    mockRegister: vi.fn<() => Promise<void>>(),
+    mockGoToDashboard: vi.fn<() => Promise<void>>(),
+}));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());

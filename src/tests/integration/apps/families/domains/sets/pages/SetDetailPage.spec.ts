@@ -47,8 +47,8 @@ const makeAdapted = (overrides: Record<string, unknown> = {}) =>
             imageUrl: null,
         },
         mutable: {quantity: 1, status: "sealed", purchaseDate: "2024-01-15", notes: "Mint condition"},
-        patch: vi.fn(),
-        delete: vi.fn(),
+        patch: vi.fn<() => Promise<void>>(),
+        delete: vi.fn<() => Promise<void>>(),
         ...overrides,
     }) as unknown as Adapted<FamilySet>;
 

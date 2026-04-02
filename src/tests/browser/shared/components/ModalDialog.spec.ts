@@ -19,7 +19,7 @@ describe("ModalDialog (browser)", () => {
     beforeEach(() => {
         container = document.createElement("div");
         document.body.appendChild(container);
-        onClose = vi.fn();
+        onClose = vi.fn<() => void>();
     });
 
     afterEach(() => {

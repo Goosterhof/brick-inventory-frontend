@@ -71,11 +71,11 @@ vi.mock("@shared/components/PrimaryButton.vue", () => ({
     },
 }));
 
-vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn(), toCsv: vi.fn()}));
+vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn<() => void>(), toCsv: vi.fn<() => string>()}));
 
 const {mockRetrieveAll, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
     const {ref} = await import("vue");
-    return {mockRetrieveAll: vi.fn(), mockAllItems: ref<unknown[]>([]), mockIsLoading: ref(false)};
+    return {mockRetrieveAll: vi.fn<() => Promise<void>>(), mockAllItems: ref<unknown[]>([]), mockIsLoading: ref(false)};
 });
 
 vi.mock("@app/services", async () => {
@@ -83,7 +83,7 @@ vi.mock("@app/services", async () => {
 
     return createMockFamilyServices({
         familyAuthService: {isLoggedIn: {value: true}},
-        familyRouterService: {goToRoute: vi.fn()},
+        familyRouterService: {goToRoute: vi.fn<() => Promise<void>>()},
         familyLoadingService: {isLoading: computed(() => mockIsLoading.value)},
     });
 });
@@ -95,9 +95,9 @@ vi.mock("@app/stores", async () => {
         familySetStoreModule: {
             getAll: computed(() => mockAllItems.value),
             retrieveAll: mockRetrieveAll,
-            getById: vi.fn(),
-            getOrFailById: vi.fn(),
-            generateNew: vi.fn(),
+            getById: vi.fn<() => unknown>(),
+            getOrFailById: vi.fn<() => Promise<unknown>>(),
+            generateNew: vi.fn<() => unknown>(),
         },
     });
 });

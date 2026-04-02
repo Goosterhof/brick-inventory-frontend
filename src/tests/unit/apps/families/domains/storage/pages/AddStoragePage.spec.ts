@@ -16,7 +16,10 @@ const {
     createMockFamilyStores,
 } = await vi.hoisted(() => import("../../../../../../helpers"));
 
-const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
+const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({
+    mockCreate: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
+}));
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
@@ -32,9 +35,9 @@ vi.mock("@app/stores", () =>
     createMockFamilyStores({
         storageOptionStoreModule: {
             getAll: {value: []},
-            retrieveAll: vi.fn(),
-            getById: vi.fn(),
-            getOrFailById: vi.fn(),
+            retrieveAll: vi.fn<() => Promise<void>>(),
+            getById: vi.fn<() => unknown>(),
+            getOrFailById: vi.fn<() => Promise<unknown>>(),
             generateNew: () => ({
                 name: "",
                 description: null,
@@ -43,7 +46,7 @@ vi.mock("@app/stores", () =>
                 column: null,
                 childIds: [],
                 mutable: ref({name: "", description: null, parentId: null, row: null, column: null, childIds: []}),
-                reset: vi.fn(),
+                reset: vi.fn<() => void>(),
                 create: mockCreate,
             }),
         },
@@ -160,7 +163,7 @@ describe("AddStoragePage", () => {
         const wrapper = shallowMount(AddStoragePage);
 
         // Act
-        const errorHandler = vi.fn();
+        const errorHandler = vi.fn<(err: unknown, instance: unknown, info: string) => void>();
         wrapper.vm.$.appContext.config.errorHandler = errorHandler;
         await wrapper.find("form").trigger("submit");
         await flushPromises();

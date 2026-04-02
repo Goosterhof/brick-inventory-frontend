@@ -25,10 +25,10 @@ vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 const {mockGetRequest, mockPutRequest, mockPostRequest, mockUserId} = vi.hoisted(() => ({
-    mockGetRequest: vi.fn(),
-    mockPutRequest: vi.fn(),
-    mockPostRequest: vi.fn(),
-    mockUserId: vi.fn(),
+    mockGetRequest: vi.fn<(url: string) => Promise<unknown>>(),
+    mockPutRequest: vi.fn<() => Promise<unknown>>(),
+    mockPostRequest: vi.fn<() => Promise<unknown>>(),
+    mockUserId: vi.fn<() => number>(),
 }));
 
 vi.mock("@app/services", () =>

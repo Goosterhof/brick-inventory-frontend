@@ -18,7 +18,7 @@ const {
     createMockFormError,
 } = await vi.hoisted(() => import("../../../../../../helpers"));
 
-const {mockGetRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn()}));
+const {mockGetRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn<() => Promise<unknown>>()}));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
@@ -64,7 +64,7 @@ vi.mock("@shared/components/PrimaryButton.vue", () => ({
     },
 }));
 
-vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn(), toCsv: vi.fn()}));
+vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn<() => void>(), toCsv: vi.fn<() => string>()}));
 
 vi.mock("@app/services", () =>
     createMockFamilyServices({

@@ -26,10 +26,10 @@ vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 
 const {mockGetRequest, mockPostRequest, mockDeleteRequest, mockUserId} = vi.hoisted(() => ({
-    mockGetRequest: vi.fn(),
-    mockPostRequest: vi.fn(),
-    mockDeleteRequest: vi.fn(),
-    mockUserId: vi.fn(),
+    mockGetRequest: vi.fn<(url: string) => Promise<unknown>>(),
+    mockPostRequest: vi.fn<() => Promise<unknown>>(),
+    mockDeleteRequest: vi.fn<() => Promise<unknown>>(),
+    mockUserId: vi.fn<() => number>(),
 }));
 
 vi.mock("@app/services", () =>
@@ -78,7 +78,7 @@ describe("SettingsPage — members", () => {
         mockUserId.mockReturnValue(1);
         mockMembersAndNoInviteCode();
         Object.defineProperty(navigator, "clipboard", {
-            value: {writeText: vi.fn().mockResolvedValue(undefined)},
+            value: {writeText: vi.fn<(text: string) => Promise<void>>().mockResolvedValue(undefined)},
             writable: true,
             configurable: true,
         });

@@ -1,5 +1,6 @@
 import type {HttpService} from "@script-development/fs-http";
 import type {AuthService} from "@shared/services/auth/types";
+import type {Mock} from "vitest";
 
 import {vi} from "vitest";
 
@@ -17,42 +18,48 @@ export interface FamilyServicesMock {
     FamilyRouterLink: Record<string, unknown>;
 }
 
+type LoosePartial<T> = {
+    [K in keyof T]?: T[K] extends Mock ? Mock : T[K];
+};
+
 type FamilyServicesOverrides = {
-    [K in keyof FamilyServicesMock]?: Partial<FamilyServicesMock[K]>;
+    [K in keyof FamilyServicesMock]?: LoosePartial<FamilyServicesMock[K]>;
 };
 
 export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): FamilyServicesMock => {
     const defaults: FamilyServicesMock = {
         familyHttpService: {
-            getRequest: vi.fn(),
-            postRequest: vi.fn(),
-            putRequest: vi.fn(),
-            patchRequest: vi.fn(),
-            deleteRequest: vi.fn(),
-            downloadRequest: vi.fn(),
-            previewRequest: vi.fn(),
-            streamRequest: vi.fn(),
-            registerRequestMiddleware: vi.fn(() => vi.fn()),
-            registerResponseMiddleware: vi.fn(() => vi.fn()),
-            registerResponseErrorMiddleware: vi.fn(() => vi.fn()),
+            getRequest: vi.fn<HttpService["getRequest"]>(),
+            postRequest: vi.fn<HttpService["postRequest"]>(),
+            putRequest: vi.fn<HttpService["putRequest"]>(),
+            patchRequest: vi.fn<HttpService["patchRequest"]>(),
+            deleteRequest: vi.fn<HttpService["deleteRequest"]>(),
+            downloadRequest: vi.fn<HttpService["downloadRequest"]>(),
+            previewRequest: vi.fn<HttpService["previewRequest"]>(),
+            streamRequest: vi.fn<HttpService["streamRequest"]>(),
+            registerRequestMiddleware: vi.fn<HttpService["registerRequestMiddleware"]>(() => vi.fn<() => void>()),
+            registerResponseMiddleware: vi.fn<HttpService["registerResponseMiddleware"]>(() => vi.fn<() => void>()),
+            registerResponseErrorMiddleware: vi.fn<HttpService["registerResponseErrorMiddleware"]>(() =>
+                vi.fn<() => void>(),
+            ),
         },
         familyAuthService: {
             isLoggedIn: {value: false},
             user: {value: null},
-            userId: vi.fn(),
-            register: vi.fn(),
-            login: vi.fn(),
-            logout: vi.fn(),
-            checkIfLoggedIn: vi.fn(),
+            userId: vi.fn<() => number>(),
+            register: vi.fn<() => Promise<void>>(),
+            login: vi.fn<() => Promise<void>>(),
+            logout: vi.fn<() => Promise<void>>(),
+            checkIfLoggedIn: vi.fn<() => Promise<void>>(),
         },
         familyRouterService: {
-            goToDashboard: vi.fn(),
-            goToRoute: vi.fn(),
-            goToCreatePage: vi.fn(),
-            goToOverviewPage: vi.fn(),
-            goToEditPage: vi.fn(),
-            goToShowPage: vi.fn(),
-            goBack: vi.fn(),
+            goToDashboard: vi.fn<() => Promise<void>>(),
+            goToRoute: vi.fn<() => Promise<void>>(),
+            goToCreatePage: vi.fn<() => Promise<void>>(),
+            goToOverviewPage: vi.fn<() => Promise<void>>(),
+            goToEditPage: vi.fn<() => Promise<void>>(),
+            goToShowPage: vi.fn<() => Promise<void>>(),
+            goBack: vi.fn<() => void>(),
         },
         familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
         familyLoadingService: {},

@@ -57,7 +57,7 @@ describe("toCsv", () => {
 describe("downloadCsv", () => {
     it("should create a download link and click it", () => {
         // Arrange
-        const mockClick = vi.fn();
+        const mockClick = vi.fn<() => void>();
         const mockCreateElement = vi
             .spyOn(document, "createElement")
             .mockReturnValue({
@@ -65,8 +65,8 @@ describe("downloadCsv", () => {
                 set download(_: string) {},
                 click: mockClick,
             } as unknown as HTMLAnchorElement);
-        const mockCreateObjectURL = vi.fn().mockReturnValue("blob:test");
-        const mockRevokeObjectURL = vi.fn();
+        const mockCreateObjectURL = vi.fn<(obj: Blob) => string>().mockReturnValue("blob:test");
+        const mockRevokeObjectURL = vi.fn<(url: string) => void>();
         globalThis.URL.createObjectURL = mockCreateObjectURL;
         globalThis.URL.revokeObjectURL = mockRevokeObjectURL;
 

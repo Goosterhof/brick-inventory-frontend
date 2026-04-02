@@ -35,10 +35,10 @@ const makeAdapted = (overrides: Record<string, unknown> = {}) =>
         column: 2,
         childIds: [10, 11],
         mutable: {name: "Top Shelf", description: "The top shelf of the cabinet", parentId: null, row: 1, column: 2},
-        reset: vi.fn(),
-        update: vi.fn(),
-        patch: vi.fn(),
-        delete: vi.fn(),
+        reset: vi.fn<() => void>(),
+        update: vi.fn<() => Promise<void>>(),
+        patch: vi.fn<() => Promise<void>>(),
+        delete: vi.fn<() => Promise<void>>(),
         ...overrides,
     }) as unknown as Adapted<StorageOption>;
 
