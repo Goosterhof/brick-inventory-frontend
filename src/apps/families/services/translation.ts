@@ -192,6 +192,8 @@ const translations = {
             allColors: "All colors",
             orphanParts: "Orphan parts",
             noResults: "No bricks match that search. Try loosening the filters.",
+            loadMore: "Load more bricks",
+            loadingMore: "Loading...",
         },
         brickDna: {
             title: "Brick DNA",
@@ -434,6 +436,8 @@ const translations = {
             allColors: "Alle kleuren",
             orphanParts: "Weesonderdelen",
             noResults: "Geen steentjes gevonden. Probeer de filters te verruimen.",
+            loadMore: "Meer steentjes laden",
+            loadingMore: "Laden...",
         },
         brickDna: {
             title: "Brick DNA",

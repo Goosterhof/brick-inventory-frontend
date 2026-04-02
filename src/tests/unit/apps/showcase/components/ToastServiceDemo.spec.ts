@@ -1,14 +1,41 @@
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import ToastMessage from "@shared/components/ToastMessage.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
-import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 import ToastServiceDemo from "@/apps/showcase/components/ToastServiceDemo.vue";
 
+// Mock heavy shared components to cut import chain cost (ADR-010).
+const {mkButtonStub, mkToastStub, mkStub} = vi.hoisted(() => ({
+    mkButtonStub: (name: string) => ({
+        name,
+        props: {disabled: Boolean},
+        emits: ["click"],
+        template: `<button @click="$emit('click')" :disabled="disabled"><slot /></button>`,
+    }),
+    mkToastStub: () => ({
+        name: "ToastMessage",
+        props: {message: String, variant: String},
+        emits: ["close"],
+        template: `<div>{{ message }}<button aria-label="Dismiss" @click="$emit('close')">x</button></div>`,
+    }),
+    mkStub: (name: string) => ({
+        name,
+        props: {number: String, title: String},
+        template: `<div>{{ number }} {{ title }}</div>`,
+    }),
+}));
+
+vi.mock("@shared/components/PrimaryButton.vue", () => ({default: mkButtonStub("PrimaryButton")}));
+vi.mock("@shared/components/ToastMessage.vue", () => ({default: mkToastStub()}));
+vi.mock("@/apps/showcase/components/SectionHeading.vue", () => ({default: mkStub("SectionHeading")}));
+
 describe("ToastServiceDemo", () => {
-    const stubs = {SectionHeading, PrimaryButton, ToastMessage, ToastContainer: false as const};
+    const stubs = {
+        SectionHeading: false as const,
+        PrimaryButton: false as const,
+        ToastMessage: false as const,
+        ToastContainer: false as const,
+    };
 
     it("should render the section heading with correct number and title", () => {
         // Act

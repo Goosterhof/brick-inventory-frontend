@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {FamilyPartEntry, GroupedFamilyPart} from "@app/types/part";
+import type {CursorPaginatedParts, FamilyPartEntry, GroupedFamilyPart} from "@app/types/part";
 
 import {familyHttpService, familySoundService, familyTranslationService} from "@app/services";
 import EmptyState from "@shared/components/EmptyState.vue";
@@ -17,21 +17,48 @@ type SortField = "name" | "quantity" | "color";
 const {t} = familyTranslationService;
 const entries = ref<FamilyPartEntry[]>([]);
 const loading = ref(true);
+const loadingMore = ref(false);
+const nextCursor = ref<string | null>(null);
 const searchQuery = ref("");
 const activeColorFilter = ref<string | null>(null);
 const showOrphansOnly = ref(false);
 const activeSortField = ref<SortField>("name");
 
+const fetchParts = async (cursor?: string): Promise<CursorPaginatedParts> => {
+    const params = new URLSearchParams({per_page: "100"});
+    if (cursor) {
+        params.set("cursor", cursor);
+    }
+    const response = await familyHttpService.getRequest<CursorPaginatedParts>(`/family/parts?${params.toString()}`);
+    return response.data;
+};
+
 onMounted(async () => {
     try {
-        const response = await familyHttpService.getRequest<FamilyPartEntry[]>("/family/parts");
-        entries.value = response.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
+        const envelope = await fetchParts();
+        entries.value = envelope.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
+        nextCursor.value = envelope.next_cursor;
     } catch {
         entries.value = [];
     } finally {
         loading.value = false;
     }
 });
+
+const loadMore = async () => {
+    if (!nextCursor.value || loadingMore.value) {
+        return;
+    }
+    loadingMore.value = true;
+    try {
+        const envelope = await fetchParts(nextCursor.value);
+        const newEntries = envelope.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
+        entries.value = [...entries.value, ...newEntries];
+        nextCursor.value = envelope.next_cursor;
+    } finally {
+        loadingMore.value = false;
+    }
+};
 
 const groupedParts = computed((): GroupedFamilyPart[] => {
     const map = new Map<string, GroupedFamilyPart>();
@@ -248,6 +275,23 @@ const allSortFields: SortField[] = ["name", "quantity", "color"];
                         </span>
                     </div>
                 </PartListItem>
+            </div>
+
+            <div v-if="nextCursor" flex justify="center" m="t-6">
+                <button
+                    class="brick-border brick-shadow brick-transition"
+                    bg="yellow-400 hover:yellow-300"
+                    p="x-6 y-3"
+                    font="bold"
+                    text="black"
+                    :disabled="loadingMore"
+                    hover="brick-shadow-hover"
+                    active="brick-shadow-active"
+                    data-testid="load-more-button"
+                    @click="loadMore"
+                >
+                    {{ loadingMore ? t("parts.loadingMore").value : t("parts.loadMore").value }}
+                </button>
             </div>
         </template>
     </div>

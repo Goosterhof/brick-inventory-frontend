@@ -1,8 +1,15 @@
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 
 import BrandVoice from "@/apps/showcase/components/BrandVoice.vue";
 import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
+
+// Mock heavy icon library to cut import chain cost (ADR-010).
+vi.mock("@phosphor-icons/vue", () => ({
+    PhCheckCircle: {template: "<i />"},
+    PhTrash: {template: "<i />"},
+    PhWarningCircle: {template: "<i />"},
+}));
 
 describe("BrandVoice", () => {
     const stubs = {SectionHeading};

@@ -36,6 +36,15 @@ const makePart = (overrides: Record<string, unknown> = {}) => ({
     ...overrides,
 });
 
+/** Wrap parts array in cursor pagination envelope matching backend response shape. */
+const makeEnvelope = (
+    data: Record<string, unknown>[],
+    overrides: {next_cursor?: string | null; prev_cursor?: string | null} = {},
+) => ({data, next_cursor: null, prev_cursor: null, path: "/api/family/parts", per_page: 100, ...overrides});
+
+/** The initial fetch URL includes per_page=100. */
+const INITIAL_URL = "/family/parts?per_page=100";
+
 describe("PartsPage — integration", () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -44,17 +53,17 @@ describe("PartsPage — integration", () => {
     });
 
     it("renders empty state with real EmptyState component when no parts", async () => {
-        mockServer.onGet("/family/parts", []);
+        mockServer.onGet(INITIAL_URL, makeEnvelope([]));
         const wrapper = mount(PartsPage);
         await flushPromises();
 
         const emptyState = wrapper.findComponent(EmptyState);
         expect(emptyState.exists()).toBe(true);
-        expect(emptyState.text()).toContain("No parts stored yet");
+        expect(emptyState.text()).toContain("No loose bricks yet");
     });
 
     it("renders real PartListItem components with correct props when parts exist", async () => {
-        mockServer.onGet("/family/parts", [makePart()]);
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()]));
         const wrapper = mount(PartsPage);
         await flushPromises();
 
@@ -69,7 +78,7 @@ describe("PartsPage — integration", () => {
     });
 
     it("renders PageHeader with export button when parts exist", async () => {
-        mockServer.onGet("/family/parts", [makePart()]);
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()]));
         const wrapper = mount(PartsPage);
         await flushPromises();
 
@@ -83,7 +92,7 @@ describe("PartsPage — integration", () => {
     });
 
     it("renders search input and filter chips for sorting and colors", async () => {
-        mockServer.onGet("/family/parts", [makePart()]);
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()]));
         const wrapper = mount(PartsPage);
         await flushPromises();
 
@@ -96,10 +105,13 @@ describe("PartsPage — integration", () => {
     });
 
     it("filters parts when clicking a color FilterChip", async () => {
-        mockServer.onGet("/family/parts", [
-            makePart({part_id: 1, color_id: 1, color_name: "Red"}),
-            makePart({part_id: 2, color_id: 2, color_name: "Blue", color_rgb: "0000FF"}),
-        ]);
+        mockServer.onGet(
+            INITIAL_URL,
+            makeEnvelope([
+                makePart({part_id: 1, color_id: 1, color_name: "Red"}),
+                makePart({part_id: 2, color_id: 2, color_name: "Blue", color_rgb: "0000FF"}),
+            ]),
+        );
         const wrapper = mount(PartsPage);
         await flushPromises();
 
@@ -113,10 +125,90 @@ describe("PartsPage — integration", () => {
     });
 
     it("shows loading text before API resolves", () => {
-        // No route registered — getRequest will reject, but loading shows while pending
-        mockServer.onGet("/family/parts", [makePart()]);
+        // Register route so mount doesn't error, but loading shows while pending
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()]));
         const wrapper = mount(PartsPage);
 
-        expect(wrapper.text()).toContain("Loading...");
+        expect(wrapper.text()).toContain("Stacking bricks...");
+    });
+
+    it("does not show load more button when next_cursor is null", async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()], {next_cursor: null}));
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        expect(wrapper.find("[data-testid='load-more-button']").exists()).toBe(false);
+    });
+
+    it("shows load more button when next_cursor is present", async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()], {next_cursor: "eyJpZCI6MjV9"}));
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        const button = wrapper.find("[data-testid='load-more-button']");
+        expect(button.exists()).toBe(true);
+        expect(button.text()).toBe("Load more bricks");
+    });
+
+    it("fetches next page and appends results when load more is clicked", async () => {
+        mockServer.onGet(
+            INITIAL_URL,
+            makeEnvelope([makePart({part_id: 1, part_name: "Brick 2x4"})], {next_cursor: "cursor-page-2"}),
+        );
+        mockServer.onGet(
+            "/family/parts?per_page=100&cursor=cursor-page-2",
+            makeEnvelope([makePart({part_id: 2, part_num: "3002", part_name: "Plate 1x2", color_id: 2})]),
+        );
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        expect(wrapper.findAllComponents(PartListItem)).toHaveLength(1);
+
+        await wrapper.find("[data-testid='load-more-button']").trigger("click");
+        await flushPromises();
+
+        const items = wrapper.findAllComponents(PartListItem);
+        expect(items).toHaveLength(2);
+        expect(items.find((p) => p.props("name") === "Plate 1x2")).toBeDefined();
+    });
+
+    it("hides load more button when last page has no next_cursor", async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()], {next_cursor: "cursor-page-2"}));
+        mockServer.onGet(
+            "/family/parts?per_page=100&cursor=cursor-page-2",
+            makeEnvelope([makePart({part_id: 2, part_num: "3002", part_name: "Plate 1x2", color_id: 2})], {
+                next_cursor: null,
+            }),
+        );
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        expect(wrapper.find("[data-testid='load-more-button']").exists()).toBe(true);
+
+        await wrapper.find("[data-testid='load-more-button']").trigger("click");
+        await flushPromises();
+
+        expect(wrapper.find("[data-testid='load-more-button']").exists()).toBe(false);
+    });
+
+    it("shows loading state on load more button while fetching", async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()], {next_cursor: "cursor-page-2"}));
+
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        const button = wrapper.find("[data-testid='load-more-button']");
+        expect(button.text()).toBe("Load more bricks");
+
+        // Don't register next page route — the request will hang as a rejected promise
+        // Instead, register a route that we can check against
+        mockServer.onGet("/family/parts?per_page=100&cursor=cursor-page-2", makeEnvelope([]));
+
+        await button.trigger("click");
+        // After click, before promise resolves, button should show loading text
+        expect(button.text()).toBe("Loading...");
+        expect(button.attributes("disabled")).toBeDefined();
+
+        await flushPromises();
     });
 });

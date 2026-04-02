@@ -49,5 +49,5 @@ The backend also supports a `per_page` query parameter. The simplest tactical fi
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Closed
+**Journal:** `.claude/records/journals/2026-04-01-parts-page-pagination.md`

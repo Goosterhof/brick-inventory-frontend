@@ -68,6 +68,14 @@ export interface GroupedFamilyPart {
     locations: {storageOptionId: number; storageOptionName: string; quantity: number}[];
 }
 
+export interface CursorPaginatedParts {
+    data: FamilyPartEntry[];
+    next_cursor: string | null;
+    prev_cursor: string | null;
+    path: string;
+    per_page: number;
+}
+
 export interface StorageOptionPart {
     id: number;
     storageOptionId: number;
