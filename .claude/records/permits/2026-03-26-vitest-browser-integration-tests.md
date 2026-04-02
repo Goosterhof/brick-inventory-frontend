@@ -70,5 +70,5 @@ Add a Vitest Browser Mode workspace (Playwright provider) alongside the existing
 
 ---
 
-**Status:** Delivered
+**Status:** Complete
 **Journal:** `.claude/records/journals/2026-03-26-vitest-browser-integration-tests.md`
