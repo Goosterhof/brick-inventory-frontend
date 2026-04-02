@@ -3,14 +3,45 @@ import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import ResourceAdapterPlayground from "@/apps/showcase/components/ResourceAdapterPlayground.vue";
-import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
+
+// Mock heavy shared components to keep import chain under 1000ms (ADR-010).
+const {mkStub, mkModelStub, mkButtonStub} = vi.hoisted(() => ({
+    mkStub: (name: string) => ({
+        name,
+        props: {number: String, title: String},
+        template: `<div data-stub="${name}">{{ number }} {{ title }}<slot /></div>`,
+    }),
+    mkModelStub: (name: string) => ({
+        name,
+        props: {modelValue: [String, Number, Object], label: String, placeholder: String, min: Number},
+        emits: ["update:modelValue"],
+        template: `<div data-stub="${name}">{{ label }}<slot /></div>`,
+    }),
+    mkButtonStub: (name: string) => ({
+        name,
+        emits: ["click"],
+        template: `<button @click="$emit('click')"><slot /></button>`,
+    }),
+}));
+
+vi.mock("@shared/components/PrimaryButton.vue", () => ({default: mkButtonStub("PrimaryButton")}));
+vi.mock("@shared/components/DangerButton.vue", () => ({default: mkButtonStub("DangerButton")}));
+vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({default: mkModelStub("TextInput")}));
+vi.mock("@shared/components/forms/inputs/NumberInput.vue", () => ({default: mkModelStub("NumberInput")}));
+vi.mock("@/apps/showcase/components/SectionHeading.vue", () => ({default: mkStub("SectionHeading")}));
 
 describe("ResourceAdapterPlayground", () => {
-    const stubs = {SectionHeading, TextInput, NumberInput, PrimaryButton, DangerButton};
+    const stubs = {
+        SectionHeading: false as const,
+        TextInput: false as const,
+        NumberInput: false as const,
+        PrimaryButton: false as const,
+        DangerButton: false as const,
+    };
 
     it("should render the section heading with correct number and title", () => {
         const wrapper = shallowMount(ResourceAdapterPlayground, {global: {stubs}});

@@ -19,6 +19,33 @@ const mockStoreGetAll = vi.hoisted(() => ({value: [] as {setNum: string; quantit
 
 vi.mock("barcode-detector", () => ({BarcodeDetector: vi.fn()}));
 
+// Mock heavy shared components to cut import chain cost (ADR-010).
+vi.mock("@shared/components/BackButton.vue", () => ({
+    default: {name: "BackButton", emits: ["click"], template: "<button @click=\"$emit('click')\"><slot /></button>"},
+}));
+vi.mock("@shared/components/PageHeader.vue", () => ({
+    default: {name: "PageHeader", props: ["title"], template: "<header><h1>{{ title }}</h1><slot /></header>"},
+}));
+vi.mock("@shared/components/PrimaryButton.vue", () => ({
+    default: {
+        name: "PrimaryButton",
+        props: ["disabled"],
+        emits: ["click"],
+        template: "<button :disabled='disabled' @click=\"$emit('click')\"><slot /></button>",
+    },
+}));
+vi.mock("@shared/components/scanner/BarcodeScanner.vue", () => ({
+    default: {name: "BarcodeScanner", props: ["resetKey"], emits: ["detect"], template: "<div><slot /></div>"},
+}));
+vi.mock("@shared/components/ToastMessage.vue", () => ({
+    default: {
+        name: "ToastMessage",
+        props: ["message", "variant"],
+        emits: ["close"],
+        template: "<div>{{ message }}</div>",
+    },
+}));
+
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
