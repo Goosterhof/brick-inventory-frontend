@@ -58,5 +58,5 @@ Tier 2 / Burn. This is the portfolio differentiator — it turns BIO from "I tra
 
 ---
 
-**Status:** Ready to Build
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-03-25-brick-dna-lab.md`
