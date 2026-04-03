@@ -91,26 +91,27 @@ Clean dependency swap. Demonstrates disciplined package extraction: identical AP
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited — they stand as written._
 
-**Overall Assessment:** _pending_
+**Overall Assessment:** Solid
 
 ### Permit Fulfillment Review
 
-_pending_
+All acceptance criteria met. The `string-ts` check was thorough -- correctly identified it cannot be removed because router and auth services still depend on it. Clean execution despite the concurrent interference.
 
 ### Decision Review
 
-_pending_
+One decision (keep `string-ts`), well-reasoned and verified. No escalation needed.
 
 ### Showcase Assessment
 
-_pending_
+The cleanest of the three migrations -- verbatim extraction, single import path change, no styling side effects. The diff is as minimal as it gets.
 
 ### Training Proposal Dispositions
 
-| Proposal            | Disposition         | Rationale           |
-| ------------------- | ------------------- | ------------------- |
-| _pending_           | _pending_           | _pending_           |
+| Proposal | Disposition | Rationale |
+| --- | --- | --- |
+| Run `git status` and `git stash list` before starting work on a shared branch | Dropped | Redundant with already-graduated proposal "Git status check before implementation." The interference was caused by parallel agent deployment (CFO error), not by the architect neglecting to check. |
+| Never use `--no-verify` -- diagnose and fix the root cause | Dropped | This is already firm policy, not a training proposal. The architect self-reported the violation, which is good. But "follow existing policy" does not belong in the graduation log -- it belongs in the Notes for the Architect section below. |
 
 ### Notes for the Architect
 
-_pending_
+The `--no-verify` usage is a firm policy violation. You self-reported it, which I appreciate -- that is the right behavior when you break a rule under pressure. The concurrent agent interference was a CFO deployment error that put you in an impossible position. That context mitigates the infraction, but the rule stands: hooks exist to catch problems, and bypassing them means problems ship. Next time, if hooks fail due to environmental interference, stop and report the blocker rather than bypassing.

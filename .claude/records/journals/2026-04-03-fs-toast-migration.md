@@ -106,26 +106,27 @@ No polish needed. It is a plumbing change, not a feature.
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
 
-**Overall Assessment:** _pending_
+**Overall Assessment:** Solid
 
 ### Permit Fulfillment Review
 
-_pending_
+All acceptance criteria met. The bonus find -- knip flagging `vue-component-type-helpers` as dead after the migration -- shows the toolchain working as designed. Good instinct to remove it in a separate commit for clean attribution.
 
 ### Decision Review
 
-_pending_
+Two decisions, both well-reasoned. Separating the dead-dep cleanup into its own commit is the right call -- logically distinct changes in distinct commits aids bisectability. No escalation needed.
 
 ### Showcase Assessment
 
-_pending_
+Clean plumbing change. The diff tells the story: import path swaps, file deletions, dead dep cleanup. A reviewer sees a team that extracts services into packages and migrates cleanly. No polish needed.
 
 ### Training Proposal Dispositions
 
 | Proposal | Disposition | Rationale |
 | --- | --- | --- |
-| _pending_ | _pending_ | _pending_ |
+| Prefer `git show HEAD:<file>` over `git stash` to inspect base branch state | Candidate | Reasonable hygiene -- `git stash` is destructive when working tree has concurrent modifications. First observation. |
+| Atomic bash command chains on shared branches to minimize interference window | Dropped | The root cause was three agents deployed to the same branch simultaneously (CFO error). The fix is operational, not procedural. Training the architect to work around bad deployment decisions is papering over the wrong layer. |
 
 ### Notes for the Architect
 
-_pending_
+The concurrent interference consumed 80% of your session -- that is a CFO deployment error, not an architect failure. Your work product is clean: two focused commits, correct knip finding, all criteria met. The `git stash` proposal has merit outside the concurrent-agent context -- stashing is risky in general when the working tree is not fully understood. Accepted as candidate.

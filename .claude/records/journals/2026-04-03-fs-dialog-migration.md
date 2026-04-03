@@ -103,26 +103,27 @@ Clean dependency swap. The migration demonstrates proper package extraction work
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
 
-**Overall Assessment:** _pending_
+**Overall Assessment:** Solid
 
 ### Permit Fulfillment Review
 
-_pending_
+All acceptance criteria met. The one partial (test:coverage blocked by pre-existing test guard) is a known environment issue, not a delivery gap — all 1097 tests pass with 100% coverage when run without the guard reporter. The architect correctly identified and documented this rather than working around it.
 
 ### Decision Review
 
-_pending_
+The backdrop CSS decision (global `dialog.css` as a shared asset) is the right call. The package renders `<dialog>` elements programmatically without a class injection hook, so a global `dialog::backdrop` rule is the only clean option. Adding it to both `families/main.ts` and `showcase/main.ts` (but not admin, which doesn't use dialogs) shows appropriate scoping. No escalation needed.
 
 ### Showcase Assessment
 
-_pending_
+Clean work. The diff is minimal and focused — import path changes, one new CSS file with a clear comment, two deletions. A reviewer would see disciplined dependency management. The `dialog.css` file is a well-documented concession to the package's design, not a hack.
 
 ### Training Proposal Dispositions
 
-| Proposal            | Disposition         | Rationale           |
-| ------------------- | ------------------- | ------------------- |
-| _pending_           | _pending_           | _pending_           |
+| Proposal | Disposition | Rationale |
+| --- | --- | --- |
+| Test file persistence in sandbox environments before starting | Dropped | Environment artifact from parallel agent deployment on the same branch. The root cause is operational (CFO deployed three agents to one branch simultaneously), not a gap in the architect's process. |
+| Run `git stash list` before starting work on a branch | Dropped | Redundant with already-graduated proposal "Git status check before implementation." The stash contamination was caused by parallel agents, not by the architect neglecting to check. |
 
 ### Notes for the Architect
 
-_pending_
+Good self-awareness in the debrief — the blind spots section is honest. The concurrent agent interference was not your fault; it was a CFO deployment error. The work product is clean despite the chaos, which is what matters. The backdrop CSS decision was well-reasoned and correctly scoped.
