@@ -13,7 +13,7 @@ Pure dependency swap: replaced local `src/shared/services/translation.ts` with `
 
 | Action   | File                                                 | Notes                                                                                      |
 | -------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Modified | `package.json`                                       | Added `@script-development/fs-translation@^0.1.0`                                         |
+| Modified | `package.json`                                       | Added `@script-development/fs-translation@^0.1.0`                                          |
 | Modified | `package-lock.json`                                  | Lockfile updated                                                                           |
 | Modified | `src/apps/families/services/translation.ts`          | Import changed from `@shared/services/translation` to `@script-development/fs-translation` |
 | Deleted  | `src/shared/services/translation.ts`                 | Replaced by package                                                                        |
@@ -21,18 +21,18 @@ Pure dependency swap: replaced local `src/shared/services/translation.ts` with `
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                       | Met | Notes                                                                 |
-| ---------------------------------------------------------- | --- | --------------------------------------------------------------------- |
-| `@script-development/fs-translation` installed             | Yes | `^0.1.0` in package.json                                             |
-| `createTranslationService` and types resolve from package  | Yes | Type-check passes                                                     |
-| `familyTranslationService` works identically               | Yes | All tests pass                                                        |
-| Parameter interpolation unchanged                          | Yes | API identical                                                         |
-| Local `translation.ts` deleted                             | Yes | Removed from `src/shared/services/`                                   |
-| Local `translation.spec.ts` deleted                        | Yes | Removed from `src/tests/unit/shared/services/`                        |
-| No references to `@shared/services/translation` remain     | Yes | Grep confirms only `.claude/` docs reference it                       |
-| `npm run knip` reports no dead exports                     | Yes | Passes clean                                                          |
-| Full quality gauntlet passes                               | Yes | All checks pass; 1097 tests, 100% coverage                           |
-| `string-ts` removable as direct dependency                 | No  | Still used by router and auth services — cannot remove                |
+| Acceptance Criterion                                      | Met | Notes                                                  |
+| --------------------------------------------------------- | --- | ------------------------------------------------------ |
+| `@script-development/fs-translation` installed            | Yes | `^0.1.0` in package.json                               |
+| `createTranslationService` and types resolve from package | Yes | Type-check passes                                      |
+| `familyTranslationService` works identically              | Yes | All tests pass                                         |
+| Parameter interpolation unchanged                         | Yes | API identical                                          |
+| Local `translation.ts` deleted                            | Yes | Removed from `src/shared/services/`                    |
+| Local `translation.spec.ts` deleted                       | Yes | Removed from `src/tests/unit/shared/services/`         |
+| No references to `@shared/services/translation` remain    | Yes | Grep confirms only `.claude/` docs reference it        |
+| `npm run knip` reports no dead exports                    | Yes | Passes clean                                           |
+| Full quality gauntlet passes                              | Yes | All checks pass; 1097 tests, 100% coverage             |
+| `string-ts` removable as direct dependency                | No  | Still used by router and auth services — cannot remove |
 
 ## Decisions Made
 
@@ -40,16 +40,16 @@ Pure dependency swap: replaced local `src/shared/services/translation.ts` with `
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                              |
-| ------------- | ------ | -------------------------------------------------- |
-| format:check  | Pass   |                                                    |
-| lint          | Pass   | 0 warnings, 0 errors                               |
-| lint:vue      | Pass   |                                                    |
-| type-check    | Pass   |                                                    |
-| test:coverage | Pass   | 100% coverage, 1097 tests pass                     |
-| knip          | Pass   |                                                    |
-| size          | Pass   | families: 221.68 kB, admin: 30.8 kB               |
-| build         | Pass   |                                                    |
+| Check         | Result | Notes                               |
+| ------------- | ------ | ----------------------------------- |
+| format:check  | Pass   |                                     |
+| lint          | Pass   | 0 warnings, 0 errors                |
+| lint:vue      | Pass   |                                     |
+| type-check    | Pass   |                                     |
+| test:coverage | Pass   | 100% coverage, 1097 tests pass      |
+| knip          | Pass   |                                     |
+| size          | Pass   | families: 221.68 kB, admin: 30.8 kB |
+| build         | Pass   |                                     |
 
 ## Showcase Readiness
 
@@ -80,10 +80,10 @@ Clean dependency swap. Demonstrates disciplined package extraction: identical AP
 
 ### Training Proposals
 
-| Proposal                                                                                                    | Context                                                                                          | Shift Evidence                         |
-| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------- |
-| Before starting work on a shared branch, run `git status` and `git stash list` to understand existing state | Parallel architect work caused file conflicts and stash interference                             | 2026-04-03-fs-translation-migration    |
-| Never use `--no-verify` — if hooks fail, diagnose and fix the root cause                                    | Used `--no-verify` to bypass hooks after environment interference instead of fixing the problem   | 2026-04-03-fs-translation-migration    |
+| Proposal                                                                                                    | Context                                                                                         | Shift Evidence                      |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Before starting work on a shared branch, run `git status` and `git stash list` to understand existing state | Parallel architect work caused file conflicts and stash interference                            | 2026-04-03-fs-translation-migration |
+| Never use `--no-verify` — if hooks fail, diagnose and fix the root cause                                    | Used `--no-verify` to bypass hooks after environment interference instead of fixing the problem | 2026-04-03-fs-translation-migration |
 
 ---
 
@@ -107,10 +107,10 @@ The cleanest of the three migrations -- verbatim extraction, single import path 
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Run `git status` and `git stash list` before starting work on a shared branch | Dropped | Redundant with already-graduated proposal "Git status check before implementation." The interference was caused by parallel agent deployment (CFO error), not by the architect neglecting to check. |
-| Never use `--no-verify` -- diagnose and fix the root cause | Dropped | This is already firm policy, not a training proposal. The architect self-reported the violation, which is good. But "follow existing policy" does not belong in the graduation log -- it belongs in the Notes for the Architect section below. |
+| Proposal                                                                      | Disposition | Rationale                                                                                                                                                                                                                                      |
+| ----------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Run `git status` and `git stash list` before starting work on a shared branch | Dropped     | Redundant with already-graduated proposal "Git status check before implementation." The interference was caused by parallel agent deployment (CFO error), not by the architect neglecting to check.                                            |
+| Never use `--no-verify` -- diagnose and fix the root cause                    | Dropped     | This is already firm policy, not a training proposal. The architect self-reported the violation, which is good. But "follow existing policy" does not belong in the graduation log -- it belongs in the Notes for the Architect section below. |
 
 ### Notes for the Architect
 

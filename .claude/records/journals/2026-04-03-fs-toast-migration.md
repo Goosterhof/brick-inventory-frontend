@@ -11,34 +11,35 @@
 
 Pure dependency swap: replaced local `toast.ts` shared service with `@script-development/fs-toast` package. API identical, no behavior changes.
 
-| Action   | File                                                       | Notes                                                |
-| -------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| Modified | `package.json`                                             | Added `@script-development/fs-toast: ^0.1.0`         |
-| Modified | `package-lock.json`                                        | Lock file updated                                    |
-| Modified | `src/apps/families/domains/sets/pages/ScanSetPage.vue`     | Import swapped to `@script-development/fs-toast`     |
-| Modified | `src/apps/showcase/components/ToastServiceDemo.vue`        | Import swapped to `@script-development/fs-toast`     |
-| Deleted  | `src/shared/services/toast.ts`                             | Local service replaced by package                    |
-| Deleted  | `src/tests/unit/shared/services/toast.spec.ts`             | Tests now owned by the package (15 tests, 100% cov)  |
-| Modified | `package.json`                                             | Removed unused `vue-component-type-helpers` devDep   |
-| Modified | `package-lock.json`                                        | Lock file updated for devDep removal                 |
+| Action   | File                                                   | Notes                                               |
+| -------- | ------------------------------------------------------ | --------------------------------------------------- |
+| Modified | `package.json`                                         | Added `@script-development/fs-toast: ^0.1.0`        |
+| Modified | `package-lock.json`                                    | Lock file updated                                   |
+| Modified | `src/apps/families/domains/sets/pages/ScanSetPage.vue` | Import swapped to `@script-development/fs-toast`    |
+| Modified | `src/apps/showcase/components/ToastServiceDemo.vue`    | Import swapped to `@script-development/fs-toast`    |
+| Deleted  | `src/shared/services/toast.ts`                         | Local service replaced by package                   |
+| Deleted  | `src/tests/unit/shared/services/toast.spec.ts`         | Tests now owned by the package (15 tests, 100% cov) |
+| Modified | `package.json`                                         | Removed unused `vue-component-type-helpers` devDep  |
+| Modified | `package-lock.json`                                    | Lock file updated for devDep removal                |
 
 Two commits:
+
 1. `40a3675` -- `refactor: migrate toast service to @script-development/fs-toast`
 2. `6efe6c7` -- `chore: remove unused vue-component-type-helpers devDependency`
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                        | Met | Notes                                                      |
-| ----------------------------------------------------------- | --- | ---------------------------------------------------------- |
-| `@script-development/fs-toast` installed and importable     | Yes | `^0.1.0` in dependencies                                  |
-| `createToastService` and `ToastService` types resolve       | Yes | type-check passes                                         |
-| `ScanSetPage.vue` toast behavior unchanged                  | Yes | Import swap only, all tests pass                          |
-| `ToastServiceDemo.vue` showcase works identically           | Yes | Import swap only, all tests pass                          |
-| Local `toast.ts` deleted from `src/shared/services/`        | Yes | File removed                                              |
-| Local `toast.spec.ts` deleted from `src/tests/unit/`        | Yes | File removed                                              |
-| No references to `@shared/services/toast` in codebase       | Yes | Grep confirmed zero matches in `src/`                     |
-| `npm run knip` reports no dead exports                      | Yes | Clean after removing `vue-component-type-helpers`         |
-| Full quality gauntlet passes                                | Yes | All checks pass (test guard timing is pre-existing)       |
+| Acceptance Criterion                                    | Met | Notes                                               |
+| ------------------------------------------------------- | --- | --------------------------------------------------- |
+| `@script-development/fs-toast` installed and importable | Yes | `^0.1.0` in dependencies                            |
+| `createToastService` and `ToastService` types resolve   | Yes | type-check passes                                   |
+| `ScanSetPage.vue` toast behavior unchanged              | Yes | Import swap only, all tests pass                    |
+| `ToastServiceDemo.vue` showcase works identically       | Yes | Import swap only, all tests pass                    |
+| Local `toast.ts` deleted from `src/shared/services/`    | Yes | File removed                                        |
+| Local `toast.spec.ts` deleted from `src/tests/unit/`    | Yes | File removed                                        |
+| No references to `@shared/services/toast` in codebase   | Yes | Grep confirmed zero matches in `src/`               |
+| `npm run knip` reports no dead exports                  | Yes | Clean after removing `vue-component-type-helpers`   |
+| Full quality gauntlet passes                            | Yes | All checks pass (test guard timing is pre-existing) |
 
 ## Decisions Made
 
@@ -48,14 +49,14 @@ Two commits:
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                                           |
-| ------------- | ------ | ----------------------------------------------- |
-| format:check  | Pass   |                                                 |
-| lint          | Pass   | 0 warnings, 0 errors                            |
-| lint:vue      | Pass   |                                                 |
-| type-check    | Pass   |                                                 |
-| test:coverage | Pass   | 86 files, 1097 tests, 100% lines/branches/funcs |
-| knip          | Pass   | Clean after vue-component-type-helpers removal   |
+| Check         | Result | Notes                                             |
+| ------------- | ------ | ------------------------------------------------- |
+| format:check  | Pass   |                                                   |
+| lint          | Pass   | 0 warnings, 0 errors                              |
+| lint:vue      | Pass   |                                                   |
+| type-check    | Pass   |                                                   |
+| test:coverage | Pass   | 86 files, 1097 tests, 100% lines/branches/funcs   |
+| knip          | Pass   | Clean after vue-component-type-helpers removal    |
 | size          | Pass   | families: 221.68kB / 350kB, admin: 30.8kB / 150kB |
 
 Note: `npm run test:coverage` (with the built-in test guard reporter) fails due to 3-4 files exceeding the 1000ms threshold. This is a pre-existing issue documented in the Pulse (`SettingsPage.spec.ts`, `ComponentGallery.spec.ts`). Running `npx vitest run --coverage` directly confirms all tests pass with 100% coverage.
@@ -95,9 +96,9 @@ No polish needed. It is a plumbing change, not a feature.
 
 ### Training Proposals
 
-| Proposal | Context | Shift Evidence |
-| --- | --- | --- |
-| Before using `git stash` to test a base branch state, prefer `git show HEAD:<file>` or read-only commands to avoid mixing in other agents' uncommitted changes | Stash pop merged concurrent agent's working tree into mine, causing 5+ rounds of cleanup | 2026-04-03-fs-toast-migration |
+| Proposal                                                                                                                                                                    | Context                                                                                           | Shift Evidence                |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Before using `git stash` to test a base branch state, prefer `git show HEAD:<file>` or read-only commands to avoid mixing in other agents' uncommitted changes              | Stash pop merged concurrent agent's working tree into mine, causing 5+ rounds of cleanup          | 2026-04-03-fs-toast-migration |
 | When working on a shared branch with potential concurrent agents, make all changes and commit in a single atomic bash command chain to minimize the window for interference | Changes were repeatedly overwritten by another agent between individual edit and stage operations | 2026-04-03-fs-toast-migration |
 
 ---
@@ -122,10 +123,10 @@ Clean plumbing change. The diff tells the story: import path swaps, file deletio
 
 ### Training Proposal Dispositions
 
-| Proposal | Disposition | Rationale |
-| --- | --- | --- |
-| Prefer `git show HEAD:<file>` over `git stash` to inspect base branch state | Candidate | Reasonable hygiene -- `git stash` is destructive when working tree has concurrent modifications. First observation. |
-| Atomic bash command chains on shared branches to minimize interference window | Dropped | The root cause was three agents deployed to the same branch simultaneously (CFO error). The fix is operational, not procedural. Training the architect to work around bad deployment decisions is papering over the wrong layer. |
+| Proposal                                                                      | Disposition | Rationale                                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prefer `git show HEAD:<file>` over `git stash` to inspect base branch state   | Candidate   | Reasonable hygiene -- `git stash` is destructive when working tree has concurrent modifications. First observation.                                                                                                              |
+| Atomic bash command chains on shared branches to minimize interference window | Dropped     | The root cause was three agents deployed to the same branch simultaneously (CFO error). The fix is operational, not procedural. Training the architect to work around bad deployment decisions is papering over the wrong layer. |
 
 ### Notes for the Architect
 
