@@ -18,7 +18,10 @@ const {
     createMockFamilyStores,
 } = await vi.hoisted(() => import("../../../../../../helpers"));
 
-const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({mockCreate: vi.fn(), mockGoToRoute: vi.fn()}));
+const {mockCreate, mockGoToRoute} = vi.hoisted(() => ({
+    mockCreate: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
+}));
 const mockStoreGetAll = vi.hoisted(() => ({value: [] as {setNum: string; quantity: number; status: string}[]}));
 
 vi.mock("axios", () => createMockAxiosWithError());
@@ -35,9 +38,9 @@ vi.mock("@app/stores", () =>
     createMockFamilyStores({
         familySetStoreModule: {
             getAll: mockStoreGetAll,
-            retrieveAll: vi.fn(),
-            getById: vi.fn(),
-            getOrFailById: vi.fn(),
+            retrieveAll: vi.fn<() => Promise<void>>(),
+            getById: vi.fn<() => unknown>(),
+            getOrFailById: vi.fn<() => Promise<unknown>>(),
             generateNew: () => ({
                 setNum: "",
                 quantity: 1,
@@ -45,7 +48,7 @@ vi.mock("@app/stores", () =>
                 purchaseDate: null,
                 notes: null,
                 mutable: ref({setNum: "", quantity: 1, status: "sealed", purchaseDate: null, notes: null}),
-                reset: vi.fn(),
+                reset: vi.fn<() => void>(),
                 create: mockCreate,
             }),
         },
@@ -148,7 +151,7 @@ describe("AddSetPage", () => {
         const wrapper = shallowMount(AddSetPage);
 
         // Act
-        const errorHandler = vi.fn();
+        const errorHandler = vi.fn<(err: unknown, instance: unknown, info: string) => void>();
         wrapper.vm.$.appContext.config.errorHandler = errorHandler;
         await wrapper.find("form").trigger("submit");
         await flushPromises();

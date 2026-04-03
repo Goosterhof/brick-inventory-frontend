@@ -80,5 +80,5 @@ If integration tests import the loading service or middleware types, those impor
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-04-01-fs-loading-migration.md`

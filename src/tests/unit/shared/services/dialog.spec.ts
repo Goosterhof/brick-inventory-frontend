@@ -116,7 +116,7 @@ describe("dialog service", () => {
 
         it("should call showModal on the dialog element via onVnodeMounted", async () => {
             // Arrange
-            const showModalSpy = vi.fn();
+            const showModalSpy = vi.fn<() => void>();
             HTMLDialogElement.prototype.showModal = showModalSpy;
 
             const service = createDialogService();
@@ -378,7 +378,7 @@ describe("dialog service", () => {
                 },
             });
 
-            const updateHandler = vi.fn();
+            const updateHandler = vi.fn<() => void>();
             const service = createDialogService();
             const wrapper = shallowMount(service.DialogContainerComponent);
 
@@ -433,7 +433,7 @@ describe("dialog service", () => {
         it("should register and unregister error middleware", () => {
             // Arrange
             const service = createDialogService();
-            const handler = vi.fn(() => false);
+            const handler = vi.fn<() => boolean>(() => false);
 
             // Act
             const unregister = service.registerErrorMiddleware(handler);
@@ -450,7 +450,7 @@ describe("dialog service", () => {
 
         it("should call error middleware when error is captured", async () => {
             // Arrange
-            const handler = vi.fn(() => false);
+            const handler = vi.fn<() => boolean>(() => false);
             const ErrorComponent = defineComponent({
                 props: {onClose: Function},
                 setup() {
@@ -479,7 +479,7 @@ describe("dialog service", () => {
 
         it("should propagate error when handler returns true", async () => {
             // Arrange
-            const handler = vi.fn(() => true);
+            const handler = vi.fn<() => boolean>(() => true);
             const ErrorComponent = defineComponent({
                 props: {onClose: Function},
                 setup() {
@@ -492,7 +492,7 @@ describe("dialog service", () => {
 
             const service = createDialogService();
             service.registerErrorMiddleware(handler);
-            const appErrorHandler = vi.fn();
+            const appErrorHandler = vi.fn<() => void>();
             shallowMount(service.DialogContainerComponent, {global: {config: {errorHandler: appErrorHandler}}});
 
             // Act
@@ -507,8 +507,8 @@ describe("dialog service", () => {
 
         it("should stop calling middleware chain when handler returns false", async () => {
             // Arrange
-            const handler1 = vi.fn(() => false);
-            const handler2 = vi.fn(() => true);
+            const handler1 = vi.fn<() => boolean>(() => false);
+            const handler2 = vi.fn<() => boolean>(() => true);
             const ErrorComponent = defineComponent({
                 props: {onClose: Function},
                 setup() {
@@ -536,7 +536,7 @@ describe("dialog service", () => {
 
         it("should propagate non-Error values without calling middleware", async () => {
             // Arrange
-            const handler = vi.fn(() => false);
+            const handler = vi.fn<() => boolean>(() => false);
             const StringErrorComponent = defineComponent({
                 props: {onClose: Function},
                 setup() {
@@ -550,7 +550,7 @@ describe("dialog service", () => {
 
             const service = createDialogService();
             service.registerErrorMiddleware(handler);
-            const appErrorHandler = vi.fn();
+            const appErrorHandler = vi.fn<() => void>();
             shallowMount(service.DialogContainerComponent, {global: {config: {errorHandler: appErrorHandler}}});
 
             // Act
@@ -564,7 +564,7 @@ describe("dialog service", () => {
 
         it("should not call middleware after it has been unregistered", async () => {
             // Arrange
-            const handler = vi.fn(() => false);
+            const handler = vi.fn<() => boolean>(() => false);
             const ErrorComponent = defineComponent({
                 props: {onClose: Function},
                 setup() {
@@ -581,7 +581,7 @@ describe("dialog service", () => {
             // Act — unregister before the error is thrown
             unregister();
 
-            const appErrorHandler = vi.fn();
+            const appErrorHandler = vi.fn<() => void>();
             shallowMount(service.DialogContainerComponent, {global: {config: {errorHandler: appErrorHandler}}});
             service.open(ErrorComponent, {});
             await nextTick();

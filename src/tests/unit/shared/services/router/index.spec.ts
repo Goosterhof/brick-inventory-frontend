@@ -643,7 +643,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn().mockReturnValue(false);
+            const middleware = vi.fn<() => boolean>().mockReturnValue(false);
 
             // Act
             const unregister = service.registerBeforeRouteMiddleware(middleware);
@@ -656,7 +656,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn().mockReturnValue(false);
+            const middleware = vi.fn<() => boolean>().mockReturnValue(false);
             service.registerBeforeRouteMiddleware(middleware);
 
             // Act
@@ -675,7 +675,7 @@ describe("router service", () => {
             await service.goToRoute("home");
             await flushPromises();
 
-            const middleware = vi.fn().mockReturnValue(true);
+            const middleware = vi.fn<() => boolean>().mockReturnValue(true);
             service.registerBeforeRouteMiddleware(middleware);
 
             // Act
@@ -690,7 +690,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn().mockReturnValue(false);
+            const middleware = vi.fn<() => boolean>().mockReturnValue(false);
             const unregister = service.registerBeforeRouteMiddleware(middleware);
 
             // Act - unregister then navigate
@@ -706,7 +706,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn().mockReturnValue(false);
+            const middleware = vi.fn<() => boolean>().mockReturnValue(false);
             const unregister = service.registerBeforeRouteMiddleware(middleware);
 
             // Act - unregister twice
@@ -776,7 +776,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn();
+            const middleware = vi.fn<() => void>();
 
             // Act
             const unregister = service.registerAfterRouteMiddleware(middleware);
@@ -789,7 +789,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn();
+            const middleware = vi.fn<() => void>();
             service.registerAfterRouteMiddleware(middleware);
 
             // Act
@@ -804,7 +804,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn();
+            const middleware = vi.fn<() => void>();
             const unregister = service.registerAfterRouteMiddleware(middleware);
 
             // Act - unregister then navigate
@@ -820,7 +820,7 @@ describe("router service", () => {
             // Arrange
             const routes = createTestRoutes();
             const service = createRouterService(routes, "home");
-            const middleware = vi.fn();
+            const middleware = vi.fn<() => void>();
             const unregister = service.registerAfterRouteMiddleware(middleware);
 
             // Act - unregister twice

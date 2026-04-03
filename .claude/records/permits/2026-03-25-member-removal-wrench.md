@@ -53,5 +53,5 @@ Small piece count. The key UX concern from the Idea Vault: removed user's contri
 
 ---
 
-**Status:** Ready to Build
-**Journal:** _link to construction journal when filed_
+**Status:** Complete — delivered as part of settings page members build; permit status was never updated
+**Journal:** N/A — work was bundled with the settings page members implementation

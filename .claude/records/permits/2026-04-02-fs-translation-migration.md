@@ -19,22 +19,24 @@ Replace the local `translation.ts` shared service with `@script-development/fs-t
 1. **Install the package** — `npm install @script-development/fs-translation` in the frontend workspace.
 
 2. **Replace the service import** — In `src/apps/families/services/translation.ts`:
-   ```ts
-   // Before
-   import {createTranslationService} from "@shared/services/translation";
 
-   // After
-   import {createTranslationService} from "@script-development/fs-translation";
-   ```
-   The rest of the file (translation dictionaries, `familyTranslationService` creation) stays identical.
+    ```ts
+    // Before
+    import {createTranslationService} from "@shared/services/translation";
+
+    // After
+    import {createTranslationService} from "@script-development/fs-translation";
+    ```
+
+    The rest of the file (translation dictionaries, `familyTranslationService` creation) stays identical.
 
 3. **Update any type imports** — Search for `TranslationService`, `TranslationSchema`, or `NestedKeys` type imports from `@shared/services/translation` and point them to the package.
 
 4. **Remove the local service file** — Once all imports are migrated:
-   - Delete `src/shared/services/translation.ts`
+    - Delete `src/shared/services/translation.ts`
 
 5. **Delete the local unit tests** — The package has 20 tests with 100% coverage:
-   - Delete `src/tests/unit/shared/services/translation.spec.ts`
+    - Delete `src/tests/unit/shared/services/translation.spec.ts`
 
 6. **Run knip** — Verify no dead exports remain.
 

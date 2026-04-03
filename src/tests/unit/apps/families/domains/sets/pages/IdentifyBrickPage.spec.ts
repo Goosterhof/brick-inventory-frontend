@@ -10,7 +10,10 @@ const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamil
     () => import("../../../../../../helpers"),
 );
 
-const {mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({mockPostRequest: vi.fn(), mockGoToRoute: vi.fn()}));
+const {mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({
+    mockPostRequest: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
+}));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());

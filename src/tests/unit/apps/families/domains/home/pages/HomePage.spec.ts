@@ -12,10 +12,10 @@ const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamil
     await vi.hoisted(() => import("../../../../../../helpers"));
 
 const {mockGetRequest, mockGoToRoute, mockIsLoggedIn, mockRetrieveAll, mockGetAll} = vi.hoisted(() => ({
-    mockGetRequest: vi.fn(),
-    mockGoToRoute: vi.fn(),
+    mockGetRequest: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
     mockIsLoggedIn: {value: true},
-    mockRetrieveAll: vi.fn().mockResolvedValue(undefined),
+    mockRetrieveAll: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
     mockGetAll: {value: [] as {set?: {year?: number | null}}[]},
 }));
 

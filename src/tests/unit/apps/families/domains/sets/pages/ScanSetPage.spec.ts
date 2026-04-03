@@ -10,14 +10,14 @@ const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamil
     await vi.hoisted(() => import("../../../../../../helpers"));
 
 const {mockGetRequest, mockPostRequest, mockGoToRoute} = vi.hoisted(() => ({
-    mockGetRequest: vi.fn(),
-    mockPostRequest: vi.fn(),
-    mockGoToRoute: vi.fn(),
+    mockGetRequest: vi.fn<() => Promise<unknown>>(),
+    mockPostRequest: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
 }));
 
 const mockStoreGetAll = vi.hoisted(() => ({value: [] as {setNum: string; quantity: number; status: string}[]}));
 
-vi.mock("barcode-detector", () => ({BarcodeDetector: vi.fn()}));
+vi.mock("barcode-detector", () => ({BarcodeDetector: vi.fn<() => void>()}));
 
 // Mock heavy shared components to cut import chain cost (ADR-010).
 vi.mock("@shared/components/BackButton.vue", () => ({
@@ -58,7 +58,12 @@ vi.mock("@app/services", () =>
 );
 vi.mock("@app/stores", () =>
     createMockFamilyStores({
-        familySetStoreModule: {getAll: mockStoreGetAll, retrieveAll: vi.fn(), getById: vi.fn(), getOrFailById: vi.fn()},
+        familySetStoreModule: {
+            getAll: mockStoreGetAll,
+            retrieveAll: vi.fn<() => Promise<void>>(),
+            getById: vi.fn<() => unknown>(),
+            getOrFailById: vi.fn<() => Promise<unknown>>(),
+        },
     }),
 );
 

@@ -62,5 +62,5 @@ The rule itself adds genuine value: typed mocks catch argument/return-type misma
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-04-02-typed-mock-parameters.md`

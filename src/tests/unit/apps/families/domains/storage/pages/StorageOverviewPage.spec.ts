@@ -57,8 +57,8 @@ vi.mock("@shared/components/PrimaryButton.vue", () => ({
 const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
     const {ref} = await import("vue");
     return {
-        mockRetrieveAll: vi.fn(),
-        mockGoToRoute: vi.fn(),
+        mockRetrieveAll: vi.fn<() => Promise<void>>(),
+        mockGoToRoute: vi.fn<() => Promise<void>>(),
         mockAllItems: ref<unknown[]>([]),
         mockIsLoading: ref(false),
     };
@@ -81,9 +81,9 @@ vi.mock("@app/stores", async () => {
         storageOptionStoreModule: {
             getAll: computed(() => mockAllItems.value),
             retrieveAll: mockRetrieveAll,
-            getById: vi.fn(),
-            getOrFailById: vi.fn(),
-            generateNew: vi.fn(),
+            getById: vi.fn<() => unknown>(),
+            getOrFailById: vi.fn<() => Promise<unknown>>(),
+            generateNew: vi.fn<() => unknown>(),
         },
     });
 });

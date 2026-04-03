@@ -20,8 +20,8 @@ describe("ConfirmDialog (browser)", () => {
     beforeEach(() => {
         container = document.createElement("div");
         document.body.appendChild(container);
-        onConfirm = vi.fn();
-        onCancel = vi.fn();
+        onConfirm = vi.fn<() => void>();
+        onCancel = vi.fn<() => void>();
     });
 
     afterEach(() => {

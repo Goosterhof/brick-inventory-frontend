@@ -19,8 +19,8 @@ vi.mock("@phosphor-icons/vue", () => ({
 }));
 
 const {mockLogout, mockGoToRoute, mockIsLoggedIn, mockCurrentRouteRef} = vi.hoisted(() => ({
-    mockLogout: vi.fn(),
-    mockGoToRoute: vi.fn(),
+    mockLogout: vi.fn<() => Promise<void>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
     mockIsLoggedIn: {value: false},
     mockCurrentRouteRef: {value: {name: "home", path: "/", matched: [] as never[], meta: {}, query: {}, params: {}}},
 }));

@@ -33,11 +33,11 @@ vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
 vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
 
 const {mockGetOrFailById, mockGoToRoute, mockCurrentRouteId, mockPatch, mockDelete} = vi.hoisted(() => ({
-    mockGetOrFailById: vi.fn(),
-    mockGoToRoute: vi.fn(),
+    mockGetOrFailById: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
     mockCurrentRouteId: {value: 5},
-    mockPatch: vi.fn(),
-    mockDelete: vi.fn(),
+    mockPatch: vi.fn<() => Promise<unknown>>(),
+    mockDelete: vi.fn<() => Promise<void>>(),
 }));
 
 vi.mock("@app/services", () =>
@@ -51,10 +51,10 @@ vi.mock("@app/stores", () =>
     createMockFamilyStores({
         storageOptionStoreModule: {
             getAll: {value: []},
-            retrieveAll: vi.fn(),
-            getById: vi.fn(),
+            retrieveAll: vi.fn<() => Promise<void>>(),
+            getById: vi.fn<() => unknown>(),
             getOrFailById: mockGetOrFailById,
-            generateNew: vi.fn(),
+            generateNew: vi.fn<() => unknown>(),
         },
     }),
 );
@@ -75,8 +75,8 @@ const createMockAdapted = () => ({
         column: 2,
         childIds: [6, 7],
     }),
-    reset: vi.fn(),
-    update: vi.fn(),
+    reset: vi.fn<() => void>(),
+    update: vi.fn<() => Promise<void>>(),
     patch: mockPatch,
     delete: mockDelete,
 });
@@ -206,7 +206,7 @@ describe("EditStoragePage", () => {
         await flushPromises();
 
         // Act
-        const errorHandler = vi.fn();
+        const errorHandler = vi.fn<(err: unknown, instance: unknown, info: string) => void>();
         wrapper.vm.$.appContext.config.errorHandler = errorHandler;
         await wrapper.find("form").trigger("submit");
         await flushPromises();

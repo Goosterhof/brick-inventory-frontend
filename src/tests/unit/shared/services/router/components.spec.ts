@@ -200,8 +200,8 @@ describe("router components", () => {
         let mockGoToRoute: Mock & GoToRouteFn;
 
         beforeEach(() => {
-            mockGetUrlForRouteName = vi.fn().mockReturnValue("/test-url") as Mock & GetUrlFn;
-            mockGoToRoute = vi.fn().mockResolvedValue(undefined) as Mock & GoToRouteFn;
+            mockGetUrlForRouteName = vi.fn<GetUrlFn>().mockReturnValue("/test-url") as Mock & GetUrlFn;
+            mockGoToRoute = vi.fn<GoToRouteFn>().mockResolvedValue(undefined) as Mock & GoToRouteFn;
         });
 
         it("should return a Vue component", () => {
@@ -274,7 +274,7 @@ describe("router components", () => {
             // Arrange
             const RouterLink = createRouterLink(mockGetUrlForRouteName, mockGoToRoute);
             const wrapper = shallowMount(RouterLink, {props: {to: {name: "test-route"}}});
-            const event = {preventDefault: vi.fn()};
+            const event = {preventDefault: vi.fn<() => void>()};
 
             // Act
             await wrapper.find("a").trigger("click", event);

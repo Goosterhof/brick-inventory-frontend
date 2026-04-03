@@ -20,40 +20,43 @@ Replace the local `toast.ts` shared service with `@script-development/fs-toast`.
 
 2. **Replace imports in consuming files** — 3 files import from `@shared/services/toast`:
 
-   **`src/apps/families/domains/sets/pages/ScanSetPage.vue`** (line 12):
-   ```ts
-   // Before
-   import {createToastService} from "@shared/services/toast";
+    **`src/apps/families/domains/sets/pages/ScanSetPage.vue`** (line 12):
 
-   // After
-   import {createToastService} from "@script-development/fs-toast";
-   ```
+    ```ts
+    // Before
+    import {createToastService} from "@shared/services/toast";
 
-   **`src/apps/showcase/components/ToastServiceDemo.vue`** (line 4):
-   ```ts
-   // Before
-   import {createToastService} from "@shared/services/toast";
+    // After
+    import {createToastService} from "@script-development/fs-toast";
+    ```
 
-   // After
-   import {createToastService} from "@script-development/fs-toast";
-   ```
+    **`src/apps/showcase/components/ToastServiceDemo.vue`** (line 4):
 
-   **`src/tests/unit/shared/services/toast.spec.ts`** (line 1):
-   ```ts
-   // Before
-   import {createToastService} from "@shared/services/toast";
+    ```ts
+    // Before
+    import {createToastService} from "@shared/services/toast";
 
-   // After
-   import {createToastService} from "@script-development/fs-toast";
-   ```
+    // After
+    import {createToastService} from "@script-development/fs-toast";
+    ```
+
+    **`src/tests/unit/shared/services/toast.spec.ts`** (line 1):
+
+    ```ts
+    // Before
+    import {createToastService} from "@shared/services/toast";
+
+    // After
+    import {createToastService} from "@script-development/fs-toast";
+    ```
 
 3. **Remove the local service file** — Once all imports are migrated:
-   - Delete `src/shared/services/toast.ts`
+    - Delete `src/shared/services/toast.ts`
 
 4. **Delete the local unit tests** — The package has 15 tests with 100% coverage. These are now the package's responsibility:
-   - Delete `src/tests/unit/shared/services/toast.spec.ts`
+    - Delete `src/tests/unit/shared/services/toast.spec.ts`
 
-   The `ToastServiceDemo.spec.ts` stays — it tests the showcase component, not the service.
+    The `ToastServiceDemo.spec.ts` stays — it tests the showcase component, not the service.
 
 5. **Run knip** — Verify no dead exports remain after removing the local file.
 

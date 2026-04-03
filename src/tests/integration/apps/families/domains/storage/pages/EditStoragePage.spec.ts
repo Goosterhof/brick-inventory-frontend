@@ -19,8 +19,8 @@ vi.mock("@script-development/fs-http", async () => {
     return {createHttpService: () => mockHttpService};
 });
 
-const mockPatch = vi.fn();
-const mockDelete = vi.fn();
+const mockPatch = vi.fn<() => Promise<void>>();
+const mockDelete = vi.fn<() => Promise<void>>();
 
 /**
  * getOrFailById returns an Adapted object with a non-configurable Ref `mutable` property.
