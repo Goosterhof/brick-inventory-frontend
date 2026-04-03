@@ -11,28 +11,28 @@
 
 Modified 47 test files to add explicit type parameters to all `vi.fn()` calls, eliminating 379 `vitest/require-mock-type-parameters` lint violations.
 
-| Action   | File                                        | Notes                                                                                          |
-| -------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Modified | `src/tests/helpers/mockFamilyServices.ts`   | Typed all HTTP methods with indexed access (`HttpService["getRequest"]` etc.), auth/router sigs |
-| Modified | `src/tests/helpers/mockAxios.ts`            | Typed `create` mock                                                                            |
-| Modified | 3 browser test files                        | BarcodeScanner, ConfirmDialog, ModalDialog                                                     |
-| Modified | 7 integration test files                    | Parts, Sets (4), Storage (2)                                                                   |
-| Modified | 18 families unit tests                      | Auth (2), BrickDna, Home, Parts, Sets (7), Settings (2), Storage (4), App                      |
-| Modified | 1 admin unit test                           | App                                                                                            |
-| Modified | 1 showcase unit test                        | DialogServiceDemo                                                                              |
-| Modified | 18 shared unit tests                        | Components (7), Composables (2), Helpers (1), Services (8)                                     |
+| Action   | File                                      | Notes                                                                                           |
+| -------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Modified | `src/tests/helpers/mockFamilyServices.ts` | Typed all HTTP methods with indexed access (`HttpService["getRequest"]` etc.), auth/router sigs |
+| Modified | `src/tests/helpers/mockAxios.ts`          | Typed `create` mock                                                                             |
+| Modified | 3 browser test files                      | BarcodeScanner, ConfirmDialog, ModalDialog                                                      |
+| Modified | 7 integration test files                  | Parts, Sets (4), Storage (2)                                                                    |
+| Modified | 18 families unit tests                    | Auth (2), BrickDna, Home, Parts, Sets (7), Settings (2), Storage (4), App                       |
+| Modified | 1 admin unit test                         | App                                                                                             |
+| Modified | 1 showcase unit test                      | DialogServiceDemo                                                                               |
+| Modified | 18 shared unit tests                      | Components (7), Composables (2), Helpers (1), Services (8)                                      |
 
 Added `LoosePartial<T>` override type to `mockFamilyServices.ts` to maintain test ergonomics when consumer files pass less-strictly-typed mocks.
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                              | Met | Notes                               |
-| ------------------------------------------------- | --- | ----------------------------------- |
-| `npm run lint` reports 0 errors and 0 warnings    | Yes | Was 379 violations, now 0           |
-| `npm run test:unit` passes — all tests green      | Yes | All tests pass                      |
-| `npm run test:coverage` passes — 100% maintained  | Yes | 100% across all metrics             |
-| `npm run type-check` passes                       | Yes | 0 errors                            |
-| Type parameters are semantically correct           | Yes | Indexed access types, explicit sigs |
+| Acceptance Criterion                             | Met | Notes                               |
+| ------------------------------------------------ | --- | ----------------------------------- |
+| `npm run lint` reports 0 errors and 0 warnings   | Yes | Was 379 violations, now 0           |
+| `npm run test:unit` passes — all tests green     | Yes | All tests pass                      |
+| `npm run test:coverage` passes — 100% maintained | Yes | 100% across all metrics             |
+| `npm run type-check` passes                      | Yes | 0 errors                            |
+| Type parameters are semantically correct         | Yes | Indexed access types, explicit sigs |
 
 ## Decisions Made
 
@@ -44,13 +44,13 @@ Added `LoosePartial<T>` override type to `mockFamilyServices.ts` to maintain tes
 
 | Check         | Result | Notes                                       |
 | ------------- | ------ | ------------------------------------------- |
-| format:check  | Pass   |                                              |
-| lint          | Pass   | 0 errors, 0 warnings (was 379 violations)  |
-| lint:vue      | Pass   |                                              |
+| format:check  | Pass   |                                             |
+| lint          | Pass   | 0 errors, 0 warnings (was 379 violations)   |
+| lint:vue      | Pass   |                                             |
 | type-check    | Pass   | 0 errors                                    |
 | test:coverage | Pass   | 100% lines, branches, functions, statements |
-| knip          | Pass   |                                              |
-| size          | Pass   |                                              |
+| knip          | Pass   |                                             |
+| size          | Pass   |                                             |
 
 ## Showcase Readiness
 
@@ -81,10 +81,10 @@ Yes. Typed mocks are a genuine quality signal — they catch argument/return-typ
 
 ### Training Proposals
 
-| Proposal                                                                                                                                                                  | Context                                                                                         | Shift Evidence                       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------ |
-| When typing shared mock helpers that use mapped types, check the mapped type definition first to understand type compatibility requirements                                | `MockedService<T>` mapped type required indexed access types, not manual signatures              | 2026-04-02-typed-mock-parameters     |
-| When changing types in a shared test helper, assess override/consumer type compatibility before committing — a looser override type may be needed to prevent cascade       | Adding strict types to `mockFamilyServices.ts` would have broken all consumer files without `LoosePartial<T>` | 2026-04-02-typed-mock-parameters     |
+| Proposal                                                                                                                                                             | Context                                                                                                       | Shift Evidence                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| When typing shared mock helpers that use mapped types, check the mapped type definition first to understand type compatibility requirements                          | `MockedService<T>` mapped type required indexed access types, not manual signatures                           | 2026-04-02-typed-mock-parameters |
+| When changing types in a shared test helper, assess override/consumer type compatibility before committing — a looser override type may be needed to prevent cascade | Adding strict types to `mockFamilyServices.ts` would have broken all consumer files without `LoosePartial<T>` | 2026-04-02-typed-mock-parameters |
 
 ---
 
@@ -99,6 +99,7 @@ Full delivery. All 5 acceptance criteria met. The permit estimated 756 violation
 ### Decision Review
 
 All three decisions were sound:
+
 - **Indexed access types** — exactly right. Manual signature duplication would have been a maintenance liability. This is the kind of decision that demonstrates TypeScript fluency.
 - **`LoosePartial<T>`** — pragmatic containment. Without it, every consumer test file would need to import `HttpService` for type compatibility, turning a test-helper change into a 40-file cascade. Good blast radius awareness.
 - **`Promise.resolve()` over `async`** — minor but correct. Shows attention to lint consistency.
@@ -111,10 +112,10 @@ Strengthens the portfolio. Typed mocks are a visible quality signal — any revi
 
 ### Training Proposal Dispositions
 
-| Proposal                                                                                                                                                            | Disposition | Rationale                                                                                                                                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Proposal                                                                                                                                                             | Disposition | Rationale                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | When typing shared mock helpers that use mapped types, check the mapped type definition first to understand type compatibility requirements                          | Candidate   | Valid — mapped type compatibility is non-obvious and the architect correctly identified indexed access as the solution. Needs a second shift to confirm it's a pattern. |
-| When changing types in a shared test helper, assess override/consumer type compatibility before committing — a looser override type may be needed to prevent cascade | Candidate   | Valid — blast radius assessment for shared helpers is a recurring concern. The `LoosePartial<T>` solution was good. Needs second confirmation.                         |
+| When changing types in a shared test helper, assess override/consumer type compatibility before committing — a looser override type may be needed to prevent cascade | Candidate   | Valid — blast radius assessment for shared helpers is a recurring concern. The `LoosePartial<T>` solution was good. Needs second confirmation.                          |
 
 ### Notes for the Architect
 
