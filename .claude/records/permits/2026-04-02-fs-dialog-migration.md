@@ -19,41 +19,46 @@ Replace the local `dialog.ts` shared service with `@script-development/fs-dialog
 1. **Install the package** — `npm install @script-development/fs-dialog` in the frontend workspace.
 
 2. **Replace the service import** — In `src/apps/families/services/dialog.ts`:
-   ```ts
-   // Before
-   import {createDialogService} from "@shared/services/dialog";
 
-   // After
-   import {createDialogService} from "@script-development/fs-dialog";
-   ```
-   The rest of the file (error middleware registration) stays identical.
+    ```ts
+    // Before
+    import {createDialogService} from "@shared/services/dialog";
+
+    // After
+    import {createDialogService} from "@script-development/fs-dialog";
+    ```
+
+    The rest of the file (error middleware registration) stays identical.
 
 3. **Replace the showcase import** — In `src/apps/showcase/components/DialogServiceDemo.vue`:
-   ```ts
-   // Before
-   import {createDialogService} from "@shared/services/dialog";
 
-   // After
-   import {createDialogService} from "@script-development/fs-dialog";
-   ```
+    ```ts
+    // Before
+    import {createDialogService} from "@shared/services/dialog";
+
+    // After
+    import {createDialogService} from "@script-development/fs-dialog";
+    ```
 
 4. **Update any type imports** — Search for `DialogService` or `DialogErrorHandler` type imports from `@shared/services/dialog` and point them to the package.
 
 5. **Remove the local service file** — Once all imports are migrated:
-   - Delete `src/shared/services/dialog.ts`
+    - Delete `src/shared/services/dialog.ts`
 
 6. **Delete the local unit tests** — The package has 33 tests with 100% coverage:
-   - Delete `src/tests/unit/shared/services/dialog.spec.ts`
+    - Delete `src/tests/unit/shared/services/dialog.spec.ts`
 
-   The `DialogServiceDemo.spec.ts` stays — it tests the showcase component.
+    The `DialogServiceDemo.spec.ts` stays — it tests the showcase component.
 
 7. **Restore territory styling** — The package uses inline style resets instead of UnoCSS attributes. BIO's dialog components (`ModalDialog.vue`, `ConfirmDialog.vue`) handle their own styling — they render inside the `<dialog>` element, so no visual change expected. However, the backdrop styling (`backdrop:bg-black` UnoCSS class) was on the `<dialog>` element in the old service. You'll need to add equivalent backdrop styling via CSS:
-   ```css
-   dialog::backdrop {
-       background-color: rgba(0, 0, 0, 0.5);
-   }
-   ```
-   Or via UnoCSS on the consumer's dialog content wrapper. Verify backdrop appearance after migration.
+
+    ```css
+    dialog::backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    ```
+
+    Or via UnoCSS on the consumer's dialog content wrapper. Verify backdrop appearance after migration.
 
 8. **Run knip** — Verify no dead exports remain.
 
