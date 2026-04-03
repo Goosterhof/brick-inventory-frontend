@@ -2,7 +2,13 @@
 import type {InviteCode} from "@app/types/inviteCode";
 import type {FamilyMember} from "@app/types/profile";
 
-import {familyAuthService, familyHttpService, familySoundService, familyTranslationService} from "@app/services";
+import {
+    familyAuthService,
+    familyHttpService,
+    familySoundService,
+    familyThemeService,
+    familyTranslationService,
+} from "@app/services";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
 import DangerButton from "@shared/components/DangerButton.vue";
@@ -193,6 +199,28 @@ const importSets = async () => {
         <PageHeader :title="t('settings.title').value" />
 
         <div flex="~ col" gap="8">
+            <section flex="~ col" gap="4">
+                <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.themeTitle").value }}</h2>
+                <p text="gray-600">{{ t("settings.themeDescription").value }}</p>
+
+                <button
+                    @click="familyThemeService.toggleTheme()"
+                    p="x-4 y-3"
+                    bg="white hover:brick-yellow"
+                    font="bold"
+                    uppercase
+                    tracking="wide"
+                    cursor="pointer"
+                    class="brick-border brick-shadow brick-transition hover:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
+                >
+                    {{
+                        familyThemeService.isDark.value ? t("settings.themeDark").value : t("settings.themeLight").value
+                    }}
+                </button>
+            </section>
+
+            <hr border="t-3 black" />
+
             <section flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.membersTitle").value }}</h2>
 

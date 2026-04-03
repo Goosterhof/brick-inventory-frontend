@@ -106,4 +106,32 @@ describe("SettingsPage — integration", () => {
         const generateBtn = buttons.find((b) => b.text().includes("Generate Invite Code"));
         expect(generateBtn).toBeUndefined();
     });
+
+    it("renders theme toggle section with real button", async () => {
+        const wrapper = await mountWithMembers();
+
+        expect(wrapper.text()).toContain("Appearance");
+        const buttons = wrapper.findAll("button");
+        const themeBtn = buttons.find((b) => b.text().includes("Light mode") || b.text().includes("Dark mode"));
+        expect(themeBtn).toBeDefined();
+    });
+
+    it("toggles theme when theme button is clicked", async () => {
+        const wrapper = await mountWithMembers();
+
+        const buttons = wrapper.findAll("button");
+        const themeBtn = buttons.find((b) => b.text().includes("Light mode") || b.text().includes("Dark mode"));
+        const initialText = themeBtn?.text();
+
+        await themeBtn?.trigger("click");
+        await flushPromises();
+
+        const updatedButtons = wrapper.findAll("button");
+        const updatedThemeBtn = updatedButtons.find(
+            (b) => b.text().includes("Light mode") || b.text().includes("Dark mode"),
+        );
+
+        // After toggle, the label should have changed
+        expect(updatedThemeBtn?.text()).not.toBe(initialText);
+    });
 });

@@ -3,6 +3,7 @@ import "virtual:uno.css";
 import "@shared/assets/icons.css";
 import "@shared/assets/accessibility.css";
 import "@shared/assets/dialog.css";
+import "@shared/assets/theme.css";
 import {registerAuthGuard} from "@shared/services/auth/guards";
 import {createApp} from "vue";
 

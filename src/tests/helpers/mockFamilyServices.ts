@@ -1,8 +1,10 @@
 import type {HttpService} from "@script-development/fs-http";
+import type {ThemeService} from "@script-development/fs-theme";
 import type {AuthService} from "@shared/services/auth/types";
 import type {Mock} from "vitest";
 
 import {vi} from "vitest";
+import {ref} from "vue";
 
 import type {MockedService} from "./mockTypes";
 
@@ -14,6 +16,7 @@ export interface FamilyServicesMock {
     familyLoadingService: Record<string, unknown>;
     familySoundService: Record<string, unknown>;
     familyStorageService: Record<string, unknown>;
+    familyThemeService: ThemeService;
     FamilyRouterView: Record<string, unknown>;
     FamilyRouterLink: Record<string, unknown>;
 }
@@ -65,6 +68,7 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
         familyLoadingService: {},
         familySoundService: {},
         familyStorageService: {},
+        familyThemeService: {isDark: ref(false), toggleTheme: vi.fn<() => void>()},
         FamilyRouterView: {template: "<div><slot /></div>"},
         FamilyRouterLink: {template: "<a><slot /></a>"},
     };
@@ -79,6 +83,7 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
         familyLoadingService: {...defaults.familyLoadingService, ...overrides.familyLoadingService},
         familySoundService: {...defaults.familySoundService, ...overrides.familySoundService},
         familyStorageService: {...defaults.familyStorageService, ...overrides.familyStorageService},
+        familyThemeService: {...defaults.familyThemeService, ...overrides.familyThemeService},
         FamilyRouterView: {...defaults.FamilyRouterView, ...overrides.FamilyRouterView},
         FamilyRouterLink: {...defaults.FamilyRouterLink, ...overrides.FamilyRouterLink},
     };
