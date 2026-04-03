@@ -6,12 +6,6 @@ import {nextTick} from "vue";
 
 import ComponentGallery from "@/apps/showcase/components/ComponentGallery.vue";
 
-const SectionHeading = {
-    name: "SectionHeading",
-    props: {number: String, title: String},
-    template: "<div>{{ number }} {{ title }}</div>",
-};
-
 // Mock heavy shared components to keep import chain under 1000ms (ADR-010).
 // Using globalThis stubs: vi.mock factories are hoisted above imports, so we
 // use vi.hoisted to make the factory function available in the hoisted scope.
@@ -79,6 +73,14 @@ vi.mock("@shared/components/BadgeLabel.vue", () => ({default: mkStub("BadgeLabel
 vi.mock("@shared/components/SectionDivider.vue", () => ({default: mkStub("SectionDivider", false)}));
 vi.mock("@shared/components/ListItemButton.vue", () => ({default: mkStub("ListItemButton", true)}));
 
+vi.mock("@/apps/showcase/components/SectionHeading.vue", () => ({
+    default: {
+        name: "SectionHeading",
+        props: {number: String, title: String},
+        template: "<div>{{ number }} {{ title }}</div>",
+    },
+}));
+
 describe("ComponentGallery", () => {
     // Prevent shallowMount from auto-stubbing vi.mock'd components — they are already lightweight stubs.
     const mockedComponentNames = [
@@ -113,9 +115,10 @@ describe("ComponentGallery", () => {
         "BadgeLabel",
         "SectionDivider",
         "ListItemButton",
+        "SectionHeading",
     ] as const;
     const noAutoStub = Object.fromEntries(mockedComponentNames.map((name) => [name, false as const]));
-    const stubs = {SectionHeading, ...noAutoStub};
+    const stubs = {...noAutoStub};
 
     it("should render the section heading with correct number and title", () => {
         // Act
