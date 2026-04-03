@@ -1,10 +1,6 @@
+import type {ComponentPublicInstance} from "vue";
+
 import SetsOverviewPage from "@app/domains/sets/pages/SetsOverviewPage.vue";
-import EmptyState from "@shared/components/EmptyState.vue";
-import FilterChip from "@shared/components/FilterChip.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import ListItemButton from "@shared/components/ListItemButton.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
@@ -142,7 +138,7 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(PageHeader).props("title")).toBe("sets.title");
+        expect(wrapper.findComponent({name: "PageHeader"}).props("title")).toBe("sets.title");
     });
 
     it("should call retrieveAll on mount", async () => {
@@ -178,7 +174,7 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(EmptyState).props("message")).toBe("sets.noSets");
+        expect(wrapper.findComponent({name: "EmptyState"}).props("message")).toBe("sets.noSets");
     });
 
     it("should show loading state initially", () => {
@@ -199,7 +195,9 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Act
-        const scanButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "sets.scanSet");
+        const scanButton = wrapper
+            .findAllComponents({name: "PrimaryButton"})
+            .find((btn) => btn.text() === "sets.scanSet");
         await scanButton?.trigger("click");
         await flushPromises();
 
@@ -214,7 +212,9 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Act
-        const addButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "sets.addSet");
+        const addButton = wrapper
+            .findAllComponents({name: "PrimaryButton"})
+            .find((btn) => btn.text() === "sets.addSet");
         await addButton?.trigger("click");
         await flushPromises();
 
@@ -229,7 +229,7 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Act
-        wrapper.findComponent(ListItemButton).vm.$emit("click");
+        (wrapper.findComponent({name: "ListItemButton"}).vm as ComponentPublicInstance).$emit("click");
         await flushPromises();
 
         // Assert
@@ -292,7 +292,7 @@ describe("SetsOverviewPage", () => {
             await flushPromises();
 
             // Act
-            await wrapper.findComponent(TextInput).setValue("Titanic");
+            await wrapper.findComponent({name: "TextInput"}).setValue("Titanic");
             await flushPromises();
 
             // Assert
@@ -307,7 +307,7 @@ describe("SetsOverviewPage", () => {
             await flushPromises();
 
             // Act
-            await wrapper.findComponent(TextInput).setValue("75192");
+            await wrapper.findComponent({name: "TextInput"}).setValue("75192");
             await flushPromises();
 
             // Assert
@@ -322,8 +322,10 @@ describe("SetsOverviewPage", () => {
             await flushPromises();
 
             // Act — click "sealed" status filter
-            const sealedChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "sets.sealed");
-            sealedChip?.vm.$emit("click");
+            const sealedChip = wrapper
+                .findAllComponents({name: "FilterChip"})
+                .find((chip) => chip.text() === "sets.sealed");
+            await sealedChip?.trigger("click");
             await flushPromises();
 
             // Assert
@@ -338,9 +340,11 @@ describe("SetsOverviewPage", () => {
             await flushPromises();
 
             // Act — click sealed, then click sealed again
-            const sealedChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === "sets.sealed");
-            sealedChip?.vm.$emit("click");
-            sealedChip?.vm.$emit("click");
+            const sealedChip = wrapper
+                .findAllComponents({name: "FilterChip"})
+                .find((chip) => chip.text() === "sets.sealed");
+            await sealedChip?.trigger("click");
+            await sealedChip?.trigger("click");
             await flushPromises();
 
             // Assert — both sets visible
@@ -355,11 +359,11 @@ describe("SetsOverviewPage", () => {
             await flushPromises();
 
             // Act
-            await wrapper.findComponent(TextInput).setValue("nonexistent");
+            await wrapper.findComponent({name: "TextInput"}).setValue("nonexistent");
             await flushPromises();
 
             // Assert
-            const emptyStates = wrapper.findAllComponents(EmptyState);
+            const emptyStates = wrapper.findAllComponents({name: "EmptyState"});
             const noResults = emptyStates.find((e) => e.props("message") === "common.noResults");
             expect(noResults?.exists()).toBe(true);
         });
@@ -374,7 +378,9 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Assert
-        const exportButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "common.export");
+        const exportButton = wrapper
+            .findAllComponents({name: "PrimaryButton"})
+            .find((btn) => btn.text() === "common.export");
         expect(exportButton?.exists()).toBe(true);
     });
 
@@ -387,7 +393,9 @@ describe("SetsOverviewPage", () => {
         await flushPromises();
 
         // Assert
-        const exportButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "common.export");
+        const exportButton = wrapper
+            .findAllComponents({name: "PrimaryButton"})
+            .find((btn) => btn.text() === "common.export");
         expect(exportButton).toBeUndefined();
     });
 

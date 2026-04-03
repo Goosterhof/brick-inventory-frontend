@@ -9,7 +9,7 @@ import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
 import ToastMessage from "@shared/components/ToastMessage.vue";
 import {deepSnakeKeys, toCamelCaseTyped} from "@shared/helpers/string";
-import {createToastService} from "@shared/services/toast";
+import {createToastService} from "@script-development/fs-toast";
 import {computed, ref} from "vue";
 
 const {t} = familyTranslationService;

@@ -1,4 +1,4 @@
-import {createTranslationService} from "@shared/services/translation";
+import {createTranslationService} from "@script-development/fs-translation";
 
 const translations = {
     en: {

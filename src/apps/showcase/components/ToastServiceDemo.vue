@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import ToastMessage from "@shared/components/ToastMessage.vue";
-import {createToastService} from "@shared/services/toast";
+import {createToastService} from "@script-development/fs-toast";
 import {ref} from "vue";
 
 import SectionHeading from "./SectionHeading.vue";
