@@ -14,7 +14,7 @@ fi
 CMD=$(echo "$COMMAND" | tr -s '[:space:]' ' ')
 
 # git push --force / -f (but not -u which is fine)
-if echo "$CMD" | grep -qE 'git\s+push\s+.*(-f|--force)'; then
+if echo "$CMD" | grep -qE 'git\s+push\s+(.*\s)?(-f|--force)(\s|$)'; then
     echo "Blocked: git push --force is destructive. The CEO must explicitly authorize this." >&2
     exit 2
 fi
