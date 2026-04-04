@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {createDialogService} from "@script-development/fs-dialog";
+import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {defineComponent, h} from "vue";
 
 import SectionHeading from "./SectionHeading.vue";
