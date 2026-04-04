@@ -26,7 +26,7 @@ let nextId = 1;
 const mockStorageData = ref<Record<string, unknown>>({});
 
 const mockStorageService: Pick<StorageService, "get" | "put"> = {
-    get: <T,>(key: string, defaultValue?: T): T => {
+    get: <T>(key: string, defaultValue?: T): T => {
         const stored = mockStorageData.value[key];
         return (stored ?? defaultValue) as T;
     },
@@ -38,11 +38,11 @@ const mockStorageService: Pick<StorageService, "get" | "put"> = {
 const mockLoadingService = {} as unknown as Pick<LoadingService, "ensureLoadingFinished">;
 
 const mockHttpService = {
-    postRequest: <T,>(_endpoint: string, data: unknown) => {
+    postRequest: <T>(_endpoint: string, data: unknown) => {
         const created = {...(data as Record<string, unknown>), id: nextId++} as T;
         return Promise.resolve({data: created});
     },
-    patchRequest: <T,>(_endpoint: string, data: unknown) => Promise.resolve({data: data as T}),
+    patchRequest: <T>(_endpoint: string, data: unknown) => Promise.resolve({data: data as T}),
     deleteRequest: () => Promise.resolve({data: undefined}),
 } as unknown as HttpService;
 
