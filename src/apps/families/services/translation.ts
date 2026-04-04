@@ -242,6 +242,10 @@ const translations = {
             removeMemberError: "Could not remove member. Please try again.",
             removeMemberSelfError: "You cannot remove yourself from the family.",
             removeMemberNotFound: "This member is no longer part of the family.",
+            themeTitle: "Appearance",
+            themeDescription: "Choose how Brick Inventory looks to you.",
+            themeDark: "Dark mode",
+            themeLight: "Light mode",
         },
     },
     nl: {
@@ -487,6 +491,10 @@ const translations = {
             removeMemberError: "Kon gezinslid niet verwijderen. Probeer het opnieuw.",
             removeMemberSelfError: "Je kunt jezelf niet uit het gezin verwijderen.",
             removeMemberNotFound: "Dit lid maakt geen deel meer uit van het gezin.",
+            themeTitle: "Weergave",
+            themeDescription: "Kies hoe Brick Inventory eruitziet.",
+            themeDark: "Donkere modus",
+            themeLight: "Lichte modus",
         },
     },
 } as const;
