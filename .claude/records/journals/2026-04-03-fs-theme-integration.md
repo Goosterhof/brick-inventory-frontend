@@ -11,33 +11,33 @@
 
 Installed `@script-development/fs-theme@0.1.0` and wired it into the Families app with a Settings page toggle and dark/light CSS custom properties.
 
-| Action   | File                                                                                    | Notes                                                     |
-| -------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Modified | `package.json`                                                                          | Added `@script-development/fs-theme` dependency           |
-| Modified | `package-lock.json`                                                                     | Lockfile update from install                              |
-| Created  | `src/apps/families/services/theme.ts`                                                   | One-liner: `createThemeService(familyStorageService)`      |
-| Modified | `src/apps/families/services/index.ts`                                                   | Added barrel export for `familyThemeService`              |
-| Modified | `src/apps/families/services/translation.ts`                                             | 4 theme keys (en + nl): themeTitle, themeDescription, themeDark, themeLight |
-| Modified | `src/apps/families/domains/settings/pages/SettingsPage.vue`                             | Added Appearance section with toggle button at top        |
-| Created  | `src/shared/assets/theme.css`                                                           | CSS custom properties for dark/light body bg/text         |
-| Modified | `src/apps/families/main.ts`                                                             | Imports theme.css                                         |
-| Modified | `src/tests/helpers/mockFamilyServices.ts`                                               | Added `familyThemeService` to mock interface              |
-| Created  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPageTheme.spec.ts`         | 6 unit tests for toggle behavior                          |
-| Modified | `src/tests/integration/apps/families/domains/settings/pages/SettingsPage.spec.ts`       | 2 integration tests for theme toggle                      |
+| Action   | File                                                                              | Notes                                                                       |
+| -------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Modified | `package.json`                                                                    | Added `@script-development/fs-theme` dependency                             |
+| Modified | `package-lock.json`                                                               | Lockfile update from install                                                |
+| Created  | `src/apps/families/services/theme.ts`                                             | One-liner: `createThemeService(familyStorageService)`                       |
+| Modified | `src/apps/families/services/index.ts`                                             | Added barrel export for `familyThemeService`                                |
+| Modified | `src/apps/families/services/translation.ts`                                       | 4 theme keys (en + nl): themeTitle, themeDescription, themeDark, themeLight |
+| Modified | `src/apps/families/domains/settings/pages/SettingsPage.vue`                       | Added Appearance section with toggle button at top                          |
+| Created  | `src/shared/assets/theme.css`                                                     | CSS custom properties for dark/light body bg/text                           |
+| Modified | `src/apps/families/main.ts`                                                       | Imports theme.css                                                           |
+| Modified | `src/tests/helpers/mockFamilyServices.ts`                                         | Added `familyThemeService` to mock interface                                |
+| Created  | `src/tests/unit/apps/families/domains/settings/pages/SettingsPageTheme.spec.ts`   | 6 unit tests for toggle behavior                                            |
+| Modified | `src/tests/integration/apps/families/domains/settings/pages/SettingsPage.spec.ts` | 2 integration tests for theme toggle                                        |
 
 ## Permit Fulfillment
 
-| Acceptance Criterion                                                              | Met | Notes                                                    |
-| --------------------------------------------------------------------------------- | --- | -------------------------------------------------------- |
-| `@script-development/fs-theme` is installed and importable                        | Yes | v0.1.0 in package.json                                  |
-| `familyThemeService` is created using `familyStorageService`                      | Yes | Single-line factory call, no separate storage instance   |
-| Theme toggle is accessible on the Settings page                                   | Yes | First section under PageHeader                           |
-| Toggling switches between dark and light mode visually                            | Yes | Button calls `toggleTheme()`, CSS custom properties swap |
-| Theme preference persists across page reloads                                     | Yes | Via fs-storage localStorage under `families:theme`       |
-| Dark mode respects neo-brutalist design system                                    | Yes | brick-border, brick-shadow classes on toggle button      |
-| All existing tests still pass                                                     | Yes | Full suite green                                         |
-| New tests cover the theme toggle interaction                                      | Yes | 6 unit + 2 integration tests                            |
-| Full quality gauntlet passes                                                      | Yes | All 7 checks pass                                       |
+| Acceptance Criterion                                         | Met | Notes                                                    |
+| ------------------------------------------------------------ | --- | -------------------------------------------------------- |
+| `@script-development/fs-theme` is installed and importable   | Yes | v0.1.0 in package.json                                   |
+| `familyThemeService` is created using `familyStorageService` | Yes | Single-line factory call, no separate storage instance   |
+| Theme toggle is accessible on the Settings page              | Yes | First section under PageHeader                           |
+| Toggling switches between dark and light mode visually       | Yes | Button calls `toggleTheme()`, CSS custom properties swap |
+| Theme preference persists across page reloads                | Yes | Via fs-storage localStorage under `families:theme`       |
+| Dark mode respects neo-brutalist design system               | Yes | brick-border, brick-shadow classes on toggle button      |
+| All existing tests still pass                                | Yes | Full suite green                                         |
+| New tests cover the theme toggle interaction                 | Yes | 6 unit + 2 integration tests                             |
+| Full quality gauntlet passes                                 | Yes | All 7 checks pass                                        |
 
 ## Decisions Made
 
@@ -51,14 +51,14 @@ Installed `@script-development/fs-theme@0.1.0` and wired it into the Families ap
 
 ## Quality Gauntlet
 
-| Check         | Result | Notes                          |
-| ------------- | ------ | ------------------------------ |
-| format:check  | Pass   |                                |
+| Check         | Result | Notes                         |
+| ------------- | ------ | ----------------------------- |
+| format:check  | Pass   |                               |
 | lint          | Pass   | 0 warnings, 0 errors          |
-| lint:vue      | Pass   |                                |
-| type-check    | Pass   |                                |
-| test:coverage | Pass   | 100% lines/branches/functions  |
-| knip          | Pass   |                                |
+| lint:vue      | Pass   |                               |
+| type-check    | Pass   |                               |
+| test:coverage | Pass   | 100% lines/branches/functions |
+| knip          | Pass   |                               |
 | size          | Pass   | 111.17 kB / 350 kB budget     |
 
 ## Showcase Readiness
@@ -91,9 +91,9 @@ The toggle button uses native brick styling rather than wrapping in a shared com
 
 ### Training Proposals
 
-| Proposal                                                                                                             | Context                                                                                              | Shift Evidence                      |
-| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| When adding CSS custom properties for theming, grep existing templates for hardcoded color values that won't respond to the new variables | Defined `--brick-card-bg` but components use `bg="white"` directly; dark mode won't affect card backgrounds | 2026-04-03-fs-theme-integration     |
+| Proposal                                                                                                                                  | Context                                                                                                     | Shift Evidence                  |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| When adding CSS custom properties for theming, grep existing templates for hardcoded color values that won't respond to the new variables | Defined `--brick-card-bg` but components use `bg="white"` directly; dark mode won't affect card backgrounds | 2026-04-03-fs-theme-integration |
 
 ---
 
@@ -111,7 +111,7 @@ All four decisions are well-reasoned:
 
 - **Appearance at top** — Good UX instinct. Agreed.
 - **Native button over PrimaryButton** — Defensible. The toggle has different interaction semantics than form actions.
-- **Minimal CSS** — This is the right call *for this permit*. The permit said "dark/light mode toggling," not "comprehensive dark design system." The 6 custom properties on body are a foundation that can be extended.
+- **Minimal CSS** — This is the right call _for this permit_. The permit said "dark/light mode toggling," not "comprehensive dark design system." The 6 custom properties on body are a foundation that can be extended.
 - **Dark-default CSS** — Follows the package convention. Correct.
 
 No decisions needed CEO escalation.
@@ -124,9 +124,9 @@ One portfolio weakness: the dark mode is currently cosmetic-only for `body` — 
 
 ### Training Proposal Dispositions
 
-| Proposal                                                                                                                                    | Disposition | Rationale                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| When adding CSS custom properties for theming, grep existing templates for hardcoded color values that won't respond to the new variables    | Candidate   | Valid observation. The architect identified this in their own blind spots section, which is good self-awareness. First observation — needs a second confirming shift to graduate. |
+| Proposal                                                                                                                                  | Disposition | Rationale                                                                                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| When adding CSS custom properties for theming, grep existing templates for hardcoded color values that won't respond to the new variables | Candidate   | Valid observation. The architect identified this in their own blind spots section, which is good self-awareness. First observation — needs a second confirming shift to graduate. |
 
 ### Notes for the Architect
 
