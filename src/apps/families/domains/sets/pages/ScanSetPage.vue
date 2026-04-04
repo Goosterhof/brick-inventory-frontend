@@ -3,13 +3,13 @@ import type {SetSummary} from "@app/types/familySet";
 
 import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
 import {familySetStoreModule} from "@app/stores";
+import {createToastService} from "@script-development/fs-toast";
 import BackButton from "@shared/components/BackButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
 import ToastMessage from "@shared/components/ToastMessage.vue";
 import {deepSnakeKeys, toCamelCaseTyped} from "@shared/helpers/string";
-import {createToastService} from "@script-development/fs-toast";
 import {computed, ref} from "vue";
 
 const {t} = familyTranslationService;
