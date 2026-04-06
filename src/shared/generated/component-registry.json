@@ -437,7 +437,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickDimensions.vue",
+                        "src/apps/showcase/components/BrickShapes.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -477,7 +482,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickDimensions.vue",
+                        "src/apps/showcase/components/BrickShapes.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {

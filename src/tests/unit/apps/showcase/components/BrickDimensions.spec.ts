@@ -64,6 +64,6 @@ describe("BrickDimensions", () => {
 
         // Assert
         expect(wrapper.text()).toContain("The Stud — Atomic Unit");
-        expect(wrapper.text()).toContain("height = 0.6 x width");
+        expect(wrapper.text()).toContain("stud ⌀ = 0.6 × cell (4.8mm)");
     });
 });
