@@ -353,7 +353,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 47},
             "dependencyDepth": 0
         },
         "LegoArchSvg": {
@@ -370,7 +370,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 88},
             "dependencyDepth": 0
         },
         "LegoBrick": {
@@ -440,7 +440,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 28},
             "dependencyDepth": 0
         },
         "LegoPlateSvg": {
@@ -457,7 +457,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 76},
             "dependencyDepth": 0
         },
         "LegoRound": {
@@ -474,7 +474,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 22},
             "dependencyDepth": 0
         },
         "LegoRoundSvg": {
@@ -491,7 +491,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 36},
             "dependencyDepth": 0
         },
         "LegoSlope": {
@@ -508,7 +508,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 39},
             "dependencyDepth": 0
         },
         "LegoSlopeSvg": {
@@ -525,7 +525,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 84},
             "dependencyDepth": 0
         },
         "LegoTechnicBeam": {
@@ -542,7 +542,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 19},
             "dependencyDepth": 0
         },
         "LegoTechnicBeamSvg": {
@@ -559,7 +559,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 54},
             "dependencyDepth": 0
         },
         "LegoTile": {
@@ -576,7 +576,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 15},
             "dependencyDepth": 0
         },
         "LegoTileSvg": {
@@ -593,7 +593,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 38},
             "dependencyDepth": 0
         },
         "LegoWedge": {
@@ -610,7 +610,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 29},
             "dependencyDepth": 0
         },
         "LegoWedgeSvg": {
@@ -627,7 +627,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 73},
             "dependencyDepth": 0
         },
         "ListItemButton": {
