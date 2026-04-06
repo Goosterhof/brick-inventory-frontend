@@ -93,7 +93,7 @@ const translations = {
             yearDistribution: "Sets by year",
             yearDistributionEmpty: "No year data available",
         },
-        about: {title: "About", description: "This is the about page."},
+        about: {title: "About", description: "This is the about page.", diorama: "Diorama"},
         sets: {
             title: "My Sets",
             addSet: "Add set",
@@ -339,7 +339,7 @@ const translations = {
             yearDistribution: "Sets per jaar",
             yearDistributionEmpty: "Geen jaargegevens beschikbaar",
         },
-        about: {title: "Over", description: "Dit is de over pagina."},
+        about: {title: "Over", description: "Dit is de over pagina.", diorama: "Diorama"},
         sets: {
             title: "Mijn Sets",
             addSet: "Set toevoegen",
