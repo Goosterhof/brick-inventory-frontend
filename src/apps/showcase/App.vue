@@ -2,6 +2,7 @@
 import AntiPatterns from "./components/AntiPatterns.vue";
 import BrandVoice from "./components/BrandVoice.vue";
 import BrickDimensions from "./components/BrickDimensions.vue";
+import BrickShapes from "./components/BrickShapes.vue";
 import ColorPalette from "./components/ColorPalette.vue";
 import ComponentGallery from "./components/ComponentGallery.vue";
 import ComponentHealth from "./components/ComponentHealth.vue";
@@ -33,6 +34,7 @@ import TypographySpecimen from "./components/TypographySpecimen.vue";
             <FormValidationWorkbench />
             <ResourceAdapterPlayground />
             <MiddlewarePipelineVisualizer />
+            <BrickShapes />
         </div>
 
         <footer p="y-16 x-4" border="t-3 black" m="t-24">
