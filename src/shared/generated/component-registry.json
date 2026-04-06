@@ -1,5 +1,5 @@
 {
-    "meta": {"componentCount": 32, "churnWindowDays": 30},
+    "meta": {"componentCount": 33, "churnWindowDays": 30},
     "components": {
         "BackButton": {
             "path": "src/shared/components/BackButton.vue",
@@ -368,6 +368,28 @@
                 "models": []
             },
             "churn": {"commits": 1, "linesChanged": 34},
+            "dependencyDepth": 0
+        },
+        "LegoBrickSvg": {
+            "path": "src/shared/components/LegoBrickSvg.vue",
+            "category": null,
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false},
+                    {"name": "columns", "required": false},
+                    {"name": "rows", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 80},
             "dependencyDepth": 0
         },
         "ListItemButton": {
