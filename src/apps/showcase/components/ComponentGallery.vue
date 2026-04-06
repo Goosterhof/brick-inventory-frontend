@@ -16,6 +16,7 @@ import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoBrickSvg from "@shared/components/LegoBrickSvg.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import LoadingState from "@shared/components/LoadingState.vue";
 import ModalDialog from "@shared/components/ModalDialog.vue";
@@ -499,6 +500,27 @@ const noop = () => {};
                     </div>
                     <div flex="~ col" items="center" gap="2">
                         <LegoBrick :columns="1" :rows="1" color="#F5C518" :shadow="false" />
+                        <p text="xs" font="mono" text-color="gray-500">1x1 Yellow (no shadow)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LegoBrickSvg -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">LegoBrickSvg</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <div flex="~ wrap" gap="6" items="end">
+                    <div flex="~ col" items="center" gap="2">
+                        <LegoBrickSvg :columns="4" :rows="2" color="#DC2626" />
+                        <p text="xs" font="mono" text-color="gray-500">4x2 Red</p>
+                    </div>
+                    <div flex="~ col" items="center" gap="2">
+                        <LegoBrickSvg :columns="2" :rows="2" color="#0055BF" />
+                        <p text="xs" font="mono" text-color="gray-500">2x2 Blue</p>
+                    </div>
+                    <div flex="~ col" items="center" gap="2">
+                        <LegoBrickSvg :columns="1" :rows="1" color="#F5C518" :shadow="false" />
                         <p text="xs" font="mono" text-color="gray-500">1x1 Yellow (no shadow)</p>
                     </div>
                 </div>
