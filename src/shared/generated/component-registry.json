@@ -1,5 +1,5 @@
 {
-    "meta": {"componentCount": 33, "churnWindowDays": 30},
+    "meta": {"componentCount": 47, "churnWindowDays": 30},
     "components": {
         "BackButton": {
             "path": "src/shared/components/BackButton.vue",
@@ -339,6 +339,40 @@
             "churn": {"commits": 1, "linesChanged": 10},
             "dependencyDepth": 0
         },
+        "LegoArch": {
+            "path": "src/shared/components/LegoArch.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 47},
+            "dependencyDepth": 0
+        },
+        "LegoArchSvg": {
+            "path": "src/shared/components/LegoArchSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 88},
+            "dependencyDepth": 0
+        },
         "LegoBrick": {
             "path": "src/shared/components/LegoBrick.vue",
             "category": null,
@@ -390,6 +424,210 @@
                 "models": []
             },
             "churn": {"commits": 1, "linesChanged": 80},
+            "dependencyDepth": 0
+        },
+        "LegoPlate": {
+            "path": "src/shared/components/LegoPlate.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 28},
+            "dependencyDepth": 0
+        },
+        "LegoPlateSvg": {
+            "path": "src/shared/components/LegoPlateSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 76},
+            "dependencyDepth": 0
+        },
+        "LegoRound": {
+            "path": "src/shared/components/LegoRound.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 22},
+            "dependencyDepth": 0
+        },
+        "LegoRoundSvg": {
+            "path": "src/shared/components/LegoRoundSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 36},
+            "dependencyDepth": 0
+        },
+        "LegoSlope": {
+            "path": "src/shared/components/LegoSlope.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 39},
+            "dependencyDepth": 0
+        },
+        "LegoSlopeSvg": {
+            "path": "src/shared/components/LegoSlopeSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 84},
+            "dependencyDepth": 0
+        },
+        "LegoTechnicBeam": {
+            "path": "src/shared/components/LegoTechnicBeam.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 19},
+            "dependencyDepth": 0
+        },
+        "LegoTechnicBeamSvg": {
+            "path": "src/shared/components/LegoTechnicBeamSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 54},
+            "dependencyDepth": 0
+        },
+        "LegoTile": {
+            "path": "src/shared/components/LegoTile.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 15},
+            "dependencyDepth": 0
+        },
+        "LegoTileSvg": {
+            "path": "src/shared/components/LegoTileSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 38},
+            "dependencyDepth": 0
+        },
+        "LegoWedge": {
+            "path": "src/shared/components/LegoWedge.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 29},
+            "dependencyDepth": 0
+        },
+        "LegoWedgeSvg": {
+            "path": "src/shared/components/LegoWedgeSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 1, "linesChanged": 73},
             "dependencyDepth": 0
         },
         "ListItemButton": {
