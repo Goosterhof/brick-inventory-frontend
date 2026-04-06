@@ -64,5 +64,5 @@ Keep components lean. Each shape is a focused rendering — no business logic, n
 
 ---
 
-**Status:** Open
-**Journal:** _pending_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-04-06-lego-brick-shapes.md`

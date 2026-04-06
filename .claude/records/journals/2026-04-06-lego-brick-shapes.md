@@ -131,4 +131,32 @@ Strong. The BrickShapes section demonstrates two things a reviewing architect wo
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
+### Assessment
+
+Solid delivery. 14 components, 112 tests, full gauntlet green, all acceptance criteria met. The comparison matrix is the real deliverable here — it's a defensible technical artifact that demonstrates the team understands rendering tradeoff analysis, not just "we can draw shapes."
+
+### Work Quality
+
+- **Component consistency:** All 14 follow the same prop interface (`color?`, `shadow?`), same naming convention, same data-attribute testability pattern. This is what scales.
+- **SVG craftsmanship:** `LegoSlopeSvg.vue` shows proper geometric thinking — polygon for the slope surface, rect for the body, gradient-overlaid circles for studs. Clean separation of concerns within the SVG.
+- **HTML pragmatism:** `LegoArch.vue` honestly demonstrates the limitation — the arch cutout is a white div overlay, not a true geometric subtraction. The journal correctly flagged this as a reason SVG wins for non-rectangular shapes.
+- **Showcase section:** The `<component :is>` data-driven approach is clean and extensible. Good call.
+- **The "13 of 14 already existed" note:** Architect correctly checked `git status` before creating files — that's the graduated training from 2026-03-28 in action. Good to see it working.
+
+### Comparison Matrix Verdict
+
+The findings are sound: SVG for geometry, HTML for simplicity on rectangles. This aligns with my pre-permit prediction, and now we have the code to prove it. That's the point.
+
+### Training Proposal Disposition
+
+| Proposal                                                      | Verdict       | Reason                                                                                                                                                           |
+| ------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| JSDOM CSS shorthand normalization: always check longhand form | **Candidate** | Hit twice within the same shift (LegoArch + LegoRound), demonstrating it's a recurring pattern. First observation — needs a second confirming shift to graduate. |
+
+### Graduation Check
+
+No graduations this round. The JSDOM shorthand proposal is a first-observation candidate. No existing candidates received second confirmation from this shift.
+
+### Concerns
+
+None. Clean delivery, accurate self-assessment, honest about the JSDOM stumble. The architect noted only 1 of 14 components was authored from scratch — that's transparency, not laziness.
