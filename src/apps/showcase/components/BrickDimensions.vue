@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoPlate from "@shared/components/LegoPlate.vue";
+import LegoRound from "@shared/components/LegoRound.vue";
 
 import SectionHeading from "./SectionHeading.vue";
 
 const bricks = [
-    {cols: 2, rows: 4, label: "2x4 Brick"},
-    {cols: 2, rows: 2, label: "2x2 Brick"},
-    {cols: 1, rows: 2, label: "1x2 Plate"},
-    {cols: 1, rows: 1, label: "1x1 Round"},
+    {cols: 2, rows: 4, label: "2x4 Brick", component: LegoBrick},
+    {cols: 2, rows: 2, label: "2x2 Brick", component: LegoBrick},
+    {cols: 1, rows: 2, label: "1x2 Plate", component: LegoPlate},
+    {cols: 1, rows: 1, label: "1x1 Round", component: LegoRound},
 ];
 </script>
 
@@ -17,7 +19,7 @@ const bricks = [
 
         <p text="lg" leading="relaxed" max-w="prose" m="b-10">
             The design system's spatial rhythm is derived from actual LEGO dimensions. A stud is the atomic unit — all
-            spacing relates back to the 0.6 width-to-height ratio of a real LEGO stud.
+            spacing relates back to the 0.6 stud-diameter-to-cell-width ratio of a real LEGO brick.
         </p>
 
         <!-- Stud ratio visualization -->
@@ -45,12 +47,12 @@ const bricks = [
                 <!-- Ratio diagram -->
                 <div flex="~ col" gap="2">
                     <div flex items="center" gap="2">
-                        <div w="16" h="1" bg="black" />
-                        <span text="xs" font="mono">width</span>
+                        <div w="20" h="1" bg="black" />
+                        <span text="xs" font="mono">cell width (8mm)</span>
                     </div>
                     <div flex items="center" gap="2">
-                        <div w="10" h="1" bg="[#F5C518]" class="brick-border" />
-                        <span text="xs" font="mono">height = 0.6 x width</span>
+                        <div w="12" h="1" bg="[#F5C518]" class="brick-border" />
+                        <span text="xs" font="mono">stud ⌀ = 0.6 × cell (4.8mm)</span>
                     </div>
                 </div>
             </div>
@@ -70,7 +72,13 @@ const bricks = [
             >
                 <p class="brick-label" text="center">{{ brick.label }}</p>
 
-                <LegoBrick :columns="brick.cols" :rows="brick.rows" color="#F5C518" :shadow="false" />
+                <component
+                    :is="brick.component"
+                    :columns="brick.cols"
+                    :rows="brick.rows"
+                    color="#F5C518"
+                    :shadow="false"
+                />
 
                 <p text="xs" font="mono" text-color="gray-500">{{ brick.cols }} x {{ brick.rows }} studs</p>
             </div>
