@@ -389,7 +389,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 80},
             "dependencyDepth": 0
         },
         "ListItemButton": {
