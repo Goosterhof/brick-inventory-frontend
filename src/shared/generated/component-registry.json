@@ -362,8 +362,11 @@
         "LegoArchSvg": {
             "path": "src/shared/components/LegoArchSvg.vue",
             "category": null,
-            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
-            "adoption": {"apps": 1, "domains": 0},
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "color", "required": false},
@@ -452,8 +455,11 @@
         "LegoPlateSvg": {
             "path": "src/shared/components/LegoPlateSvg.vue",
             "category": null,
-            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
-            "adoption": {"apps": 1, "domains": 0},
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "color", "required": false},
@@ -489,8 +495,11 @@
         "LegoRoundSvg": {
             "path": "src/shared/components/LegoRoundSvg.vue",
             "category": null,
-            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
-            "adoption": {"apps": 1, "domains": 0},
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "color", "required": false},
@@ -526,8 +535,11 @@
         "LegoSlopeSvg": {
             "path": "src/shared/components/LegoSlopeSvg.vue",
             "category": null,
-            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
-            "adoption": {"apps": 1, "domains": 0},
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "color", "required": false},
@@ -563,8 +575,11 @@
         "LegoTechnicBeamSvg": {
             "path": "src/shared/components/LegoTechnicBeamSvg.vue",
             "category": null,
-            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
-            "adoption": {"apps": 1, "domains": 0},
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "color", "required": false},
@@ -600,8 +615,11 @@
         "LegoTileSvg": {
             "path": "src/shared/components/LegoTileSvg.vue",
             "category": null,
-            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
-            "adoption": {"apps": 1, "domains": 0},
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "color", "required": false},
@@ -637,8 +655,11 @@
         "LegoWedgeSvg": {
             "path": "src/shared/components/LegoWedgeSvg.vue",
             "category": null,
-            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}},
-            "adoption": {"apps": 1, "domains": 0},
+            "consumers": {
+                "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "color", "required": false},
