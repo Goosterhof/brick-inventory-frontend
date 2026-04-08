@@ -1,28 +1,34 @@
 export interface BrickDnaTopColor {
+    colorId: number;
     name: string;
-    hex: string;
-    count: number;
+    rgb: string;
+    isTransparent: boolean;
+    totalQuantity: number;
 }
 
 export interface BrickDnaTopPartType {
+    partId: number;
+    partNum: string;
     name: string;
-    category: string;
-    count: number;
+    category: string | null;
+    totalQuantity: number;
 }
 
 export interface BrickDnaRarePart {
-    part: string;
-    color: string;
+    partId: number;
+    partNum: string;
+    partName: string;
+    colorId: number | null;
+    colorName: string | null;
+    colorRgb: string | null;
     quantity: number;
-}
-
-export interface BrickDnaDiversityScore {
-    shannonIndex: number;
 }
 
 export interface BrickDna {
     topColors: BrickDnaTopColor[];
     topPartTypes: BrickDnaTopPartType[];
     rarestParts: BrickDnaRarePart[];
-    diversityScore: BrickDnaDiversityScore;
+    diversityScore: number;
+    totalUniqueParts: number;
+    totalPartsQuantity: number;
 }

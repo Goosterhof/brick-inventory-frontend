@@ -51,16 +51,16 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                 </h2>
                 <CardContainer>
                     <div flex="~ col" items="center" gap="2" p="4">
-                        <p text="5xl" font="bold">{{ diversityPercentage(dna.diversityScore.shannonIndex) }}</p>
+                        <p text="5xl" font="bold">{{ diversityPercentage(dna.diversityScore) }}</p>
                         <p text="sm" font="bold" uppercase tracking="wide">
-                            {{ diversityLabel(dna.diversityScore.shannonIndex) }}
+                            {{ diversityLabel(dna.diversityScore) }}
                         </p>
                         <!-- Visual bar -->
                         <div w="full" max-w="sm" h="4" bg="gray-200" class="brick-border">
                             <div
                                 h="full"
                                 bg="baseplate-green"
-                                :style="{width: diversityPercentage(dna.diversityScore.shannonIndex)}"
+                                :style="{width: diversityPercentage(dna.diversityScore)}"
                             />
                         </div>
                     </div>
@@ -79,7 +79,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                         v-for="color in dna.topColors"
                         :key="color.name"
                         :label="color.name"
-                        :value="String(color.count)"
+                        :value="String(color.totalQuantity)"
                     >
                         <div
                             w="6"
@@ -88,7 +88,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                             class="brick-border"
                             border="1"
                             m="t-2"
-                            :style="{backgroundColor: color.hex}"
+                            :style="{backgroundColor: `#${color.rgb}`}"
                         />
                     </StatCard>
                 </div>
@@ -106,7 +106,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                         v-for="partType in dna.topPartTypes"
                         :key="partType.name"
                         :label="partType.name"
-                        :value="String(partType.count)"
+                        :value="String(partType.totalQuantity)"
                     >
                         <p text="xs gray-500" m="t-1">{{ partType.category }}</p>
                     </StatCard>
@@ -124,8 +124,8 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                     <CardContainer v-for="(rare, index) in dna.rarestParts" :key="index">
                         <div flex justify="between" items="center">
                             <div>
-                                <p font="bold">{{ rare.part }}</p>
-                                <p text="sm gray-600">{{ rare.color }}</p>
+                                <p font="bold">{{ rare.partName }}</p>
+                                <p text="sm gray-600">{{ rare.colorName }}</p>
                             </div>
                             <p text="xl" font="bold">{{ rare.quantity }}x</p>
                         </div>
