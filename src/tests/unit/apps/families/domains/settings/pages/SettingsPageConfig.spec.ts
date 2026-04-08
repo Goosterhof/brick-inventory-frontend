@@ -3,7 +3,7 @@ import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {flushPromises, shallowMount} from "@vue/test-utils";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 const {
     createMockAxiosWithError,
@@ -174,18 +174,48 @@ describe("SettingsPage — config", () => {
     });
 
     describe("import sets", () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        const pendingJob = {
+            id: 1,
+            status: "pending",
+            totalSets: 0,
+            processedSets: 0,
+            failedSets: 0,
+            failedSetDetails: null,
+            startedAt: null,
+            completedAt: null,
+            createdAt: "2026-04-08T10:00:00Z",
+        };
+
+        const completedJob = {
+            ...pendingJob,
+            status: "completed",
+            totalSets: 7,
+            processedSets: 7,
+            failedSets: 0,
+            completedAt: "2026-04-08T10:01:00Z",
+        };
+
+        const failedJob = {
+            ...pendingJob,
+            status: "failed",
+            totalSets: 7,
+            processedSets: 5,
+            failedSets: 2,
+            failedSetDetails: [{setNum: "10270-1", error: "Not found"}],
+            completedAt: "2026-04-08T10:01:00Z",
+        };
+
         it("should call import endpoint", async () => {
             // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import completed successfully",
-                    created: 5,
-                    updated: 2,
-                    skipped: 0,
-                    total: 7,
-                    complete: true,
-                },
-            });
+            mockPostRequest.mockResolvedValue({data: pendingJob});
             const wrapper = shallowMount(SettingsPage);
 
             // Act
@@ -199,45 +229,56 @@ describe("SettingsPage — config", () => {
             expect(mockPostRequest).toHaveBeenCalledWith("/family-sets/import-from-rebrickable", {});
         });
 
-        it("should display import results", async () => {
+        it("should poll import-status after starting import", async () => {
             // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import completed successfully",
-                    created: 5,
-                    updated: 2,
-                    skipped: 1,
-                    total: 7,
-                    complete: true,
-                },
+            mockPostRequest.mockResolvedValue({data: pendingJob});
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                if (url === "/family-sets/import-status") {
+                    return Promise.resolve({data: completedJob});
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
             });
             const wrapper = shallowMount(SettingsPage);
 
-            // Act
+            // Act — start import
             const importButton = wrapper
                 .findAllComponents(PrimaryButton)
                 .find((btn) => btn.text() === "settings.importButton");
             await importButton?.trigger("click");
             await flushPromises();
 
+            // Advance timer to trigger poll
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+
             // Assert
-            expect(wrapper.text()).toContain("Import completed successfully");
-            expect(wrapper.text()).toContain("settings.importCreated");
-            expect(wrapper.text()).toContain("settings.importUpdated");
-            expect(wrapper.text()).toContain("settings.importSkipped");
+            expect(mockGetRequest).toHaveBeenCalledWith("/family-sets/import-status");
         });
 
-        it("should not show skipped count when zero", async () => {
+        it("should display completed import results", async () => {
             // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import completed successfully",
-                    created: 5,
-                    updated: 2,
-                    skipped: 0,
-                    total: 7,
-                    complete: true,
-                },
+            mockPostRequest.mockResolvedValue({data: pendingJob});
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                if (url === "/family-sets/import-status") {
+                    return Promise.resolve({data: completedJob});
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
             });
             const wrapper = shallowMount(SettingsPage);
 
@@ -248,8 +289,46 @@ describe("SettingsPage — config", () => {
             await importButton?.trigger("click");
             await flushPromises();
 
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+
             // Assert
-            expect(wrapper.text()).not.toContain("settings.importSkipped");
+            expect(wrapper.text()).toContain("settings.importComplete");
+        });
+
+        it("should display failed import with details", async () => {
+            // Arrange
+            mockPostRequest.mockResolvedValue({data: pendingJob});
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                if (url === "/family-sets/import-status") {
+                    return Promise.resolve({data: failedJob});
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
+            });
+            const wrapper = shallowMount(SettingsPage);
+
+            // Act
+            const importButton = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((btn) => btn.text() === "settings.importButton");
+            await importButton?.trigger("click");
+            await flushPromises();
+
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain("settings.importFailed");
+            expect(wrapper.text()).toContain("10270-1");
+            expect(wrapper.text()).toContain("Not found");
         });
 
         it("should show error when not family head (403)", async () => {
@@ -310,14 +389,9 @@ describe("SettingsPage — config", () => {
             expect(wrapper.text()).toContain("settings.importError");
         });
 
-        it("should show importing state while in progress", async () => {
+        it("should show importing state while polling", async () => {
             // Arrange
-            let resolveRequest: ((value: unknown) => void) | undefined;
-            mockPostRequest.mockReturnValue(
-                new Promise((resolve) => {
-                    resolveRequest = resolve;
-                }),
-            );
+            mockPostRequest.mockResolvedValue({data: pendingJob});
             const wrapper = shallowMount(SettingsPage);
 
             // Act
@@ -332,21 +406,25 @@ describe("SettingsPage — config", () => {
                 .findAllComponents(PrimaryButton)
                 .find((btn) => btn.text() === "settings.importing");
             expect(updatedButton?.exists()).toBe(true);
-            resolveRequest?.({data: {message: "done", created: 0, updated: 0, skipped: 0, total: 0, complete: true}});
         });
 
-        it("should display import error from response", async () => {
+        it("should show progress during polling", async () => {
             // Arrange
-            mockPostRequest.mockResolvedValue({
-                data: {
-                    message: "Import partially completed",
-                    created: 3,
-                    updated: 0,
-                    skipped: 0,
-                    total: 3,
-                    complete: false,
-                    error: "Some sets failed to import",
-                },
+            const runningJob = {...pendingJob, status: "in_progress", totalSets: 7, processedSets: 3};
+            mockPostRequest.mockResolvedValue({data: pendingJob});
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                if (url === "/family-sets/import-status") {
+                    return Promise.resolve({data: runningJob});
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
             });
             const wrapper = shallowMount(SettingsPage);
 
@@ -357,8 +435,91 @@ describe("SettingsPage — config", () => {
             await importButton?.trigger("click");
             await flushPromises();
 
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+
             // Assert
-            expect(wrapper.text()).toContain("Some sets failed to import");
+            expect(wrapper.text()).toContain("settings.importProgress");
+        });
+
+        it("should stop polling and show error when poll request fails", async () => {
+            // Arrange
+            mockPostRequest.mockResolvedValue({data: pendingJob});
+            let pollCallCount = 0;
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                if (url === "/family-sets/import-status") {
+                    pollCallCount++;
+                    return Promise.reject(new Error("Network error"));
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
+            });
+            const wrapper = shallowMount(SettingsPage);
+
+            // Act
+            const importButton = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((btn) => btn.text() === "settings.importButton");
+            await importButton?.trigger("click");
+            await flushPromises();
+
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+
+            // Assert — polling stopped after error
+            expect(wrapper.text()).toContain("settings.importError");
+            expect(pollCallCount).toBe(1);
+
+            // Advance more — should not poll again
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+            expect(pollCallCount).toBe(1);
+        });
+
+        it("should stop polling on completed status", async () => {
+            // Arrange
+            mockPostRequest.mockResolvedValue({data: pendingJob});
+            let pollCallCount = 0;
+            mockGetRequest.mockImplementation((url: string) => {
+                if (url === "/family/members") {
+                    return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+                }
+                if (url === "/family/invite-code") {
+                    const error = new MockAxiosError("Not Found");
+                    error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+                    return Promise.reject(error);
+                }
+                if (url === "/family-sets/import-status") {
+                    pollCallCount++;
+                    return Promise.resolve({data: completedJob});
+                }
+                return Promise.reject(new Error(`Unexpected GET: ${url}`));
+            });
+            const wrapper = shallowMount(SettingsPage);
+
+            // Act
+            const importButton = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((btn) => btn.text() === "settings.importButton");
+            await importButton?.trigger("click");
+            await flushPromises();
+
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+
+            // Advance more — should not poll again
+            vi.advanceTimersByTime(3000);
+            await flushPromises();
+
+            // Assert
+            expect(pollCallCount).toBe(1);
         });
     });
 });
