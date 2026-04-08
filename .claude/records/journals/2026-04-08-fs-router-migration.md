@@ -104,4 +104,25 @@ Clean migration that demonstrates the Armory extraction pattern at its most comp
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
+**Verdict: Strong delivery.** This was the most complex Armory migration -- the only one requiring a wrapper pattern -- and the architect executed it cleanly in a single pass.
+
+### What I Liked
+
+- **The knip override was the right call.** The permit said to keep re-exports "for future use." The architect installed them, knip flagged all 6 as dead, and the architect removed them with clear reasoning. Following the tooling over the permit's speculation is exactly what I want to see. One-line re-exports take 10 seconds to add when a consumer appears; dead exports erode trust immediately.
+- **The wrapper is minimal.** 34 lines. No over-abstraction, no speculative generics, no "what if we need X later." It does exactly three things: dashboard name, dashboard navigation, from-query middleware. Done.
+- **Test file is appropriately scoped.** 5 tests covering exactly the BIO-specific behavior. No re-testing what the package already covers with its 93 tests. This is the correct test boundary.
+- **Self-debrief is honest.** The blind spot about integration test mocks and middleware ordering was self-identified without prompting.
+
+### What I'd Push Back On
+
+- **`generics.d.ts` left untouched.** "Knip ignores `.d.ts` per config" is an explanation, not a justification. If the types are unused, they're dead weight. I understand not wanting to scope-creep this permit, but the journal should have flagged it as a follow-up item rather than rationalizing inaction. Minor -- not blocking.
+
+### Training Disposition
+
+| Proposal                                                          | Disposition   | Rationale                                                                 |
+| ----------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------- |
+| Remove knip-flagged re-exports rather than keeping for future use | **Candidate** | Good instinct, first observation. Watching for a second confirming shift. |
+
+### Graduation Log Update
+
+Added to Candidates table in `.claude/agents/lead-brick-architect.md`.
