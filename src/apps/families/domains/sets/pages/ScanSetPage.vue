@@ -115,11 +115,11 @@ const goBack = async () => {
         <div v-if="scannedCode" m="t-6" flex="~ col" gap="4">
             <p font="bold" text="lg">{{ t("sets.scannedCode").value }}: {{ scannedCode }}</p>
 
-            <p v-if="isSearching" text="gray-600">{{ t("common.loading").value }}</p>
+            <p v-if="isSearching" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
 
             <template v-else-if="hasSearched">
                 <div v-if="foundSet" flex="~ col" gap="4">
-                    <div flex items="center" gap="4" p="4" bg="white" class="brick-border">
+                    <div flex items="center" gap="4" p="4" bg="[var(--brick-card-bg)]" class="brick-border">
                         <img
                             v-if="foundSet.imageUrl"
                             :src="foundSet.imageUrl"
@@ -130,12 +130,17 @@ const goBack = async () => {
                         />
                         <div flex="1">
                             <p font="bold">{{ foundSet.name }}</p>
-                            <p text="sm gray-600">{{ foundSet.setNum }}</p>
+                            <p text="sm [var(--brick-muted-text)]">{{ foundSet.setNum }}</p>
                             <div flex gap="2" m="t-1">
-                                <span v-if="foundSet.year" text="xs" p="x-2 y-1" bg="gray-200" font="bold">{{
-                                    foundSet.year
-                                }}</span>
-                                <span v-if="foundSet.numParts" text="xs gray-600"
+                                <span
+                                    v-if="foundSet.year"
+                                    text="xs"
+                                    p="x-2 y-1"
+                                    bg="[var(--brick-surface-subtle)]"
+                                    font="bold"
+                                    >{{ foundSet.year }}</span
+                                >
+                                <span v-if="foundSet.numParts" text="xs [var(--brick-muted-text)]"
                                     >{{ t("sets.numParts").value }}: {{ foundSet.numParts }}</span
                                 >
                             </div>
@@ -180,7 +185,7 @@ const goBack = async () => {
                 </div>
 
                 <div v-else flex="~ col" gap="4">
-                    <p text="gray-600">{{ t("sets.scanNoResult").value }}</p>
+                    <p text="[var(--brick-muted-text)]">{{ t("sets.scanNoResult").value }}</p>
                 </div>
             </template>
 

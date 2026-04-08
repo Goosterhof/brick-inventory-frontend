@@ -16,6 +16,6 @@ describe("SectionDivider", () => {
         const wrapper = shallowMount(SectionDivider);
 
         // Assert
-        expect(wrapper.find("hr").attributes("border")).toBe("t-3 black");
+        expect(wrapper.find("hr").attributes("border")).toBe("t-3 [var(--brick-border-color)]");
     });
 });

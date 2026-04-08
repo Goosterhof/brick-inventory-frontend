@@ -25,8 +25,8 @@ const handleClick = () => {
         :type="type"
         :disabled="disabled"
         p="x-4 y-3"
-        bg="black hover:brick-yellow focus:brick-yellow disabled:gray-200"
-        text="white hover:black focus:black disabled:gray-600"
+        bg="[var(--brick-border-color)] hover:brick-yellow focus:brick-yellow disabled:[var(--brick-surface-subtle)]"
+        text="[var(--brick-page-bg)] hover:[var(--brick-page-text)] focus:[var(--brick-page-text)] disabled:[var(--brick-muted-text)]"
         font="bold"
         uppercase
         tracking="wide"

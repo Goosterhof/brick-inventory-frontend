@@ -54,7 +54,7 @@ const goToDetail = async (id: number) => {
             }}</PrimaryButton>
         </PageHeader>
 
-        <p v-if="isLoading" text="gray-600">{{ t("common.loading").value }}</p>
+        <p v-if="isLoading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
 
         <EmptyState
             v-else-if="getAll.length === 0"
@@ -82,7 +82,9 @@ const goToDetail = async (id: number) => {
                     <ListItemButton v-for="option in filteredOptions" :key="option.id" @click="goToDetail(option.id)">
                         <div flex="1">
                             <p font="bold">{{ option.name }}</p>
-                            <p v-if="option.description" text="sm gray-600">{{ option.description }}</p>
+                            <p v-if="option.description" text="sm [var(--brick-muted-text)]">
+                                {{ option.description }}
+                            </p>
                         </div>
                     </ListItemButton>
                 </div>
@@ -94,12 +96,23 @@ const goToDetail = async (id: number) => {
                     <ListItemButton @click="goToDetail(parent.id)">
                         <div flex="1">
                             <p font="bold">{{ parent.name }}</p>
-                            <p v-if="parent.description" text="sm gray-600">{{ parent.description }}</p>
+                            <p v-if="parent.description" text="sm [var(--brick-muted-text)]">
+                                {{ parent.description }}
+                            </p>
                             <div flex gap="2" m="t-1">
-                                <span v-if="parent.childIds.length > 0" text="xs" p="x-2 y-1" bg="gray-200" font="bold">
+                                <span
+                                    v-if="parent.childIds.length > 0"
+                                    text="xs"
+                                    p="x-2 y-1"
+                                    bg="[var(--brick-surface-subtle)]"
+                                    font="bold"
+                                >
                                     {{ t("storage.subLocationsCount", {count: String(parent.childIds.length)}).value }}
                                 </span>
-                                <span v-if="parent.row !== null && parent.column !== null" text="xs gray-600">
+                                <span
+                                    v-if="parent.row !== null && parent.column !== null"
+                                    text="xs [var(--brick-muted-text)]"
+                                >
                                     {{
                                         t("storage.rowColumnLabel", {
                                             row: String(parent.row),
@@ -119,9 +132,14 @@ const goToDetail = async (id: number) => {
                         >
                             <div flex="1">
                                 <p font="bold">{{ child.name }}</p>
-                                <p v-if="child.description" text="sm gray-600">{{ child.description }}</p>
+                                <p v-if="child.description" text="sm [var(--brick-muted-text)]">
+                                    {{ child.description }}
+                                </p>
                                 <div flex gap="2" m="t-1">
-                                    <span v-if="child.row !== null && child.column !== null" text="xs gray-600">
+                                    <span
+                                        v-if="child.row !== null && child.column !== null"
+                                        text="xs [var(--brick-muted-text)]"
+                                    >
                                         {{
                                             t("storage.rowColumnLabel", {
                                                 row: String(child.row),

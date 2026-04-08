@@ -24,7 +24,7 @@ const barWidthPercent = (count: number): string => {
         <div flex flex-col gap="2">
             <div v-for="[year, count] in sortedEntries" :key="year" flex items-center gap="3">
                 <span w="16" text="sm right" font="mono" flex-shrink="0">{{ year }}</span>
-                <div flex-1 h="8" bg="gray-100" brick-border overflow="hidden">
+                <div flex-1 h="8" bg="[var(--brick-surface-subtle)]" brick-border overflow="hidden">
                     <div
                         h="full"
                         bg="brick-yellow"

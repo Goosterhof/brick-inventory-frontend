@@ -201,12 +201,12 @@ const importSets = async () => {
         <div flex="~ col" gap="8">
             <section flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.themeTitle").value }}</h2>
-                <p text="gray-600">{{ t("settings.themeDescription").value }}</p>
+                <p text="[var(--brick-muted-text)]">{{ t("settings.themeDescription").value }}</p>
 
                 <button
                     @click="familyThemeService.toggleTheme()"
                     p="x-4 y-3"
-                    bg="white hover:brick-yellow"
+                    bg="[var(--brick-card-bg)] hover:brick-yellow"
                     font="bold"
                     uppercase
                     tracking="wide"
@@ -219,12 +219,12 @@ const importSets = async () => {
                 </button>
             </section>
 
-            <hr border="t-3 black" />
+            <hr border="t-3 [var(--brick-border-color)]" />
 
             <section flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.membersTitle").value }}</h2>
 
-                <p v-if="membersLoading" text="gray-600">{{ t("common.loading").value }}</p>
+                <p v-if="membersLoading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
 
                 <div v-else flex="~ col" gap="2">
                     <div
@@ -234,12 +234,12 @@ const importSets = async () => {
                         items="center"
                         gap="3"
                         p="3"
-                        bg="white"
+                        bg="[var(--brick-card-bg)]"
                         class="brick-border"
                     >
                         <div flex="1">
                             <p font="bold">{{ member.name }}</p>
-                            <p text="sm gray-600">{{ member.email }}</p>
+                            <p text="sm [var(--brick-muted-text)]">{{ member.email }}</p>
                         </div>
                         <BadgeLabel v-if="member.isHead" variant="highlight">
                             {{ t("settings.familyHead").value }}
@@ -268,13 +268,13 @@ const importSets = async () => {
                 </ConfirmDialog>
             </section>
 
-            <hr border="t-3 black" />
+            <hr border="t-3 [var(--brick-border-color)]" />
 
             <section v-if="isHead" flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.inviteCodeTitle").value }}</h2>
-                <p text="gray-600">{{ t("settings.inviteCodeDescription").value }}</p>
+                <p text="[var(--brick-muted-text)]">{{ t("settings.inviteCodeDescription").value }}</p>
 
-                <div v-if="inviteCode" p="4" bg="white" class="brick-border" flex="~ col" gap="3">
+                <div v-if="inviteCode" p="4" bg="[var(--brick-card-bg)]" class="brick-border" flex="~ col" gap="3">
                     <div flex items="center" gap="3">
                         <p font="mono bold" text="lg">{{ inviteCode.code }}</p>
                         <PrimaryButton :sound-service="familySoundService" @click="copyCode">
@@ -282,7 +282,9 @@ const importSets = async () => {
                         </PrimaryButton>
                     </div>
                     <p v-if="codeCopied" text="baseplate-green" font="bold">{{ t("settings.codeCopied").value }}</p>
-                    <p text="sm gray-600">{{ t("settings.codeExpires").value }}: {{ inviteCode.expiresAt }}</p>
+                    <p text="sm [var(--brick-muted-text)]">
+                        {{ t("settings.codeExpires").value }}: {{ inviteCode.expiresAt }}
+                    </p>
                     <DangerButton :disabled="inviteCodeLoading" @click="revokeInviteCode">
                         {{ t("settings.revokeCode").value }}
                     </DangerButton>
@@ -300,11 +302,11 @@ const importSets = async () => {
                 </PrimaryButton>
             </section>
 
-            <hr v-if="isHead" border="t-3 black" />
+            <hr v-if="isHead" border="t-3 [var(--brick-border-color)]" />
 
             <section flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.rebrickableTitle").value }}</h2>
-                <p text="gray-600">{{ t("settings.rebrickableDescription").value }}</p>
+                <p text="[var(--brick-muted-text)]">{{ t("settings.rebrickableDescription").value }}</p>
 
                 <form flex="~ col" gap="4" @submit.prevent="saveToken">
                     <TextInput
@@ -326,13 +328,13 @@ const importSets = async () => {
                 </form>
             </section>
 
-            <hr border="t-3 black" />
+            <hr border="t-3 [var(--brick-border-color)]" />
 
             <section flex="~ col" gap="4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.importTitle").value }}</h2>
-                <p text="gray-600">{{ t("settings.importDescription").value }}</p>
+                <p text="[var(--brick-muted-text)]">{{ t("settings.importDescription").value }}</p>
 
-                <div v-if="importResult" p="4" bg="white" class="brick-border" flex="~ col" gap="2">
+                <div v-if="importResult" p="4" bg="[var(--brick-card-bg)]" class="brick-border" flex="~ col" gap="2">
                     <p font="bold">{{ importResult.message }}</p>
                     <div flex="~ col" gap="1" text="sm">
                         <p>{{ t("settings.importCreated", {count: String(importResult.created)}).value }}</p>

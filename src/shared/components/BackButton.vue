@@ -5,9 +5,9 @@ defineEmits<{click: []}>();
 <template>
     <button
         @click="$emit('click')"
-        text="black"
+        text="[var(--brick-page-text)]"
         cursor="pointer"
-        bg="white hover:brick-yellow focus:brick-yellow"
+        bg="[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow"
         p="x-4 y-2"
         outline="none"
         focus-visible:brick-focus

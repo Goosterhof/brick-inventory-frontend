@@ -65,7 +65,7 @@ const handleSubmit = async () => {
         <template #title>{{ t("sets.assignPartTitle").value }}</template>
 
         <div flex="~ col" gap="4">
-            <div flex gap="3" items="center" p="3" bg="gray-100" class="brick-border">
+            <div flex gap="3" items="center" p="3" bg="[var(--brick-surface-subtle)]" class="brick-border">
                 <div
                     v-if="part.color.rgb"
                     w="6"
@@ -76,7 +76,7 @@ const handleSubmit = async () => {
                 />
                 <div flex="1" min-w="0">
                     <p font="bold" truncate>{{ part.part.name }}</p>
-                    <p text="sm gray-600">{{ part.part.partNum }} · {{ part.color.name }}</p>
+                    <p text="sm [var(--brick-muted-text)]">{{ part.part.partNum }} · {{ part.color.name }}</p>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@ const handleSubmit = async () => {
             </div>
 
             <form flex="~ col" gap="4" @submit.prevent="handleSubmit">
-                <p v-if="loadingOptions" text="gray-600">{{ t("common.loading").value }}</p>
+                <p v-if="loadingOptions" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
 
                 <template v-else>
                     <SelectInput v-model="selectedStorageId" :label="t('sets.selectStorage').value" :error="error">

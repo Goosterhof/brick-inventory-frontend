@@ -70,7 +70,9 @@ const handleDelete = async () => {
 
         <template v-else-if="adapted">
             <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("sets.editSet").value }}</h1>
-            <p text="gray-600" m="b-6">{{ adapted.set?.name }} ({{ adapted.set?.setNum ?? adapted.setNum }})</p>
+            <p text="[var(--brick-muted-text)]" m="b-6">
+                {{ adapted.set?.name }} ({{ adapted.set?.setNum ?? adapted.setNum }})
+            </p>
 
             <form flex="~ col" gap="4" @submit.prevent="onSubmit">
                 <NumberInput

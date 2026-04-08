@@ -14,7 +14,7 @@ const closeMenu = () => {
 </script>
 
 <template>
-    <header border="b-3 black">
+    <header border="b-3 [var(--brick-border-color)]">
         <nav p="4" flex items="center" justify="between">
             <div hidden sm:flex gap="4" items="center">
                 <slot name="links" />
@@ -28,7 +28,7 @@ const closeMenu = () => {
                 flex
                 items="center"
                 justify="center"
-                bg="white hover:brick-yellow focus:brick-yellow"
+                bg="[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow"
                 :class="[
                     'brick-border brick-transition',
                     menuOpen
@@ -58,7 +58,7 @@ const closeMenu = () => {
             class="grid transition-property-[grid-template-rows] transition-duration-150 transition-ease-[cubic-bezier(0.2,0,0,1)]"
         >
             <div overflow="hidden">
-                <div border="t-3 black" @click="closeMenu">
+                <div border="t-3 [var(--brick-border-color)]" @click="closeMenu">
                     <slot name="mobile-links" />
                 </div>
             </div>

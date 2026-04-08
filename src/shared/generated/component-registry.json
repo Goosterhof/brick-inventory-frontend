@@ -73,7 +73,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 9, "linesChanged": 95},
+            "churn": {"commits": 8, "linesChanged": 86},
             "dependencyDepth": 0
         },
         "CardContainer": {
@@ -336,7 +336,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 8},
+            "churn": {"commits": 2, "linesChanged": 6},
             "dependencyDepth": 0
         },
         "LegoArch": {
@@ -771,7 +771,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 5, "linesChanged": 26},
+            "churn": {"commits": 4, "linesChanged": 23},
             "dependencyDepth": 0
         },
         "NavMobileLink": {
@@ -833,7 +833,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 5, "linesChanged": 39},
+            "churn": {"commits": 4, "linesChanged": 26},
             "dependencyDepth": 1
         },
         "PageHeader": {
@@ -943,7 +943,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 5, "linesChanged": 37},
+            "churn": {"commits": 4, "linesChanged": 32},
             "dependencyDepth": 0
         },
         "SectionDivider": {
@@ -1094,7 +1094,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 5, "linesChanged": 39},
+            "churn": {"commits": 4, "linesChanged": 26},
             "dependencyDepth": 1
         },
         "ToastMessage": {

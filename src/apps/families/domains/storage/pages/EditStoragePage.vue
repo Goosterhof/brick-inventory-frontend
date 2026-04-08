@@ -59,7 +59,7 @@ const handleDelete = async () => {
 
         <template v-else-if="adapted">
             <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("storage.editStorage").value }}</h1>
-            <p text="gray-600" m="b-6">{{ adapted.name }}</p>
+            <p text="[var(--brick-muted-text)]" m="b-6">{{ adapted.name }}</p>
 
             <form flex="~ col" gap="4" @submit.prevent="onSubmit">
                 <TextInput v-model="adapted.mutable.name" :label="t('storage.name').value" :error="errors.name" />

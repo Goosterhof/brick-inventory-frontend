@@ -598,6 +598,127 @@ describe("Architecture", () => {
         });
     });
 
+    describe("dark mode enforcement — no hardcoded light-mode colors in non-showcase Vue files", () => {
+        const SHOWCASE_DIR = join(APPS_DIR, "showcase");
+        const ADMIN_DIR = join(APPS_DIR, "admin");
+
+        /** LEGO brick shape components use hardcoded colors for decorative rendering — they are exempt. */
+        const EXEMPT_PATTERNS = [
+            /\/Lego[A-Z]\w+\.vue$/, // LegoArch, LegoBrick, LegoTechnicBeam, etc.
+            /\/scanner\//, // Camera overlay buttons need fixed contrast on dark background
+        ];
+
+        const isExempt = (filePath: string): boolean => EXEMPT_PATTERNS.some((pattern) => pattern.test(filePath));
+
+        /**
+         * Matches UnoCSS attributify bg values that are bare Tailwind colors
+         * (e.g., bg="white", bg="gray-200") but NOT token-based values
+         * (e.g., bg="[var(--brick-card-bg)]"), brand colors, or dynamic bindings.
+         */
+        const HARDCODED_BG_PATTERN = /\bbg="(?:white|gray-\d{2,3})(?:\s|")/;
+
+        /**
+         * Matches UnoCSS attributify text values with bare gray colors
+         * (e.g., text="gray-600", text="sm gray-600") but NOT token-based values.
+         */
+        const HARDCODED_TEXT_GRAY_PATTERN = /\btext="(?:[a-z]+ )?gray-\d{2,3}(?:\s|")/;
+
+        /**
+         * Matches class-based bg-white or bg-gray-* utilities.
+         */
+        const HARDCODED_CLASS_BG_PATTERN = /\bbg-(?:white|gray-\d{2,3})\b/;
+
+        it("should not have hardcoded bg='white' or bg='gray-*' in non-showcase Vue files", () => {
+            const vueFiles = getVueFiles(SRC_DIR).filter(
+                (file) => !file.startsWith(SHOWCASE_DIR) && !file.startsWith(ADMIN_DIR) && !isExempt(file),
+            );
+            const violations: string[] = [];
+
+            for (const file of vueFiles) {
+                const content = readFileSync(file, "utf-8");
+                const templateMatch = content.match(/<template[\s\S]*$/);
+                if (!templateMatch) continue;
+                const template = templateMatch[0];
+
+                const lines = template.split("\n");
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    if (line === undefined) continue;
+
+                    if (HARDCODED_BG_PATTERN.test(line) || HARDCODED_CLASS_BG_PATTERN.test(line)) {
+                        const rel = relative(SRC_DIR, file);
+                        violations.push(`${rel}:${String(i + 1)} has hardcoded background: ${line.trim()}`);
+                    }
+                }
+            }
+
+            expect(
+                violations,
+                'Use CSS custom property tokens (e.g., bg="[var(--brick-card-bg)]") instead of hardcoded colors like bg="white" or bg="gray-200". See theme.css for available tokens.',
+            ).toEqual([]);
+        });
+
+        it("should not have hardcoded text='gray-*' in non-showcase Vue files", () => {
+            const vueFiles = getVueFiles(SRC_DIR).filter(
+                (file) => !file.startsWith(SHOWCASE_DIR) && !file.startsWith(ADMIN_DIR) && !isExempt(file),
+            );
+            const violations: string[] = [];
+
+            for (const file of vueFiles) {
+                const content = readFileSync(file, "utf-8");
+                const templateMatch = content.match(/<template[\s\S]*$/);
+                if (!templateMatch) continue;
+                const template = templateMatch[0];
+
+                const lines = template.split("\n");
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    if (line === undefined) continue;
+
+                    if (HARDCODED_TEXT_GRAY_PATTERN.test(line)) {
+                        const rel = relative(SRC_DIR, file);
+                        violations.push(`${rel}:${String(i + 1)} has hardcoded text color: ${line.trim()}`);
+                    }
+                }
+            }
+
+            expect(
+                violations,
+                'Use CSS custom property tokens (e.g., text="[var(--brick-muted-text)]") instead of hardcoded colors like text="gray-600". See theme.css for available tokens.',
+            ).toEqual([]);
+        });
+
+        it("should not have hardcoded bg-white in <script> computed classes in non-showcase Vue files", () => {
+            const vueFiles = getVueFiles(SRC_DIR).filter(
+                (file) => !file.startsWith(SHOWCASE_DIR) && !file.startsWith(ADMIN_DIR) && !isExempt(file),
+            );
+            const violations: string[] = [];
+
+            for (const file of vueFiles) {
+                const content = readFileSync(file, "utf-8");
+                const scriptMatch = content.match(/<script[\s\S]*?<\/script>/);
+                if (!scriptMatch) continue;
+                const script = scriptMatch[0];
+
+                const lines = script.split("\n");
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    if (line === undefined) continue;
+
+                    if (HARDCODED_CLASS_BG_PATTERN.test(line)) {
+                        const rel = relative(SRC_DIR, file);
+                        violations.push(`${rel}:${String(i + 1)} has hardcoded bg class in script: ${line.trim()}`);
+                    }
+                }
+            }
+
+            expect(
+                violations,
+                'Computed class strings must use token-based bg values (e.g., "bg-[var(--brick-card-bg)]") instead of "bg-white" or "bg-gray-*".',
+            ).toEqual([]);
+        });
+    });
+
     describe("mount boundary enforcement — unit tests use shallowMount, integration tests use mount", () => {
         const TESTS_DIR = join(SRC_DIR, "tests");
 
