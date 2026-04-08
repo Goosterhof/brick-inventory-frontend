@@ -154,8 +154,16 @@ const clearLog = () => {
         </div>
 
         <!-- Toast container (renders at bottom-right via the component's own positioning) -->
-        <div fixed="~" bottom="4" right="4" z="50" flex="~ col" gap="2" w="sm" max-w="[calc(100vw-2rem)]">
-            <component :is="toastService.ToastContainerComponent" />
-        </div>
+        <component
+            :is="toastService.ToastContainerComponent"
+            fixed="~"
+            bottom="4"
+            right="4"
+            z="50"
+            flex="~ col"
+            gap="2"
+            w="sm"
+            max-w="[calc(100vw-2rem)]"
+        />
     </section>
 </template>

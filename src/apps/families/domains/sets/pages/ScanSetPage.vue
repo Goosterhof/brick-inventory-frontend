@@ -189,8 +189,16 @@ const goBack = async () => {
 
         <PrimaryButton v-if="setsAddedCount > 0" m="t-6" @click="goBack">{{ t("sets.scanDone").value }}</PrimaryButton>
 
-        <div fixed="~" bottom="4" right="4" z="50" flex="~ col" gap="2" w="sm" max-w="[calc(100vw-2rem)]">
-            <component :is="toastService.ToastContainerComponent" />
-        </div>
+        <component
+            :is="toastService.ToastContainerComponent"
+            fixed="~"
+            bottom="4"
+            right="4"
+            z="50"
+            flex="~ col"
+            gap="2"
+            w="sm"
+            max-w="[calc(100vw-2rem)]"
+        />
     </div>
 </template>
