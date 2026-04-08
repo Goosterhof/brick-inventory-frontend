@@ -4,6 +4,7 @@ import "@shared/assets/icons.css";
 import "@shared/assets/accessibility.css";
 import "@shared/assets/dialog.css";
 import "@shared/assets/theme.css";
+import {registerFromQueryMiddleware} from "@shared/middleware/fromQuery";
 import {registerAuthGuard} from "@shared/services/auth/guards";
 import {createApp} from "vue";
 
@@ -17,6 +18,7 @@ app.provide("size", "1.25em");
 app.provide("color", "currentColor");
 
 familyRouterService.install();
+registerFromQueryMiddleware(familyRouterService);
 registerAuthGuard(familyAuthService, familyRouterService, "login");
 
 await familyAuthService.checkIfLoggedIn();

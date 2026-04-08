@@ -15,19 +15,5 @@ export const createRouterService = <Routes extends RouteRecordRaw[]>(
 ): BioRouterService<Routes> => {
     const service = createBaseRouterService(routes, {base});
 
-    // BIO-specific: "from" query middleware
-    service.registerBeforeRouteMiddleware((to) => {
-        if (to.meta?.ignoreFrom) return false;
-
-        const fromQuery = service.currentRouteRef.value.query.from;
-        if (fromQuery) {
-            if (fromQuery.toString() === to.name) return false;
-            void service.goToRoute(fromQuery.toString());
-            return true;
-        }
-
-        return false;
-    });
-
     return {...service, dashboardRouteName, goToDashboard: () => service.goToRoute(dashboardRouteName)};
 };
