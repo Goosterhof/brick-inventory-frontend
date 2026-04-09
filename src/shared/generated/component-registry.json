@@ -1,5 +1,5 @@
 {
-    "meta": {"componentCount": 47, "churnWindowDays": 30},
+    "meta": {"componentCount": 48, "churnWindowDays": 30},
     "components": {
         "BackButton": {
             "path": "src/shared/components/BackButton.vue",
@@ -862,6 +862,26 @@
                 "models": []
             },
             "churn": {"commits": 1, "linesChanged": 10},
+            "dependencyDepth": 0
+        },
+        "PageTransition": {
+            "path": "src/shared/components/PageTransition.vue",
+            "category": null,
+            "consumers": {
+                "families": {"_root": ["src/apps/families/App.vue"]},
+                "showcase": {"_root": ["src/apps/showcase/components/PageTransitionDemo.vue"]}
+            },
+            "adoption": {"apps": 2, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "name", "required": true},
+                    {"name": "routeKey", "required": true}
+                ],
+                "emits": [],
+                "slots": [{"name": "default"}],
+                "models": []
+            },
+            "churn": {"commits": 0, "linesChanged": 0},
             "dependencyDepth": 0
         },
         "PartListItem": {

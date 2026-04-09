@@ -9,6 +9,7 @@ import ComponentHealth from "./components/ComponentHealth.vue";
 import DialogServiceDemo from "./components/DialogServiceDemo.vue";
 import FormValidationWorkbench from "./components/FormValidationWorkbench.vue";
 import MiddlewarePipelineVisualizer from "./components/MiddlewarePipelineVisualizer.vue";
+import PageTransitionDemo from "./components/PageTransitionDemo.vue";
 import ResourceAdapterPlayground from "./components/ResourceAdapterPlayground.vue";
 import ShowcaseHero from "./components/ShowcaseHero.vue";
 import SnapDemo from "./components/SnapDemo.vue";
@@ -35,6 +36,7 @@ import TypographySpecimen from "./components/TypographySpecimen.vue";
             <ResourceAdapterPlayground />
             <MiddlewarePipelineVisualizer />
             <BrickShapes />
+            <PageTransitionDemo />
         </div>
 
         <footer p="y-16 x-4" border="t-3 black" m="t-24">
