@@ -9,19 +9,16 @@ const {createMockAxiosWithError, createMockFsHelpers, createMockStringTs, create
     () => import("../../../../../../helpers"),
 );
 
-const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({
+const {mockLogin, mockGoToRoute} = vi.hoisted(() => ({
     mockLogin: vi.fn<() => Promise<void>>(),
-    mockGoToDashboard: vi.fn<() => Promise<void>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
 }));
 
 vi.mock("axios", () => createMockAxiosWithError());
 vi.mock("string-ts", () => createMockStringTs());
 vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 vi.mock("@app/services", () =>
-    createMockFamilyServices({
-        familyAuthService: {login: mockLogin},
-        familyRouterService: {goToDashboard: mockGoToDashboard},
-    }),
+    createMockFamilyServices({familyAuthService: {login: mockLogin}, familyRouterService: {goToRoute: mockGoToRoute}}),
 );
 
 describe("LoginPage", () => {
@@ -107,7 +104,7 @@ describe("LoginPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockGoToDashboard).toHaveBeenCalled();
+        expect(mockGoToRoute).toHaveBeenCalled();
     });
 
     it("should render page title", () => {
@@ -130,7 +127,7 @@ describe("LoginPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockGoToDashboard).not.toHaveBeenCalled();
+        expect(mockGoToRoute).not.toHaveBeenCalled();
     });
 
     it("should render link to register page", () => {
@@ -159,6 +156,6 @@ describe("LoginPage", () => {
         // Assert - error should be rethrown and caught by Vue's error handler
         expect(errorHandler).toHaveBeenCalled();
         expect(errorHandler.mock.calls[0]?.[0]).toBe(axiosError);
-        expect(mockGoToDashboard).not.toHaveBeenCalled();
+        expect(mockGoToRoute).not.toHaveBeenCalled();
     });
 });

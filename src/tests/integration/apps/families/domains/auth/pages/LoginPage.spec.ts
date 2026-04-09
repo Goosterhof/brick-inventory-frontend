@@ -70,7 +70,7 @@ describe("LoginPage — integration", () => {
         await flushPromises();
 
         // No assertion on navigation — integration tests verify composition, not side effects.
-        // The form submission fires login() on the real auth service, then goToDashboard() on the real router.
+        // The form submission fires login() on the real auth service, then goToRoute("home") on the real router.
     });
 
     it("renders the register link via real FamilyRouterLink", () => {

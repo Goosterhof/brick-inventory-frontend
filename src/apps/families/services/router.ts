@@ -8,7 +8,7 @@ import {routes as partsRoutes} from "@app/domains/parts";
 import {routes as setsRoutes} from "@app/domains/sets";
 import {routes as settingsRoutes} from "@app/domains/settings";
 import {routes as storageRoutes} from "@app/domains/storage";
-import {createRouterService} from "@shared/services/router";
+import {createRouterService} from "@script-development/fs-router";
 
 const routes = [
     ...homeRoutes,
@@ -23,7 +23,7 @@ const routes = [
 
 export type FamilyAppRoutes = typeof routes;
 
-const routerService = createRouterService([...routes], "home", import.meta.env.BASE_URL);
+const routerService = createRouterService([...routes], {base: import.meta.env.BASE_URL});
 
 export const familyRouterService = routerService;
 export const FamilyRouterView = routerService.RouterView;

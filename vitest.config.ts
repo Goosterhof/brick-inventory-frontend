@@ -81,6 +81,7 @@ export default mergeConfig(
                 project("shared/composables", "shared/composables"),
                 project("shared/errors", "shared/errors"),
                 project("shared/helpers", "shared/helpers"),
+                project("shared/middleware", "shared/middleware"),
                 project("shared/services", "shared/services"),
 
                 // Showcase

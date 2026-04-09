@@ -1,7 +1,7 @@
 import type {RouteRecordRaw} from "vue-router";
 
+import {createRouterService} from "@script-development/fs-router";
 import {registerAuthGuard} from "@shared/services/auth/guards";
-import {createRouterService} from "@shared/services/router";
 import {flushPromises} from "@vue/test-utils";
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {computed, defineComponent, h, ref} from "vue";
@@ -48,11 +48,11 @@ describe("auth guards", () => {
         it("should return an unregister function", () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "home");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(false);
 
             // Act
-            const unregister = registerAuthGuard(authService, routerService, "login");
+            const unregister = registerAuthGuard(authService, routerService, "login", "home");
 
             // Assert
             expect(typeof unregister).toBe("function");
@@ -61,9 +61,9 @@ describe("auth guards", () => {
         it("should redirect to login when accessing authOnly route while not logged in", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "home");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(false);
-            registerAuthGuard(authService, routerService, "login");
+            registerAuthGuard(authService, routerService, "login", "home");
 
             // Act
             await routerService.goToRoute("dashboard");
@@ -76,9 +76,9 @@ describe("auth guards", () => {
         it("should allow access to authOnly route when logged in", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "home");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(true);
-            registerAuthGuard(authService, routerService, "login");
+            registerAuthGuard(authService, routerService, "login", "home");
 
             // Act
             await routerService.goToRoute("dashboard");
@@ -91,9 +91,9 @@ describe("auth guards", () => {
         it("should redirect to dashboard when accessing canSeeWhenLoggedIn=false route while logged in", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "dashboard");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(true);
-            registerAuthGuard(authService, routerService, "login");
+            registerAuthGuard(authService, routerService, "login", "dashboard");
 
             // Act
             await routerService.goToRoute("login");
@@ -106,9 +106,9 @@ describe("auth guards", () => {
         it("should allow access to canSeeWhenLoggedIn=false route when not logged in", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "home");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(false);
-            registerAuthGuard(authService, routerService, "login");
+            registerAuthGuard(authService, routerService, "login", "home");
 
             // Act
             await routerService.goToRoute("login");
@@ -118,10 +118,10 @@ describe("auth guards", () => {
             expect(routerService.currentRouteRef.value.name).toBe("login");
         });
 
-        it("should use custom dashboard route name for redirect when provided", async () => {
+        it("should use the provided dashboard route name for redirect", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "dashboard");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(true);
             registerAuthGuard(authService, routerService, "login", "home");
 
@@ -136,9 +136,9 @@ describe("auth guards", () => {
         it("should allow access to routes without meta when not logged in", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "home");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(false);
-            registerAuthGuard(authService, routerService, "login");
+            registerAuthGuard(authService, routerService, "login", "home");
 
             // Act
             await routerService.goToRoute("home");
@@ -151,9 +151,9 @@ describe("auth guards", () => {
         it("should allow access to routes without meta when logged in", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "home");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(true);
-            registerAuthGuard(authService, routerService, "login");
+            registerAuthGuard(authService, routerService, "login", "home");
 
             // Act
             await routerService.goToRoute("home");
@@ -166,9 +166,9 @@ describe("auth guards", () => {
         it("should not execute guard after unregistering", async () => {
             // Arrange
             const routes = createTestRoutes();
-            const routerService = createRouterService(routes, "home");
+            const routerService = createRouterService(routes);
             const authService = createMockAuthService(false);
-            const unregister = registerAuthGuard(authService, routerService, "login");
+            const unregister = registerAuthGuard(authService, routerService, "login", "home");
 
             // Act
             unregister();
