@@ -1,7 +1,7 @@
 import type {RouteRecordRaw} from "vue-router";
 
 import {routes as homeRoutes} from "@app/domains/home";
-import {createRouterService} from "@shared/services/router";
+import {createRouterService} from "@script-development/fs-router";
 
 const routes = [...homeRoutes] as const satisfies readonly RouteRecordRaw[];
 
