@@ -23,7 +23,7 @@ const routes = [
 
 export type FamilyAppRoutes = typeof routes;
 
-const routerService = createRouterService([...routes], "home", import.meta.env.BASE_URL);
+const routerService = createRouterService([...routes], {base: import.meta.env.BASE_URL});
 
 export const familyRouterService = routerService;
 export const FamilyRouterView = routerService.RouterView;

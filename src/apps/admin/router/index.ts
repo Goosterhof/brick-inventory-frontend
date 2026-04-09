@@ -5,7 +5,7 @@ import {createRouterService} from "@shared/services/router";
 
 const routes = [...homeRoutes] as const satisfies readonly RouteRecordRaw[];
 
-const routerService = createRouterService([...routes], "home", import.meta.env.BASE_URL);
+const routerService = createRouterService([...routes], {base: import.meta.env.BASE_URL});
 
 export const adminRouterService = routerService;
 export const AdminRouterView = routerService.RouterView;

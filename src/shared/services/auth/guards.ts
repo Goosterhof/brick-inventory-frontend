@@ -1,14 +1,13 @@
-import type {UnregisterMiddleware} from "@script-development/fs-router";
-import type {BioRouterService} from "@shared/services/router";
+import type {RouteName, RouterService, UnregisterMiddleware} from "@script-development/fs-router";
 import type {RouteRecordRaw} from "vue-router";
 
 import type {AuthService} from "./types";
 
 export const registerAuthGuard = <Profile, Routes extends RouteRecordRaw[]>(
     authService: AuthService<Profile>,
-    routerService: BioRouterService<Routes>,
-    loginRouteName: BioRouterService<Routes>["dashboardRouteName"],
-    dashboardRouteName: BioRouterService<Routes>["dashboardRouteName"] = routerService.dashboardRouteName,
+    routerService: RouterService<Routes>,
+    loginRouteName: RouteName<Routes>,
+    dashboardRouteName: RouteName<Routes>,
 ): UnregisterMiddleware =>
     routerService.registerBeforeRouteMiddleware((to) => {
         const isLoggedIn = authService.isLoggedIn.value;

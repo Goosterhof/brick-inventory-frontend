@@ -19,7 +19,7 @@ app.provide("color", "currentColor");
 
 familyRouterService.install();
 registerFromQueryMiddleware(familyRouterService);
-registerAuthGuard(familyAuthService, familyRouterService, "login");
+registerAuthGuard(familyAuthService, familyRouterService, "login", "home");
 
 await familyAuthService.checkIfLoggedIn();
 

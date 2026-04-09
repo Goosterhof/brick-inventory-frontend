@@ -61,7 +61,7 @@ describe("RegisterPage — integration", () => {
         await flushPromises();
 
         // No assertion on navigation — integration tests verify composition, not side effects.
-        // The form submission fires register() on the real auth service, then goToDashboard() on the real router.
+        // The form submission fires register() on the real auth service, then goToRoute("home") on the real router.
     });
 
     it("renders a real PrimaryButton for submission", () => {
