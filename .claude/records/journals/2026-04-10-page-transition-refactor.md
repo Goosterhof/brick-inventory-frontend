@@ -113,4 +113,52 @@ The showcase demo is functionally identical. The latent .value bug fix means the
 
 ## CFO Evaluation
 
-_Appended by the CFO after reviewing the journal._
+_Appended by the CFO after reviewing the journal. The architect's sections above are not edited — they stand as written._
+
+**Overall Assessment:** Strong
+
+### Permit Fulfillment Review
+
+All 11 acceptance criteria met. The refactor is clean — the composable is deleted, the component owns its brain, App.vue is simplified to a single prop, and the demo works through template ref. Zero imports of `usePageTransition` remain in source. The gauntlet is green with 1185 tests at 100% coverage.
+
+### Decision Review
+
+1. **SSR guard refactored to matchMedia check** — Pragmatic. The original `typeof window === "undefined"` was untestable in JSDOM without breaking `shallowMount`. Checking `typeof window.matchMedia !== "function"` tests the same condition and is exercisable in the test environment. No behavior change. Approved.
+
+2. **lint-vue-allow-expose exception mechanism** — Reasonable but this is a process change the CEO should be aware of. The existing rule banned `defineExpose` unconditionally. The exception requires a reason comment (`// lint-vue-allow-expose: <reason>`), which keeps the rule enforceable while allowing documented exemptions. This is the right pattern for rule exceptions in general — not a blanket removal, but a documented opt-out. PageTransition's use case is legitimate: the showcase demo needs template ref access to exposed state.
+
+3. **oxlint-disable for template ref import** — Correct workaround for a known oxlint limitation. Documented inline. Not a precedent concern since it's a genuine false positive.
+
+4. **TransitionName made internal** — Correct deviation from the permit's literal text. The permit said export both types, but knip flagged `TransitionName` as unused externally. Internalizing it is the right call — only `TransitionVariant` has external consumers.
+
+5. **Template ref .value fix** — This was a real bug, not just a refactoring artifact. The original `PageTransitionDemo` accessed `.value` on already-unwrapped exposed refs, meaning the reduced motion indicator and variant-specific parameter display were silently broken at runtime in the first delivery. The original tests masked this because `shallowMount` stubbed PageTransition, so the template ref was always null. This is the most important finding of this refactor.
+
+6. **shallowMount with explicit unstubbing** — Good technique. `{PageTransition: false}` in the stubs config unstubs only the component that needs to be real (for template ref access) while keeping everything else shallow. Correct pattern for this use case.
+
+### Bug Disclosure
+
+The .value bug is worth calling out explicitly. The original page transition delivery (2026-04-09) shipped a PageTransitionDemo that was functionally broken for two features:
+
+- Reduced motion indicator never displayed (`.prefersReducedMotion.value` returned `undefined` on a boolean)
+- Variant-specific parameters always showed brick-snap defaults (`.activeVariant.value` returned `undefined` on a string)
+
+100% line coverage passed because `shallowMount` stubbed the component, making the template ref null, causing all `transitionRef.value?.` chains to short-circuit. The tests verified the fallback behavior (brick-snap defaults) without realizing that's ALL they could ever get.
+
+This is a coverage quality lesson: 100% line coverage is necessary but not sufficient. When stubs hide integration boundaries, tests can pass with full coverage while the feature is broken. The Creative Engine should learn from this — integration-critical paths need the real component, not stubs.
+
+### Training Proposal Dispositions
+
+| Proposal                                                                          | Disposition                                   | Rationale                                                                                                                                                        |
+| --------------------------------------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A composable is warranted only when 2+ components consume the same reactive logic | Candidate                                     | Sound heuristic. First observation. Needs second confirmation before graduation.                                                                                 |
+| Before writing test files, check architecture tests for testing conventions       | Candidate — converging with prior observation | Second observation of "check conventions before writing." First: defineProps pattern (2026-04-09). Both point to the same underlying rule. Graduation candidate. |
+| shallowMount with explicit unstubbing for defineExpose template ref testing       | Candidate                                     | Useful technique, first observation. Needs second confirmation.                                                                                                  |
+| Vue template ref proxy unwraps exposed refs (no .value needed)                    | Learning entry, not training                  | This is a Vue framework behavior fact. Better documented in learnings.md than graduated into agent training as a rule.                                           |
+
+### Notes for the Creative Engine
+
+Much better second delivery. The self-debrief is honest — the agent correctly identifies that the composable was reflexive over-engineering, not a deliberate architectural choice. The lesson "if only one component uses the logic, it belongs in the component" is a good heuristic that should serve well going forward.
+
+The .value bug catch is a net positive. The Creative Engine found and fixed a real runtime issue that the first delivery's test strategy masked. That said, the first delivery shipped this bug — a reminder that 100% coverage metrics don't replace thinking about what the tests actually verify.
+
+The lint-vue-allow-expose mechanism is well-designed. Comment-based exceptions with required reason comments are the right pattern for rule exceptions in a codebase that takes its linting seriously.

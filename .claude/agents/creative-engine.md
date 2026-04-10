@@ -279,25 +279,27 @@ _Animation parameter patterns observed across deliveries. When a pattern has 3+ 
 
 _Patterns with enough data points to suggest a rule. Need CFO test scenarios before graduation._
 
-| Proposal                                                                               | First Observed | Journal Evidence                  | Context                                                                                    |
-| -------------------------------------------------------------------------------------- | -------------- | --------------------------------- | ------------------------------------------------------------------------------------------ |
-| Before writing any component, check existing components for the defineProps pattern    | 2026-04-09     | 2026-04-09-page-transition-system | Lint caught non-destructured defineProps in PageTransition.vue                             |
-| After writing tests, run coverage on the specific project before the full gauntlet     | 2026-04-09     | 2026-04-09-page-transition-system | SSR branches only caught by full coverage run; project-specific run would have been faster |
-| When testing showcase demos, use unique selectors that won't collide with stub content | 2026-04-09     | 2026-04-09-page-transition-system | SectionHeading stub caused false selector matches in PageTransitionDemo test               |
-| Check knip before committing new exports to avoid unused-export violations             | 2026-04-09     | 2026-04-09-page-transition-system | PageTransitionConfig and UsePageTransition were exported but unused externally             |
+| Proposal                                                                               | First Observed | Journal Evidence                                                       | Context                                                                                     |
+| -------------------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Before writing any component, check existing components for the defineProps pattern    | 2026-04-09     | 2026-04-09-page-transition-system, 2026-04-10-page-transition-refactor | Lint caught non-destructured defineProps; then mount boundary violation in refactor tests   |
+| After writing tests, run coverage on the specific project before the full gauntlet     | 2026-04-09     | 2026-04-09-page-transition-system                                      | SSR branches only caught by full coverage run; project-specific run would have been faster  |
+| When testing showcase demos, use unique selectors that won't collide with stub content | 2026-04-09     | 2026-04-09-page-transition-system                                      | SectionHeading stub caused false selector matches in PageTransitionDemo test                |
+| Check knip before committing new exports to avoid unused-export violations             | 2026-04-09     | 2026-04-09-page-transition-system                                      | PageTransitionConfig and UsePageTransition were exported but unused externally              |
+| A composable is warranted only when 2+ components consume the same reactive logic      | 2026-04-10     | 2026-04-10-page-transition-refactor                                    | usePageTransition had one consumer; separation was pure indirection with zero reuse benefit |
+| shallowMount with explicit unstubbing for defineExpose template ref testing            | 2026-04-10     | 2026-04-10-page-transition-refactor                                    | `{PageTransition: false}` unstubs one component while keeping others shallow                |
 
 ### Graduated
 
-_Patterns confirmed through test scenarios. Promoted into animation standards above._
+_Patterns confirmed through test scenarios. Promoted into the Creative Engine's pre-work checklist._
 
-| Proposal                           | Graduated | Confirming Journals | Promoted To |
-| ---------------------------------- | --------- | ------------------- | ----------- |
-| _(empty — first delivery pending)_ |           |                     |             |
+| Proposal                                                                                                             | Graduated  | Confirming Journals                                                                                                             | Promoted To                                                                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Before writing new code, check architecture tests and linter rules for conventions that constrain the implementation | 2026-04-10 | 2026-04-09-page-transition-system (defineProps pattern), 2026-04-10-page-transition-refactor (mount boundary, defineExpose ban) | Pre-work checklist: "Before writing components or tests, check architecture.spec.ts and lint-vue-conventions.mjs for rules that constrain the implementation." |
 
 ### Dropped
 
 _Patterns evaluated and rejected. Kept for institutional memory._
 
-| Proposal                           | Dropped | Journal Evidence | Reason |
-| ---------------------------------- | ------- | ---------------- | ------ |
-| _(empty — first delivery pending)_ |         |                  |        |
+| Proposal     | Dropped | Journal Evidence | Reason |
+| ------------ | ------- | ---------------- | ------ |
+| _(none yet)_ |         |                  |        |
