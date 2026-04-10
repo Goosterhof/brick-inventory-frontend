@@ -287,6 +287,8 @@ _Patterns with enough data points to suggest a rule. Need CFO test scenarios bef
 | Check knip before committing new exports to avoid unused-export violations             | 2026-04-09     | 2026-04-09-page-transition-system                                      | PageTransitionConfig and UsePageTransition were exported but unused externally              |
 | A composable is warranted only when 2+ components consume the same reactive logic      | 2026-04-10     | 2026-04-10-page-transition-refactor                                    | usePageTransition had one consumer; separation was pure indirection with zero reuse benefit |
 | shallowMount with explicit unstubbing for defineExpose template ref testing            | 2026-04-10     | 2026-04-10-page-transition-refactor                                    | `{PageTransition: false}` unstubs one component while keeping others shallow                |
+| Never use defineExpose — demo should own state and pass down via props                 | 2026-04-10     | 2026-04-10-remove-define-expose                                        | Used defineExpose to let demo read animation state; CEO ruled hard no — inverted ownership  |
+| Before adding a lint rule exception, ask if the architecture is wrong                  | 2026-04-10     | 2026-04-10-remove-define-expose                                        | Added lint-vue-allow-expose exception; the underlying architecture was wrong, not the rule  |
 
 ### Graduated
 
