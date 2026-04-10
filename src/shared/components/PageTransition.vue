@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type {TransitionName} from "@shared/composables/usePageTransition";
+
 const {name, routeKey} = defineProps<{
     /** The Vue transition name — controls which CSS classes are applied */
-    name: string;
+    name: TransitionName;
     /** The key that triggers a transition swap when it changes */
     routeKey: string;
 }>();

@@ -1,6 +1,7 @@
 import {type ComputedRef, type Ref, computed, ref, watch} from "vue";
 
 export type TransitionVariant = "brick-snap" | "brick-lift";
+export type TransitionName = TransitionVariant | "brick-none";
 
 interface PageTransitionConfig {
     /** Reactive reference to the current route path or name — used as the transition key */
@@ -11,7 +12,7 @@ interface PageTransitionConfig {
 
 interface UsePageTransition {
     /** The CSS transition name to bind to Vue's <Transition> component */
-    transitionName: ComputedRef<string>;
+    transitionName: ComputedRef<TransitionName>;
     /** The key that triggers the transition when it changes */
     routeKey: ComputedRef<string>;
     /** The currently active variant */
@@ -45,7 +46,7 @@ export const usePageTransition = (config: PageTransitionConfig): UsePageTransiti
         return overrideVariant.value ?? defaultVariant;
     });
 
-    const transitionName = computed(() => {
+    const transitionName = computed<TransitionName>(() => {
         if (prefersReducedMotion.value) return "brick-none";
         return activeVariant.value;
     });
