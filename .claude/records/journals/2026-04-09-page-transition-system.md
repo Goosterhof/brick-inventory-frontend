@@ -158,4 +158,52 @@ The parameter display in the showcase is particularly strong -- it shows both th
 
 _Appended by the CFO after reviewing the journal. The architect's sections above are not edited -- they stand as written._
 
-**Overall Assessment:** _pending_
+**Overall Assessment:** Solid
+
+### Permit Fulfillment Review
+
+All 7 acceptance criteria met. The composable API is clean, the component correctly uses Vue's Transition system, the Showcase demo is interactive and self-documenting, and 100% coverage is genuine. The integration into Families App.vue is minimal and correct — three lines added (import, composable setup, template wrapper). No over-delivery, no scope creep.
+
+### Decision Review
+
+1. **Scoped CSS exception to ADR-003** — Well-reasoned. Vue's Transition class naming convention (`.[name]-enter-active`) cannot be expressed through UnoCSS attributify. This is a framework constraint, not a style preference. No ADR amendment needed — this is a valid carve-out for the same reason Phosphor icon CSS overrides live in a CSS file.
+
+2. **Route path over route name as key** — Correct choice. Path is the more reliable signal and aligns with how the RouterService exposes route state.
+
+3. **Override auto-reset on route change** — Good defensive design. Prevents stale variant state without requiring consumer cleanup.
+
+4. **Non-exported interfaces** — Correct response to knip. Consumers use `usePageTransition()` return type inferentially; they don't need the interface type.
+
+5. **SSR guards** — The CFO notes this is defensive coding for a non-SSR app. Acceptable since it's in shared code and costs nothing, but flags it as a potential "over-engineering" pattern to watch — the Creative Engine should not add SSR guards everywhere just because it can.
+
+### Showcase Assessment
+
+The Showcase demo is the strongest part of this delivery. The variant comparison table with actual CSS values, the live preview with tab navigation, and the reduced-motion indicator all demonstrate exactly the kind of self-documenting, interactive showcase that ADR-015 envisioned. A senior architect reviewing this would see both the animation quality and the documentation discipline. Portfolio-ready.
+
+### Training Proposal Dispositions
+
+| Proposal                                                                               | Disposition | Rationale                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Before writing any component, check existing components for the defineProps pattern    | Candidate   | Valid — the Architect has the same lesson in its log (scanner slot refactor). Universal to all builders in this codebase.                                                                                                                 |
+| After writing tests, run coverage on the specific project before the full gauntlet     | Candidate   | Reasonable efficiency improvement. Running the full gauntlet to discover one uncovered branch is slow. Project-specific coverage run gives faster feedback.                                                                               |
+| When testing showcase demos, use unique selectors that won't collide with stub content | Candidate   | Valid test authoring lesson. Stub content can contain decorative elements that match generic selectors. Needs second confirmation.                                                                                                        |
+| Check knip before committing new exports to avoid unused-export violations             | Candidate   | Reasonable. The Architect has a similar lesson about running knip early. However, this is arguably covered by "run the gauntlet" — knip is part of it. Accepting as candidate but may drop if it proves redundant with the gauntlet step. |
+
+### Parameter Record Assessment
+
+The Parameter Record is well-structured and contains the data ADR-015 called for. The "Emerging patterns" section is exactly what the graduation protocol needs — noting that enter durations cluster at 200-220ms, leave at 140ms, and 12px = 3 LEGO studs. These are the seeds of graduated animation standards.
+
+First data points logged in the Discovered Parameters table:
+
+- Enter duration range: 200-220ms (2 data points)
+- Leave duration: 140ms (2 data points, consistent)
+- Easing: cubic-bezier(0.2, 0, 0, 1) (2 data points, matches existing brick-transition)
+- Translation distance: 12px / 3 studs (2 data points)
+
+Too early to graduate — need 3+ approvals per ADR-015's protocol. But the pattern is forming.
+
+### Notes for the Creative Engine
+
+First delivery, solid execution. The composable is well-typed, the transitions feel intentional (not arbitrary), and the parameter documentation is exactly what the firm needs to discover its animation language. The issues fixed during build (defineProps destructuring, knip exports, test selectors) are normal first-shift friction — the agent learned the codebase's conventions through contact, which is how it's supposed to work.
+
+One watch item: the SSR guards are fine here but don't make them a habit. This codebase doesn't use SSR, and defensive code for hypothetical environments can accumulate into real complexity. Guard when there's a reason, not by default.

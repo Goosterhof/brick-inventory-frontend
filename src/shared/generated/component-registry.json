@@ -881,7 +881,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 88},
             "dependencyDepth": 0
         },
         "PartListItem": {

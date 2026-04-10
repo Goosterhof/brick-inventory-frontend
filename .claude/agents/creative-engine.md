@@ -268,17 +268,23 @@ Training proposals from construction journals are tracked here. Patterns emerge 
 
 _Animation parameter patterns observed across deliveries. When a pattern has 3+ approvals in a consistent range, it becomes a graduation candidate._
 
-| Parameter Pattern                  | Observed Range | Approvals | Rejections | Status |
-| ---------------------------------- | -------------- | --------- | ---------- | ------ |
-| _(empty — first delivery pending)_ |                |           |            |        |
+| Parameter Pattern                  | Observed Range             | Approvals | Rejections | Status   |
+| ---------------------------------- | -------------------------- | --------- | ---------- | -------- |
+| Page transition enter duration     | 200-220ms                  | 2         | 0          | Tracking |
+| Page transition leave duration     | 140ms                      | 2         | 0          | Tracking |
+| Page transition easing             | cubic-bezier(0.2, 0, 0, 1) | 2         | 0          | Tracking |
+| Page transition translate distance | 12px (3 LEGO studs)        | 2         | 0          | Tracking |
 
 ### Candidates
 
 _Patterns with enough data points to suggest a rule. Need CFO test scenarios before graduation._
 
-| Proposal                           | First Observed | Journal Evidence | Context |
-| ---------------------------------- | -------------- | ---------------- | ------- |
-| _(empty — first delivery pending)_ |                |                  |         |
+| Proposal                                                                               | First Observed | Journal Evidence                  | Context                                                                                    |
+| -------------------------------------------------------------------------------------- | -------------- | --------------------------------- | ------------------------------------------------------------------------------------------ |
+| Before writing any component, check existing components for the defineProps pattern    | 2026-04-09     | 2026-04-09-page-transition-system | Lint caught non-destructured defineProps in PageTransition.vue                             |
+| After writing tests, run coverage on the specific project before the full gauntlet     | 2026-04-09     | 2026-04-09-page-transition-system | SSR branches only caught by full coverage run; project-specific run would have been faster |
+| When testing showcase demos, use unique selectors that won't collide with stub content | 2026-04-09     | 2026-04-09-page-transition-system | SectionHeading stub caused false selector matches in PageTransitionDemo test               |
+| Check knip before committing new exports to avoid unused-export violations             | 2026-04-09     | 2026-04-09-page-transition-system | PageTransitionConfig and UsePageTransition were exported but unused externally             |
 
 ### Graduated
 
