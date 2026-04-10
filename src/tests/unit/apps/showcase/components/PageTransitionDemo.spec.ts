@@ -1,8 +1,8 @@
 import {shallowMount} from "@vue/test-utils";
 import {beforeEach, describe, expect, it, vi} from "vitest";
+import {nextTick} from "vue";
 
 import PageTransitionDemo from "@/apps/showcase/components/PageTransitionDemo.vue";
-import SectionHeading from "@/apps/showcase/components/SectionHeading.vue";
 
 type MediaQueryHandler = (event: {matches: boolean}) => void;
 
@@ -11,16 +11,19 @@ const createMockMatchMedia = (matches: boolean) => {
     const addEventListener = vi.fn<(type: string, handler: MediaQueryHandler) => void>((_type, handler) => {
         handlers.push(handler);
     });
-    return vi
-        .fn<(query: string) => {matches: boolean; addEventListener: typeof addEventListener}>()
-        .mockReturnValue({matches, addEventListener});
+    return {
+        matchMedia: vi
+            .fn<(query: string) => {matches: boolean; addEventListener: typeof addEventListener}>()
+            .mockReturnValue({matches, addEventListener}),
+        handlers,
+    };
 };
 
 describe("PageTransitionDemo", () => {
-    const stubs = {SectionHeading};
+    const stubs = {PageTransition: false};
 
     beforeEach(() => {
-        Object.defineProperty(window, "matchMedia", {writable: true, value: createMockMatchMedia(false)});
+        Object.defineProperty(window, "matchMedia", {writable: true, value: createMockMatchMedia(false).matchMedia});
     });
 
     it("should render the section heading with correct number and title", () => {
@@ -28,8 +31,10 @@ describe("PageTransitionDemo", () => {
         const wrapper = shallowMount(PageTransitionDemo, {global: {stubs}});
 
         // Assert
-        expect(wrapper.text()).toContain("15");
-        expect(wrapper.text()).toContain("Page Transitions");
+        const heading = wrapper.findComponent({name: "SectionHeading"});
+        expect(heading.exists()).toBe(true);
+        expect(heading.props("number")).toBe("15");
+        expect(heading.props("title")).toBe("Page Transitions");
     });
 
     it("should render the section element with correct id", () => {
@@ -169,24 +174,26 @@ describe("PageTransitionDemo", () => {
         expect(wrapper.text()).not.toContain("prefers-reduced-motion: reduce");
     });
 
-    it("should show reduced motion indicator when reduced motion is preferred", () => {
+    it("should show reduced motion indicator when reduced motion is preferred", async () => {
         // Arrange
-        Object.defineProperty(window, "matchMedia", {writable: true, value: createMockMatchMedia(true)});
+        Object.defineProperty(window, "matchMedia", {writable: true, value: createMockMatchMedia(true).matchMedia});
 
         // Act
         const wrapper = shallowMount(PageTransitionDemo, {global: {stubs}});
+        await nextTick();
 
         // Assert
         expect(wrapper.text()).toContain("prefers-reduced-motion: reduce");
         expect(wrapper.text()).toContain("all animations disabled");
     });
 
-    it("should show brick-none parameters when reduced motion is preferred", () => {
+    it("should show brick-none parameters when reduced motion is preferred", async () => {
         // Arrange
-        Object.defineProperty(window, "matchMedia", {writable: true, value: createMockMatchMedia(true)});
+        Object.defineProperty(window, "matchMedia", {writable: true, value: createMockMatchMedia(true).matchMedia});
 
         // Act
         const wrapper = shallowMount(PageTransitionDemo, {global: {stubs}});
+        await nextTick();
 
         // Assert
         expect(wrapper.text()).toContain("brick-none");

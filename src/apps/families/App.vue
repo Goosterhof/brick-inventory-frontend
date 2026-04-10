@@ -10,12 +10,10 @@ import {PhSignOut} from "@phosphor-icons/vue";
 import NavHeader from "@shared/components/NavHeader.vue";
 import NavMobileLink from "@shared/components/NavMobileLink.vue";
 import PageTransition from "@shared/components/PageTransition.vue";
-import {usePageTransition} from "@shared/composables/usePageTransition";
 import {computed} from "vue";
 
 const {t} = familyTranslationService;
 const currentRouteName = computed(() => familyRouterService.currentRouteRef.value.name);
-const {transitionName, routeKey} = usePageTransition({routeRef: familyRouterService.currentRouteRef});
 
 const handleLogout = async () => {
     await familyAuthService.logout();
@@ -144,7 +142,7 @@ const handleLogout = async () => {
     </NavHeader>
 
     <main p="4">
-        <PageTransition :name="transitionName" :route-key="routeKey">
+        <PageTransition :route-path="familyRouterService.currentRouteRef.value.path">
             <FamilyRouterView />
         </PageTransition>
     </main>

@@ -1,17 +1,65 @@
-<script setup lang="ts">
-import type {TransitionName} from "@shared/composables/usePageTransition";
+<script lang="ts">
+export type TransitionVariant = "brick-snap" | "brick-lift";
+</script>
 
-const {name, routeKey} = defineProps<{
-    /** The Vue transition name — controls which CSS classes are applied */
-    name: TransitionName;
-    /** The key that triggers a transition swap when it changes */
-    routeKey: string;
+<script setup lang="ts">
+import {computed, ref, watch} from "vue";
+
+type TransitionName = TransitionVariant | "brick-none";
+
+const {routePath, defaultVariant = "brick-snap"} = defineProps<{
+    /** The current route path — used as the transition key */
+    routePath: string;
+    /** Optional: override the default variant selection */
+    defaultVariant?: TransitionVariant;
 }>();
+
+const detectReducedMotion = (): boolean => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+};
+
+const prefersReducedMotion = ref(detectReducedMotion());
+const overrideVariant = ref<TransitionVariant | null>(null);
+
+if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    mediaQuery.addEventListener("change", (event) => {
+        prefersReducedMotion.value = event.matches;
+    });
+}
+
+const activeVariant = computed<TransitionVariant>(() => {
+    return overrideVariant.value ?? defaultVariant;
+});
+
+const transitionName = computed<TransitionName>(() => {
+    if (prefersReducedMotion.value) return "brick-none";
+    return activeVariant.value;
+});
+
+watch(
+    () => routePath,
+    () => {
+        overrideVariant.value = null;
+    },
+);
+
+const setVariant = (variant: TransitionVariant): void => {
+    overrideVariant.value = variant;
+};
+
+const setBackNavigation = (): void => {
+    overrideVariant.value = "brick-lift";
+};
+
+// lint-vue-allow-expose: Showcase demo reads animation state and calls variant methods via template ref
+defineExpose({setVariant, setBackNavigation, activeVariant, prefersReducedMotion});
 </script>
 
 <template>
-    <Transition :name="name" mode="out-in">
-        <div :key="routeKey">
+    <Transition :name="transitionName" mode="out-in">
+        <div :key="routePath">
             <slot />
         </div>
     </Transition>

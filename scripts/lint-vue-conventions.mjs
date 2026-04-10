@@ -59,7 +59,8 @@ for (const file of vueFiles) {
     }
 
     // Check 3: No defineExpose — use props/emits for parent-child communication
-    if (content.includes("defineExpose")) {
+    // Exception: components with "// lint-vue-allow-expose: <reason>" comment are exempt
+    if (content.includes("defineExpose") && !content.includes("// lint-vue-allow-expose:")) {
         errors.push(`${file}: defineExpose is forbidden. Use props and emits for parent-child communication instead.`);
     }
 
