@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type {ImportJob} from "@app/types/importJob";
 import type {InviteCode} from "@app/types/inviteCode";
 import type {FamilyMember} from "@app/types/profile";
 
@@ -17,7 +18,7 @@ import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {toCamelCaseTyped} from "@shared/helpers/string";
 import {isAxiosError} from "axios";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 
 const {t} = familyTranslationService;
 
@@ -83,16 +84,9 @@ const tokenSaved = ref(false);
 const tokenError = ref("");
 
 const importing = ref(false);
-const importResult = ref<{
-    message: string;
-    created: number;
-    updated: number;
-    skipped: number;
-    total: number;
-    complete: boolean;
-    error?: string;
-} | null>(null);
+const importJob = ref<ImportJob | null>(null);
 const importError = ref("");
+let pollInterval: ReturnType<typeof setInterval> | null = null;
 
 onMounted(async () => {
     const response = await familyHttpService.getRequest<FamilyMember[]>("/family/members");
@@ -162,24 +156,45 @@ const saveToken = async () => {
     }
 };
 
+const stopPolling = () => {
+    if (pollInterval !== null) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+    }
+};
+
+const pollImportStatus = () => {
+    pollInterval = setInterval(async () => {
+        try {
+            const response = await familyHttpService.getRequest<ImportJob>("/family-sets/import-status");
+            importJob.value = toCamelCaseTyped<ImportJob>(response.data);
+
+            if (importJob.value.status === "completed" || importJob.value.status === "failed") {
+                stopPolling();
+                importing.value = false;
+                if (importJob.value.status === "completed") {
+                    familySoundService.play("cascade");
+                }
+            }
+        } catch {
+            stopPolling();
+            importing.value = false;
+            importError.value = t("settings.importError").value;
+        }
+    }, 3000);
+};
+
 const importSets = async () => {
     importing.value = true;
-    importResult.value = null;
+    importJob.value = null;
     importError.value = "";
 
     try {
-        const response = await familyHttpService.postRequest<{
-            message: string;
-            created: number;
-            updated: number;
-            skipped: number;
-            total: number;
-            complete: boolean;
-            error?: string;
-        }>("/family-sets/import-from-rebrickable", {});
-        importResult.value = response.data;
-        familySoundService.play("cascade");
+        const response = await familyHttpService.postRequest<ImportJob>("/family-sets/import-from-rebrickable", {});
+        importJob.value = toCamelCaseTyped<ImportJob>(response.data);
+        pollImportStatus();
     } catch (error: unknown) {
+        importing.value = false;
         const status = isAxiosError(error) ? error.response?.status : undefined;
         if (status === 403) {
             importError.value = t("settings.notFamilyHead").value;
@@ -188,10 +203,12 @@ const importSets = async () => {
         } else {
             importError.value = t("settings.importError").value;
         }
-    } finally {
-        importing.value = false;
     }
 };
+
+onUnmounted(() => {
+    stopPolling();
+});
 </script>
 
 <template>
@@ -334,16 +351,36 @@ const importSets = async () => {
                 <h2 text="xl" font="bold" uppercase tracking="wide">{{ t("settings.importTitle").value }}</h2>
                 <p text="[var(--brick-muted-text)]">{{ t("settings.importDescription").value }}</p>
 
-                <div v-if="importResult" p="4" bg="[var(--brick-card-bg)]" class="brick-border" flex="~ col" gap="2">
-                    <p font="bold">{{ importResult.message }}</p>
-                    <div flex="~ col" gap="1" text="sm">
-                        <p>{{ t("settings.importCreated", {count: String(importResult.created)}).value }}</p>
-                        <p>{{ t("settings.importUpdated", {count: String(importResult.updated)}).value }}</p>
-                        <p v-if="importResult.skipped > 0">
-                            {{ t("settings.importSkipped", {count: String(importResult.skipped)}).value }}
+                <div v-if="importJob" p="4" bg="[var(--brick-card-bg)]" class="brick-border" flex="~ col" gap="2">
+                    <p v-if="importJob.status === 'completed'" font="bold">
+                        {{
+                            t("settings.importComplete", {
+                                processed: String(importJob.processedSets),
+                                failed: String(importJob.failedSets),
+                            }).value
+                        }}
+                    </p>
+                    <p v-else-if="importJob.status === 'failed'" font="bold" text="brick-red-dark">
+                        {{ t("settings.importFailed").value }}
+                    </p>
+                    <p v-else font="bold">
+                        {{
+                            t("settings.importProgress", {
+                                processed: String(importJob.processedSets),
+                                total: String(importJob.totalSets),
+                            }).value
+                        }}
+                    </p>
+                    <div
+                        v-if="importJob.failedSetDetails && importJob.failedSetDetails.length > 0"
+                        flex="~ col"
+                        gap="1"
+                        text="sm"
+                    >
+                        <p v-for="(detail, index) in importJob.failedSetDetails" :key="index" text="brick-red-dark">
+                            {{ detail.setNum }}: {{ detail.error }}
                         </p>
                     </div>
-                    <p v-if="importResult.error" text="brick-red-dark" font="bold">{{ importResult.error }}</p>
                 </div>
 
                 <p v-if="importError" text="brick-red-dark" font="bold">{{ importError }}</p>

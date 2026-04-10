@@ -18,13 +18,25 @@ vi.mock("@script-development/fs-http", async () => {
  * toCamelCaseTyped() converts these to camelCase before they reach the component.
  */
 const mockDna = {
-    diversity_score: {shannon_index: 0.85},
+    diversity_score: 0.85,
+    total_unique_parts: 150,
+    total_parts_quantity: 4200,
     top_colors: [
-        {name: "Red", hex: "#FF0000", count: 120},
-        {name: "Blue", hex: "#0000FF", count: 95},
+        {color_id: 1, name: "Red", rgb: "FF0000", is_transparent: false, total_quantity: 120},
+        {color_id: 2, name: "Blue", rgb: "0000FF", is_transparent: false, total_quantity: 95},
     ],
-    top_part_types: [{name: "Brick 2x4", category: "Bricks", count: 200}],
-    rarest_parts: [{part: "Chrome Gold Helmet", color: "Chrome Gold", quantity: 1}],
+    top_part_types: [{part_id: 10, part_num: "3001", name: "Brick 2x4", category: "Bricks", total_quantity: 200}],
+    rarest_parts: [
+        {
+            part_id: 30,
+            part_num: "3850",
+            part_name: "Chrome Gold Helmet",
+            color_id: 4,
+            color_name: "Chrome Gold",
+            color_rgb: "BBA53D",
+            quantity: 1,
+        },
+    ],
 };
 
 describe("BrickDnaPage — integration", () => {

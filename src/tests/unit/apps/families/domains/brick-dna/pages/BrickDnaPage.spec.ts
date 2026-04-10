@@ -53,19 +53,37 @@ vi.mock("@app/services", () => createMockFamilyServices({familyHttpService: {get
 
 const mockBrickDnaResponse = {
     topColors: [
-        {name: "Red", hex: "#CC0000", count: 150},
-        {name: "Blue", hex: "#0000CC", count: 120},
-        {name: "White", hex: "#FFFFFF", count: 80},
+        {colorId: 1, name: "Red", rgb: "CC0000", isTransparent: false, totalQuantity: 150},
+        {colorId: 2, name: "Blue", rgb: "0000CC", isTransparent: false, totalQuantity: 120},
+        {colorId: 3, name: "White", rgb: "FFFFFF", isTransparent: false, totalQuantity: 80},
     ],
     topPartTypes: [
-        {name: "Brick 2x4", category: "Bricks", count: 200},
-        {name: "Plate 1x2", category: "Plates", count: 180},
+        {partId: 10, partNum: "3001", name: "Brick 2x4", category: "Bricks", totalQuantity: 200},
+        {partId: 20, partNum: "3023", name: "Plate 1x2", category: "Plates", totalQuantity: 180},
     ],
     rarestParts: [
-        {part: "Chrome Gold Sword", color: "Chrome Gold", quantity: 1},
-        {part: "Transparent Neon Green 1x1", color: "Trans-Neon Green", quantity: 2},
+        {
+            partId: 30,
+            partNum: "3850",
+            partName: "Chrome Gold Sword",
+            colorId: 4,
+            colorName: "Chrome Gold",
+            colorRgb: "BBA53D",
+            quantity: 1,
+        },
+        {
+            partId: 40,
+            partNum: "3024",
+            partName: "Transparent Neon Green 1x1",
+            colorId: 5,
+            colorName: "Trans-Neon Green",
+            colorRgb: "C0FF00",
+            quantity: 2,
+        },
     ],
-    diversityScore: {shannonIndex: 0.75},
+    diversityScore: 0.75,
+    totalUniqueParts: 150,
+    totalPartsQuantity: 4200,
 };
 
 describe("BrickDnaPage", () => {
@@ -135,7 +153,7 @@ describe("BrickDnaPage", () => {
 
         it("should show high diversity label for score >= 0.8", async () => {
             // Arrange
-            const highDiversityData = {...mockBrickDnaResponse, diversityScore: {shannonIndex: 0.85}};
+            const highDiversityData = {...mockBrickDnaResponse, diversityScore: 0.85};
             mockGetRequest.mockResolvedValue({data: highDiversityData});
 
             // Act
@@ -160,7 +178,7 @@ describe("BrickDnaPage", () => {
 
         it("should show low diversity label for score < 0.5", async () => {
             // Arrange
-            const lowDiversityData = {...mockBrickDnaResponse, diversityScore: {shannonIndex: 0.3}};
+            const lowDiversityData = {...mockBrickDnaResponse, diversityScore: 0.3};
             mockGetRequest.mockResolvedValue({data: lowDiversityData});
 
             // Act
@@ -198,7 +216,7 @@ describe("BrickDnaPage", () => {
     });
 
     describe("top colors", () => {
-        it("should display top colors as stat cards", async () => {
+        it("should display top colors as stat cards with totalQuantity", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: mockBrickDnaResponse});
 
@@ -218,7 +236,7 @@ describe("BrickDnaPage", () => {
             expect(whiteCard?.props("value")).toBe("80");
         });
 
-        it("should render color swatches with correct hex color", async () => {
+        it("should render color swatches with correct rgb color", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue({data: mockBrickDnaResponse});
 

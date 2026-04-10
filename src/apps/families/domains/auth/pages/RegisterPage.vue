@@ -35,7 +35,7 @@ const onSubmit = () =>
             password: password.value,
             passwordConfirmation: passwordConfirmation.value,
         });
-        await familyRouterService.goToDashboard();
+        await familyRouterService.goToRoute("home");
     });
 </script>
 

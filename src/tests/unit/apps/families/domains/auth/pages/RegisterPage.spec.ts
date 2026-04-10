@@ -8,9 +8,9 @@ const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamil
     () => import("../../../../../../helpers"),
 );
 
-const {mockRegister, mockGoToDashboard} = vi.hoisted(() => ({
+const {mockRegister, mockGoToRoute} = vi.hoisted(() => ({
     mockRegister: vi.fn<() => Promise<void>>(),
-    mockGoToDashboard: vi.fn<() => Promise<void>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
 }));
 
 vi.mock("axios", () => createMockAxios());
@@ -19,7 +19,7 @@ vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
 vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyAuthService: {register: mockRegister},
-        familyRouterService: {goToDashboard: mockGoToDashboard},
+        familyRouterService: {goToRoute: mockGoToRoute},
     }),
 );
 
@@ -159,7 +159,7 @@ describe("RegisterPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockGoToDashboard).toHaveBeenCalled();
+        expect(mockGoToRoute).toHaveBeenCalled();
     });
 
     it("should render link to login page", () => {

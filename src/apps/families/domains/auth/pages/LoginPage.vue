@@ -24,7 +24,7 @@ const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 const onSubmit = () =>
     handleSubmit(async () => {
         await familyAuthService.login({email: email.value, password: password.value});
-        await familyRouterService.goToDashboard();
+        await familyRouterService.goToRoute("home");
     });
 </script>
 
