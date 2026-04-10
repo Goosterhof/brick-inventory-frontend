@@ -15,7 +15,7 @@ defineEmits<{click: []}>();
         outline="none"
         focus-visible:brick-focus
         class="brick-border brick-transition"
-        :bg="active ? 'yellow-300' : 'white hover:yellow-100'"
+        :bg="active ? 'yellow-300' : '[var(--brick-card-bg)] hover:yellow-100'"
         @click="$emit('click')"
     >
         <slot />

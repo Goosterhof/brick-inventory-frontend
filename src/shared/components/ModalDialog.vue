@@ -43,7 +43,7 @@ const handleBackdropClick = (event: MouseEvent) => {
         bg="transparent"
         class="backdrop:bg-black"
     >
-        <div bg="white" p="6" min-w="80" max-w="lg" class="brick-border brick-shadow">
+        <div bg="[var(--brick-card-bg)]" p="6" min-w="80" max-w="lg" class="brick-border brick-shadow">
             <div flex justify="between" items="center" m="b-4">
                 <h2 text="xl" font="bold" uppercase tracking="wide">
                     <slot name="title" />
@@ -51,7 +51,7 @@ const handleBackdropClick = (event: MouseEvent) => {
                 <button
                     @click="emit('close')"
                     p="2"
-                    bg="white hover:brick-yellow focus:brick-yellow"
+                    bg="[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow"
                     cursor="pointer"
                     outline="none"
                     focus-visible:brick-focus

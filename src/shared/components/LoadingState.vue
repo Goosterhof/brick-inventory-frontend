@@ -27,6 +27,6 @@ const {message = "Loading..."} = defineProps<{message?: string}>();
                 style="animation-delay: 300ms; animation-duration: 600ms"
             />
         </div>
-        <p text="gray-600" font="medium">{{ message }}</p>
+        <p text="[var(--brick-muted-text)]" font="medium">{{ message }}</p>
     </div>
 </template>

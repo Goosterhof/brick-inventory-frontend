@@ -183,7 +183,7 @@ const allSortFields: SortField[] = ["name", "quantity", "color"];
             }}</PrimaryButton>
         </PageHeader>
 
-        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
+        <p v-if="loading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
 
         <EmptyState
             v-else-if="groupedParts.length === 0"
@@ -283,7 +283,7 @@ const allSortFields: SortField[] = ["name", "quantity", "color"];
                     bg="yellow-400 hover:yellow-300"
                     p="x-6 y-3"
                     font="bold"
-                    text="black"
+                    text="[var(--brick-page-text)]"
                     :disabled="loadingMore"
                     hover="brick-shadow-hover"
                     active="brick-shadow-active"

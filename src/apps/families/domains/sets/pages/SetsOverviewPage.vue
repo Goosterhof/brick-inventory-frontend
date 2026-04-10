@@ -169,7 +169,7 @@ const exportCsv = () => {
             </div>
         </PageHeader>
 
-        <p v-if="isLoading" text="gray-600">{{ t("common.loading").value }}</p>
+        <p v-if="isLoading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
 
         <EmptyState
             v-else-if="getAll.length === 0"
@@ -240,22 +240,24 @@ const exportCsv = () => {
                                 v-else
                                 w="20"
                                 h="20"
-                                bg="gray-200"
+                                bg="[var(--brick-surface-subtle)]"
                                 flex
                                 items="center"
                                 justify="center"
-                                text="sm gray-600"
+                                text="sm [var(--brick-muted-text)]"
                             >
                                 {{ t("common.noImage").value }}
                             </div>
                             <div flex="1">
                                 <p font="bold">{{ familySet.set?.name ?? familySet.setNum }}</p>
-                                <p text="sm gray-600">{{ familySet.set?.setNum ?? familySet.setNum }}</p>
+                                <p text="sm [var(--brick-muted-text)]">
+                                    {{ familySet.set?.setNum ?? familySet.setNum }}
+                                </p>
                                 <div flex gap="2" m="t-1" items="center">
                                     <BadgeLabel :variant="familySet.status === 'wishlist' ? 'muted' : 'default'">{{
                                         t(statusKey[familySet.status]).value
                                     }}</BadgeLabel>
-                                    <span text="xs gray-600">{{ familySet.quantity }}x</span>
+                                    <span text="xs [var(--brick-muted-text)]">{{ familySet.quantity }}x</span>
                                 </div>
                             </div>
                         </ListItemButton>

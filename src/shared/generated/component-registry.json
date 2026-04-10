@@ -17,7 +17,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 1, "linesChanged": 18},
+            "churn": {"commits": 4, "linesChanged": 24},
             "dependencyDepth": 0
         },
         "BadgeLabel": {
@@ -37,7 +37,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 16},
+            "churn": {"commits": 2, "linesChanged": 24},
             "dependencyDepth": 0
         },
         "BarcodeScanner": {
@@ -55,7 +55,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 225},
+            "churn": {"commits": 8, "linesChanged": 259},
             "dependencyDepth": 0
         },
         "CameraCapture": {
@@ -73,7 +73,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 235},
+            "churn": {"commits": 8, "linesChanged": 86},
             "dependencyDepth": 0
         },
         "CardContainer": {
@@ -88,7 +88,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [], "emits": [], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 1, "linesChanged": 5},
+            "churn": {"commits": 2, "linesChanged": 7},
             "dependencyDepth": 0
         },
         "CollapsibleSection": {
@@ -106,7 +106,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 35},
+            "churn": {"commits": 2, "linesChanged": 46},
             "dependencyDepth": 0
         },
         "ConfirmDialog": {
@@ -132,7 +132,7 @@
                 "slots": [{"name": "confirm"}, {"name": "cancel"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 63},
+            "churn": {"commits": 4, "linesChanged": 67},
             "dependencyDepth": 1
         },
         "DangerButton": {
@@ -162,7 +162,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 23},
+            "churn": {"commits": 4, "linesChanged": 35},
             "dependencyDepth": 0
         },
         "DateInput": {
@@ -194,7 +194,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 1, "linesChanged": 51},
+            "churn": {"commits": 6, "linesChanged": 65},
             "dependencyDepth": 1
         },
         "DetailRow": {
@@ -240,7 +240,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 21},
+            "churn": {"commits": 5, "linesChanged": 27},
             "dependencyDepth": 1
         },
         "FilterChip": {
@@ -260,7 +260,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 23},
+            "churn": {"commits": 3, "linesChanged": 25},
             "dependencyDepth": 0
         },
         "FormError": {
@@ -288,7 +288,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 9},
+            "churn": {"commits": 3, "linesChanged": 6},
             "dependencyDepth": 0
         },
         "FormField": {
@@ -308,7 +308,7 @@
             },
             "adoption": {"apps": 1, "domains": 0},
             "apiSurface": {"props": [], "emits": [], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 1, "linesChanged": 5},
+            "churn": {"commits": 0, "linesChanged": 0},
             "dependencyDepth": 0
         },
         "FormLabel": {
@@ -336,7 +336,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 10},
+            "churn": {"commits": 3, "linesChanged": 8},
             "dependencyDepth": 0
         },
         "LegoArch": {
@@ -694,7 +694,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 1, "linesChanged": 21},
+            "churn": {"commits": 4, "linesChanged": 25},
             "dependencyDepth": 0
         },
         "LoadingState": {
@@ -715,7 +715,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [{"name": "message", "required": false}], "emits": [], "slots": [], "models": []},
-            "churn": {"commits": 1, "linesChanged": 32},
+            "churn": {"commits": 2, "linesChanged": 34},
             "dependencyDepth": 0
         },
         "ModalDialog": {
@@ -736,7 +736,7 @@
                 "slots": [{"name": "title"}, {"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 73},
+            "churn": {"commits": 6, "linesChanged": 81},
             "dependencyDepth": 0
         },
         "NavHeader": {
@@ -753,7 +753,7 @@
                 "slots": [{"name": "links"}, {"name": "actions"}, {"name": "mobile-links"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 67},
+            "churn": {"commits": 5, "linesChanged": 79},
             "dependencyDepth": 0
         },
         "NavLink": {
@@ -771,7 +771,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 27},
+            "churn": {"commits": 5, "linesChanged": 25},
             "dependencyDepth": 0
         },
         "NavMobileLink": {
@@ -791,7 +791,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 29},
+            "churn": {"commits": 6, "linesChanged": 47},
             "dependencyDepth": 0
         },
         "NumberInput": {
@@ -833,7 +833,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 1, "linesChanged": 75},
+            "churn": {"commits": 5, "linesChanged": 30},
             "dependencyDepth": 1
         },
         "PageHeader": {
@@ -861,7 +861,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 10},
+            "churn": {"commits": 2, "linesChanged": 12},
             "dependencyDepth": 0
         },
         "PageTransition": {
@@ -910,7 +910,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 29},
+            "churn": {"commits": 6, "linesChanged": 64},
             "dependencyDepth": 0
         },
         "PrimaryButton": {
@@ -963,7 +963,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 43},
+            "churn": {"commits": 5, "linesChanged": 36},
             "dependencyDepth": 0
         },
         "SectionDivider": {
@@ -975,7 +975,7 @@
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {"props": [], "emits": [], "slots": [], "models": []},
-            "churn": {"commits": 1, "linesChanged": 3},
+            "churn": {"commits": 2, "linesChanged": 5},
             "dependencyDepth": 0
         },
         "SelectInput": {
@@ -1008,7 +1008,7 @@
                 "slots": [{"name": "default"}],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 1, "linesChanged": 52},
+            "churn": {"commits": 5, "linesChanged": 64},
             "dependencyDepth": 1
         },
         "StatCard": {
@@ -1031,7 +1031,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 11},
+            "churn": {"commits": 2, "linesChanged": 13},
             "dependencyDepth": 0
         },
         "TextareaInput": {
@@ -1068,7 +1068,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 1, "linesChanged": 52},
+            "churn": {"commits": 6, "linesChanged": 66},
             "dependencyDepth": 1
         },
         "TextInput": {
@@ -1114,7 +1114,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 1, "linesChanged": 61},
+            "churn": {"commits": 5, "linesChanged": 30},
             "dependencyDepth": 1
         },
         "ToastMessage": {
@@ -1139,7 +1139,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 33},
+            "churn": {"commits": 5, "linesChanged": 53},
             "dependencyDepth": 0
         }
     }

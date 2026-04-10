@@ -26,7 +26,7 @@ const handleConfirm = () => {
                 @click="handleConfirm"
                 p="x-4 y-3"
                 border="3 brick-red"
-                bg="white hover:brick-red-light focus:brick-red-light"
+                bg="[var(--brick-card-bg)] hover:brick-red-light focus:brick-red-light"
                 text="brick-red-dark"
                 font="bold"
                 uppercase
@@ -41,7 +41,7 @@ const handleConfirm = () => {
             <button
                 @click="emit('cancel')"
                 p="x-4 y-3"
-                bg="white hover:brick-yellow focus:brick-yellow"
+                bg="[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow"
                 font="bold"
                 uppercase
                 tracking="wide"

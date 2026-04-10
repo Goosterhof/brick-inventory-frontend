@@ -128,7 +128,7 @@ const handleLogout = async () => {
                 items="center"
                 gap="2"
                 p="x-4 y-2"
-                bg="white hover:brick-yellow focus:brick-yellow"
+                bg="[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow"
                 font="bold"
                 uppercase
                 tracking="wide"

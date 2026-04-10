@@ -14,13 +14,13 @@ const handleClick = (event: Event) => {
         :href="to"
         block
         p="4"
-        border="b-3 black"
+        border="b-3 [var(--brick-border-color)]"
         font="bold"
         uppercase
         tracking="wide"
         outline="none"
         focus-visible:brick-focus
-        :bg="active ? 'brick-yellow' : 'white hover:brick-yellow focus:brick-yellow'"
+        :bg="active ? 'brick-yellow' : '[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow'"
         class="brick-transition"
         @click="handleClick"
     >

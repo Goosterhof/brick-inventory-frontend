@@ -81,7 +81,7 @@ describe("PartListItem", () => {
         const wrapper = shallowMount(PartListItem, {props: {...defaultProps, spare: true}});
 
         // Assert
-        expect(wrapper.attributes("bg")).toBe("gray-200");
+        expect(wrapper.attributes("bg")).toBe("[var(--brick-surface-subtle)]");
     });
 
     it("should use white background for non-spare parts", () => {
@@ -89,7 +89,7 @@ describe("PartListItem", () => {
         const wrapper = shallowMount(PartListItem, {props: defaultProps});
 
         // Assert
-        expect(wrapper.attributes("bg")).toBe("white");
+        expect(wrapper.attributes("bg")).toBe("[var(--brick-card-bg)]");
     });
 
     it("should have neo-brutalist styling", () => {

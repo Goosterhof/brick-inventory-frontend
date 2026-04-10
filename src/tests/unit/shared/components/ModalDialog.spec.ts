@@ -109,7 +109,7 @@ describe("ModalDialog", () => {
         const wrapper = mountModal();
 
         // Act
-        await wrapper.find("div[bg='white']").trigger("click");
+        await wrapper.find("div[bg='[var(--brick-card-bg)]']").trigger("click");
 
         // Assert
         expect(wrapper.emitted("close")).toBeUndefined();
@@ -118,7 +118,7 @@ describe("ModalDialog", () => {
     it("should have brick brutalist styling on content panel", () => {
         // Arrange
         const wrapper = mountModal();
-        const panel = wrapper.find("div[bg='white']");
+        const panel = wrapper.find("div[bg='[var(--brick-card-bg)]']");
 
         // Assert
         expect(panel.attributes("class")).toContain("brick-border");

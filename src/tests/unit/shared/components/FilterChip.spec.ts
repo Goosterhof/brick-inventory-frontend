@@ -41,7 +41,7 @@ describe("FilterChip", () => {
             const wrapper = shallowMount(FilterChip, {slots: {default: "Filter"}});
 
             // Assert
-            expect(wrapper.attributes("bg")).toBe("white hover:yellow-100");
+            expect(wrapper.attributes("bg")).toBe("[var(--brick-card-bg)] hover:yellow-100");
         });
 
         it("should show yellow background when active", () => {
