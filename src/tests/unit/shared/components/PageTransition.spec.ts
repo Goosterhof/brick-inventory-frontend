@@ -38,7 +38,7 @@ describe("PageTransition", () => {
         expect(wrapper.text()).toBe("Page content");
     });
 
-    it("should pass the transition name to the Transition component", () => {
+    it("should pass the default transition name to the Transition component", () => {
         // Arrange & Act
         const wrapper = shallowMount(PageTransition, {props: {routePath: "/sets"}, slots: {default: "<p>Content</p>"}});
 
@@ -69,17 +69,7 @@ describe("PageTransition", () => {
         expect(keyedDiv.exists()).toBe(true);
     });
 
-    it("should default to brick-snap variant", () => {
-        // Arrange & Act
-        const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
-
-        // Assert
-        const transition = wrapper.findComponent({name: "Transition"});
-        expect(transition.attributes("name")).toBe("brick-snap");
-        expect(wrapper.vm.activeVariant).toBe("brick-snap");
-    });
-
-    it("should use the provided defaultVariant", () => {
+    it("should use the provided defaultVariant for the transition name", () => {
         // Arrange & Act
         const wrapper = shallowMount(PageTransition, {
             props: {routePath: "/", defaultVariant: "brick-lift"},
@@ -89,58 +79,9 @@ describe("PageTransition", () => {
         // Assert
         const transition = wrapper.findComponent({name: "Transition"});
         expect(transition.attributes("name")).toBe("brick-lift");
-        expect(wrapper.vm.activeVariant).toBe("brick-lift");
     });
 
-    it("should expose setVariant, setBackNavigation, activeVariant, and prefersReducedMotion", () => {
-        // Arrange & Act
-        const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
-
-        // Assert
-        expect(wrapper.vm.setVariant).toBeInstanceOf(Function);
-        expect(wrapper.vm.setBackNavigation).toBeInstanceOf(Function);
-        expect(wrapper.vm.activeVariant).toBeDefined();
-        expect(wrapper.vm.prefersReducedMotion).toBeDefined();
-    });
-
-    it("should override variant with setVariant", () => {
-        // Arrange
-        const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
-
-        // Act
-        wrapper.vm.setVariant("brick-lift");
-
-        // Assert
-        expect(wrapper.vm.activeVariant).toBe("brick-lift");
-    });
-
-    it("should set brick-lift variant when setBackNavigation is called", () => {
-        // Arrange
-        const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
-
-        // Act
-        wrapper.vm.setBackNavigation();
-
-        // Assert
-        expect(wrapper.vm.activeVariant).toBe("brick-lift");
-    });
-
-    it("should reset override variant on route change", async () => {
-        // Arrange
-        const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
-
-        wrapper.vm.setVariant("brick-lift");
-        expect(wrapper.vm.activeVariant).toBe("brick-lift");
-
-        // Act
-        await wrapper.setProps({routePath: "/about"});
-        await nextTick();
-
-        // Assert
-        expect(wrapper.vm.activeVariant).toBe("brick-snap");
-    });
-
-    it("should detect prefers-reduced-motion", () => {
+    it("should detect prefers-reduced-motion and use brick-none", () => {
         // Arrange
         const {matchMedia} = createMockMatchMedia(true);
         Object.defineProperty(window, "matchMedia", {writable: true, value: matchMedia});
@@ -149,20 +90,20 @@ describe("PageTransition", () => {
         const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
 
         // Assert
-        expect(wrapper.vm.prefersReducedMotion).toBe(true);
         const transition = wrapper.findComponent({name: "Transition"});
         expect(transition.attributes("name")).toBe("brick-none");
     });
 
-    it("should return brick-none transition name when reduced motion is preferred even with explicit variant", () => {
+    it("should use brick-none when reduced motion is preferred even with explicit defaultVariant", () => {
         // Arrange
         const {matchMedia} = createMockMatchMedia(true);
         Object.defineProperty(window, "matchMedia", {writable: true, value: matchMedia});
 
-        const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
-
-        // Act — even with explicit variant set, reduced motion takes precedence
-        wrapper.vm.setVariant("brick-lift");
+        // Act
+        const wrapper = shallowMount(PageTransition, {
+            props: {routePath: "/", defaultVariant: "brick-lift"},
+            slots: {default: "<p>Content</p>"},
+        });
 
         // Assert
         const transition = wrapper.findComponent({name: "Transition"});
@@ -176,7 +117,8 @@ describe("PageTransition", () => {
 
         const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
 
-        expect(wrapper.vm.prefersReducedMotion).toBe(false);
+        const transition = wrapper.findComponent({name: "Transition"});
+        expect(transition.attributes("name")).toBe("brick-snap");
 
         // Act — simulate system preference change
         for (const handler of handlers) {
@@ -185,8 +127,6 @@ describe("PageTransition", () => {
         await nextTick();
 
         // Assert
-        expect(wrapper.vm.prefersReducedMotion).toBe(true);
-        const transition = wrapper.findComponent({name: "Transition"});
         expect(transition.attributes("name")).toBe("brick-none");
     });
 
@@ -197,7 +137,8 @@ describe("PageTransition", () => {
 
         const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
 
-        expect(wrapper.vm.prefersReducedMotion).toBe(true);
+        const transition = wrapper.findComponent({name: "Transition"});
+        expect(transition.attributes("name")).toBe("brick-none");
 
         // Act — simulate user disabling reduced motion
         for (const handler of handlers) {
@@ -206,8 +147,6 @@ describe("PageTransition", () => {
         await nextTick();
 
         // Assert
-        expect(wrapper.vm.prefersReducedMotion).toBe(false);
-        const transition = wrapper.findComponent({name: "Transition"});
         expect(transition.attributes("name")).toBe("brick-snap");
     });
 
@@ -243,7 +182,6 @@ describe("PageTransition", () => {
         const wrapper = shallowMount(PageTransition, {props: {routePath: "/"}, slots: {default: "<p>Content</p>"}});
 
         // Assert — defaults to false (no reduced motion), no listener registered
-        expect(wrapper.vm.prefersReducedMotion).toBe(false);
         const transition = wrapper.findComponent({name: "Transition"});
         expect(transition.attributes("name")).toBe("brick-snap");
     });

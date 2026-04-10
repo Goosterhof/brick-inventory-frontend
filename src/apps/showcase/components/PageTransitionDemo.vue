@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {TransitionVariant} from "@shared/components/PageTransition.vue";
 
-// oxlint-disable-next-line typescript/consistent-type-imports -- PageTransition is used as a runtime component in the template
 import PageTransition from "@shared/components/PageTransition.vue";
 import {computed, ref} from "vue";
 
@@ -11,25 +10,33 @@ const pages = ["Home", "Sets", "Storage", "Parts"] as const;
 const currentPage = ref<(typeof pages)[number]>("Home");
 const selectedVariant = ref<TransitionVariant>("brick-snap");
 
-const transitionRef = ref<InstanceType<typeof PageTransition> | null>(null);
+const prefersReducedMotion = ref(
+    typeof window !== "undefined" && typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        : false,
+);
+
+if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
+    window.matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (event) => {
+        prefersReducedMotion.value = event.matches;
+    });
+}
 
 const routePath = computed(() => `/${currentPage.value.toLowerCase()}`);
 
 const handleVariantChange = (variant: TransitionVariant): void => {
     selectedVariant.value = variant;
-    transitionRef.value?.setVariant(variant);
 };
 
 const navigateTo = (page: (typeof pages)[number]): void => {
-    transitionRef.value?.setVariant(selectedVariant.value);
     currentPage.value = page;
 };
 
 const parameters = computed(() => {
-    if (transitionRef.value?.prefersReducedMotion) {
+    if (prefersReducedMotion.value) {
         return {name: "brick-none", enterDuration: "0ms", leaveDuration: "0ms", easing: "none", distance: "0px"};
     }
-    if (transitionRef.value?.activeVariant === "brick-lift") {
+    if (selectedVariant.value === "brick-lift") {
         return {
             name: "brick-lift",
             enterDuration: "200ms",
@@ -46,8 +53,6 @@ const parameters = computed(() => {
         distance: "12px (up on enter), 4px (up on leave)",
     };
 });
-
-const prefersReducedMotion = computed(() => transitionRef.value?.prefersReducedMotion ?? false);
 </script>
 
 <template>
@@ -111,7 +116,7 @@ const prefersReducedMotion = computed(() => transitionRef.value?.prefersReducedM
                     justify="center"
                     overflow="hidden"
                 >
-                    <PageTransition ref="transitionRef" :route-path="routePath" :default-variant="selectedVariant">
+                    <PageTransition :route-path="routePath" :default-variant="selectedVariant">
                         <div text="center">
                             <p font="heading bold" text="2xl" m="b-2">{{ currentPage }}</p>
                             <p text="sm gray-500">Simulated page content</p>

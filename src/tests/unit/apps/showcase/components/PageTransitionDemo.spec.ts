@@ -240,6 +240,39 @@ describe("PageTransitionDemo", () => {
         expect(updatedSnapButton?.attributes("bg")).not.toContain("brick-yellow");
     });
 
+    it("should respond to live changes in prefers-reduced-motion media query", async () => {
+        // Arrange
+        const {matchMedia, handlers} = createMockMatchMedia(false);
+        Object.defineProperty(window, "matchMedia", {writable: true, value: matchMedia});
+
+        const wrapper = shallowMount(PageTransitionDemo, {global: {stubs}});
+
+        // Assert — initially no reduced motion
+        expect(wrapper.text()).not.toContain("prefers-reduced-motion: reduce");
+
+        // Act — simulate system preference change
+        for (const handler of handlers) {
+            handler({matches: true});
+        }
+        await nextTick();
+
+        // Assert — reduced motion indicator should now appear
+        expect(wrapper.text()).toContain("prefers-reduced-motion: reduce");
+        expect(wrapper.text()).toContain("brick-none");
+    });
+
+    it("should default to no reduced motion when matchMedia is unavailable", () => {
+        // Arrange — simulate environment where matchMedia is not available
+        Object.defineProperty(window, "matchMedia", {writable: true, value: undefined});
+
+        // Act
+        const wrapper = shallowMount(PageTransitionDemo, {global: {stubs}});
+
+        // Assert — defaults to false (no reduced motion), shows brick-snap parameters
+        expect(wrapper.text()).not.toContain("prefers-reduced-motion: reduce");
+        expect(wrapper.text()).toContain("brick-snap");
+    });
+
     it("should highlight the active navigation tab", async () => {
         // Arrange
         const wrapper = shallowMount(PageTransitionDemo, {global: {stubs}});
