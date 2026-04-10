@@ -39,7 +39,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('brickDna.title').value" />
 
-        <p v-if="loading" text="gray-600">{{ t("common.loading").value }}</p>
+        <p v-if="loading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
 
         <EmptyState v-else-if="!dna" :message="t('brickDna.empty').value" show-brick brick-color="#237841" />
 
@@ -56,7 +56,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                             {{ diversityLabel(dna.diversityScore) }}
                         </p>
                         <!-- Visual bar -->
-                        <div w="full" max-w="sm" h="4" bg="gray-200" class="brick-border">
+                        <div w="full" max-w="sm" h="4" bg="[var(--brick-surface-subtle)]" class="brick-border">
                             <div
                                 h="full"
                                 bg="baseplate-green"
@@ -108,7 +108,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                         :label="partType.name"
                         :value="String(partType.totalQuantity)"
                     >
-                        <p text="xs gray-500" m="t-1">{{ partType.category }}</p>
+                        <p text="xs [var(--brick-muted-text)]" m="t-1">{{ partType.category }}</p>
                     </StatCard>
                 </div>
             </div>
@@ -125,7 +125,7 @@ const diversityPercentage = (score: number): string => `${Math.round(score * 100
                         <div flex justify="between" items="center">
                             <div>
                                 <p font="bold">{{ rare.partName }}</p>
-                                <p text="sm gray-600">{{ rare.colorName }}</p>
+                                <p text="sm [var(--brick-muted-text)]">{{ rare.colorName }}</p>
                             </div>
                             <p text="xl" font="bold">{{ rare.quantity }}x</p>
                         </div>

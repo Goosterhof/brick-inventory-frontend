@@ -179,7 +179,16 @@ const handleAssigned = () => {
                         h="48"
                         object="contain"
                     />
-                    <div v-else w="48" h="48" bg="gray-200" flex items="center" justify="center" text="gray-600">
+                    <div
+                        v-else
+                        w="48"
+                        h="48"
+                        bg="[var(--brick-surface-subtle)]"
+                        flex
+                        items="center"
+                        justify="center"
+                        text="[var(--brick-muted-text)]"
+                    >
                         {{ t("common.noImage").value }}
                     </div>
                 </div>
@@ -188,7 +197,7 @@ const handleAssigned = () => {
                     <h1 text="2xl" font="bold" uppercase tracking="wide">
                         {{ adapted.set?.name ?? adapted.setNum }}
                     </h1>
-                    <p text="gray-600">{{ adapted.set?.setNum ?? adapted.setNum }}</p>
+                    <p text="[var(--brick-muted-text)]">{{ adapted.set?.setNum ?? adapted.setNum }}</p>
 
                     <div flex="~ col" gap="2" m="t-2">
                         <div flex gap="2">
@@ -223,7 +232,11 @@ const handleAssigned = () => {
                                     outline="none"
                                     focus-visible:brick-focus
                                     class="brick-border brick-transition"
-                                    :bg="adapted.status === status ? 'yellow-300' : 'white hover:yellow-100'"
+                                    :bg="
+                                        adapted.status === status
+                                            ? 'yellow-300'
+                                            : '[var(--brick-card-bg)] hover:yellow-100'
+                                    "
                                     :disabled="statusUpdating"
                                     @click="updateStatus(status)"
                                 >
@@ -268,7 +281,7 @@ const handleAssigned = () => {
                     p="4"
                     m="b-6"
                     class="brick-border brick-shadow"
-                    :bg="buildStats.canBuild ? 'baseplate-green/15' : 'white'"
+                    :bg="buildStats.canBuild ? 'baseplate-green/15' : '[var(--brick-card-bg)]'"
                 >
                     <h2 text="xl" font="bold" uppercase tracking="wide" m="b-3">
                         {{ t("sets.buildCheck").value }}
@@ -333,7 +346,9 @@ const handleAssigned = () => {
                                 />
                                 <div flex="1">
                                     <p font="bold" text="sm">{{ part.part.name }}</p>
-                                    <p text="xs gray-600">{{ part.part.partNum }} · {{ part.color.name }}</p>
+                                    <p text="xs [var(--brick-muted-text)]">
+                                        {{ part.part.partNum }} · {{ part.color.name }}
+                                    </p>
                                 </div>
                                 <div text="sm" font="bold" text-color="brick-red-dark">
                                     {{ part.available }}/{{ part.quantity }}
@@ -348,7 +363,7 @@ const handleAssigned = () => {
                                     uppercase
                                     tracking="wide"
                                     class="brick-border brick-transition"
-                                    bg="white hover:brick-yellow"
+                                    bg="[var(--brick-card-bg)] hover:brick-yellow"
                                 >
                                     BrickLink
                                 </a>

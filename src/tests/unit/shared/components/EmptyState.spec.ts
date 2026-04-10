@@ -17,7 +17,7 @@ describe("EmptyState", () => {
         const wrapper = shallowMount(EmptyState, {props: {message: "Empty"}});
 
         // Assert
-        expect(wrapper.find("p").attributes("text")).toBe("gray-600");
+        expect(wrapper.find("p").attributes("text")).toBe("[var(--brick-muted-text)]");
     });
 
     it("should not show LegoBrick by default", () => {

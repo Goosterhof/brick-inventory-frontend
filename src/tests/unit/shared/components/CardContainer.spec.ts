@@ -18,6 +18,6 @@ describe("CardContainer", () => {
         // Assert
         expect(wrapper.attributes("class")).toContain("brick-border");
         expect(wrapper.attributes("class")).toContain("brick-shadow");
-        expect(wrapper.attributes("bg")).toBe("white");
+        expect(wrapper.attributes("bg")).toBe("[var(--brick-card-bg)]");
     });
 });

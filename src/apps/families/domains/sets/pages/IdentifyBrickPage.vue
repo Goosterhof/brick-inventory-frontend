@@ -50,7 +50,7 @@ const goBack = async () => {
             <BackButton @click="goBack">{{ t("sets.backToOverview").value }}</BackButton>
         </PageHeader>
 
-        <p text="gray-600" m="b-4">{{ t("sets.identifyDescription").value }}</p>
+        <p text="[var(--brick-muted-text)]" m="b-4">{{ t("sets.identifyDescription").value }}</p>
 
         <CameraCapture
             v-if="showCamera"
@@ -62,11 +62,11 @@ const goBack = async () => {
         />
 
         <div v-if="isIdentifying" m="t-6">
-            <p text="gray-600">{{ t("sets.identifying").value }}</p>
+            <p text="[var(--brick-muted-text)]">{{ t("sets.identifying").value }}</p>
         </div>
 
         <div v-else-if="identifiedPart" m="t-6" flex="~ col" gap="4">
-            <div flex gap="4" items="center" p="4" bg="white" class="brick-border brick-shadow">
+            <div flex gap="4" items="center" p="4" bg="[var(--brick-card-bg)]" class="brick-border brick-shadow">
                 <img
                     v-if="identifiedPart.imageUrl"
                     :src="identifiedPart.imageUrl"
@@ -77,7 +77,7 @@ const goBack = async () => {
                 />
                 <div flex="1">
                     <p font="bold" text="lg">{{ identifiedPart.name }}</p>
-                    <p text="sm gray-600">{{ identifiedPart.partNum }}</p>
+                    <p text="sm [var(--brick-muted-text)]">{{ identifiedPart.partNum }}</p>
                 </div>
             </div>
 

@@ -30,7 +30,7 @@ describe("NavMobileLink", () => {
         // Assert
         expect(link.attributes("block")).toBeDefined();
         expect(link.attributes("p")).toBe("4");
-        expect(link.attributes("border")).toBe("b-3 black");
+        expect(link.attributes("border")).toBe("b-3 [var(--brick-border-color)]");
     });
 
     it("should show default background when not active", () => {
@@ -39,7 +39,7 @@ describe("NavMobileLink", () => {
         const link = wrapper.find("a");
 
         // Assert
-        expect(link.attributes("bg")).toBe("white hover:brick-yellow focus:brick-yellow");
+        expect(link.attributes("bg")).toBe("[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow");
     });
 
     it("should show yellow background when active", () => {

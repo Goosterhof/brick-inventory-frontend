@@ -23,7 +23,7 @@ const inputStateClass = computed(() => {
     if (error) {
         return "bg-brick-red-light border-brick-red brick-shadow-error focus:brick-shadow-error-hover";
     }
-    return "bg-white brick-shadow focus:brick-shadow-hover focus:bg-brick-yellow";
+    return "bg-[var(--brick-card-bg)] brick-shadow focus:brick-shadow-hover focus:bg-brick-yellow";
 });
 </script>
 
@@ -39,7 +39,7 @@ const inputStateClass = computed(() => {
             :aria-invalid="error ? true : undefined"
             :aria-describedby="error ? errorId : undefined"
             p="x-4 y-3"
-            text="black"
+            text="[var(--brick-page-text)]"
             font="medium"
             class="brick-border brick-transition"
             outline="none"

@@ -112,7 +112,7 @@ describe("NavHeader", () => {
         await wrapper.find("button[aria-label='Menu']").trigger("click");
 
         // Act
-        await wrapper.find("#mobile-menu div[border='t-3 black']").trigger("click");
+        await wrapper.find("#mobile-menu div[border='t-3 [var(--brick-border-color)]']").trigger("click");
         await wrapper.vm.$nextTick();
 
         // Assert
@@ -159,6 +159,6 @@ describe("NavHeader", () => {
         const wrapper = mountNavHeader();
 
         // Assert
-        expect(wrapper.find("header").attributes("border")).toBe("b-3 black");
+        expect(wrapper.find("header").attributes("border")).toBe("b-3 [var(--brick-border-color)]");
     });
 });

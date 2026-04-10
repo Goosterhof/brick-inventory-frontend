@@ -133,7 +133,7 @@ describe("TextInput", () => {
         const input = wrapper.find("input");
 
         // Assert
-        expect(input.classes()).toContain("bg-white");
+        expect(input.classes()).toContain("bg-[var(--brick-card-bg)]");
     });
 
     it("should apply error styling when error is present", () => {

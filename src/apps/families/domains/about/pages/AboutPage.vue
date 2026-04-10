@@ -30,7 +30,7 @@ const GRAY = "#6B7280";
 <template>
     <div>
         <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">{{ t("about.title").value }}</h1>
-        <p text="gray-600" m="b-6">{{ t("about.description").value }}</p>
+        <p text="[var(--brick-muted-text)]" m="b-6">{{ t("about.description").value }}</p>
         <div flex gap="8">
             <div inline-block style="filter: drop-shadow(4px 4px 0 black)">
                 <!-- Row 1: Red 2×2 + Blue 1×1 (bottom-aligned) -->

@@ -74,8 +74,8 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                     <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">
                         {{ t("home.brandTitle").value }}
                     </h1>
-                    <p text="gray-600" m="b-2">{{ t("home.tagline").value }}</p>
-                    <p text="gray-600" m="b-6">{{ t("home.brandDescription").value }}</p>
+                    <p text="[var(--brick-muted-text)]" m="b-2">{{ t("home.tagline").value }}</p>
+                    <p text="[var(--brick-muted-text)]" m="b-6">{{ t("home.brandDescription").value }}</p>
 
                     <NavLink to="/register" @click="familyRouterService.goToRoute('register')">
                         {{ t("auth.createAccount").value }}
@@ -95,13 +95,13 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
         <template v-else>
             <PageHeader :title="t('home.dashboardTitle').value" />
 
-            <p v-if="loading" text="gray-600">{{ t("home.loadingStats").value }}</p>
+            <p v-if="loading" text="[var(--brick-muted-text)]">{{ t("home.loadingStats").value }}</p>
 
             <template v-else-if="stats">
                 <!-- Headline stats -->
                 <div grid grid-cols="1 sm:2 lg:3" gap="4" m="b-6">
                     <StatCard :label="t('home.statSets').value" :value="String(stats.totalSets)">
-                        <p v-if="stats.totalSetQuantity !== stats.totalSets" text="sm gray-600">
+                        <p v-if="stats.totalSetQuantity !== stats.totalSets" text="sm [var(--brick-muted-text)]">
                             {{ t("home.totalIncludingDuplicates", {count: String(stats.totalSetQuantity)}).value }}
                         </p>
                     </StatCard>
@@ -112,7 +112,7 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                     />
 
                     <StatCard :label="t('home.statStoredParts').value" :value="String(stats.totalUniqueParts)">
-                        <p v-if="stats.totalPartsQuantity > 0" text="sm gray-600">
+                        <p v-if="stats.totalPartsQuantity > 0" text="sm [var(--brick-muted-text)]">
                             {{ t("home.totalPieces", {count: String(stats.totalPartsQuantity)}).value }}
                         </p>
                     </StatCard>
@@ -143,7 +143,7 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                     </CardContainer>
                 </template>
 
-                <p v-else-if="!setsLoading && yearDistribution.size === 0" text="gray-600" m="b-6">
+                <p v-else-if="!setsLoading && yearDistribution.size === 0" text="[var(--brick-muted-text)]" m="b-6">
                     {{ t("home.yearDistributionEmpty").value }}
                 </p>
 

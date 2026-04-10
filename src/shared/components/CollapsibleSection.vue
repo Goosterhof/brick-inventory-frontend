@@ -15,7 +15,7 @@ defineEmits<{toggle: []}>();
             gap="2"
             w="full"
             p="3"
-            bg="gray-100 hover:brick-yellow"
+            bg="[var(--brick-surface-subtle)] hover:brick-yellow"
             cursor="pointer"
             outline="none"
             focus-visible:brick-focus
@@ -24,7 +24,14 @@ defineEmits<{toggle: []}>();
         >
             <PhCaretRight :size="16" weight="bold" class="brick-transition" :transform="expanded ? 'rotate(90)' : ''" />
             <span class="brick-label" flex="1" text="left sm">{{ title }}</span>
-            <span v-if="count !== undefined" text="xs" font="bold" p="x-2 y-0.5" bg="white" class="brick-border">
+            <span
+                v-if="count !== undefined"
+                text="xs"
+                font="bold"
+                p="x-2 y-0.5"
+                bg="[var(--brick-card-bg)]"
+                class="brick-border"
+            >
                 {{ count }}
             </span>
         </button>
