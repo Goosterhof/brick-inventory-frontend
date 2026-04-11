@@ -9,6 +9,7 @@ import {
 import {PhSignOut} from "@phosphor-icons/vue";
 import NavHeader from "@shared/components/NavHeader.vue";
 import NavMobileLink from "@shared/components/NavMobileLink.vue";
+import PageTransition from "@shared/components/PageTransition.vue";
 import {computed} from "vue";
 
 const {t} = familyTranslationService;
@@ -141,6 +142,8 @@ const handleLogout = async () => {
     </NavHeader>
 
     <main p="4">
-        <FamilyRouterView />
+        <PageTransition :route-path="familyRouterService.currentRouteRef.value.path">
+            <FamilyRouterView />
+        </PageTransition>
     </main>
 </template>

@@ -258,7 +258,7 @@ Filed by the Building Inspector after an audit. Inspections can be routine (peri
 | Document | Filed By | Reviewed By | Approved By |
 |---|---|---|---|
 | Building Permit | CEO, CFO, or General | — | — (filed = active) |
-| Construction Journal | Lead Brick Architect | CFO (appends evaluation) | CEO (approves knowledge updates) |
+| Construction Journal | Lead Brick Architect or Creative Engine | CFO (appends evaluation) | CEO (approves knowledge updates) |
 | Inspection Report | Building Inspector | CFO (appends evaluation) | CEO (approves findings disposition) |
 
 ### War Room Integration
@@ -271,7 +271,7 @@ When the General deploys the company via the war room:
 
 ### Graduation — Evidence-Backed Training
 
-Both agents (architect and inspector) propose training improvements in their journals/reports. The CFO tracks these in each agent's Graduation Log with evidence:
+All three agents (architect, inspector, and creative engine) propose training improvements in their journals/reports. The CFO tracks these in each agent's Graduation Log with evidence:
 
 - A proposal must be observed in **at least 2 shifts** before promotion into the agent's training
 - Every graduation log entry references the specific journal or report that provided evidence
@@ -353,7 +353,7 @@ refactor: extract http middleware into shared service
 
 ## Agent Management — The Dispatch Report
 
-After any agent (Lead Brick Architect, Building Inspector) completes work that includes a self-debrief with training proposals, the CFO **must** produce a structured **Dispatch Report** before responding to the CEO. This is not a checklist to remember — it is a required output. The CFO cannot present results without having written it.
+After any agent (Lead Brick Architect, Building Inspector, Creative Engine) completes work that includes a self-debrief with training proposals, the CFO **must** produce a structured **Dispatch Report** before responding to the CEO. This is not a checklist to remember — it is a required output. The CFO cannot present results without having written it.
 
 ### Dispatch Report Format
 
@@ -396,9 +396,11 @@ A checklist says "you must do this" but produces no artifact — it's easy to sk
 
 ### The Rebuttal Protocol
 
-When the Building Inspector files findings rated **medium or above**, the CFO forwards them to the Lead Brick Architect for a formal response. The Architect responds with ACCEPT, REBUT (with evidence), or PARTIAL (valid finding, better fix). The CFO reads both sides and rules.
+When the Building Inspector files findings rated **medium or above**, the CFO forwards them to the Lead Brick Architect or Creative Engine (whichever owns the code in question) for a formal response. The builder responds with ACCEPT, REBUT (with evidence), or PARTIAL (valid finding, better fix). The CFO reads both sides and rules.
 
-This is productive disagreement by design. The juniors who read this portfolio should see that the best engineering teams challenge findings with evidence, not compliance. Findings that survive rebuttal are stronger. Rebuttals that succeed sharpen the Inspector's methodology. Both outcomes feed the graduation logs.
+When the Lead Brick Architect and Creative Engine disagree on shared component changes (animation vs. structural integrity), the same protocol applies — the CFO arbitrates, the CEO has final authority on creative direction questions.
+
+This is productive disagreement by design. The juniors who read this portfolio should see that the best engineering teams challenge findings with evidence, not compliance. Findings that survive rebuttal are stronger. Rebuttals that succeed sharpen methodology. All outcomes feed the graduation logs.
 
 Full protocol details live in each agent's `.md` file.
 
