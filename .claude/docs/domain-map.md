@@ -92,7 +92,7 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 
 The design system specimen — Brick Brutalism on display. No domains, no routing, no auth. A single-page exhibition of every design token, component, and interaction pattern.
 
-- **Components**: ShowcaseHero, ColorPalette, TypographySpecimen, BrickDimensions, SnapDemo, ComponentGallery, BrandVoice, AntiPatterns, SectionHeading, ComponentHealth, DialogServiceDemo, ToastServiceDemo, FormValidationWorkbench, MiddlewarePipelineVisualizer, ResourceAdapterPlayground
+- **Components**: ShowcaseHero, ColorPalette, TypographySpecimen, BrickDimensions, BrickShapes, SnapDemo, ComponentGallery, BrandVoice, AntiPatterns, SectionHeading, ComponentHealth, DialogServiceDemo, ToastServiceDemo, FormValidationWorkbench, MiddlewarePipelineVisualizer, ResourceAdapterPlayground, PageTransitionDemo
 - **Deployed at**: showcase.brick-inventory.com
 
 ## Shared Components
