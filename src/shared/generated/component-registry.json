@@ -344,7 +344,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -364,7 +369,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -390,7 +400,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/BrickDimensions.vue",
-                        "src/apps/showcase/components/ComponentGallery.vue"
+                        "src/apps/showcase/components/ComponentGallery.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
                     ]
                 },
                 "shared": {"_root": ["src/shared/components/EmptyState.vue"]}
@@ -415,7 +426,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/ComponentGallery.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -440,7 +456,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/BrickDimensions.vue",
-                        "src/apps/showcase/components/BrickShapes.vue"
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
                     ]
                 }
             },
@@ -462,7 +479,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -485,7 +507,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/BrickDimensions.vue",
-                        "src/apps/showcase/components/BrickShapes.vue"
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
                     ]
                 }
             },
@@ -507,7 +530,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -527,7 +555,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -547,7 +580,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -567,7 +605,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -587,7 +630,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -607,7 +655,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -627,7 +680,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -647,7 +705,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -667,7 +730,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {

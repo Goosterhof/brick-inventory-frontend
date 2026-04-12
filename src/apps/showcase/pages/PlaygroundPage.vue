@@ -1,57 +1,227 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import type {Component} from "vue";
 
-const experimentCount = ref(6);
+import LegoArch from "@shared/components/LegoArch.vue";
+import LegoArchSvg from "@shared/components/LegoArchSvg.vue";
+import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoBrickSvg from "@shared/components/LegoBrickSvg.vue";
+import LegoPlate from "@shared/components/LegoPlate.vue";
+import LegoPlateSvg from "@shared/components/LegoPlateSvg.vue";
+import LegoRound from "@shared/components/LegoRound.vue";
+import LegoRoundSvg from "@shared/components/LegoRoundSvg.vue";
+import LegoSlope from "@shared/components/LegoSlope.vue";
+import LegoSlopeSvg from "@shared/components/LegoSlopeSvg.vue";
+import LegoTechnicBeam from "@shared/components/LegoTechnicBeam.vue";
+import LegoTechnicBeamSvg from "@shared/components/LegoTechnicBeamSvg.vue";
+import LegoTile from "@shared/components/LegoTile.vue";
+import LegoTileSvg from "@shared/components/LegoTileSvg.vue";
+import LegoWedge from "@shared/components/LegoWedge.vue";
+import LegoWedgeSvg from "@shared/components/LegoWedgeSvg.vue";
 
-const addExperiment = () => {
-    experimentCount.value++;
-};
+interface BrickEntry {
+    label: string;
+    dimensions: string;
+    partNumber: string;
+    bricklinkId: string;
+    html: Component;
+    svg: Component;
+    color: string;
+    htmlProps?: Record<string, unknown>;
+    svgProps?: Record<string, unknown>;
+}
+
+const bricks: BrickEntry[] = [
+    {
+        label: "Brick",
+        dimensions: "2x4",
+        partNumber: "3001",
+        bricklinkId: "3001",
+        html: LegoBrick,
+        svg: LegoBrickSvg,
+        color: "#C41A16",
+        htmlProps: {columns: 4, rows: 2},
+        svgProps: {columns: 4, rows: 2},
+    },
+    {
+        label: "Brick",
+        dimensions: "2x2",
+        partNumber: "3003",
+        bricklinkId: "3003",
+        html: LegoBrick,
+        svg: LegoBrickSvg,
+        color: "#0055BF",
+        htmlProps: {columns: 2, rows: 2},
+        svgProps: {columns: 2, rows: 2},
+    },
+    {
+        label: "Brick",
+        dimensions: "1x1",
+        partNumber: "3005",
+        bricklinkId: "3005",
+        html: LegoBrick,
+        svg: LegoBrickSvg,
+        color: "#237841",
+        htmlProps: {columns: 1, rows: 1},
+        svgProps: {columns: 1, rows: 1},
+    },
+    {
+        label: "Plate",
+        dimensions: "2x4",
+        partNumber: "3020",
+        bricklinkId: "3020",
+        html: LegoPlate,
+        svg: LegoPlateSvg,
+        color: "#C41A16",
+    },
+    {
+        label: "Tile",
+        dimensions: "1x2",
+        partNumber: "3069",
+        bricklinkId: "3069b",
+        html: LegoTile,
+        svg: LegoTileSvg,
+        color: "#0055BF",
+    },
+    {
+        label: "Slope 45\u00B0",
+        dimensions: "2x2",
+        partNumber: "3039",
+        bricklinkId: "3039",
+        html: LegoSlope,
+        svg: LegoSlopeSvg,
+        color: "#F5C518",
+    },
+    {
+        label: "Arch",
+        dimensions: "1x4",
+        partNumber: "3659",
+        bricklinkId: "3659",
+        html: LegoArch,
+        svg: LegoArchSvg,
+        color: "#0055BF",
+    },
+    {
+        label: "Wedge Plate",
+        dimensions: "2x4",
+        partNumber: "51739",
+        bricklinkId: "51739",
+        html: LegoWedge,
+        svg: LegoWedgeSvg,
+        color: "#F5C518",
+    },
+    {
+        label: "Round Brick",
+        dimensions: "1x1",
+        partNumber: "3062",
+        bricklinkId: "3062b",
+        html: LegoRound,
+        svg: LegoRoundSvg,
+        color: "#237841",
+    },
+    {
+        label: "Technic Beam",
+        dimensions: "1x4",
+        partNumber: "3701",
+        bricklinkId: "3701",
+        html: LegoTechnicBeam,
+        svg: LegoTechnicBeamSvg,
+        color: "#C41A16",
+    },
+];
+
+const bricklinkUrl = (id: string) => `https://www.bricklink.com/v2/catalog/catalogitem.page?P=${id}`;
+const bricklinkImageUrl = (id: string) => `https://img.bricklink.com/ItemImage/PT/5/${id}.png`;
 </script>
 
 <template>
     <section p="y-16 x-4 md:x-8" border="b-3 black" bg="brick-yellow">
         <div max-w="6xl" m="x-auto">
             <p font="heading bold" text="sm" uppercase tracking="widest" m="b-4" opacity="60">Component Playground</p>
-            <h1 font="heading bold" text="5xl md:7xl" uppercase tracking="wide" leading="none" m="b-4">Experiment</h1>
-            <p text="lg" max-w="xl" leading="relaxed" m="b-8">
-                Drop components in the slots below. Try different animations, layouts, and styles side by side.
+            <h1 font="heading bold" text="5xl md:7xl" uppercase tracking="wide" leading="none" m="b-4">
+                Brick Dimensions
+            </h1>
+            <p text="lg" max-w="xl" leading="relaxed">
+                Every brick component next to its real-world reference. Compare HTML/CSS, SVG, and the actual LEGO part.
             </p>
-            <button
-                @click="addExperiment"
-                p="x-5 y-2"
-                bg="black"
-                text="white"
-                font="bold"
-                uppercase
-                tracking="wide"
-                cursor="pointer"
-                class="brick-border brick-shadow brick-transition hover:brick-shadow-hover active:brick-shadow-active active:translate-x-[2px] active:translate-y-[2px]"
-            >
-                + Add Slot
-            </button>
         </div>
     </section>
 
     <div max-w="6xl" m="x-auto" p="x-4 md:x-8 y-12">
-        <div grid="~ cols-1 md:cols-2" gap="8">
+        <div flex="~ col" gap="8">
             <div
-                v-for="n in experimentCount"
-                :key="n"
-                min-h="64"
+                v-for="brick in bricks"
+                :key="`${brick.label}-${brick.dimensions}`"
                 p="6"
                 bg="white"
                 class="brick-border brick-shadow"
-                flex="~ col"
             >
-                <div flex="~" items="center" justify="between" m="b-4" border="b-2 black" p="b-3">
-                    <span font="heading bold" text="xs" uppercase tracking="widest" opacity="40">
-                        Experiment {{ String(n).padStart(2, "0") }}
-                    </span>
+                <!-- Header row: name + part info -->
+                <div flex="~" items="center" justify="between" m="b-6" border="b-2 black" p="b-4">
+                    <div>
+                        <h2 font="heading bold" text="xl" uppercase tracking="wide">
+                            {{ brick.label }} ({{ brick.dimensions }})
+                        </h2>
+                        <p text="sm gray-500" m="t-1" font="mono">Part #{{ brick.partNumber }}</p>
+                    </div>
+                    <a
+                        :href="bricklinkUrl(brick.bricklinkId)"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        p="x-4 y-2"
+                        bg="gray-100 hover:gray-200"
+                        text="sm black"
+                        font="bold"
+                        uppercase
+                        tracking="wide"
+                        class="brick-border brick-transition"
+                    >
+                        BrickLink
+                    </a>
                 </div>
 
-                <!-- Drop your experiment component here -->
-                <div flex="~ 1 col" items="center" justify="center" border="2 dashed gray-300" rounded="sm" p="8">
-                    <p text="sm gray-400" font="bold" uppercase tracking="wide">Empty Slot</p>
+                <!-- Three-column comparison: Reference | HTML/CSS | SVG -->
+                <div grid="~ cols-3" gap="6">
+                    <!-- Reference image -->
+                    <div flex="~ col" items="center" gap="3">
+                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">Reference</p>
+                        <div
+                            flex
+                            items="center"
+                            justify="center"
+                            min-h="32"
+                            w="full"
+                            bg="gray-50"
+                            border="2 dashed gray-200"
+                            rounded="sm"
+                            p="2"
+                        >
+                            <img
+                                :src="bricklinkImageUrl(brick.bricklinkId)"
+                                :alt="`Real LEGO ${brick.label} ${brick.dimensions}`"
+                                max-h="28"
+                                max-w="full"
+                                object="contain"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- HTML/CSS -->
+                    <div flex="~ col" items="center" gap="3">
+                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">HTML / CSS</p>
+                        <div flex items="center" justify="center" min-h="32" w="full" bg="gray-50" rounded="sm" p="4">
+                            <component :is="brick.html" :color="brick.color" v-bind="brick.htmlProps" />
+                        </div>
+                    </div>
+
+                    <!-- SVG -->
+                    <div flex="~ col" items="center" gap="3">
+                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">SVG</p>
+                        <div flex items="center" justify="center" min-h="32" w="full" bg="gray-50" rounded="sm" p="4">
+                            <div w="40">
+                                <component :is="brick.svg" :color="brick.color" v-bind="brick.svgProps" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
