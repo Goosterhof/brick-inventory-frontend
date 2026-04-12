@@ -53,6 +53,7 @@ export default mergeConfig(
                     "src/**/*.d.ts",
                     "src/apps/**/router/**",
                     "src/apps/**/domains/**",
+                    "src/apps/**/pages/**",
                     "src/apps/**/services/**",
                     "src/apps/**/stores/**",
                     "src/apps/**/types/**",
