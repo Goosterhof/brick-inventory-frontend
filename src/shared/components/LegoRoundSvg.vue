@@ -6,7 +6,7 @@ const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?:
 const STROKE = 3;
 const SHADOW_OFFSET = 4;
 const BODY_R = 28;
-const STUD_R = 10;
+const STUD_R = 12;
 const CX = BODY_R + STROKE / 2;
 const CY = BODY_R + STROKE / 2;
 

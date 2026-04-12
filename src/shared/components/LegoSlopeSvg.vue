@@ -8,7 +8,7 @@ const SHADOW_OFFSET = 4;
 const BODY_W = 80;
 const BODY_H = 48;
 const SLOPE_H = 40;
-const STUD_R = 10;
+const STUD_R = 12;
 
 const gradientId = useId();
 const totalW = BODY_W + STROKE + SHADOW_OFFSET;

@@ -5,10 +5,10 @@ const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?:
 
 const STROKE = 3;
 const SHADOW_OFFSET = 4;
-const W = 120;
+const W = 160;
 const H = 40;
-const TAPER = 36;
-const STUD_R = 8;
+const TAPER = 48;
+const STUD_R = 12;
 
 const gradientId = useId();
 const halfStroke = STROKE / 2;
@@ -55,7 +55,7 @@ const totalH = H + STROKE + SHADOW_OFFSET;
         <!-- Studs -->
         <g v-for="i in 4" :key="i">
             <circle
-                :cx="halfStroke + 12 + (i - 1) * 24"
+                :cx="halfStroke + 20 + (i - 1) * 34"
                 :cy="halfStroke + H / 2"
                 :r="STUD_R"
                 :fill="color"
@@ -63,7 +63,7 @@ const totalH = H + STROKE + SHADOW_OFFSET;
                 :stroke-width="STROKE"
             />
             <circle
-                :cx="halfStroke + 12 + (i - 1) * 24"
+                :cx="halfStroke + 20 + (i - 1) * 34"
                 :cy="halfStroke + H / 2"
                 :r="STUD_R"
                 :fill="`url(#${gradientId})`"

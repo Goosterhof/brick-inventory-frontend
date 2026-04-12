@@ -16,7 +16,7 @@ describe("LegoTechnicBeam", () => {
         const holes = wrapper.findAll("[data-pin-hole]");
         const hole = holes.find((h) => h.attributes("bg") === "white");
         expect(hole?.exists()).toBe(true);
-        expect(hole?.attributes("border")).toBe("2 black");
+        expect(hole?.attributes("border")).toBe("3 black");
         expect(hole?.attributes("rounded")).toBe("full");
     });
 
