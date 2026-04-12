@@ -18,25 +18,31 @@ import LegoWedgeSvg from "@shared/components/LegoWedgeSvg.vue";
 import {shallowMount} from "@vue/test-utils";
 import {describe, expect, it, vi} from "vitest";
 
-// Mock diorama-only components to keep the import chain light — shallowMount stubs them anyway
-vi.mock("@shared/components/LegoArch.vue", () => ({default: {name: "LegoArch", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoArchSvg.vue", () => ({default: {name: "LegoArchSvg", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoPlate.vue", () => ({default: {name: "LegoPlate", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoPlateSvg.vue", () => ({default: {name: "LegoPlateSvg", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoRound.vue", () => ({default: {name: "LegoRound", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoRoundSvg.vue", () => ({default: {name: "LegoRoundSvg", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoSlope.vue", () => ({default: {name: "LegoSlope", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoSlopeSvg.vue", () => ({default: {name: "LegoSlopeSvg", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoTechnicBeam.vue", () => ({
-    default: {name: "LegoTechnicBeam", props: ["color", "shadow"]},
+// Mock all shape components to eliminate the 16-module import resolution chain at collect time.
+// vi.mock hoists above imports, so the imports above resolve to these lightweight stubs.
+// shallowMount stubs them anyway — the mocks only prevent heavy transitive module resolution.
+const {brickProps, shapeProps} = vi.hoisted(() => ({
+    brickProps: ["color", "shadow", "columns", "rows"],
+    shapeProps: ["color", "shadow"],
 }));
+vi.mock("@shared/components/LegoBrick.vue", () => ({default: {name: "LegoBrick", props: brickProps}}));
+vi.mock("@shared/components/LegoBrickSvg.vue", () => ({default: {name: "LegoBrickSvg", props: brickProps}}));
+vi.mock("@shared/components/LegoArch.vue", () => ({default: {name: "LegoArch", props: shapeProps}}));
+vi.mock("@shared/components/LegoArchSvg.vue", () => ({default: {name: "LegoArchSvg", props: shapeProps}}));
+vi.mock("@shared/components/LegoPlate.vue", () => ({default: {name: "LegoPlate", props: shapeProps}}));
+vi.mock("@shared/components/LegoPlateSvg.vue", () => ({default: {name: "LegoPlateSvg", props: shapeProps}}));
+vi.mock("@shared/components/LegoRound.vue", () => ({default: {name: "LegoRound", props: shapeProps}}));
+vi.mock("@shared/components/LegoRoundSvg.vue", () => ({default: {name: "LegoRoundSvg", props: shapeProps}}));
+vi.mock("@shared/components/LegoSlope.vue", () => ({default: {name: "LegoSlope", props: shapeProps}}));
+vi.mock("@shared/components/LegoSlopeSvg.vue", () => ({default: {name: "LegoSlopeSvg", props: shapeProps}}));
+vi.mock("@shared/components/LegoTechnicBeam.vue", () => ({default: {name: "LegoTechnicBeam", props: shapeProps}}));
 vi.mock("@shared/components/LegoTechnicBeamSvg.vue", () => ({
-    default: {name: "LegoTechnicBeamSvg", props: ["color", "shadow"]},
+    default: {name: "LegoTechnicBeamSvg", props: shapeProps},
 }));
-vi.mock("@shared/components/LegoTile.vue", () => ({default: {name: "LegoTile", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoTileSvg.vue", () => ({default: {name: "LegoTileSvg", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoWedge.vue", () => ({default: {name: "LegoWedge", props: ["color", "shadow"]}}));
-vi.mock("@shared/components/LegoWedgeSvg.vue", () => ({default: {name: "LegoWedgeSvg", props: ["color", "shadow"]}}));
+vi.mock("@shared/components/LegoTile.vue", () => ({default: {name: "LegoTile", props: shapeProps}}));
+vi.mock("@shared/components/LegoTileSvg.vue", () => ({default: {name: "LegoTileSvg", props: shapeProps}}));
+vi.mock("@shared/components/LegoWedge.vue", () => ({default: {name: "LegoWedge", props: shapeProps}}));
+vi.mock("@shared/components/LegoWedgeSvg.vue", () => ({default: {name: "LegoWedgeSvg", props: shapeProps}}));
 
 vi.mock("@app/services", () => ({
     familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},

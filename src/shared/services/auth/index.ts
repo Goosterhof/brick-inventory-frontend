@@ -1,11 +1,10 @@
 import type {HttpService} from "@script-development/fs-http";
-import type {DeepSnakeKeys} from "string-ts";
+import type {DeepSnakeKeys} from "@shared/helpers/string";
 import type {ComputedRef, ShallowRef} from "vue";
 
 import {NotLoggedInError} from "@shared/errors/not-logged-in";
-import {toCamelCaseTyped} from "@shared/helpers/string";
+import {deepSnakeKeys, toCamelCaseTyped} from "@shared/helpers/string";
 import {isAxiosError} from "axios";
-import {deepSnakeKeys} from "string-ts";
 import {computed, shallowRef} from "vue";
 
 import type {AuthService, Credentials, RegistrationData} from "./types";

@@ -15,20 +15,20 @@ A consolidated, current-state assessment of the frontend codebase. Updated by th
 ## Overall Health
 
 **Rating:** 9/10
-**Assessed:** 2026-03-29
+**Assessed:** 2026-04-11
 
-Strong architectural foundation with full accountability pipeline operational. 100% test coverage enforced. Multi-app structure with strict isolation. Showcase app fully tested with dedicated demo components for form validation, resource adapters, and middleware pipelines. Adapter-store and resource-adapter patterns battle-tested — sets domain consumes all CRUD operations. Page integration test layer established (ADR-013) with coverage across all domain pages. Mutation testing infrastructure configured (Stryker). Form submit loading guard prevents double-submission. No critical gaps remaining. Documentation drift is the primary recurring concern — addressed by architecture test enforcement in this session.
+Strong architectural foundation with full accountability pipeline operational. 100% test coverage enforced. Multi-app structure with strict isolation. Showcase app fully tested with dedicated demo components for form validation, resource adapters, middleware pipelines, and page transitions. Adapter-store and resource-adapter patterns battle-tested — sets domain consumes all CRUD operations. Page integration test layer established (ADR-013) with coverage across all domain pages. Creative Engine agent (ADR-015) operational — three deliveries completed (page transitions, refactor, defineExpose cleanup). Router migration to `@script-development/fs-router` complete — BioRouterService wrapper deleted, thin app-level wrappers remain. LEGO shape component library added (7 HTML + 7 SVG). Gauntlet fully green. Documentation drift remains the primary recurring concern.
 
 ## Active Concerns
 
-**Assessed:** 2026-03-29
+**Assessed:** 2026-04-11
 
-| Concern                                         | Severity | Status     | Notes                                                                                                                            |
-| ----------------------------------------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `SettingsPage.spec.ts` collect guard breach     | Medium   | Active     | 1060ms delta (threshold: 1000ms) — caused by member removal delivery adding 10 tests. Split recommended per Theme Atlas pattern. |
-| `ComponentGallery.spec.ts` collect guard breach | Medium   | Monitoring | 1298ms delta — persists across 4 inspections. Pre-existing.                                                                      |
-| `Item` type constraint mismatch                 | Low      | Aware      | `FamilySet` has `id` but no `createdAt`/`updatedAt` — may surface in future domains                                              |
-| `format:check` failures on `.claude/` md        | Low      | Known      | oxfmt reformats markdown — agent docs and journal files drift; not a code defect                                                 |
+| Concern                                         | Severity | Status     | Notes                                                                                                                                                            |
+| ----------------------------------------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AboutPage.spec.ts` collect guard breach        | Medium   | Active     | 618ms delta in coverage mode (threshold 400ms). Root cause: AboutPage imports 16 shape components; test mocks all 16 but coverage instrumentation adds overhead. |
+| `ComponentGallery.spec.ts` collect guard breach | Medium   | Monitoring | 808ms execution time — persists across 5 inspections. Root cause: `mount` (not `shallowMount`) importing all shared components.                                  |
+| `Item` type constraint mismatch                 | Low      | Aware      | `FamilySet` has `id` but no `createdAt`/`updatedAt` — may surface in future domains                                                                              |
+| `format:check` failures on `.claude/` md        | Low      | Known      | oxfmt reformats markdown — agent docs and journal files drift; not a code defect                                                                                 |
 
 ## In-Progress Work
 

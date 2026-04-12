@@ -1,4 +1,5 @@
 export {deepCamelKeys, deepSnakeKeys, toCamelCaseTyped} from "@script-development/fs-helpers";
+export type {DeepSnakeKeys} from "string-ts";
 
 /**
  * Normalizes a string for use in URL paths by removing diacritics (accents, umlauts, etc.)
