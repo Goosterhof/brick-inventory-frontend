@@ -1,43 +1,38 @@
 <script setup lang="ts">
-import AntiPatterns from "./components/AntiPatterns.vue";
-import BrandVoice from "./components/BrandVoice.vue";
-import BrickDimensions from "./components/BrickDimensions.vue";
-import BrickShapes from "./components/BrickShapes.vue";
-import ColorPalette from "./components/ColorPalette.vue";
-import ComponentGallery from "./components/ComponentGallery.vue";
-import ComponentHealth from "./components/ComponentHealth.vue";
-import DialogServiceDemo from "./components/DialogServiceDemo.vue";
-import FormValidationWorkbench from "./components/FormValidationWorkbench.vue";
-import MiddlewarePipelineVisualizer from "./components/MiddlewarePipelineVisualizer.vue";
-import PageTransitionDemo from "./components/PageTransitionDemo.vue";
-import ResourceAdapterPlayground from "./components/ResourceAdapterPlayground.vue";
-import ShowcaseHero from "./components/ShowcaseHero.vue";
-import SnapDemo from "./components/SnapDemo.vue";
-import ToastServiceDemo from "./components/ToastServiceDemo.vue";
-import TypographySpecimen from "./components/TypographySpecimen.vue";
+import {RouterLink, RouterView} from "vue-router";
 </script>
 
 <template>
     <div min-h="screen" bg="white" text="black">
-        <ShowcaseHero />
+        <nav p="x-4 md:x-8 y-3" border="b-3 black" bg="white" flex="~" items="center" gap="4" sticky top="0" z="50">
+            <span font="heading bold" text="sm" uppercase tracking="widest" m="r-4">Brick & Mortar</span>
+            <RouterLink
+                :to="{name: 'showcase'}"
+                p="x-4 y-2"
+                font="bold"
+                text="sm"
+                uppercase
+                tracking="wide"
+                class="brick-transition"
+                :class="$route.name === 'showcase' ? 'bg-black text-white' : 'hover:bg-gray-100'"
+            >
+                Showcase
+            </RouterLink>
+            <RouterLink
+                :to="{name: 'playground'}"
+                p="x-4 y-2"
+                font="bold"
+                text="sm"
+                uppercase
+                tracking="wide"
+                class="brick-transition"
+                :class="$route.name === 'playground' ? 'bg-black text-white' : 'hover:bg-gray-100'"
+            >
+                Playground
+            </RouterLink>
+        </nav>
 
-        <div max-w="6xl" m="x-auto" p="x-4 md:x-8">
-            <ColorPalette />
-            <TypographySpecimen />
-            <SnapDemo />
-            <ComponentGallery />
-            <AntiPatterns />
-            <BrandVoice />
-            <BrickDimensions />
-            <ComponentHealth />
-            <DialogServiceDemo />
-            <ToastServiceDemo />
-            <FormValidationWorkbench />
-            <ResourceAdapterPlayground />
-            <MiddlewarePipelineVisualizer />
-            <BrickShapes />
-            <PageTransitionDemo />
-        </div>
+        <RouterView />
 
         <footer p="y-16 x-4" border="t-3 black" m="t-24">
             <div max-w="6xl" m="x-auto" flex="~ col" items="center" gap="4">

@@ -344,7 +344,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -356,7 +361,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 47},
+            "churn": {"commits": 2, "linesChanged": 55},
             "dependencyDepth": 0
         },
         "LegoArchSvg": {
@@ -364,7 +369,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -376,7 +386,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 88},
+            "churn": {"commits": 2, "linesChanged": 90},
             "dependencyDepth": 0
         },
         "LegoBrick": {
@@ -390,7 +400,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/BrickDimensions.vue",
-                        "src/apps/showcase/components/ComponentGallery.vue"
+                        "src/apps/showcase/components/ComponentGallery.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
                     ]
                 },
                 "shared": {"_root": ["src/shared/components/EmptyState.vue"]}
@@ -415,7 +426,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/ComponentGallery.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -440,7 +456,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/BrickDimensions.vue",
-                        "src/apps/showcase/components/BrickShapes.vue"
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
                     ]
                 }
             },
@@ -454,7 +471,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 28},
+            "churn": {"commits": 2, "linesChanged": 36},
             "dependencyDepth": 0
         },
         "LegoPlateSvg": {
@@ -462,7 +479,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -474,7 +496,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 76},
+            "churn": {"commits": 2, "linesChanged": 78},
             "dependencyDepth": 0
         },
         "LegoRound": {
@@ -485,7 +507,8 @@
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/BrickDimensions.vue",
-                        "src/apps/showcase/components/BrickShapes.vue"
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
                     ]
                 }
             },
@@ -507,7 +530,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -519,7 +547,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 36},
+            "churn": {"commits": 2, "linesChanged": 38},
             "dependencyDepth": 0
         },
         "LegoSlope": {
@@ -527,7 +555,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -539,7 +572,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 39},
+            "churn": {"commits": 2, "linesChanged": 47},
             "dependencyDepth": 0
         },
         "LegoSlopeSvg": {
@@ -547,7 +580,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -559,7 +597,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 84},
+            "churn": {"commits": 2, "linesChanged": 86},
             "dependencyDepth": 0
         },
         "LegoTechnicBeam": {
@@ -567,7 +605,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -579,7 +622,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 19},
+            "churn": {"commits": 2, "linesChanged": 23},
             "dependencyDepth": 0
         },
         "LegoTechnicBeamSvg": {
@@ -587,7 +630,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -599,7 +647,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 54},
+            "churn": {"commits": 2, "linesChanged": 58},
             "dependencyDepth": 0
         },
         "LegoTile": {
@@ -607,7 +655,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -627,7 +680,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -647,7 +705,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -659,7 +722,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 29},
+            "churn": {"commits": 2, "linesChanged": 41},
             "dependencyDepth": 0
         },
         "LegoWedgeSvg": {
@@ -667,7 +730,12 @@
             "category": null,
             "consumers": {
                 "families": {"about": ["src/apps/families/domains/about/pages/AboutPage.vue"]},
-                "showcase": {"_root": ["src/apps/showcase/components/BrickShapes.vue"]}
+                "showcase": {
+                    "_root": [
+                        "src/apps/showcase/components/BrickShapes.vue",
+                        "src/apps/showcase/pages/PlaygroundPage.vue"
+                    ]
+                }
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
@@ -679,7 +747,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 73},
+            "churn": {"commits": 2, "linesChanged": 83},
             "dependencyDepth": 0
         },
         "ListItemButton": {
