@@ -68,8 +68,8 @@ describe("LegoTechnicBeamSvg", () => {
     it("should compute correct viewBox", () => {
         const wrapper = shallowMount(LegoTechnicBeamSvg);
 
-        // W=160, H=32, STROKE=3, SHADOW_OFFSET=4 -> "0 0 167 39"
+        // W=160, H=40, STROKE=3, SHADOW_OFFSET=4 -> "0 0 167 47"
         const svg = wrapper.find("svg");
-        expect(svg.attributes("viewBox")).toBe("0 0 167 39");
+        expect(svg.attributes("viewBox")).toBe("0 0 167 47");
     });
 });

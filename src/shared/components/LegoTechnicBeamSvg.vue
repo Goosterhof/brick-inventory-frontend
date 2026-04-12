@@ -4,8 +4,8 @@ const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?:
 const STROKE = 3;
 const SHADOW_OFFSET = 4;
 const W = 160;
-const H = 32;
-const HOLE_R = 10;
+const H = 40;
+const HOLE_R = 12;
 const HOLE_COUNT = 4;
 
 const halfStroke = STROKE / 2;

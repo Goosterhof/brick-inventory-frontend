@@ -9,7 +9,7 @@ const BODY_W = 160;
 const TOP_H = 30;
 const BOT_H = 40;
 const ARCH_R = 30;
-const STUD_R = 10;
+const STUD_R = 12;
 
 const gradientId = useId();
 const halfStroke = STROKE / 2;

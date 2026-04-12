@@ -5,7 +5,7 @@ const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?:
 
 const CELL = 40;
 const PAD = 10;
-const STUD_R = 13;
+const STUD_R = 12;
 const STROKE = 3;
 const SHADOW_OFFSET = 4;
 const COLUMNS = 4;
