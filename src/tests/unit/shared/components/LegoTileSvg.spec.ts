@@ -23,6 +23,15 @@ describe("LegoTileSvg", () => {
         expect(circles).toHaveLength(0);
     });
 
+    it("should render a tile hint inner rectangle", () => {
+        const wrapper = shallowMount(LegoTileSvg);
+
+        const hint = wrapper.find("[data-tile-hint]");
+        expect(hint.exists()).toBe(true);
+        expect(hint.attributes("fill")).toBe("none");
+        expect(hint.attributes("stroke-opacity")).toBe("0.2");
+    });
+
     it("should render shadow by default", () => {
         const wrapper = shallowMount(LegoTileSvg);
 

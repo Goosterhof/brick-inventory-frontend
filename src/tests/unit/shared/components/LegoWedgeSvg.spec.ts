@@ -11,22 +11,32 @@ describe("LegoWedgeSvg", () => {
         expect(svg.attributes("aria-label")).toBe("2 by 4 LEGO wedge plate");
     });
 
-    it("should render the body polygon", () => {
+    it("should render the body rect", () => {
         const wrapper = shallowMount(LegoWedgeSvg);
 
         const body = wrapper.find("[data-body]");
         expect(body.exists()).toBe(true);
+        expect(body.element.tagName.toLowerCase()).toBe("rect");
         expect(body.attributes("stroke")).toBe("black");
         expect(body.attributes("stroke-width")).toBe("3");
     });
 
-    it("should render 4 studs", () => {
+    it("should render a wedge hint taper line", () => {
+        const wrapper = shallowMount(LegoWedgeSvg);
+
+        const hint = wrapper.find("[data-wedge-hint]");
+        expect(hint.exists()).toBe(true);
+        expect(hint.attributes("stroke")).toBe("black");
+        expect(hint.attributes("stroke-opacity")).toBe("0.4");
+    });
+
+    it("should render 7 studs (4 top row + 3 bottom row)", () => {
         const wrapper = shallowMount(LegoWedgeSvg);
 
         const studGroups = wrapper.findAll("g");
-        expect(studGroups).toHaveLength(4);
+        expect(studGroups).toHaveLength(7);
         const circles = wrapper.findAll("circle");
-        expect(circles).toHaveLength(8);
+        expect(circles).toHaveLength(14);
     });
 
     it("should render shadow by default", () => {

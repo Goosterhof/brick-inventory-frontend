@@ -13,6 +13,14 @@ describe("LegoTile", () => {
         expect(studs).toHaveLength(0);
     });
 
+    it("should render a tile hint inner rectangle", () => {
+        const wrapper = shallowMount(LegoTile);
+
+        const hint = wrapper.find("[data-tile-hint]");
+        expect(hint.exists()).toBe(true);
+        expect(hint.attributes("style")).toContain("border: 1px solid rgba(0, 0, 0, 0.2)");
+    });
+
     it("should show shadow by default", () => {
         const wrapper = shallowMount(LegoTile);
 

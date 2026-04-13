@@ -53,6 +53,6 @@ describe("BrickShapes", () => {
     it("should render descriptive intro paragraph", () => {
         const wrapper = shallowMount(BrickShapes, {global: {stubs}});
 
-        expect(wrapper.text()).toContain("Each LEGO shape rendered in both HTML/CSS and SVG");
+        expect(wrapper.text()).toContain("Each LEGO shape rendered top-down in both HTML/CSS and SVG");
     });
 });
