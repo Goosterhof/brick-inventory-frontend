@@ -20,6 +20,15 @@ describe("LegoPlateSvg", () => {
         expect(body.attributes("stroke-width")).toBe("3");
     });
 
+    it("should render a plate hint inner outline", () => {
+        const wrapper = shallowMount(LegoPlateSvg);
+
+        const hint = wrapper.find("[data-plate-hint]");
+        expect(hint.exists()).toBe(true);
+        expect(hint.attributes("fill")).toBe("none");
+        expect(hint.attributes("stroke-opacity")).toBe("0.15");
+    });
+
     it("should render 8 studs (2x4)", () => {
         const wrapper = shallowMount(LegoPlateSvg);
 

@@ -3,21 +3,47 @@ import {useId} from "vue";
 
 const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
 
+const CELL = 40;
+const PAD = 10;
+const STUD_RADIUS = 12;
 const STROKE = 3;
 const SHADOW_OFFSET = 4;
-const W = 160;
-const H = 40;
-const TAPER = 48;
-const STUD_R = 12;
+const COLUMNS = 4;
+const ROWS = 2;
 
 const gradientId = useId();
+
+const bodyWidth = 2 * PAD + COLUMNS * CELL;
+const bodyHeight = 2 * PAD + ROWS * CELL;
 const halfStroke = STROKE / 2;
-const totalW = W + STROKE + SHADOW_OFFSET;
-const totalH = H + STROKE + SHADOW_OFFSET;
+
+const viewBox = `0 0 ${bodyWidth + STROKE + SHADOW_OFFSET} ${bodyHeight + STROKE + SHADOW_OFFSET}`;
+
+const studs = (() => {
+    const result: Array<{cx: number; cy: number}> = [];
+    for (let col = 0; col < COLUMNS; col++) {
+        result.push({
+            cx: halfStroke + PAD + CELL / 2 + col * CELL,
+            cy: halfStroke + PAD + CELL / 2,
+        });
+    }
+    for (let col = 0; col < COLUMNS - 1; col++) {
+        result.push({
+            cx: halfStroke + PAD + CELL / 2 + col * CELL,
+            cy: halfStroke + PAD + CELL + CELL / 2,
+        });
+    }
+    return result;
+})();
+
+const taperX1 = halfStroke + bodyWidth;
+const taperY1 = halfStroke;
+const taperX2 = halfStroke + bodyWidth - PAD - CELL;
+const taperY2 = halfStroke + bodyHeight;
 </script>
 
 <template>
-    <svg :viewBox="`0 0 ${totalW} ${totalH}`" role="img" aria-label="2 by 4 LEGO wedge plate">
+    <svg :viewBox="viewBox" role="img" aria-label="2 by 4 LEGO wedge plate">
         <defs>
             <radialGradient :id="gradientId" cx="35%" cy="35%" r="50%">
                 <stop offset="0%" stop-color="white" stop-opacity="0.6" />
@@ -26,48 +52,44 @@ const totalH = H + STROKE + SHADOW_OFFSET;
         </defs>
 
         <!-- Shadow -->
-        <polygon
+        <rect
             v-if="shadow"
-            :points="`
-                ${halfStroke + SHADOW_OFFSET},${halfStroke + SHADOW_OFFSET}
-                ${halfStroke + W + SHADOW_OFFSET},${halfStroke + SHADOW_OFFSET}
-                ${halfStroke + W - TAPER + SHADOW_OFFSET},${halfStroke + H + SHADOW_OFFSET}
-                ${halfStroke + SHADOW_OFFSET},${halfStroke + H + SHADOW_OFFSET}
-            `"
+            :x="halfStroke + SHADOW_OFFSET"
+            :y="halfStroke + SHADOW_OFFSET"
+            :width="bodyWidth"
+            :height="bodyHeight"
             fill="black"
             data-shadow
         />
 
         <!-- Body -->
-        <polygon
-            :points="`
-                ${halfStroke},${halfStroke}
-                ${halfStroke + W},${halfStroke}
-                ${halfStroke + W - TAPER},${halfStroke + H}
-                ${halfStroke},${halfStroke + H}
-            `"
+        <rect
+            :x="halfStroke"
+            :y="halfStroke"
+            :width="bodyWidth"
+            :height="bodyHeight"
             :fill="color"
             stroke="black"
             :stroke-width="STROKE"
             data-body
         />
 
-        <!-- Studs -->
-        <g v-for="i in 4" :key="i">
-            <circle
-                :cx="halfStroke + 20 + (i - 1) * 34"
-                :cy="halfStroke + H / 2"
-                :r="STUD_R"
-                :fill="color"
-                stroke="black"
-                :stroke-width="STROKE"
-            />
-            <circle
-                :cx="halfStroke + 20 + (i - 1) * 34"
-                :cy="halfStroke + H / 2"
-                :r="STUD_R"
-                :fill="`url(#${gradientId})`"
-            />
+        <!-- Wedge hint: diagonal taper line from top-right to bottom -->
+        <line
+            :x1="taperX1"
+            :y1="taperY1"
+            :x2="taperX2"
+            :y2="taperY2"
+            stroke="black"
+            stroke-width="2"
+            stroke-opacity="0.4"
+            data-wedge-hint
+        />
+
+        <!-- Studs: 4 on row 1, 3 on row 2 (4th cut off by taper) -->
+        <g v-for="(stud, index) in studs" :key="index">
+            <circle :cx="stud.cx" :cy="stud.cy" :r="STUD_RADIUS" :fill="color" stroke="black" :stroke-width="STROKE" />
+            <circle :cx="stud.cx" :cy="stud.cy" :r="STUD_RADIUS" :fill="`url(#${gradientId})`" />
         </g>
     </svg>
 </template>

@@ -32,8 +32,8 @@ const shapes = [
         <SectionHeading number="14" title="Brick Shapes" />
 
         <p text="lg" leading="relaxed" max-w="prose" m="b-10">
-            Each LEGO shape rendered in both HTML/CSS and SVG. Side-by-side comparison reveals the strengths and limits
-            of each approach — from trivial tiles to complex arches.
+            Each LEGO shape rendered top-down in both HTML/CSS and SVG, with subtle hints at the defining feature.
+            Side-by-side comparison reveals the strengths and limits of each approach.
         </p>
 
         <div flex="~ col" gap="6">

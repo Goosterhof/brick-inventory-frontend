@@ -3,22 +3,33 @@ import {useId} from "vue";
 
 const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
 
+const CELL = 40;
+const PAD = 10;
+const STUD_RADIUS = 12;
 const STROKE = 3;
 const SHADOW_OFFSET = 4;
-const BODY_W = 160;
-const TOP_H = 30;
-const BOT_H = 40;
-const ARCH_R = 30;
-const STUD_R = 12;
+const COLUMNS = 4;
 
 const gradientId = useId();
+
+const bodyWidth = 2 * PAD + COLUMNS * CELL;
+const bodyHeight = 2 * PAD + CELL;
 const halfStroke = STROKE / 2;
-const totalW = BODY_W + STROKE + SHADOW_OFFSET;
-const totalH = TOP_H + BOT_H + STROKE + SHADOW_OFFSET;
+
+const viewBox = `0 0 ${bodyWidth + STROKE + SHADOW_OFFSET} ${bodyHeight + STROKE + SHADOW_OFFSET}`;
+
+const studs = Array.from({length: COLUMNS}, (_, col) => ({
+    cx: halfStroke + PAD + CELL / 2 + col * CELL,
+    cy: halfStroke + PAD + CELL / 2,
+}));
+
+const archCx = halfStroke + bodyWidth / 2;
+const archCy = halfStroke + bodyHeight;
+const archR = 20;
 </script>
 
 <template>
-    <svg :viewBox="`0 0 ${totalW} ${totalH}`" role="img" aria-label="1 by 4 LEGO arch brick">
+    <svg :viewBox="viewBox" role="img" aria-label="1 by 4 LEGO arch brick">
         <defs>
             <radialGradient :id="gradientId" cx="35%" cy="35%" r="50%">
                 <stop offset="0%" stop-color="white" stop-opacity="0.6" />
@@ -31,58 +42,38 @@ const totalH = TOP_H + BOT_H + STROKE + SHADOW_OFFSET;
             v-if="shadow"
             :x="halfStroke + SHADOW_OFFSET"
             :y="halfStroke + SHADOW_OFFSET"
-            :width="BODY_W"
-            :height="TOP_H + BOT_H"
+            :width="bodyWidth"
+            :height="bodyHeight"
             fill="black"
             data-shadow
         />
 
-        <!-- Top section -->
+        <!-- Body -->
         <rect
             :x="halfStroke"
             :y="halfStroke"
-            :width="BODY_W"
-            :height="TOP_H"
+            :width="bodyWidth"
+            :height="bodyHeight"
             :fill="color"
             stroke="black"
             :stroke-width="STROKE"
             data-body
         />
 
-        <!-- Bottom section with arch cutout -->
+        <!-- Arch hint: subtle semicircle at bottom center -->
         <path
-            :d="`
-                M ${halfStroke} ${halfStroke + TOP_H}
-                L ${halfStroke + BODY_W} ${halfStroke + TOP_H}
-                L ${halfStroke + BODY_W} ${halfStroke + TOP_H + BOT_H}
-                L ${halfStroke} ${halfStroke + TOP_H + BOT_H}
-                Z
-                M ${halfStroke + BODY_W / 2 - ARCH_R} ${halfStroke + TOP_H + BOT_H}
-                A ${ARCH_R} ${ARCH_R} 0 0 1 ${halfStroke + BODY_W / 2 + ARCH_R} ${halfStroke + TOP_H + BOT_H}
-            `"
-            :fill="color"
+            :d="`M ${archCx - archR} ${archCy} A ${archR} ${archR} 0 0 1 ${archCx + archR} ${archCy}`"
+            fill="none"
             stroke="black"
-            :stroke-width="STROKE"
-            fill-rule="evenodd"
-            data-arch
+            stroke-width="1.5"
+            stroke-opacity="0.35"
+            data-arch-hint
         />
 
         <!-- Studs -->
-        <g v-for="i in 4" :key="i">
-            <circle
-                :cx="halfStroke + (i * BODY_W) / 5"
-                :cy="halfStroke + TOP_H / 2"
-                :r="STUD_R"
-                :fill="color"
-                stroke="black"
-                :stroke-width="STROKE"
-            />
-            <circle
-                :cx="halfStroke + (i * BODY_W) / 5"
-                :cy="halfStroke + TOP_H / 2"
-                :r="STUD_R"
-                :fill="`url(#${gradientId})`"
-            />
+        <g v-for="(stud, index) in studs" :key="index">
+            <circle :cx="stud.cx" :cy="stud.cy" :r="STUD_RADIUS" :fill="color" stroke="black" :stroke-width="STROKE" />
+            <circle :cx="stud.cx" :cy="stud.cy" :r="STUD_RADIUS" :fill="`url(#${gradientId})`" />
         </g>
     </svg>
 </template>

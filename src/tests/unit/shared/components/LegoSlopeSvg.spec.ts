@@ -11,14 +11,6 @@ describe("LegoSlopeSvg", () => {
         expect(svg.attributes("aria-label")).toBe("2 by 2 LEGO slope brick");
     });
 
-    it("should render the slope polygon", () => {
-        const wrapper = shallowMount(LegoSlopeSvg);
-
-        const slope = wrapper.find("[data-slope]");
-        expect(slope.exists()).toBe(true);
-        expect(slope.attributes("stroke")).toBe("black");
-    });
-
     it("should render the body rect", () => {
         const wrapper = shallowMount(LegoSlopeSvg);
 
@@ -28,7 +20,16 @@ describe("LegoSlopeSvg", () => {
         expect(body.attributes("stroke-width")).toBe("3");
     });
 
-    it("should render 2 studs with gradient", () => {
+    it("should render a diagonal slope hint line", () => {
+        const wrapper = shallowMount(LegoSlopeSvg);
+
+        const hint = wrapper.find("[data-slope-hint]");
+        expect(hint.exists()).toBe(true);
+        expect(hint.attributes("stroke")).toBe("black");
+        expect(hint.attributes("stroke-opacity")).toBe("0.4");
+    });
+
+    it("should render 2 studs with gradient on the bottom row", () => {
         const wrapper = shallowMount(LegoSlopeSvg);
 
         const studGroups = wrapper.findAll("g");
@@ -51,14 +52,11 @@ describe("LegoSlopeSvg", () => {
         expect(shadow.exists()).toBe(false);
     });
 
-    it("should apply custom color to body and slope", () => {
+    it("should apply custom color to body", () => {
         const wrapper = shallowMount(LegoSlopeSvg, {props: {color: "#0055BF"}});
 
         const body = wrapper.find("[data-body]");
         expect(body.attributes("fill")).toBe("#0055BF");
-
-        const slope = wrapper.find("[data-slope]");
-        expect(slope.attributes("fill")).toBe("#0055BF");
     });
 
     it("should apply default red color", () => {

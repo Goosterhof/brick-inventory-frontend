@@ -20,15 +20,16 @@ describe("LegoArchSvg", () => {
         expect(body.attributes("stroke-width")).toBe("3");
     });
 
-    it("should render the arch path with fill-rule evenodd", () => {
+    it("should render a subtle arch hint path", () => {
         const wrapper = shallowMount(LegoArchSvg);
 
-        const arch = wrapper.find("[data-arch]");
-        expect(arch.exists()).toBe(true);
-        expect(arch.attributes("fill-rule")).toBe("evenodd");
+        const hint = wrapper.find("[data-arch-hint]");
+        expect(hint.exists()).toBe(true);
+        expect(hint.attributes("fill")).toBe("none");
+        expect(hint.attributes("stroke-opacity")).toBe("0.35");
     });
 
-    it("should render 4 studs", () => {
+    it("should render 4 studs with gradient", () => {
         const wrapper = shallowMount(LegoArchSvg);
 
         const studGroups = wrapper.findAll("g");
@@ -51,14 +52,11 @@ describe("LegoArchSvg", () => {
         expect(shadow.exists()).toBe(false);
     });
 
-    it("should apply custom color to body and arch", () => {
+    it("should apply custom color to body", () => {
         const wrapper = shallowMount(LegoArchSvg, {props: {color: "#F5C518"}});
 
         const body = wrapper.find("[data-body]");
         expect(body.attributes("fill")).toBe("#F5C518");
-
-        const arch = wrapper.find("[data-arch]");
-        expect(arch.attributes("fill")).toBe("#F5C518");
     });
 
     it("should apply default red color", () => {
