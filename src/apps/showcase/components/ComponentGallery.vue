@@ -16,6 +16,7 @@ import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoBrickSideSvg from "@shared/components/LegoBrickSideSvg.vue";
 import LegoBrickSvg from "@shared/components/LegoBrickSvg.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
 import LoadingState from "@shared/components/LoadingState.vue";
@@ -521,6 +522,33 @@ const noop = () => {};
                     </div>
                     <div flex="~ col" items="center" gap="2">
                         <LegoBrickSvg :columns="1" :rows="1" color="#F5C518" :shadow="false" />
+                        <p text="xs" font="mono" text-color="gray-500">1x1 Yellow (no shadow)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LegoBrickSideSvg -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">LegoBrickSideSvg</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <div flex="~ wrap" gap="6" items="end">
+                    <div flex="~ col" items="center" gap="2">
+                        <div w="40">
+                            <LegoBrickSideSvg :columns="4" :rows="2" color="#DC2626" />
+                        </div>
+                        <p text="xs" font="mono" text-color="gray-500">4x2 Red</p>
+                    </div>
+                    <div flex="~ col" items="center" gap="2">
+                        <div w="24">
+                            <LegoBrickSideSvg :columns="2" :rows="2" color="#0055BF" />
+                        </div>
+                        <p text="xs" font="mono" text-color="gray-500">2x2 Blue</p>
+                    </div>
+                    <div flex="~ col" items="center" gap="2">
+                        <div w="16">
+                            <LegoBrickSideSvg :columns="1" :rows="1" color="#F5C518" :shadow="false" />
+                        </div>
                         <p text="xs" font="mono" text-color="gray-500">1x1 Yellow (no shadow)</p>
                     </div>
                 </div>
