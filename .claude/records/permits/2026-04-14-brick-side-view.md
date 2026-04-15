@@ -52,5 +52,5 @@ SVG-only is the right call. Side views have varying body heights and stud protru
 
 ---
 
-**Status:** In Progress
-**Journal:** _pending_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-04-14-brick-side-view.md`
