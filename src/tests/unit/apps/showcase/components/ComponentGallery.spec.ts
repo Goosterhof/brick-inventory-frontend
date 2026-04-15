@@ -49,6 +49,7 @@ vi.mock("@shared/components/NavHeader.vue", () => ({default: mkStub("NavHeader",
 vi.mock("@shared/components/NavLink.vue", () => ({default: mkStub("NavLink", false)}));
 vi.mock("@shared/components/NavMobileLink.vue", () => ({default: mkStub("NavMobileLink", false)}));
 vi.mock("@shared/components/LegoBrick.vue", () => ({default: mkStub("LegoBrick", false)}));
+vi.mock("@shared/components/LegoBrickSideSvg.vue", () => ({default: mkStub("LegoBrickSideSvg", false)}));
 vi.mock("@shared/components/LegoBrickSvg.vue", () => ({default: mkStub("LegoBrickSvg", false)}));
 vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({default: mkModelStub("TextInput")}));
 vi.mock("@shared/components/forms/inputs/NumberInput.vue", () => ({default: mkModelStub("NumberInput")}));
@@ -93,6 +94,7 @@ describe("ComponentGallery", () => {
         "NavLink",
         "NavMobileLink",
         "LegoBrick",
+        "LegoBrickSideSvg",
         "LegoBrickSvg",
         "TextInput",
         "NumberInput",
@@ -165,6 +167,7 @@ describe("ComponentGallery", () => {
         expect(labelTexts).toContain("Scanner Components");
         expect(labelTexts).toContain("LegoBrick");
         expect(labelTexts).toContain("LegoBrickSvg");
+        expect(labelTexts).toContain("LegoBrickSideSvg");
     });
 
     it("should toggle modalOpen state when Open Modal is clicked", async () => {

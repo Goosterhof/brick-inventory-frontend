@@ -4,6 +4,7 @@ import type {Component} from "vue";
 import LegoArch from "@shared/components/LegoArch.vue";
 import LegoArchSvg from "@shared/components/LegoArchSvg.vue";
 import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoBrickSideSvg from "@shared/components/LegoBrickSideSvg.vue";
 import LegoBrickSvg from "@shared/components/LegoBrickSvg.vue";
 import LegoPlate from "@shared/components/LegoPlate.vue";
 import LegoPlateSvg from "@shared/components/LegoPlateSvg.vue";
@@ -28,6 +29,8 @@ interface BrickEntry {
     color: string;
     htmlProps?: Record<string, unknown>;
     svgProps?: Record<string, unknown>;
+    sideSvg?: Component;
+    sideSvgProps?: Record<string, unknown>;
 }
 
 const bricks: BrickEntry[] = [
@@ -41,6 +44,8 @@ const bricks: BrickEntry[] = [
         color: "#C41A16",
         htmlProps: {columns: 4, rows: 2},
         svgProps: {columns: 4, rows: 2},
+        sideSvg: LegoBrickSideSvg,
+        sideSvgProps: {columns: 4, rows: 2},
     },
     {
         label: "Brick",
@@ -52,6 +57,8 @@ const bricks: BrickEntry[] = [
         color: "#0055BF",
         htmlProps: {columns: 2, rows: 2},
         svgProps: {columns: 2, rows: 2},
+        sideSvg: LegoBrickSideSvg,
+        sideSvgProps: {columns: 2, rows: 2},
     },
     {
         label: "Brick",
@@ -63,6 +70,8 @@ const bricks: BrickEntry[] = [
         color: "#237841",
         htmlProps: {columns: 1, rows: 1},
         svgProps: {columns: 1, rows: 1},
+        sideSvg: LegoBrickSideSvg,
+        sideSvgProps: {columns: 1, rows: 1},
     },
     {
         label: "Plate",
@@ -179,8 +188,8 @@ const bricklinkImageUrl = (id: string) => `https://img.bricklink.com/ItemImage/P
                     </a>
                 </div>
 
-                <!-- Three-column comparison: Reference | HTML/CSS | SVG -->
-                <div grid="~ cols-3" gap="6">
+                <!-- Comparison grid: Reference | HTML/CSS | SVG Top | SVG Side -->
+                <div :class="brick.sideSvg ? 'grid grid-cols-4 gap-6' : 'grid grid-cols-3 gap-6'">
                     <!-- Reference image -->
                     <div flex="~ col" items="center" gap="3">
                         <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">Reference</p>
@@ -213,12 +222,24 @@ const bricklinkImageUrl = (id: string) => `https://img.bricklink.com/ItemImage/P
                         </div>
                     </div>
 
-                    <!-- SVG -->
+                    <!-- SVG Top-Down -->
                     <div flex="~ col" items="center" gap="3">
-                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">SVG</p>
+                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">
+                            {{ brick.sideSvg ? "SVG Top" : "SVG" }}
+                        </p>
                         <div flex items="center" justify="center" min-h="32" w="full" bg="gray-50" rounded="sm" p="4">
                             <div w="40">
                                 <component :is="brick.svg" :color="brick.color" v-bind="brick.svgProps" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SVG Side View -->
+                    <div v-if="brick.sideSvg" flex="~ col" items="center" gap="3">
+                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">SVG Side</p>
+                        <div flex items="center" justify="center" min-h="32" w="full" bg="gray-50" rounded="sm" p="4">
+                            <div w="40">
+                                <component :is="brick.sideSvg" :color="brick.color" v-bind="brick.sideSvgProps" />
                             </div>
                         </div>
                     </div>
