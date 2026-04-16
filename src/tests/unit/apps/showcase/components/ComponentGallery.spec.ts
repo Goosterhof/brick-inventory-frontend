@@ -49,6 +49,8 @@ vi.mock("@shared/components/NavHeader.vue", () => ({default: mkStub("NavHeader",
 vi.mock("@shared/components/NavLink.vue", () => ({default: mkStub("NavLink", false)}));
 vi.mock("@shared/components/NavMobileLink.vue", () => ({default: mkStub("NavMobileLink", false)}));
 vi.mock("@shared/components/LegoBrick.vue", () => ({default: mkStub("LegoBrick", false)}));
+vi.mock("@shared/components/LegoBrickCuboidCss.vue", () => ({default: mkStub("LegoBrickCuboidCss", false)}));
+vi.mock("@shared/components/LegoBrickIsometricSvg.vue", () => ({default: mkStub("LegoBrickIsometricSvg", false)}));
 vi.mock("@shared/components/LegoBrickSideSvg.vue", () => ({default: mkStub("LegoBrickSideSvg", false)}));
 vi.mock("@shared/components/LegoBrickSvg.vue", () => ({default: mkStub("LegoBrickSvg", false)}));
 vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({default: mkModelStub("TextInput")}));
@@ -94,6 +96,8 @@ describe("ComponentGallery", () => {
         "NavLink",
         "NavMobileLink",
         "LegoBrick",
+        "LegoBrickCuboidCss",
+        "LegoBrickIsometricSvg",
         "LegoBrickSideSvg",
         "LegoBrickSvg",
         "TextInput",
@@ -168,6 +172,21 @@ describe("ComponentGallery", () => {
         expect(labelTexts).toContain("LegoBrick");
         expect(labelTexts).toContain("LegoBrickSvg");
         expect(labelTexts).toContain("LegoBrickSideSvg");
+        expect(labelTexts).toContain("3D Brick Techniques");
+    });
+
+    it("should render the 3D brick techniques section with both components and a caption", () => {
+        // Act
+        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
+
+        // Assert — both 3D brick variants present
+        expect(wrapper.findComponent({name: "LegoBrickCuboidCss"}).exists()).toBe(true);
+        expect(wrapper.findComponent({name: "LegoBrickIsometricSvg"}).exists()).toBe(true);
+
+        // Caption calls out the tradeoff explicitly
+        expect(wrapper.text()).toContain("CSS 3D Transforms");
+        expect(wrapper.text()).toContain("SVG Isometric Projection");
+        expect(wrapper.text()).toContain("real geometry");
     });
 
     it("should toggle modalOpen state when Open Modal is clicked", async () => {

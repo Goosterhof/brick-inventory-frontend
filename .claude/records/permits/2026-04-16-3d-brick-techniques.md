@@ -32,15 +32,15 @@ Produce two 3D renderings of a standard 6x2 LEGO brick as a side-by-side compari
 
 ## Acceptance Criteria
 
-- [ ] `LegoBrick3dCss.vue` renders a recognizable 6x2 brick in 3D via CSS transforms — top, front, back, left, right, bottom faces all present and positioned correctly
-- [ ] 12 studs are visible on the top face with believable cylindrical appearance
-- [ ] `LegoBrick3dIsometric.vue` renders the same brick in SVG isometric projection with the three visible faces (top, front, right) shaded distinctly
-- [ ] Both components accept a `color` prop and apply it consistently across faces (with appropriate shading per face)
-- [ ] Both components are accessible: `role="img"` + descriptive `aria-label`
-- [ ] Both components appear in a dedicated Showcase ComponentGallery section with a caption explaining the technique comparison
-- [ ] 100% test coverage on new components (lines, functions, branches, statements)
-- [ ] ComponentGallery test updated to cover the new section
-- [ ] Full quality gauntlet passes
+- [x] `LegoBrick3dCss.vue` renders a recognizable 6x2 brick in 3D via CSS transforms — top, front, back, left, right, bottom faces all present and positioned correctly (shipped as `LegoBrickCuboidCss.vue`)
+- [x] 12 studs are visible on the top face with believable cylindrical appearance
+- [x] `LegoBrick3dIsometric.vue` renders the same brick in SVG isometric projection with the three visible faces (top, front, right) shaded distinctly (shipped as `LegoBrickIsometricSvg.vue`)
+- [x] Both components accept a `color` prop and apply it consistently across faces (with appropriate shading per face)
+- [x] Both components are accessible: `role="img"` + descriptive `aria-label`
+- [x] Both components appear in a dedicated Showcase ComponentGallery section with a caption explaining the technique comparison
+- [x] 100% test coverage on new components (lines, functions, branches, statements)
+- [x] ComponentGallery test updated to cover the new section
+- [x] Full quality gauntlet passes
 
 ## References
 
@@ -64,5 +64,5 @@ Produce two 3D renderings of a standard 6x2 LEGO brick as a side-by-side compari
 
 ---
 
-**Status:** Open
-**Journal:** _to be filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-04-16-3d-brick-techniques.md`
