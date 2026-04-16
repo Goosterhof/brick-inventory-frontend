@@ -175,20 +175,6 @@ describe("ComponentGallery", () => {
         expect(labelTexts).toContain("3D Brick Techniques");
     });
 
-    it("should render the 3D brick techniques section with both components and a caption", () => {
-        // Act
-        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
-
-        // Assert — both 3D brick variants present
-        expect(wrapper.findComponent({name: "LegoBrickCuboidCss"}).exists()).toBe(true);
-        expect(wrapper.findComponent({name: "LegoBrickIsometricSvg"}).exists()).toBe(true);
-
-        // Caption calls out the tradeoff explicitly
-        expect(wrapper.text()).toContain("CSS 3D Transforms");
-        expect(wrapper.text()).toContain("SVG Isometric Projection");
-        expect(wrapper.text()).toContain("real geometry");
-    });
-
     it("should toggle modalOpen state when Open Modal is clicked", async () => {
         // Arrange
         const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
@@ -364,14 +350,21 @@ describe("ComponentGallery", () => {
         expect(wrapper.text()).toContain("NavMobileLink");
     });
 
-    it("should render the LegoBrick demo with multiple variants", () => {
+    it("should render brick demos including the 3D techniques section", () => {
         // Act
         const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
-        // Assert
+        // Assert — LegoBrick variants
         expect(wrapper.text()).toContain("4x2 Red");
         expect(wrapper.text()).toContain("2x2 Blue");
         expect(wrapper.text()).toContain("1x1 Yellow (no shadow)");
+
+        // Assert — 3D techniques section renders both variants with the tradeoff caption
+        expect(wrapper.findComponent({name: "LegoBrickCuboidCss"}).exists()).toBe(true);
+        expect(wrapper.findComponent({name: "LegoBrickIsometricSvg"}).exists()).toBe(true);
+        expect(wrapper.text()).toContain("CSS 3D Transforms");
+        expect(wrapper.text()).toContain("SVG Isometric Projection");
+        expect(wrapper.text()).toContain("real geometry");
     });
 
     it("should update v-model values when form inputs change", async () => {
