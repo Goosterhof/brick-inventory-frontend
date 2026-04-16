@@ -51,5 +51,5 @@ Keep the same constants/grid system (CELL=40, PAD=10, etc.) so the shapes stay c
 
 ---
 
-**Status:** Open
-**Journal:** _pending_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-04-16-fix-svg-slope-arch.md`
