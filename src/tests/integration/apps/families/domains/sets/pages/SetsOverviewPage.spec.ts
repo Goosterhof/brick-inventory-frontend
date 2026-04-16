@@ -41,6 +41,7 @@ describe("SetsOverviewPage — integration", () => {
 
     const mountPage = async (sets: ReturnType<typeof makeSet>[] = []) => {
         mockServer.onGet("family-sets", sets);
+        mockServer.onGet("/family-sets/completion", []);
         const wrapper = mount(SetsOverviewPage);
         await flushPromises();
         return wrapper;
@@ -51,7 +52,7 @@ describe("SetsOverviewPage — integration", () => {
 
         const emptyState = wrapper.findComponent(EmptyState);
         expect(emptyState.exists()).toBe(true);
-        expect(emptyState.text()).toContain("No sets yet");
+        expect(emptyState.text()).toContain("The shelf is bare");
     });
 
     it("renders PageHeader with real PrimaryButton actions", async () => {

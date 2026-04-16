@@ -57,5 +57,5 @@ The visual treatment matters here — this is the most visible new element on th
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-03-26-set-completion-gauge.md`
