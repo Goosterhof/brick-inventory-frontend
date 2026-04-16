@@ -23,9 +23,14 @@ const studs = Array.from({length: COLUMNS}, (_, col) => ({
     cy: halfStroke + PAD + CELL / 2,
 }));
 
+/* Arch cutout: a semicircular opening spanning the middle two stud positions
+   (studs 2 and 3). The arch is drawn as a dark filled semicircle at the bottom
+   of the body to simulate looking through the arch opening from above. */
 const archCx = halfStroke + bodyWidth / 2;
 const archCy = halfStroke + bodyHeight;
-const archR = 20;
+const archR = CELL;
+const archLeft = archCx - archR;
+const archRight = archCx + archR;
 </script>
 
 <template>
@@ -60,13 +65,14 @@ const archR = 20;
             data-body
         />
 
-        <!-- Arch hint: subtle semicircle at bottom center -->
+        <!-- Arch hint: filled semicircular cutout spanning the middle two stud positions -->
         <path
-            :d="`M ${archCx - archR} ${archCy} A ${archR} ${archR} 0 0 1 ${archCx + archR} ${archCy}`"
-            fill="none"
+            :d="`M ${archLeft} ${archCy} A ${archR} ${archR} 0 0 1 ${archRight} ${archCy} Z`"
+            fill="black"
+            fill-opacity="0.2"
             stroke="black"
             stroke-width="1.5"
-            stroke-opacity="0.35"
+            stroke-opacity="0.4"
             data-arch-hint
         />
 

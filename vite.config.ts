@@ -20,5 +20,5 @@ export default defineConfig({
             "@app": fileURLToPath(new URL(`./src/apps/${appName}`, import.meta.url)),
         },
     },
-    build: {outDir: fileURLToPath(new URL(`./dist/${appName}`, import.meta.url))},
+    build: {outDir: fileURLToPath(new URL(`./dist/${appName}`, import.meta.url)), emptyOutDir: true},
 });

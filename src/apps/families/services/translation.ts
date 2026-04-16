@@ -158,6 +158,8 @@ const translations = {
             scanAddedToast: "Added {name} ({setNum}) to your collection!",
             setsAddedCount: "{count} sets added this session",
             scanDone: "Done scanning",
+            completionUnknown: "?",
+            completionLabel: "Build completion",
         },
         storage: {
             title: "Storage",
@@ -408,6 +410,8 @@ const translations = {
             scanAddedToast: "{name} ({setNum}) toegevoegd aan je collectie!",
             setsAddedCount: "{count} sets toegevoegd deze sessie",
             scanDone: "Klaar met scannen",
+            completionUnknown: "?",
+            completionLabel: "Bouwvoortgang",
         },
         storage: {
             title: "Opslag",

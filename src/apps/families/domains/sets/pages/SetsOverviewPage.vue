@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import type {FamilySetStatus} from "@app/types/familySet";
+import type {FamilySetCompletion, FamilySetStatus} from "@app/types/familySet";
 
-import {familyLoadingService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
+import {
+    familyHttpService,
+    familyLoadingService,
+    familyRouterService,
+    familySoundService,
+    familyTranslationService,
+} from "@app/services";
 import {familySetStoreModule} from "@app/stores";
 import BadgeLabel from "@shared/components/BadgeLabel.vue";
 import CollapsibleSection from "@shared/components/CollapsibleSection.vue";
@@ -12,7 +18,10 @@ import ListItemButton from "@shared/components/ListItemButton.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
 import {downloadCsv, toCsv} from "@shared/helpers/csv";
+import {toCamelCaseTyped} from "@shared/helpers/string";
 import {computed, onMounted, ref} from "vue";
+
+import CompletionGauge from "../components/CompletionGauge.vue";
 
 const {t} = familyTranslationService;
 const {isLoading} = familyLoadingService;
@@ -21,6 +30,8 @@ const searchQuery = ref("");
 const activeStatusFilter = ref<FamilySetStatus | null>(null);
 const activeThemeFilters = ref<Set<string>>(new Set());
 const expandedThemes = ref<Set<string>>(new Set());
+const completionByFamilySetId = ref<Map<number, FamilySetCompletion>>(new Map());
+const completionLoading = ref(true);
 
 const statusKey: Record<
     FamilySetStatus,
@@ -112,8 +123,25 @@ const toggleThemeExpanded = (theme: string) => {
     expandedThemes.value = next;
 };
 
+const fetchCompletion = async (): Promise<void> => {
+    completionLoading.value = true;
+    try {
+        const response = await familyHttpService.getRequest<FamilySetCompletion[]>("/family-sets/completion");
+        const camelized = response.data.map((item) => toCamelCaseTyped<FamilySetCompletion>(item));
+        const next = new Map<number, FamilySetCompletion>();
+        for (const entry of camelized) {
+            next.set(entry.familySetId, entry);
+        }
+        completionByFamilySetId.value = next;
+    } catch {
+        completionByFamilySetId.value = new Map();
+    } finally {
+        completionLoading.value = false;
+    }
+};
+
 onMounted(async () => {
-    await retrieveAll();
+    await Promise.all([retrieveAll(), fetchCompletion()]);
 });
 
 const goToAdd = async () => {
@@ -248,7 +276,7 @@ const exportCsv = () => {
                             >
                                 {{ t("common.noImage").value }}
                             </div>
-                            <div flex="1">
+                            <div flex="1" min-w="0">
                                 <p font="bold">{{ familySet.set?.name ?? familySet.setNum }}</p>
                                 <p text="sm [var(--brick-muted-text)]">
                                     {{ familySet.set?.setNum ?? familySet.setNum }}
@@ -258,6 +286,20 @@ const exportCsv = () => {
                                         t(statusKey[familySet.status]).value
                                     }}</BadgeLabel>
                                     <span text="xs [var(--brick-muted-text)]">{{ familySet.quantity }}x</span>
+                                </div>
+                                <div v-if="familySet.status !== 'wishlist'" m="t-2" max-w="48">
+                                    <p
+                                        v-if="completionLoading"
+                                        text="xs [var(--brick-muted-text)]"
+                                        aria-label="set-completion-loading"
+                                    >
+                                        {{ t("common.loading").value }}
+                                    </p>
+                                    <CompletionGauge
+                                        v-else
+                                        :percentage="completionByFamilySetId.get(familySet.id)?.percentage ?? null"
+                                        :unknown-label="t('sets.completionUnknown').value"
+                                    />
                                 </div>
                             </div>
                         </ListItemButton>
