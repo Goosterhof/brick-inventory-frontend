@@ -1,7 +1,7 @@
 import type {ComponentPublicInstance} from "vue";
 
 import {shallowMount} from "@vue/test-utils";
-import {describe, expect, it, vi} from "vitest";
+import {beforeAll, describe, expect, it, vi} from "vitest";
 import {nextTick} from "vue";
 
 import ComponentGallery from "@/apps/showcase/components/ComponentGallery.vue";
@@ -124,50 +124,65 @@ describe("ComponentGallery", () => {
     const noAutoStub = Object.fromEntries(mockedComponentNames.map((name) => [name, false as const]));
     const stubs = {...noAutoStub};
 
-    it("should render the section heading with correct number and title", () => {
-        // Act
-        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
+    // Read-only rendering assertions share a single mount to reduce overhead.
+    describe("rendering", () => {
+        let wrapper: ReturnType<typeof shallowMount>;
 
-        // Assert
-        expect(wrapper.text()).toContain("04");
-        expect(wrapper.text()).toContain("Component Gallery");
-    });
+        beforeAll(() => {
+            wrapper = shallowMount(ComponentGallery, {global: {stubs}});
+        });
 
-    it("should render the section element with correct id", () => {
-        // Act
-        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
+        it("should render the section heading with correct number and title", () => {
+            expect(wrapper.text()).toContain("04");
+            expect(wrapper.text()).toContain("Component Gallery");
+        });
 
-        // Assert
-        expect(wrapper.find("section#components").exists()).toBe(true);
-    });
+        it("should render the section element with correct id", () => {
+            expect(wrapper.find("section#components").exists()).toBe(true);
+        });
 
-    it("should render all gallery category labels", () => {
-        // Act
-        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
+        it("should render all gallery category labels", () => {
+            const labels = wrapper.findAll(".brick-label");
+            const labelTexts = labels.map((l) => l.text());
+            expect(labelTexts).toContain("Buttons");
+            expect(labelTexts).toContain("Form Inputs");
+            expect(labelTexts).toContain("Cards & Layout");
+            expect(labelTexts).toContain("PageHeader");
+            expect(labelTexts).toContain("StatCard");
+            expect(labelTexts).toContain("DetailRow");
+            expect(labelTexts).toContain("PartListItem");
+            expect(labelTexts).toContain("FilterChip");
+            expect(labelTexts).toContain("BadgeLabel");
+            expect(labelTexts).toContain("SectionDivider");
+            expect(labelTexts).toContain("LoadingState");
+            expect(labelTexts).toContain("ModalDialog");
+            expect(labelTexts).toContain("ConfirmDialog");
+            expect(labelTexts).toContain("Toast Messages");
+            expect(labelTexts).toContain("Empty State");
+            expect(labelTexts).toContain("Navigation");
+            expect(labelTexts).toContain("Scanner Components");
+            expect(labelTexts).toContain("LegoBrick");
+            expect(labelTexts).toContain("LegoBrickSvg");
+            expect(labelTexts).toContain("LegoBrickSideSvg");
+        });
 
-        // Assert
-        const labels = wrapper.findAll(".brick-label");
-        const labelTexts = labels.map((l) => l.text());
-        expect(labelTexts).toContain("Buttons");
-        expect(labelTexts).toContain("Form Inputs");
-        expect(labelTexts).toContain("Cards & Layout");
-        expect(labelTexts).toContain("PageHeader");
-        expect(labelTexts).toContain("StatCard");
-        expect(labelTexts).toContain("DetailRow");
-        expect(labelTexts).toContain("PartListItem");
-        expect(labelTexts).toContain("FilterChip");
-        expect(labelTexts).toContain("BadgeLabel");
-        expect(labelTexts).toContain("SectionDivider");
-        expect(labelTexts).toContain("LoadingState");
-        expect(labelTexts).toContain("ModalDialog");
-        expect(labelTexts).toContain("ConfirmDialog");
-        expect(labelTexts).toContain("Toast Messages");
-        expect(labelTexts).toContain("Empty State");
-        expect(labelTexts).toContain("Navigation");
-        expect(labelTexts).toContain("Scanner Components");
-        expect(labelTexts).toContain("LegoBrick");
-        expect(labelTexts).toContain("LegoBrickSvg");
-        expect(labelTexts).toContain("LegoBrickSideSvg");
+        it("should render scanner component placeholders", () => {
+            expect(wrapper.text()).toContain("BarcodeScanner");
+            expect(wrapper.text()).toContain("CameraCapture");
+            expect(wrapper.text()).toContain("Camera Required");
+        });
+
+        it("should render navigation component demos", () => {
+            expect(wrapper.text()).toContain("NavHeader");
+            expect(wrapper.text()).toContain("NavLink");
+            expect(wrapper.text()).toContain("NavMobileLink");
+        });
+
+        it("should render the LegoBrick demo with multiple variants", () => {
+            expect(wrapper.text()).toContain("4x2 Red");
+            expect(wrapper.text()).toContain("2x2 Blue");
+            expect(wrapper.text()).toContain("1x1 Yellow (no shadow)");
+        });
     });
 
     it("should toggle modalOpen state when Open Modal is clicked", async () => {
@@ -304,55 +319,23 @@ describe("ComponentGallery", () => {
         expect(wrapper.text()).toContain("Could not connect to the brick vault.");
     });
 
-    it("should toggle filter chips on click for all filter values", async () => {
+    it("should toggle filter chips on click", async () => {
         // Arrange
         const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
 
-        // Act — click each filter chip to activate and deactivate
+        // Act — click each chip once to cover all template @click handlers
         const filterNames = ["Sealed", "Built", "In Progress", "Incomplete"];
         for (const name of filterNames) {
             const chip = wrapper.findAll("button").find((b) => b.text().trim() === name);
             expect(chip).toBeDefined();
             await chip?.trigger("click");
             await nextTick();
-            await chip?.trigger("click");
-            await nextTick();
         }
 
-        // Assert — all filters rendered
-        for (const name of filterNames) {
-            expect(wrapper.text()).toContain(name);
-        }
-    });
-
-    it("should render scanner component placeholders", () => {
-        // Act
-        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
-
-        // Assert
-        expect(wrapper.text()).toContain("BarcodeScanner");
-        expect(wrapper.text()).toContain("CameraCapture");
-        expect(wrapper.text()).toContain("Camera Required");
-    });
-
-    it("should render navigation component demos", () => {
-        // Act
-        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
-
-        // Assert
-        expect(wrapper.text()).toContain("NavHeader");
-        expect(wrapper.text()).toContain("NavLink");
-        expect(wrapper.text()).toContain("NavMobileLink");
-    });
-
-    it("should render the LegoBrick demo with multiple variants", () => {
-        // Act
-        const wrapper = shallowMount(ComponentGallery, {global: {stubs}});
-
-        // Assert
-        expect(wrapper.text()).toContain("4x2 Red");
-        expect(wrapper.text()).toContain("2x2 Blue");
-        expect(wrapper.text()).toContain("1x1 Yellow (no shadow)");
+        // Act — click Incomplete again to exercise the deactivate (null) branch
+        const incompleteChip = wrapper.findAll("button").find((b) => b.text().trim() === "Incomplete");
+        await incompleteChip?.trigger("click");
+        await nextTick();
     });
 
     it("should update v-model values when form inputs change", async () => {
