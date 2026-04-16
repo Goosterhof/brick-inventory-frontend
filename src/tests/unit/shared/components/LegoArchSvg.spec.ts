@@ -20,13 +20,25 @@ describe("LegoArchSvg", () => {
         expect(body.attributes("stroke-width")).toBe("3");
     });
 
-    it("should render a subtle arch hint path", () => {
+    it("should render a filled arch cutout path", () => {
         const wrapper = shallowMount(LegoArchSvg);
 
         const hint = wrapper.find("[data-arch-hint]");
         expect(hint.exists()).toBe(true);
-        expect(hint.attributes("fill")).toBe("none");
-        expect(hint.attributes("stroke-opacity")).toBe("0.35");
+        expect(hint.attributes("fill")).toBe("black");
+        expect(hint.attributes("fill-opacity")).toBe("0.2");
+        expect(hint.attributes("stroke-opacity")).toBe("0.4");
+    });
+
+    it("should render the arch cutout spanning two cell widths", () => {
+        const wrapper = shallowMount(LegoArchSvg);
+
+        const hint = wrapper.find("[data-arch-hint]");
+        const d = hint.attributes("d") ?? "";
+        // archR = CELL = 40, archCx = halfStroke + bodyWidth/2 = 1.5 + 90 = 91.5
+        // archLeft = 91.5 - 40 = 51.5, archRight = 91.5 + 40 = 131.5
+        expect(d).toContain("M 51.5");
+        expect(d).toContain("131.5");
     });
 
     it("should render 4 studs with gradient", () => {

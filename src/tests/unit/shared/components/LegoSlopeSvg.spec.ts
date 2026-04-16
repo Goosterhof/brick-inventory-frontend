@@ -20,13 +20,30 @@ describe("LegoSlopeSvg", () => {
         expect(body.attributes("stroke-width")).toBe("3");
     });
 
-    it("should render a diagonal slope hint line", () => {
+    it("should render a filled slope hint polygon with gradient", () => {
         const wrapper = shallowMount(LegoSlopeSvg);
 
         const hint = wrapper.find("[data-slope-hint]");
         expect(hint.exists()).toBe(true);
-        expect(hint.attributes("stroke")).toBe("black");
-        expect(hint.attributes("stroke-opacity")).toBe("0.4");
+        expect(hint.element.tagName).toBe("polygon");
+        expect(hint.attributes("points")).toContain("1.5,1.5");
+    });
+
+    it("should render the slope edge divider line", () => {
+        const wrapper = shallowMount(LegoSlopeSvg);
+
+        const edge = wrapper.find("[data-slope-edge]");
+        expect(edge.exists()).toBe(true);
+        expect(edge.attributes("stroke")).toBe("black");
+        expect(edge.attributes("stroke-opacity")).toBe("0.4");
+    });
+
+    it("should include a linear gradient for the slope shading", () => {
+        const wrapper = shallowMount(LegoSlopeSvg);
+
+        const defs = wrapper.find("defs");
+        const linearGradient = defs.find("linearGradient");
+        expect(linearGradient.exists()).toBe(true);
     });
 
     it("should render 2 studs with gradient on the bottom row", () => {
