@@ -49,13 +49,13 @@ const ariaLabel = computed(() => `${columns} by ${rows} LEGO brick side view`);
             </linearGradient>
         </defs>
 
-        <!-- Shadow -->
+        <!-- Shadow — covers full silhouette (studs + body) so the shadow matches the brick outline -->
         <rect
             v-if="shadow"
             :x="STROKE / 2 + SHADOW_OFFSET"
-            :y="bodyY + SHADOW_OFFSET"
+            :y="studY + SHADOW_OFFSET"
             :width="bodyWidth"
-            :height="BODY_HEIGHT"
+            :height="STUD_HEIGHT + BODY_HEIGHT"
             fill="black"
             data-shadow
         />
@@ -74,6 +74,7 @@ const ariaLabel = computed(() => `${columns} by ${rows} LEGO brick side view`);
 
         <!-- Studs -->
         <g v-for="(stud, index) in studs" :key="index">
+            <!-- +STROKE in height overlaps the body's top edge by one stroke width, eliminating the visible seam -->
             <rect
                 :x="stud.x"
                 :y="studY"
