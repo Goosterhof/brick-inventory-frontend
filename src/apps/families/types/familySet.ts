@@ -20,3 +20,11 @@ export interface FamilySet {
     notes: string | null;
     set?: SetSummary;
 }
+
+export interface FamilySetCompletion {
+    familySetId: number;
+    setNum: string;
+    totalParts: number | null;
+    storedParts: number | null;
+    percentage: number | null;
+}

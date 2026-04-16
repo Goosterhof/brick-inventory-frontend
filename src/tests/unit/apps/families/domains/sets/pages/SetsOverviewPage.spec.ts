@@ -71,13 +71,22 @@ vi.mock("@shared/components/PrimaryButton.vue", () => ({
 
 vi.mock("@shared/helpers/csv", () => ({downloadCsv: vi.fn<() => void>(), toCsv: vi.fn<() => string>()}));
 
-const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
+vi.mock("@app/domains/sets/components/CompletionGauge.vue", () => ({
+    default: {
+        name: "CompletionGauge",
+        template: "<span data-test='completion-gauge'>{{ percentage }}</span>",
+        props: ["percentage", "unknownLabel"],
+    },
+}));
+
+const {mockRetrieveAll, mockGoToRoute, mockAllItems, mockIsLoading, mockGetRequest} = await vi.hoisted(async () => {
     const {ref} = await import("vue");
     return {
         mockRetrieveAll: vi.fn<() => Promise<void>>(),
         mockGoToRoute: vi.fn<() => Promise<void>>(),
         mockAllItems: ref<unknown[]>([]),
         mockIsLoading: ref(false),
+        mockGetRequest: vi.fn<() => Promise<unknown>>(),
     };
 });
 
@@ -86,6 +95,7 @@ vi.mock("@app/services", async () => {
 
     return createMockFamilyServices({
         familyAuthService: {isLoggedIn: {value: true}},
+        familyHttpService: {getRequest: mockGetRequest},
         familyRouterService: {goToRoute: mockGoToRoute},
         familyLoadingService: {isLoading: computed(() => mockIsLoading.value)},
     });
@@ -130,6 +140,7 @@ describe("SetsOverviewPage", () => {
         mockAllItems.value = [];
         mockIsLoading.value = false;
         mockRetrieveAll.mockResolvedValue(undefined);
+        mockGetRequest.mockResolvedValue({data: []});
     });
 
     it("should render page title", async () => {
@@ -416,5 +427,110 @@ describe("SetsOverviewPage", () => {
 
         // Assert
         expect(wrapper.text()).toContain("99999-1");
+    });
+
+    describe("completion gauge", () => {
+        const mockWishlistSet = {
+            id: 5,
+            setId: 50,
+            setNum: "11111-1",
+            quantity: 1,
+            status: "wishlist" as const,
+            purchaseDate: null,
+            notes: null,
+            set: {
+                id: 50,
+                setNum: "11111-1",
+                name: "Wishlist Dreams",
+                year: 2023,
+                theme: "Star Wars",
+                numParts: 1000,
+                imageUrl: null,
+            },
+        };
+
+        it("should fetch completion data on mount", async () => {
+            // Arrange & Act
+            shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Assert
+            expect(mockGetRequest).toHaveBeenCalledWith("/family-sets/completion");
+        });
+
+        it("should show loading placeholder for non-wishlist sets while completion is loading", () => {
+            // Arrange — getRequest never resolves, completion stays loading
+            mockGetRequest.mockReturnValue(new Promise(() => {}));
+            mockAllItems.value = [mockAdaptedSet];
+
+            // Act
+            const wrapper = shallowMount(SetsOverviewPage);
+
+            // Assert
+            expect(wrapper.find("[aria-label='set-completion-loading']").exists()).toBe(true);
+            expect(wrapper.findComponent({name: "CompletionGauge"}).exists()).toBe(false);
+        });
+
+        it("should render a completion gauge with the matching percentage once data loads", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({
+                data: [{familySetId: 1, setNum: "75192-1", totalParts: 100, storedParts: 78, percentage: 78}],
+            });
+            mockAllItems.value = [mockAdaptedSet];
+
+            // Act
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Assert
+            const gauge = wrapper.findComponent({name: "CompletionGauge"});
+            expect(gauge.exists()).toBe(true);
+            expect(gauge.props("percentage")).toBe(78);
+            expect(gauge.props("unknownLabel")).toBe("sets.completionUnknown");
+        });
+
+        it("should pass null percentage to the gauge when a set has no completion entry", async () => {
+            // Arrange — backend returns nothing for this set (parts never fetched)
+            mockGetRequest.mockResolvedValue({data: []});
+            mockAllItems.value = [mockAdaptedSet];
+
+            // Act
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Assert
+            const gauge = wrapper.findComponent({name: "CompletionGauge"});
+            expect(gauge.props("percentage")).toBeNull();
+        });
+
+        it("should not render a completion gauge for wishlist sets", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: []});
+            mockAllItems.value = [mockWishlistSet];
+
+            // Act
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.findComponent({name: "CompletionGauge"}).exists()).toBe(false);
+            expect(wrapper.find("[aria-label='set-completion-loading']").exists()).toBe(false);
+        });
+
+        it("should stop showing the loading placeholder even when completion fetch fails", async () => {
+            // Arrange — completion request rejects; page must still render gauges with null data
+            mockGetRequest.mockRejectedValue(new Error("network down"));
+            mockAllItems.value = [mockAdaptedSet];
+
+            // Act
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Assert — the page swallows the error; loading flips off and a null-percentage gauge renders
+            expect(wrapper.find("[aria-label='set-completion-loading']").exists()).toBe(false);
+            const gauge = wrapper.findComponent({name: "CompletionGauge"});
+            expect(gauge.exists()).toBe(true);
+            expect(gauge.props("percentage")).toBeNull();
+        });
     });
 });
