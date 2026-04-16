@@ -62,6 +62,19 @@ describe("LegoBrickSideSvg", () => {
         expect(shadowRect.exists()).toBe(true);
     });
 
+    it("should render shadow covering the full silhouette (studs + body)", () => {
+        // Arrange — 2-column brick: bodyWidth = 2*10 + 2*40 = 100
+        // studY = STROKE/2 = 1.5, shadow y = studY + SHADOW_OFFSET = 5.5
+        // shadow height = STUD_HEIGHT + BODY_HEIGHT = 9 + 48 = 57
+        const wrapper = shallowMount(LegoBrickSideSvg, {props: {columns: 2, rows: 1}});
+
+        // Assert
+        const shadowRect = wrapper.find("[data-shadow]");
+        expect(shadowRect.attributes("y")).toBe("5.5");
+        expect(shadowRect.attributes("height")).toBe("57");
+        expect(shadowRect.attributes("width")).toBe("100");
+    });
+
     it("should not render shadow rect when shadow is false", () => {
         // Arrange
         const wrapper = shallowMount(LegoBrickSideSvg, {props: {shadow: false}});
