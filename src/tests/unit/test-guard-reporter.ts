@@ -11,18 +11,19 @@ import type {Reporter, TestRunEndReason} from "vitest/reporters";
  * - File too large (too many tests in one file)
  * - Expensive test setup/teardown
  *
- * Unlike collect duration, execution time is deterministic — it does not vary
- * with worker pool size, thread contention, or module transform caching.
+ * Execution time varies under full-suite load due to thread contention and
+ * worker pool pressure — tests routinely measure 1.5–2x slower in the full
+ * suite vs isolated project runs.
  *
  * Two tiers:
- * - Warning (300–1000ms): printed but does not fail the suite
- * - Failure (1000ms+): fails the suite with exit code 1
+ * - Warning (300–2000ms): printed but does not fail the suite
+ * - Failure (2000ms+): fails the suite with exit code 1
  *
  * See ADR-010 for the full test isolation policy.
  */
 
 const WARN_THRESHOLD_MS = 300;
-const FAIL_THRESHOLD_MS = 1000;
+const FAIL_THRESHOLD_MS = 2000;
 
 interface FileEntry {
     project: string;
