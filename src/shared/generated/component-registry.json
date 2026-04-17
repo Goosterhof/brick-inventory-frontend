@@ -6,6 +6,7 @@
             "category": null,
             "consumers": {
                 "families": {
+                    "parts": ["src/apps/families/domains/parts/pages/PartsMissingPage.vue"],
                     "sets": [
                         "src/apps/families/domains/sets/pages/IdentifyBrickPage.vue",
                         "src/apps/families/domains/sets/pages/ScanSetPage.vue",
@@ -15,9 +16,9 @@
                 },
                 "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {"apps": 2, "domains": 2},
+            "adoption": {"apps": 2, "domains": 3},
             "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 2, "linesChanged": 5},
+            "churn": {"commits": 2, "linesChanged": 22},
             "dependencyDepth": 0
         },
         "BadgeLabel": {
@@ -37,7 +38,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 16},
             "dependencyDepth": 0
         },
         "BarcodeScanner": {
@@ -55,7 +56,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 6, "linesChanged": 41},
+            "churn": {"commits": 2, "linesChanged": 225},
             "dependencyDepth": 0
         },
         "CameraCapture": {
@@ -73,7 +74,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 5, "linesChanged": 64},
+            "churn": {"commits": 2, "linesChanged": 235},
             "dependencyDepth": 0
         },
         "CardContainer": {
@@ -88,7 +89,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [], "emits": [], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 1, "linesChanged": 2},
+            "churn": {"commits": 2, "linesChanged": 7},
             "dependencyDepth": 0
         },
         "CollapsibleSection": {
@@ -132,7 +133,7 @@
                 "slots": [{"name": "confirm"}, {"name": "cancel"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 24},
+            "churn": {"commits": 3, "linesChanged": 67},
             "dependencyDepth": 1
         },
         "DangerButton": {
@@ -162,7 +163,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 5},
+            "churn": {"commits": 2, "linesChanged": 27},
             "dependencyDepth": 0
         },
         "DateInput": {
@@ -194,7 +195,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 3, "linesChanged": 7},
+            "churn": {"commits": 2, "linesChanged": 55},
             "dependencyDepth": 1
         },
         "DetailRow": {
@@ -211,7 +212,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 10},
             "dependencyDepth": 0
         },
         "EmptyState": {
@@ -220,7 +221,10 @@
             "consumers": {
                 "families": {
                     "brick-dna": ["src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"],
                     "storage": [
                         "src/apps/families/domains/storage/pages/StorageDetailPage.vue",
@@ -240,7 +244,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 18},
+            "churn": {"commits": 3, "linesChanged": 23},
             "dependencyDepth": 1
         },
         "FilterChip": {
@@ -248,7 +252,10 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"]
                 },
                 "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
@@ -260,7 +267,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 3},
+            "churn": {"commits": 2, "linesChanged": 25},
             "dependencyDepth": 0
         },
         "FormError": {
@@ -288,7 +295,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 2},
+            "churn": {"commits": 1, "linesChanged": 9},
             "dependencyDepth": 0
         },
         "FormField": {
@@ -308,7 +315,7 @@
             },
             "adoption": {"apps": 1, "domains": 0},
             "apiSurface": {"props": [], "emits": [], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 5},
             "dependencyDepth": 0
         },
         "FormLabel": {
@@ -336,7 +343,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 2},
+            "churn": {"commits": 2, "linesChanged": 12},
             "dependencyDepth": 0
         },
         "LegoArch": {
@@ -418,7 +425,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 0, "linesChanged": 0},
+            "churn": {"commits": 1, "linesChanged": 34},
             "dependencyDepth": 0
         },
         "LegoBrickSideSvg": {
@@ -788,7 +795,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 2, "linesChanged": 3},
+            "churn": {"commits": 2, "linesChanged": 23},
             "dependencyDepth": 0
         },
         "LoadingState": {
@@ -809,7 +816,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [{"name": "message", "required": false}], "emits": [], "slots": [], "models": []},
-            "churn": {"commits": 1, "linesChanged": 2},
+            "churn": {"commits": 2, "linesChanged": 34},
             "dependencyDepth": 0
         },
         "ModalDialog": {
@@ -830,7 +837,7 @@
                 "slots": [{"name": "title"}, {"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 14},
+            "churn": {"commits": 3, "linesChanged": 77},
             "dependencyDepth": 0
         },
         "NavHeader": {
@@ -847,7 +854,7 @@
                 "slots": [{"name": "links"}, {"name": "actions"}, {"name": "mobile-links"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 7},
+            "churn": {"commits": 2, "linesChanged": 73},
             "dependencyDepth": 0
         },
         "NavLink": {
@@ -865,7 +872,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 3},
+            "churn": {"commits": 2, "linesChanged": 29},
             "dependencyDepth": 0
         },
         "NavMobileLink": {
@@ -885,7 +892,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 5},
+            "churn": {"commits": 2, "linesChanged": 33},
             "dependencyDepth": 0
         },
         "NumberInput": {
@@ -927,7 +934,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 2, "linesChanged": 5},
+            "churn": {"commits": 2, "linesChanged": 79},
             "dependencyDepth": 1
         },
         "PageHeader": {
@@ -937,7 +944,10 @@
                 "families": {
                     "brick-dna": ["src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"],
                     "home": ["src/apps/families/domains/home/pages/HomePage.vue"],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/pages/IdentifyBrickPage.vue",
                         "src/apps/families/domains/sets/pages/ScanSetPage.vue",
@@ -955,7 +965,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 2},
+            "churn": {"commits": 1, "linesChanged": 10},
             "dependencyDepth": 0
         },
         "PageTransition": {
@@ -984,7 +994,10 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": ["src/apps/families/domains/sets/pages/SetDetailPage.vue"],
                     "storage": ["src/apps/families/domains/storage/pages/StorageDetailPage.vue"]
                 },
@@ -1005,7 +1018,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 17},
+            "churn": {"commits": 2, "linesChanged": 40},
             "dependencyDepth": 0
         },
         "PrimaryButton": {
@@ -1017,7 +1030,10 @@
                         "src/apps/families/domains/auth/pages/LoginPage.vue",
                         "src/apps/families/domains/auth/pages/RegisterPage.vue"
                     ],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/modals/AssignPartModal.vue",
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
@@ -1058,7 +1074,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 26},
+            "churn": {"commits": 3, "linesChanged": 47},
             "dependencyDepth": 0
         },
         "SectionDivider": {
@@ -1070,7 +1086,7 @@
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {"props": [], "emits": [], "slots": [], "models": []},
-            "churn": {"commits": 1, "linesChanged": 2},
+            "churn": {"commits": 2, "linesChanged": 5},
             "dependencyDepth": 0
         },
         "SelectInput": {
@@ -1103,7 +1119,7 @@
                 "slots": [{"name": "default"}],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 2, "linesChanged": 5},
+            "churn": {"commits": 2, "linesChanged": 56},
             "dependencyDepth": 1
         },
         "StatCard": {
@@ -1126,7 +1142,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 2},
+            "churn": {"commits": 2, "linesChanged": 13},
             "dependencyDepth": 0
         },
         "TextareaInput": {
@@ -1163,7 +1179,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 3, "linesChanged": 7},
+            "churn": {"commits": 2, "linesChanged": 56},
             "dependencyDepth": 1
         },
         "TextInput": {
@@ -1175,7 +1191,10 @@
                         "src/apps/families/domains/auth/pages/LoginPage.vue",
                         "src/apps/families/domains/auth/pages/RegisterPage.vue"
                     ],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
                         "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"
@@ -1209,7 +1228,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 2, "linesChanged": 5},
+            "churn": {"commits": 2, "linesChanged": 65},
             "dependencyDepth": 1
         },
         "ToastMessage": {
@@ -1234,7 +1253,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 9},
+            "churn": {"commits": 2, "linesChanged": 41},
             "dependencyDepth": 0
         }
     }
