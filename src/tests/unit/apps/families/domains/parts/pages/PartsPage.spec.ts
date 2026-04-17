@@ -18,7 +18,10 @@ const {
     createMockFormError,
 } = await vi.hoisted(() => import("../../../../../../helpers"));
 
-const {mockGetRequest} = vi.hoisted(() => ({mockGetRequest: vi.fn<() => Promise<unknown>>()}));
+const {mockGetRequest, mockGoToRoute} = vi.hoisted(() => ({
+    mockGetRequest: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
+}));
 
 vi.mock("axios", () => createMockAxios());
 vi.mock("string-ts", () => createMockStringTs());
@@ -70,6 +73,7 @@ vi.mock("@app/services", () =>
     createMockFamilyServices({
         familyHttpService: {getRequest: mockGetRequest},
         familyAuthService: {isLoggedIn: {value: true}},
+        familyRouterService: {goToRoute: mockGoToRoute},
     }),
 );
 
@@ -690,6 +694,35 @@ describe("PartsPage", () => {
             // Assert
             const exportButton = wrapper.findAllComponents(PrimaryButton).find((btn) => btn.text() === "common.export");
             expect(exportButton).toBeUndefined();
+        });
+    });
+
+    describe("missing parts CTA", () => {
+        it("renders the CTA regardless of whether any parts are stored", async () => {
+            // Arrange — no parts should still offer the CTA so the user can discover the feature early
+            mockGetRequest.mockResolvedValue({data: makeEnvelope([])});
+
+            // Act
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Assert
+            const cta = wrapper.find("[data-testid='parts-missing-cta']");
+            expect(cta.exists()).toBe(true);
+            expect(cta.text()).toBe("parts.seeMissingCta");
+        });
+
+        it("navigates to the parts-missing route when the CTA is clicked", async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.find("[data-testid='parts-missing-cta']").trigger("click");
+
+            // Assert
+            expect(mockGoToRoute).toHaveBeenCalledWith("parts-missing");
         });
     });
 });

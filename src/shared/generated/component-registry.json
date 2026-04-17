@@ -6,6 +6,7 @@
             "category": null,
             "consumers": {
                 "families": {
+                    "parts": ["src/apps/families/domains/parts/pages/PartsMissingPage.vue"],
                     "sets": [
                         "src/apps/families/domains/sets/pages/IdentifyBrickPage.vue",
                         "src/apps/families/domains/sets/pages/ScanSetPage.vue",
@@ -15,7 +16,7 @@
                 },
                 "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
             },
-            "adoption": {"apps": 2, "domains": 2},
+            "adoption": {"apps": 2, "domains": 3},
             "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
             "churn": {"commits": 2, "linesChanged": 22},
             "dependencyDepth": 0
@@ -220,7 +221,10 @@
             "consumers": {
                 "families": {
                     "brick-dna": ["src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"],
                     "storage": [
                         "src/apps/families/domains/storage/pages/StorageDetailPage.vue",
@@ -248,7 +252,10 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"]
                 },
                 "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
@@ -386,7 +393,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 165},
+            "churn": {"commits": 4, "linesChanged": 181},
             "dependencyDepth": 0
         },
         "LegoBrick": {
@@ -435,7 +442,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 236},
+            "churn": {"commits": 0, "linesChanged": 0},
             "dependencyDepth": 0
         },
         "LegoBrickIsometricSvg": {
@@ -452,7 +459,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 1, "linesChanged": 254},
+            "churn": {"commits": 0, "linesChanged": 0},
             "dependencyDepth": 0
         },
         "LegoBrickSideSvg": {
@@ -657,7 +664,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 172},
+            "churn": {"commits": 4, "linesChanged": 199},
             "dependencyDepth": 0
         },
         "LegoTechnicBeam": {
@@ -971,7 +978,10 @@
                 "families": {
                     "brick-dna": ["src/apps/families/domains/brick-dna/pages/BrickDnaPage.vue"],
                     "home": ["src/apps/families/domains/home/pages/HomePage.vue"],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/pages/IdentifyBrickPage.vue",
                         "src/apps/families/domains/sets/pages/ScanSetPage.vue",
@@ -1018,7 +1028,10 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": ["src/apps/families/domains/sets/pages/SetDetailPage.vue"],
                     "storage": ["src/apps/families/domains/storage/pages/StorageDetailPage.vue"]
                 },
@@ -1051,7 +1064,10 @@
                         "src/apps/families/domains/auth/pages/LoginPage.vue",
                         "src/apps/families/domains/auth/pages/RegisterPage.vue"
                     ],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/modals/AssignPartModal.vue",
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
@@ -1209,7 +1225,10 @@
                         "src/apps/families/domains/auth/pages/LoginPage.vue",
                         "src/apps/families/domains/auth/pages/RegisterPage.vue"
                     ],
-                    "parts": ["src/apps/families/domains/parts/pages/PartsPage.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/pages/PartsMissingPage.vue",
+                        "src/apps/families/domains/parts/pages/PartsPage.vue"
+                    ],
                     "sets": [
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
                         "src/apps/families/domains/sets/pages/SetsOverviewPage.vue"

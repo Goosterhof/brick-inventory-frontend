@@ -83,3 +83,23 @@ export interface StorageOptionPart {
     part: Part;
     color: Color | null;
 }
+
+export interface MasterShoppingListEntry {
+    partId: number;
+    partNum: string;
+    partName: string;
+    partImageUrl: string | null;
+    colorId: number | null;
+    colorName: string | null;
+    colorRgb: string | null;
+    brickLinkColorId: number | null;
+    quantityNeeded: number;
+    quantityStored: number;
+    shortfall: number;
+    neededByFamilySetIds: number[];
+}
+
+export interface MasterShoppingListResponse {
+    entries: MasterShoppingListEntry[];
+    unknownFamilySetIds: number[];
+}

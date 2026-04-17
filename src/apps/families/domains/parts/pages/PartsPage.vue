@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {CursorPaginatedParts, FamilyPartEntry, GroupedFamilyPart} from "@app/types/part";
 
-import {familyHttpService, familySoundService, familyTranslationService} from "@app/services";
+import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
 import EmptyState from "@shared/components/EmptyState.vue";
 import FilterChip from "@shared/components/FilterChip.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
@@ -173,14 +173,26 @@ const sortLabelKey: Record<SortField, "parts.sortName" | "parts.sortQuantity" | 
     color: "parts.sortColor",
 };
 const allSortFields: SortField[] = ["name", "quantity", "color"];
+
+const goToMissing = async () => {
+    await familyRouterService.goToRoute("parts-missing");
+};
 </script>
 
 <template>
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('parts.title').value">
-            <PrimaryButton v-if="groupedParts.length > 0" :sound-service="familySoundService" @click="exportCsv">{{
-                t("common.export").value
-            }}</PrimaryButton>
+            <div flex gap="2" flex-wrap="wrap">
+                <PrimaryButton
+                    :sound-service="familySoundService"
+                    data-testid="parts-missing-cta"
+                    @click="goToMissing"
+                    >{{ t("parts.seeMissingCta").value }}</PrimaryButton
+                >
+                <PrimaryButton v-if="groupedParts.length > 0" :sound-service="familySoundService" @click="exportCsv">{{
+                    t("common.export").value
+                }}</PrimaryButton>
+            </div>
         </PageHeader>
 
         <p v-if="loading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>

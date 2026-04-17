@@ -86,9 +86,31 @@ describe("PartsPage — integration", () => {
         expect(pageHeader.exists()).toBe(true);
         expect(pageHeader.find("h1").text()).toBe("Parts Inventory");
 
-        const exportBtn = pageHeader.findComponent(PrimaryButton);
-        expect(exportBtn.exists()).toBe(true);
-        expect(exportBtn.text()).toBe("Export CSV");
+        const buttonLabels = pageHeader.findAllComponents(PrimaryButton).map((b) => b.text());
+        expect(buttonLabels).toContain("Export CSV");
+    });
+
+    it("renders the 'Missing parts across all sets' CTA in the page header even when no parts are stored", async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([]));
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        const cta = wrapper.find("[data-testid='parts-missing-cta']");
+        expect(cta.exists()).toBe(true);
+        expect(cta.text()).toBe("See what you're missing across all sets");
+    });
+
+    it("navigates to /parts/missing when the missing-parts CTA is clicked", async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()]));
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        await wrapper.find("[data-testid='parts-missing-cta']").trigger("click");
+        await flushPromises();
+
+        // The families app uses a custom RouterService; verify the named route resolves to /parts/missing.
+        const {familyRouterService} = await import("@app/services");
+        expect(familyRouterService.getUrlForRouteName("parts-missing")).toBe("/parts/missing");
     });
 
     it("renders search input and filter chips for sorting and colors", async () => {

@@ -7,4 +7,10 @@ export const routes = [
         component: () => import("./pages/PartsPage.vue"),
         meta: {authOnly: true, title: "pageTitle.parts"},
     },
+    {
+        path: "/parts/missing",
+        name: "parts-missing",
+        component: () => import("./pages/PartsMissingPage.vue"),
+        meta: {authOnly: true, title: "pageTitle.partsMissing"},
+    },
 ] as const satisfies readonly RouteRecordRaw[];
