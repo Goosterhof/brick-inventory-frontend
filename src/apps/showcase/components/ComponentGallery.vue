@@ -16,6 +16,8 @@ import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
 import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
 import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoBrickCuboidCss from "@shared/components/LegoBrickCuboidCss.vue";
+import LegoBrickIsometricSvg from "@shared/components/LegoBrickIsometricSvg.vue";
 import LegoBrickSideSvg from "@shared/components/LegoBrickSideSvg.vue";
 import LegoBrickSvg from "@shared/components/LegoBrickSvg.vue";
 import ListItemButton from "@shared/components/ListItemButton.vue";
@@ -550,6 +552,42 @@ const noop = () => {};
                             <LegoBrickSideSvg :columns="1" :rows="1" color="#F5C518" :shadow="false" />
                         </div>
                         <p text="xs" font="mono" text-color="gray-500">1x1 Yellow (no shadow)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3D Brick Techniques -->
+        <div m="b-12">
+            <p class="brick-label" m="b-6">3D Brick Techniques</p>
+            <div p="6" class="brick-border" bg="gray-50">
+                <p text="sm gray-700" m="b-6" max-w="3xl" leading="relaxed">
+                    Two approaches to rendering a 6x2 brick in 3D without a WebGL dependency. CSS 3D uses real geometry
+                    — six faces composed with <code font="mono">transform: rotateX/Y translateZ</code> — which opens the
+                    door to future orbit controls and per-face interactivity. SVG isometric uses a locked 30&deg;
+                    projection: crisp at any size, pairs naturally with <code font="mono">brick-shadow</code>, and ships
+                    as a single scalable asset.
+                </p>
+                <div grid="~ cols-1 md:cols-2" gap="8" items="start">
+                    <div flex="~ col" items="center" gap="3">
+                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">
+                            CSS 3D Transforms
+                        </p>
+                        <LegoBrickCuboidCss color="#C41A16" />
+                        <p text="xs gray-600 center" max-w="sm">
+                            Real geometry. Hover tilts the scene. Reduced-motion compliant via the global override.
+                        </p>
+                    </div>
+                    <div flex="~ col" items="center" gap="3">
+                        <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">
+                            SVG Isometric Projection
+                        </p>
+                        <div w="80">
+                            <LegoBrickIsometricSvg color="#0055BF" />
+                        </div>
+                        <p text="xs gray-600 center" max-w="sm">
+                            Locked 30&deg; projection. Crisp at any size, no layout thrash.
+                        </p>
                     </div>
                 </div>
             </div>

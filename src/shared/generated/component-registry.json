@@ -1,5 +1,5 @@
 {
-    "meta": {"componentCount": 49, "churnWindowDays": 30},
+    "meta": {"componentCount": 51, "churnWindowDays": 30},
     "components": {
         "BackButton": {
             "path": "src/shared/components/BackButton.vue",
@@ -426,6 +426,40 @@
                 "models": []
             },
             "churn": {"commits": 1, "linesChanged": 34},
+            "dependencyDepth": 0
+        },
+        "LegoBrickCuboidCss": {
+            "path": "src/shared/components/LegoBrickCuboidCss.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 0, "linesChanged": 0},
+            "dependencyDepth": 0
+        },
+        "LegoBrickIsometricSvg": {
+            "path": "src/shared/components/LegoBrickIsometricSvg.vue",
+            "category": null,
+            "consumers": {"showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}},
+            "adoption": {"apps": 1, "domains": 0},
+            "apiSurface": {
+                "props": [
+                    {"name": "color", "required": false},
+                    {"name": "shadow", "required": false}
+                ],
+                "emits": [],
+                "slots": [],
+                "models": []
+            },
+            "churn": {"commits": 0, "linesChanged": 0},
             "dependencyDepth": 0
         },
         "LegoBrickSideSvg": {
