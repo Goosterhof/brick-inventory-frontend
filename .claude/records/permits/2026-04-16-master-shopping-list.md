@@ -81,5 +81,5 @@ This is the payoff page for a collector who's been adding sets for a while — t
 
 ---
 
-**Status:** Open
-**Journal:** _link to construction journal when filed_
+**Status:** Complete
+**Journal:** [2026-04-16-master-shopping-list](../journals/2026-04-16-master-shopping-list.md)
