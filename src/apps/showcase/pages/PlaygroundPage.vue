@@ -143,31 +143,31 @@ const bricklinkImageUrl = (id: string) => `https://img.bricklink.com/ItemImage/P
 </script>
 
 <template>
-    <section p="y-16 x-4 md:x-8" border="b-3 black" bg="brick-yellow">
+    <section p="y-12 sm:y-16 x-4 md:x-8" border="b-3 black" bg="brick-yellow">
         <div max-w="6xl" m="x-auto">
             <p font="heading bold" text="sm" uppercase tracking="widest" m="b-4" opacity="60">Component Playground</p>
-            <h1 font="heading bold" text="5xl md:7xl" uppercase tracking="wide" leading="none" m="b-4">
+            <h1 font="heading bold" text="4xl sm:5xl md:7xl" uppercase tracking="wide" leading="none" m="b-4">
                 Brick Dimensions
             </h1>
-            <p text="lg" max-w="xl" leading="relaxed">
+            <p text="base sm:lg" max-w="xl" leading="relaxed">
                 Every brick component next to its real-world reference. Compare HTML/CSS, SVG, and the actual LEGO part.
             </p>
         </div>
     </section>
 
-    <div max-w="6xl" m="x-auto" p="x-4 md:x-8 y-12">
-        <div flex="~ col" gap="8">
+    <div max-w="6xl" m="x-auto" p="x-4 md:x-8 y-8 sm:y-12">
+        <div flex="~ col" gap="6 sm:8">
             <div
                 v-for="brick in bricks"
                 :key="`${brick.label}-${brick.dimensions}`"
-                p="6"
+                p="4 sm:6"
                 bg="white"
                 class="brick-border brick-shadow"
             >
                 <!-- Header row: name + part info -->
-                <div flex="~" items="center" justify="between" m="b-6" border="b-2 black" p="b-4">
-                    <div>
-                        <h2 font="heading bold" text="xl" uppercase tracking="wide">
+                <div flex="~ wrap" items="center" justify="between" gap="3" m="b-6" border="b-2 black" p="b-4">
+                    <div min-w="0">
+                        <h2 font="heading bold" text="lg sm:xl" uppercase tracking="wide" leading="tight">
                             {{ brick.label }} ({{ brick.dimensions }})
                         </h2>
                         <p text="sm gray-500" m="t-1" font="mono">Part #{{ brick.partNumber }}</p>
@@ -176,6 +176,10 @@ const bricklinkImageUrl = (id: string) => `https://img.bricklink.com/ItemImage/P
                         :href="bricklinkUrl(brick.bricklinkId)"
                         target="_blank"
                         rel="noopener noreferrer"
+                        inline-flex
+                        items="center"
+                        justify="center"
+                        min-h="11"
                         p="x-4 y-2"
                         bg="gray-100 hover:gray-200"
                         text="sm black"
@@ -189,7 +193,13 @@ const bricklinkImageUrl = (id: string) => `https://img.bricklink.com/ItemImage/P
                 </div>
 
                 <!-- Comparison grid: Reference | HTML/CSS | SVG Top | SVG Side -->
-                <div :class="brick.sideSvg ? 'grid grid-cols-4 gap-6' : 'grid grid-cols-3 gap-6'">
+                <div
+                    :class="
+                        brick.sideSvg
+                            ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6'
+                            : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6'
+                    "
+                >
                     <!-- Reference image -->
                     <div flex="~ col" items="center" gap="3">
                         <p text="xs" font="mono bold" text-color="gray-500" uppercase tracking="wide">Reference</p>
