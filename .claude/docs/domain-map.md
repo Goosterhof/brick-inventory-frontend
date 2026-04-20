@@ -9,7 +9,7 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 | **auth**      | Minifig Badge — prove you belong at this building table                        | `/login`, `/register`                                                               | No (hidden when logged in) |
 | **home**      | The Building Table — your starting baseplate                                   | `/`                                                                                 | No                         |
 | **sets**      | The Collection — every set you own, tracked, scanned, and identified           | `/sets`, `/sets/add`, `/sets/scan`, `/sets/identify`, `/sets/:id`, `/sets/:id/edit` | Yes                        |
-| **parts**     | The Parts Bin — individual bricks across your collection                       | `/parts`                                                                            | Yes                        |
+| **parts**     | The Parts Bin — individual bricks across your collection                       | `/parts`, `/parts/missing`                                                          | Yes                        |
 | **storage**   | The Drawer System — where bricks live when they are not being built            | `/storage`, `/storage/add`, `/storage/:id`, `/storage/:id/edit`                     | Yes                        |
 | **settings**  | The Workbench — family preferences and configuration                           | `/settings`                                                                         | Yes                        |
 | **brick-dna** | The DNA Lab — color diversity, top parts, and rarest bricks in your collection | `/brick-dna`                                                                        | Yes                        |
@@ -40,10 +40,10 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 
 #### parts
 
-- **Pages**: PartsPage
+- **Pages**: PartsPage, PartsMissingPage
 - **Components**: —
 - **Modals**: —
-- **API**: —
+- **API**: `GET /family-sets/missing-parts`
 
 #### storage
 
