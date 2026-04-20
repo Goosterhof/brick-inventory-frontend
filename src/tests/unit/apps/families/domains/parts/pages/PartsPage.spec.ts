@@ -122,10 +122,10 @@ const mockPartsData = [
 /** Wrap parts data in cursor pagination envelope. */
 const makeEnvelope = (data: Record<string, unknown>[] = mockPartsData, nextCursor: string | null = null) => ({
     data,
-    next_cursor: nextCursor,
-    prev_cursor: null,
+    nextCursor: nextCursor,
+    prevCursor: null,
     path: "/api/family/parts",
-    per_page: 100,
+    perPage: 100,
 });
 
 describe("PartsPage", () => {
