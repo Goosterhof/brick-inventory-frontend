@@ -3,6 +3,7 @@ import {mockServer} from "@integration/helpers/mock-server";
 import BackButton from "@shared/components/BackButton.vue";
 import EmptyState from "@shared/components/EmptyState.vue";
 import FilterChip from "@shared/components/FilterChip.vue";
+import TextInput from "@shared/components/forms/inputs/TextInput.vue";
 import PageHeader from "@shared/components/PageHeader.vue";
 import PartListItem from "@shared/components/PartListItem.vue";
 import PrimaryButton from "@shared/components/PrimaryButton.vue";
@@ -128,5 +129,52 @@ describe("PartsMissingPage — integration", () => {
         expect(chipTexts).toContain("Most missing");
         expect(chipTexts).toContain("Part name");
         expect(chipTexts).toContain("Color");
+    });
+
+    it("filters the PartListItem list when a search term is entered", async () => {
+        mockServer.onGet(
+            URL_MISSING,
+            makePayload([
+                makeEntry({part_name: "Brick 2x4", part_num: "3001"}),
+                makeEntry({part_id: 11, part_name: "Plate 1x2", part_num: "3023"}),
+            ]),
+        );
+
+        const wrapper = mount(PartsMissingPage);
+        await flushPromises();
+
+        expect(wrapper.findAllComponents(PartListItem)).toHaveLength(2);
+
+        await wrapper.findComponent(TextInput).setValue("Plate");
+        await flushPromises();
+
+        const items = wrapper.findAllComponents(PartListItem);
+        expect(items).toHaveLength(1);
+        expect(items[0]?.props("name")).toBe("Plate 1x2");
+    });
+
+    it("reorders PartListItems when a sort FilterChip is clicked", async () => {
+        mockServer.onGet(
+            URL_MISSING,
+            makePayload([
+                makeEntry({part_id: 10, part_name: "Brick 2x4", shortfall: 9}),
+                makeEntry({part_id: 11, part_name: "Axle 2", shortfall: 2}),
+            ]),
+        );
+
+        const wrapper = mount(PartsMissingPage);
+        await flushPromises();
+
+        // Default sort: shortfall descending — Brick 2x4 (9) first
+        const namesByShortfall = wrapper.findAllComponents(PartListItem).map((i) => i.props("name"));
+        expect(namesByShortfall).toEqual(["Brick 2x4", "Axle 2"]);
+
+        const nameChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === "Part name");
+        await nameChip?.find("button").trigger("click");
+        await flushPromises();
+
+        // After switching to name sort: Axle 2 < Brick 2x4 alphabetically
+        const namesByName = wrapper.findAllComponents(PartListItem).map((i) => i.props("name"));
+        expect(namesByName).toEqual(["Axle 2", "Brick 2x4"]);
     });
 });
