@@ -151,7 +151,10 @@ describe("LegoBrickIsometricSvg", () => {
         // plus padding + shadow offset — the viewBox width should be larger than 277.
         expect(width).toBeGreaterThan(277);
         // Height spans the full vertical silhouette (top of stud to base of shadow).
+        // With the correct studExtentTop formula the height is ~250; the buggy
+        // formula (double-subtracting BODY_HEIGHT) produced ~298.
         expect(height).toBeGreaterThan(200);
+        expect(height).toBeLessThan(275);
     });
 
     it("should render a stud side band path using an elliptical arc command", () => {

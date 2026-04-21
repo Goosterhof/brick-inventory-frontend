@@ -30,14 +30,14 @@ const fetchParts = async (cursor?: string): Promise<CursorPaginatedParts> => {
         params.set("cursor", cursor);
     }
     const response = await familyHttpService.getRequest<CursorPaginatedParts>(`/family/parts?${params.toString()}`);
-    return response.data;
+    return toCamelCaseTyped<CursorPaginatedParts>(response.data);
 };
 
 onMounted(async () => {
     try {
         const envelope = await fetchParts();
-        entries.value = envelope.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
-        nextCursor.value = envelope.next_cursor;
+        entries.value = envelope.data;
+        nextCursor.value = envelope.nextCursor;
     } catch {
         entries.value = [];
     } finally {
@@ -52,9 +52,8 @@ const loadMore = async () => {
     loadingMore.value = true;
     try {
         const envelope = await fetchParts(nextCursor.value);
-        const newEntries = envelope.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
-        entries.value = [...entries.value, ...newEntries];
-        nextCursor.value = envelope.next_cursor;
+        entries.value = [...entries.value, ...envelope.data];
+        nextCursor.value = envelope.nextCursor;
     } finally {
         loadingMore.value = false;
     }

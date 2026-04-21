@@ -70,10 +70,10 @@ export interface GroupedFamilyPart {
 
 export interface CursorPaginatedParts {
     data: FamilyPartEntry[];
-    next_cursor: string | null;
-    prev_cursor: string | null;
+    nextCursor: string | null;
+    prevCursor: string | null;
     path: string;
-    per_page: number;
+    perPage: number;
 }
 
 export interface StorageOptionPart {
