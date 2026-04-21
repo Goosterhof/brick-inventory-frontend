@@ -69,8 +69,13 @@ const projectedExtents = computed(() => {
     };
 });
 
-// Studs sit above the brick top; include their height in the viewBox.
-const studExtentTop = computed(() => -BODY_HEIGHT - STUD_HEIGHT + projectedExtents.value.minY);
+// Studs sit above the brick top. Their topmost screen-y is minY (the top brick
+// corners) minus one more STUD_HEIGHT — since stud tops are STUD_HEIGHT above
+// the top face in world-z, which maps to −STUD_HEIGHT in screen-y.
+// Former formula −BODY_HEIGHT −STUD_HEIGHT + minY double-counted BODY_HEIGHT
+// (minY already reflects the top face at z=BODY_HEIGHT), producing a viewBox
+// ~48 px taller than needed.
+const studExtentTop = computed(() => projectedExtents.value.minY - STUD_HEIGHT);
 
 const viewBox = computed(() => {
     const {minX, maxX, minY, maxY} = projectedExtents.value;
