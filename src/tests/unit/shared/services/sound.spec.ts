@@ -1,14 +1,14 @@
-import type {StorageService} from "@script-development/fs-storage";
+import type {StorageService} from '@script-development/fs-storage';
 
-import {createSoundService} from "@shared/services/sound";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import {createSoundService} from '@shared/services/sound';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 const createMockStorageService = (initialData: Record<string, unknown> = {}): StorageService => {
     const store = new Map<string, unknown>(Object.entries(initialData));
 
     return {
         put: vi.fn<(key: string, value: unknown) => void>((key: string, value: unknown) => store.set(key, value)),
-        get: vi.fn<(key: string) => unknown>((key: string) => store.get(key)) as unknown as StorageService["get"],
+        get: vi.fn<(key: string) => unknown>((key: string) => store.get(key)) as unknown as StorageService['get'],
         remove: vi.fn<(key: string) => void>((key: string) => {
             store.delete(key);
         }),
@@ -19,7 +19,7 @@ const createMockStorageService = (initialData: Record<string, unknown> = {}): St
 };
 
 const mockMatchMedia = (matches: boolean) => {
-    Object.defineProperty(window, "matchMedia", {
+    Object.defineProperty(window, 'matchMedia', {
         writable: true,
         value: vi.fn<() => {matches: boolean}>().mockReturnValue({matches}),
     });
@@ -36,7 +36,7 @@ const createMockAudioContext = () => {
         connect: vi.fn<() => void>(),
     };
 
-    const mockFilter = {type: "", frequency: {value: 0}, Q: {value: 0}, connect: vi.fn<() => void>()};
+    const mockFilter = {type: '', frequency: {value: 0}, Q: {value: 0}, connect: vi.fn<() => void>()};
 
     const mockBufferSource = {
         buffer: null,
@@ -61,19 +61,19 @@ const createMockAudioContext = () => {
     return mockContext;
 };
 
-describe("createSoundService", () => {
+describe('createSoundService', () => {
     beforeEach(() => {
         mockMatchMedia(false);
 
         vi.stubGlobal(
-            "AudioContext",
+            'AudioContext',
             vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return createMockAudioContext();
             }),
         );
     });
 
-    it("should initialize with sound disabled", () => {
+    it('should initialize with sound disabled', () => {
         // Arrange
         const storage = createMockStorageService();
 
@@ -84,9 +84,9 @@ describe("createSoundService", () => {
         expect(service.isEnabled.value).toBe(false);
     });
 
-    it("should initialize with sound enabled when stored preference is true", () => {
+    it('should initialize with sound enabled when stored preference is true', () => {
         // Arrange
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
 
         // Act
         const service = createSoundService(storage);
@@ -95,7 +95,7 @@ describe("createSoundService", () => {
         expect(service.isEnabled.value).toBe(true);
     });
 
-    it("should enable sound when toggled on", () => {
+    it('should enable sound when toggled on', () => {
         // Arrange
         const storage = createMockStorageService();
         const service = createSoundService(storage);
@@ -107,9 +107,9 @@ describe("createSoundService", () => {
         expect(service.isEnabled.value).toBe(true);
     });
 
-    it("should disable sound when toggled off", () => {
+    it('should disable sound when toggled off', () => {
         // Arrange
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act
@@ -119,7 +119,7 @@ describe("createSoundService", () => {
         expect(service.isEnabled.value).toBe(false);
     });
 
-    it("should persist toggle state to storage", () => {
+    it('should persist toggle state to storage', () => {
         // Arrange
         const storage = createMockStorageService();
         const service = createSoundService(storage);
@@ -128,19 +128,19 @@ describe("createSoundService", () => {
         service.toggle();
 
         // Assert
-        expect(storage.put).toHaveBeenCalledWith("sound-enabled", true);
+        expect(storage.put).toHaveBeenCalledWith('sound-enabled', true);
 
         // Act - toggle off
         service.toggle();
 
         // Assert
-        expect(storage.put).toHaveBeenCalledWith("sound-enabled", false);
+        expect(storage.put).toHaveBeenCalledWith('sound-enabled', false);
     });
 
-    it("should disable sound when prefers-reduced-motion matches", () => {
+    it('should disable sound when prefers-reduced-motion matches', () => {
         // Arrange
         mockMatchMedia(true);
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
 
         // Act
         const service = createSoundService(storage);
@@ -149,103 +149,103 @@ describe("createSoundService", () => {
         expect(service.isEnabled.value).toBe(false);
     });
 
-    it("should not play sound when disabled", () => {
+    it('should not play sound when disabled', () => {
         // Arrange
         const storage = createMockStorageService();
         const service = createSoundService(storage);
 
         // Act
-        service.play("snap");
+        service.play('snap');
 
         // Assert
         expect(AudioContext).not.toHaveBeenCalled();
     });
 
-    it("should not play sound when prefers-reduced-motion is active", () => {
+    it('should not play sound when prefers-reduced-motion is active', () => {
         // Arrange
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Enable reduced motion after creation
         mockMatchMedia(true);
 
         // Act
-        service.play("snap");
+        service.play('snap');
 
         // Assert
         expect(AudioContext).not.toHaveBeenCalled();
     });
 
-    it("should create AudioContext and play snap sound", () => {
+    it('should create AudioContext and play snap sound', () => {
         // Arrange
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act
-        service.play("snap");
+        service.play('snap');
 
         // Assert
         expect(AudioContext).toHaveBeenCalledOnce();
     });
 
-    it("should create AudioContext and play pull sound", () => {
+    it('should create AudioContext and play pull sound', () => {
         // Arrange
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act
-        service.play("pull");
+        service.play('pull');
 
         // Assert
         expect(AudioContext).toHaveBeenCalledOnce();
     });
 
-    it("should create AudioContext and play cascade sound", () => {
+    it('should create AudioContext and play cascade sound', () => {
         // Arrange
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act
-        service.play("cascade");
+        service.play('cascade');
 
         // Assert
         expect(AudioContext).toHaveBeenCalledOnce();
     });
 
-    it("should create AudioContext and play thud sound", () => {
+    it('should create AudioContext and play thud sound', () => {
         // Arrange
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act
-        service.play("thud");
+        service.play('thud');
 
         // Assert
         expect(AudioContext).toHaveBeenCalledOnce();
     });
 
-    it("should close previous AudioContext when playing a new sound", () => {
+    it('should close previous AudioContext when playing a new sound', () => {
         // Arrange
         const mockContext = createMockAudioContext();
         vi.stubGlobal(
-            "AudioContext",
+            'AudioContext',
             vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return mockContext;
             }),
         );
 
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act - play twice
-        service.play("snap");
-        service.play("pull");
+        service.play('snap');
+        service.play('pull');
 
         // Assert
         expect(mockContext.close).toHaveBeenCalledOnce();
     });
 
-    it("should read stored preference on initialization", () => {
+    it('should read stored preference on initialization', () => {
         // Arrange
         const storage = createMockStorageService();
 
@@ -253,23 +253,23 @@ describe("createSoundService", () => {
         createSoundService(storage);
 
         // Assert
-        expect(storage.get).toHaveBeenCalledWith("sound-enabled");
+        expect(storage.get).toHaveBeenCalledWith('sound-enabled');
     });
 
-    it("should use noise-based synthesis with bandpass filter for snap", () => {
+    it('should use noise-based synthesis with bandpass filter for snap', () => {
         // Arrange
         const mockContext = createMockAudioContext();
         vi.stubGlobal(
-            "AudioContext",
+            'AudioContext',
             vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return mockContext;
             }),
         );
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act
-        service.play("snap");
+        service.play('snap');
 
         // Assert
         expect(mockContext.createBuffer).toHaveBeenCalled();
@@ -277,20 +277,20 @@ describe("createSoundService", () => {
         expect(mockContext.createBiquadFilter).toHaveBeenCalled();
     });
 
-    it("should use noise-based synthesis with bandpass filter for cascade", () => {
+    it('should use noise-based synthesis with bandpass filter for cascade', () => {
         // Arrange
         const mockContext = createMockAudioContext();
         vi.stubGlobal(
-            "AudioContext",
+            'AudioContext',
             vi.fn<() => ReturnType<typeof createMockAudioContext>>().mockImplementation(function () {
                 return mockContext;
             }),
         );
-        const storage = createMockStorageService({"sound-enabled": true});
+        const storage = createMockStorageService({'sound-enabled': true});
         const service = createSoundService(storage);
 
         // Act
-        service.play("cascade");
+        service.play('cascade');
 
         // Assert — cascade creates 4 snaps
         expect(mockContext.createBufferSource).toHaveBeenCalledTimes(4);

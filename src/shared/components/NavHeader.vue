@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {PhList, PhX} from "@phosphor-icons/vue";
-import {ref} from "vue";
+import {PhList, PhX} from '@phosphor-icons/vue';
+import {ref} from 'vue';
 
 const menuOpen = ref(false);
 

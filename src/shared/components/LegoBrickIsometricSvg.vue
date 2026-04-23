@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, useId} from "vue";
+import {computed, useId} from 'vue';
 
 /**
  * SVG isometric 3D LEGO brick (6x2, fixed footprint).
@@ -19,7 +19,7 @@ import {computed, useId} from "vue";
  * them, forming a proper cylinder silhouette.
  */
 
-const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
+const {color = '#DC2626', shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
 
 // 6x2 fixed footprint. World-space units before projection.
 const COLS = 6;

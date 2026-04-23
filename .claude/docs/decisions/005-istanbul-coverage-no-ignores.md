@@ -67,7 +67,7 @@ const startCamera = async () => {
 Test by mounting, then unmounting before the promise resolves:
 
 ```ts
-it("should clean up stream when component unmounts during getUserMedia", async () => {
+it('should clean up stream when component unmounts during getUserMedia', async () => {
     let resolve;
     mockGetUserMedia.mockReturnValue(
         new Promise((r) => {

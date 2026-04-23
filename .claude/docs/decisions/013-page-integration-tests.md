@@ -214,13 +214,13 @@ Two `vi.mock()` calls per test file: `@script-development/fs-http` (returns mock
 Usage pattern in test files:
 
 ```typescript
-vi.mock("@script-development/fs-http", async () => {
-    const {mockHttpService} = await import("../helpers/mock-server");
+vi.mock('@script-development/fs-http', async () => {
+    const {mockHttpService} = await import('../helpers/mock-server');
     return {createHttpService: () => mockHttpService};
 });
 
 beforeEach(() => mockServer.reset());
-mockServer.onGet("storage-options", [
+mockServer.onGet('storage-options', [
     /* snake_case fixtures */
 ]);
 ```

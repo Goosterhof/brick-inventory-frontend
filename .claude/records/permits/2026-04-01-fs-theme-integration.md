@@ -21,8 +21,8 @@ Install and wire `@script-development/fs-theme` into the Families app, giving us
 2. **Create the service instance** — Add `src/apps/families/services/theme.ts` following the established pattern:
 
     ```ts
-    import {createThemeService} from "@script-development/fs-theme";
-    import {familyStorageService} from "./storage";
+    import {createThemeService} from '@script-development/fs-theme';
+    import {familyStorageService} from './storage';
 
     export const familyThemeService = createThemeService(familyStorageService);
     ```

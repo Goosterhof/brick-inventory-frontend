@@ -1,63 +1,63 @@
 <script setup lang="ts">
-import {createDialogService} from "@script-development/fs-dialog";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {defineComponent, h} from "vue";
+import {createDialogService} from '@script-development/fs-dialog';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {defineComponent, h} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
 const dialogService = createDialogService();
 
 const DemoDialogContent = defineComponent({
-    name: "DemoDialogContent",
+    name: 'DemoDialogContent',
     props: {
         title: {type: String, required: true},
         message: {type: String, required: true},
         showStack: {type: Boolean, default: false},
     },
-    emits: ["close"],
+    emits: ['close'],
     setup(props, {emit}) {
         const openStacked = () => {
             dialogService.open(DemoDialogContent, {
-                title: "Stacked Dialog",
+                title: 'Stacked Dialog',
                 message:
-                    "This dialog was opened from inside another dialog. The service manages the stack automatically.",
+                    'This dialog was opened from inside another dialog. The service manages the stack automatically.',
             });
         };
 
         return () =>
-            h("div", {p: "6", bg: "white", class: "brick-border", min_w: "sm:80", max_w: "lg"}, [
-                h("h3", {font: "heading bold", text: "xl", uppercase: "", tracking: "wide", m: "b-3"}, props.title),
-                h("p", {m: "b-4", text: "gray-700"}, props.message),
-                h("div", {flex: "~", gap: "3"}, [
+            h('div', {p: '6', bg: 'white', class: 'brick-border', min_w: 'sm:80', max_w: 'lg'}, [
+                h('h3', {font: 'heading bold', text: 'xl', uppercase: '', tracking: 'wide', m: 'b-3'}, props.title),
+                h('p', {m: 'b-4', text: 'gray-700'}, props.message),
+                h('div', {flex: '~', gap: '3'}, [
                     ...(props.showStack
                         ? [
                               h(
-                                  "button",
+                                  'button',
                                   {
                                       onClick: openStacked,
-                                      p: "x-4 y-2",
-                                      font: "bold",
-                                      text: "sm white",
-                                      bg: "[#0055BF] hover:[#004299]",
-                                      cursor: "pointer",
-                                      class: "brick-border brick-shadow brick-transition hover:brick-shadow-hover active:brick-shadow-active",
+                                      p: 'x-4 y-2',
+                                      font: 'bold',
+                                      text: 'sm white',
+                                      bg: '[#0055BF] hover:[#004299]',
+                                      cursor: 'pointer',
+                                      class: 'brick-border brick-shadow brick-transition hover:brick-shadow-hover active:brick-shadow-active',
                                   },
-                                  "Open Stacked",
+                                  'Open Stacked',
                               ),
                           ]
                         : []),
                     h(
-                        "button",
+                        'button',
                         {
-                            onClick: () => emit("close"),
-                            p: "x-4 y-2",
-                            font: "bold",
-                            text: "sm",
-                            bg: "gray-100 hover:gray-200",
-                            cursor: "pointer",
-                            class: "brick-border brick-shadow brick-transition hover:brick-shadow-hover active:brick-shadow-active",
+                            onClick: () => emit('close'),
+                            p: 'x-4 y-2',
+                            font: 'bold',
+                            text: 'sm',
+                            bg: 'gray-100 hover:gray-200',
+                            cursor: 'pointer',
+                            class: 'brick-border brick-shadow brick-transition hover:brick-shadow-hover active:brick-shadow-active',
                         },
-                        "Close",
+                        'Close',
                     ),
                 ]),
             ]);
@@ -66,14 +66,14 @@ const DemoDialogContent = defineComponent({
 
 const openSingleDialog = () => {
     dialogService.open(DemoDialogContent, {
-        title: "Single Dialog",
-        message: "Opened programmatically via dialogService.open(). Click Close or the backdrop to dismiss.",
+        title: 'Single Dialog',
+        message: 'Opened programmatically via dialogService.open(). Click Close or the backdrop to dismiss.',
     });
 };
 
 const openStackableDialog = () => {
     dialogService.open(DemoDialogContent, {
-        title: "First Dialog",
+        title: 'First Dialog',
         message:
             'Click "Open Stacked" to open a second dialog on top. Each dialog gets its own native <dialog> element.',
         showStack: true,

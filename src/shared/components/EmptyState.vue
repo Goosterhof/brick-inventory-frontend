@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoBrick from '@shared/components/LegoBrick.vue';
 
 const {
     message,
     showBrick = false,
-    brickColor = "#F5C518",
+    brickColor = '#F5C518',
 } = defineProps<{message: string; showBrick?: boolean; brickColor?: string}>();
 </script>
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {computed, useId} from "vue";
+import {computed, useId} from 'vue';
 
 const {
-    color = "#DC2626",
+    color = '#DC2626',
     shadow = true,
     columns = 4,
     rows = 2,

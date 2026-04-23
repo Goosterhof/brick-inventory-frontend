@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed} from 'vue';
 
 const {percentage, unknownLabel} = defineProps<{
     percentage: number | null;
     unknownLabel: string;
 }>();
 
-type GaugeState = "unknown" | "empty" | "partial" | "complete";
+type GaugeState = 'unknown' | 'empty' | 'partial' | 'complete';
 
 const state = computed<GaugeState>(() => {
-    if (percentage === null) return "unknown";
-    if (percentage <= 0) return "empty";
-    if (percentage >= 100) return "complete";
-    return "partial";
+    if (percentage === null) return 'unknown';
+    if (percentage <= 0) return 'empty';
+    if (percentage >= 100) return 'complete';
+    return 'partial';
 });
 
 const clampedPercentage = computed(() => {
@@ -24,30 +24,30 @@ const clampedPercentage = computed(() => {
 
 const barColor = computed(() => {
     switch (state.value) {
-        case "empty":
-            return "brick-red";
-        case "partial":
-            return "brick-yellow";
-        case "complete":
-            return "baseplate-green";
+        case 'empty':
+            return 'brick-red';
+        case 'partial':
+            return 'brick-yellow';
+        case 'complete':
+            return 'baseplate-green';
         default:
-            return "[var(--brick-surface-subtle)]";
+            return '[var(--brick-surface-subtle)]';
     }
 });
 
 const labelText = computed(() => {
-    if (state.value === "unknown") return unknownLabel;
+    if (state.value === 'unknown') return unknownLabel;
     return `${String(Math.round(clampedPercentage.value))}%`;
 });
 
 const labelColorClass = computed(() => {
     switch (state.value) {
-        case "complete":
-            return "text-baseplate-green";
-        case "empty":
-            return "text-brick-red-dark";
+        case 'complete':
+            return 'text-baseplate-green';
+        case 'empty':
+            return 'text-brick-red-dark';
         default:
-            return "text-brick-ink";
+            return 'text-brick-ink';
     }
 });
 </script>

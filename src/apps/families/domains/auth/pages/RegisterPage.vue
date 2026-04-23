@@ -5,22 +5,22 @@ import {
     familyHttpService,
     familyRouterService,
     familyTranslationService,
-} from "@app/services";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {useFormSubmit} from "@shared/composables/useFormSubmit";
-import {useValidationErrors} from "@shared/composables/useValidationErrors";
-import {ref} from "vue";
+} from '@app/services';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {useFormSubmit} from '@shared/composables/useFormSubmit';
+import {useValidationErrors} from '@shared/composables/useValidationErrors';
+import {ref} from 'vue';
 
 const {t} = familyTranslationService;
-const inviteCode = ref("");
-const familyName = ref("");
-const name = ref("");
-const email = ref("");
-const password = ref("");
-const passwordConfirmation = ref("");
+const inviteCode = ref('');
+const familyName = ref('');
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const passwordConfirmation = ref('');
 
-type RegistrationField = "inviteCode" | "familyName" | "name" | "email" | "password" | "passwordConfirmation";
+type RegistrationField = 'inviteCode' | 'familyName' | 'name' | 'email' | 'password' | 'passwordConfirmation';
 const validationErrors = useValidationErrors<RegistrationField>(familyHttpService);
 const {errors} = validationErrors;
 const {handleSubmit, submitting} = useFormSubmit(validationErrors);
@@ -35,13 +35,13 @@ const onSubmit = () =>
             password: password.value,
             passwordConfirmation: passwordConfirmation.value,
         });
-        await familyRouterService.goToRoute("home");
+        await familyRouterService.goToRoute('home');
     });
 </script>
 
 <template>
     <div max-w="md" m="x-auto">
-        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">{{ t("auth.createAccount").value }}</h1>
+        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-6">{{ t('auth.createAccount').value }}</h1>
 
         <form flex="~ col" gap="4" @submit.prevent="onSubmit">
             <TextInput
@@ -66,13 +66,13 @@ const onSubmit = () =>
                 :error="errors.passwordConfirmation"
             />
 
-            <PrimaryButton type="submit" :disabled="submitting">{{ t("auth.register").value }}</PrimaryButton>
+            <PrimaryButton type="submit" :disabled="submitting">{{ t('auth.register').value }}</PrimaryButton>
         </form>
 
         <p m="t-6" text="center">
-            {{ t("auth.alreadyHaveAccount").value }}
+            {{ t('auth.alreadyHaveAccount').value }}
             <FamilyRouterLink :to="{name: 'login'}" font="bold" text="decoration-underline">
-                {{ t("auth.logIn").value }}
+                {{ t('auth.logIn').value }}
             </FamilyRouterLink>
         </p>
     </div>

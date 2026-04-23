@@ -1,8 +1,8 @@
-import {readdirSync, readFileSync, statSync} from "node:fs";
-import {basename, join} from "node:path";
+import {readdirSync, readFileSync, statSync} from 'node:fs';
+import {basename, join} from 'node:path';
 
 const errors = [];
-const IGNORED_DIRS = ["node_modules", "dist", "coverage"];
+const IGNORED_DIRS = ['node_modules', 'dist', 'coverage'];
 
 const findFiles = (dir, extensions) => {
     const files = [];
@@ -21,20 +21,20 @@ const findFiles = (dir, extensions) => {
 
 // Accept file paths as arguments (for lint-staged) or scan all source files
 const argFiles = process.argv.length > 2 ? process.argv.slice(2) : [];
-const vueFiles = argFiles.length > 0 ? argFiles.filter((f) => f.endsWith(".vue")) : findFiles("src", [".vue"]);
+const vueFiles = argFiles.length > 0 ? argFiles.filter((f) => f.endsWith('.vue')) : findFiles('src', ['.vue']);
 const allSourceFiles =
     argFiles.length > 0
-        ? argFiles.filter((f) => f.endsWith(".vue") || f.endsWith(".ts"))
-        : findFiles("src", [".vue", ".ts"]);
+        ? argFiles.filter((f) => f.endsWith('.vue') || f.endsWith('.ts'))
+        : findFiles('src', ['.vue', '.ts']);
 
 // ── Vue-specific checks ────────────────────────────────────────────────────────
 
 for (const file of vueFiles) {
-    const name = basename(file, ".vue");
-    const content = readFileSync(file, "utf-8");
+    const name = basename(file, '.vue');
+    const content = readFileSync(file, 'utf-8');
 
     // Check 1: Multi-word PascalCase component names (App.vue is exempt)
-    if (name !== "App") {
+    if (name !== 'App') {
         const words = name.match(/[A-Z][a-z]*/g) || [];
         if (words.length < 2) {
             errors.push(
@@ -59,7 +59,7 @@ for (const file of vueFiles) {
     }
 
     // Check 3: No defineExpose — use props/emits for parent-child communication
-    if (content.includes("defineExpose")) {
+    if (content.includes('defineExpose')) {
         errors.push(`${file}: defineExpose is forbidden. Use props and emits for parent-child communication instead.`);
     }
 
@@ -74,9 +74,9 @@ for (const file of vueFiles) {
     }
 
     // Check 5: Define-macros order — defineProps before defineEmits before defineSlots
-    const propsIndex = content.indexOf("defineProps");
-    const emitsIndex = content.indexOf("defineEmits");
-    const slotsIndex = content.indexOf("defineSlots");
+    const propsIndex = content.indexOf('defineProps');
+    const emitsIndex = content.indexOf('defineEmits');
+    const slotsIndex = content.indexOf('defineSlots');
 
     if (propsIndex !== -1 && emitsIndex !== -1 && propsIndex > emitsIndex) {
         errors.push(`${file}: defineProps must come before defineEmits`);
@@ -90,7 +90,7 @@ for (const file of vueFiles) {
 
     // Check 6: No <RouterLink> or <router-link> in shared components (ADR-001)
     // The oxlint import ban catches JS imports, but globally registered components can be used without import
-    if (file.startsWith("src/shared/") || file.includes("/shared/")) {
+    if (file.startsWith('src/shared/') || file.includes('/shared/')) {
         const templateMatch = content.match(/<template[\s\S]*$/);
         if (templateMatch) {
             const template = templateMatch[0];
@@ -111,12 +111,12 @@ const COVERAGE_IGNORE_PATTERN = /\/\*\s*(istanbul|v8|c8)\s+ignore\b/;
 
 for (const file of allSourceFiles) {
     // Skip test files — they aren't subject to coverage ignore bans
-    if (file.includes("/tests/") || file.endsWith(".spec.ts")) {
+    if (file.includes('/tests/') || file.endsWith('.spec.ts')) {
         continue;
     }
 
-    const content = readFileSync(file, "utf-8");
-    const lines = content.split("\n");
+    const content = readFileSync(file, 'utf-8');
+    const lines = content.split('\n');
 
     for (let i = 0; i < lines.length; i++) {
         if (COVERAGE_IGNORE_PATTERN.test(lines[i])) {
@@ -134,16 +134,16 @@ const SINGLETON_CALL_PATTERN = /^export\s+(?:const|let|var)\s+\w+\s*=\s*(?:new\s
 const EXPORT_DEFAULT_INSTANCE_PATTERN = /^export\s+default\s+(?:new\s+\w|create\w*\()/;
 
 for (const file of allSourceFiles) {
-    if (!file.includes("shared/services/")) {
+    if (!file.includes('shared/services/')) {
         continue;
     }
     // Skip type declaration files
-    if (file.endsWith(".d.ts")) {
+    if (file.endsWith('.d.ts')) {
         continue;
     }
 
-    const content = readFileSync(file, "utf-8");
-    const lines = content.split("\n");
+    const content = readFileSync(file, 'utf-8');
+    const lines = content.split('\n');
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
@@ -167,11 +167,11 @@ for (const file of allSourceFiles) {
 const VI_MOCK_WITHOUT_FACTORY = /vi\.mock\(\s*["'][^"']+["']\s*\)/;
 
 const specFiles =
-    argFiles.length > 0 ? argFiles.filter((f) => f.endsWith(".spec.ts")) : findFiles("src/tests", [".spec.ts"]);
+    argFiles.length > 0 ? argFiles.filter((f) => f.endsWith('.spec.ts')) : findFiles('src/tests', ['.spec.ts']);
 
 for (const file of specFiles) {
-    const content = readFileSync(file, "utf-8");
-    const lines = content.split("\n");
+    const content = readFileSync(file, 'utf-8');
+    const lines = content.split('\n');
 
     for (let i = 0; i < lines.length; i++) {
         if (VI_MOCK_WITHOUT_FACTORY.test(lines[i])) {
@@ -185,12 +185,12 @@ for (const file of specFiles) {
 // ── Report ──────────────────────────────────────────────────────────────────────
 
 if (errors.length > 0) {
-    console.error("Convention violations found:\n");
+    console.error('Convention violations found:\n');
     for (const error of errors) {
         console.error(`  ${error}`);
     }
     console.error(`\n${errors.length} violation(s) found.`);
     process.exit(1);
 } else {
-    console.log("All conventions passed.");
+    console.log('All conventions passed.');
 }

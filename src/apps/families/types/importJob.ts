@@ -5,7 +5,7 @@ export interface ImportJobFailedSet {
 
 export interface ImportJob {
     id: number;
-    status: "pending" | "in_progress" | "completed" | "failed";
+    status: 'pending' | 'in_progress' | 'completed' | 'failed';
     totalSets: number;
     processedSets: number;
     failedSets: number;

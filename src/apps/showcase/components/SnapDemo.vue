@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
-type InteractionState = "default" | "hover" | "focus" | "active";
+type InteractionState = 'default' | 'hover' | 'focus' | 'active';
 
-const buttonState = ref<InteractionState>("default");
-const inputState = ref<InteractionState>("default");
-const cardState = ref<InteractionState>("default");
-const linkState = ref<InteractionState>("default");
+const buttonState = ref<InteractionState>('default');
+const inputState = ref<InteractionState>('default');
+const cardState = ref<InteractionState>('default');
+const linkState = ref<InteractionState>('default');
 
 const shadowValues = {
-    default: "4px 4px 0px 0px rgba(0,0,0,1)",
-    hover: "6px 6px 0px 0px rgba(0,0,0,1)",
-    focus: "6px 6px 0px 0px rgba(0,0,0,1)",
-    active: "2px 2px 0px 0px rgba(0,0,0,1)",
+    default: '4px 4px 0px 0px rgba(0,0,0,1)',
+    hover: '6px 6px 0px 0px rgba(0,0,0,1)',
+    focus: '6px 6px 0px 0px rgba(0,0,0,1)',
+    active: '2px 2px 0px 0px rgba(0,0,0,1)',
 };
 
 const stateColors: Record<InteractionState, string> = {
-    default: "bg-gray-100",
-    hover: "bg-[#F5C518]",
-    focus: "bg-[#F5C518]",
-    active: "bg-[#FDF0C4]",
+    default: 'bg-gray-100',
+    hover: 'bg-[#F5C518]',
+    focus: 'bg-[#F5C518]',
+    active: 'bg-[#FDF0C4]',
 };
 </script>
 
@@ -188,7 +188,7 @@ const stateColors: Record<InteractionState, string> = {
                 </a>
 
                 <p font="mono" text="xs gray-500" m="t-4">
-                    decoration: 3px solid {{ linkState === "hover" || linkState === "focus" ? "#F5C518" : "#000000" }}
+                    decoration: 3px solid {{ linkState === 'hover' || linkState === 'focus' ? '#F5C518' : '#000000' }}
                 </p>
             </div>
         </div>

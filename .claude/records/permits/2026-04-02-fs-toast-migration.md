@@ -24,30 +24,30 @@ Replace the local `toast.ts` shared service with `@script-development/fs-toast`.
 
     ```ts
     // Before
-    import {createToastService} from "@shared/services/toast";
+    import {createToastService} from '@shared/services/toast';
 
     // After
-    import {createToastService} from "@script-development/fs-toast";
+    import {createToastService} from '@script-development/fs-toast';
     ```
 
     **`src/apps/showcase/components/ToastServiceDemo.vue`** (line 4):
 
     ```ts
     // Before
-    import {createToastService} from "@shared/services/toast";
+    import {createToastService} from '@shared/services/toast';
 
     // After
-    import {createToastService} from "@script-development/fs-toast";
+    import {createToastService} from '@script-development/fs-toast';
     ```
 
     **`src/tests/unit/shared/services/toast.spec.ts`** (line 1):
 
     ```ts
     // Before
-    import {createToastService} from "@shared/services/toast";
+    import {createToastService} from '@shared/services/toast';
 
     // After
-    import {createToastService} from "@script-development/fs-toast";
+    import {createToastService} from '@script-development/fs-toast';
     ```
 
 3. **Remove the local service file** — Once all imports are migrated:

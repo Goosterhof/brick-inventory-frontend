@@ -50,8 +50,8 @@ const project = (name: string, include: string) => ({
     extends: true,
     test: {
         name,
-        environment: "happy-dom",
-        setupFiles: ["./src/tests/unit/setup.ts"],
+        environment: 'happy-dom',
+        setupFiles: ['./src/tests/unit/setup.ts'],
         include: [`src/tests/unit/${include}/**/*.spec.ts`],
     },
 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import NavLink from "@shared/components/NavLink.vue";
+import NavLink from '@shared/components/NavLink.vue';
 
-import {AdminRouterView, adminRouterService} from "./router";
+import {AdminRouterView, adminRouterService} from './router';
 </script>
 
 <template>

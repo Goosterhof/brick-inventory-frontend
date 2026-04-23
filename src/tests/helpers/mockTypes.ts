@@ -1,5 +1,5 @@
-import type {Mock} from "vitest";
-import type {ComputedRef, Ref} from "vue";
+import type {Mock} from 'vitest';
+import type {ComputedRef, Ref} from 'vue';
 
 type SimplifyRef<T> = T extends ComputedRef<infer V> ? {value: V} : T extends Ref<infer V> ? {value: V} : T;
 

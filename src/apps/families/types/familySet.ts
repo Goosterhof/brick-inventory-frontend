@@ -1,4 +1,4 @@
-export type FamilySetStatus = "sealed" | "built" | "in_progress" | "incomplete" | "wishlist";
+export type FamilySetStatus = 'sealed' | 'built' | 'in_progress' | 'incomplete' | 'wishlist';
 
 export interface SetSummary {
     id: number;

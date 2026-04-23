@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const {
-    color = "#DC2626",
+    color = '#DC2626',
     shadow = true,
     columns = 4,
     rows = 2,

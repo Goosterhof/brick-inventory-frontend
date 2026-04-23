@@ -1,14 +1,14 @@
-import type {RouteRecordRaw} from "vue-router";
+import type {RouteRecordRaw} from 'vue-router';
 
-import {routes as aboutRoutes} from "@app/domains/about";
-import {routes as authRoutes} from "@app/domains/auth";
-import {routes as brickDnaRoutes} from "@app/domains/brick-dna";
-import {routes as homeRoutes} from "@app/domains/home";
-import {routes as partsRoutes} from "@app/domains/parts";
-import {routes as setsRoutes} from "@app/domains/sets";
-import {routes as settingsRoutes} from "@app/domains/settings";
-import {routes as storageRoutes} from "@app/domains/storage";
-import {createRouterService} from "@script-development/fs-router";
+import {routes as aboutRoutes} from '@app/domains/about';
+import {routes as authRoutes} from '@app/domains/auth';
+import {routes as brickDnaRoutes} from '@app/domains/brick-dna';
+import {routes as homeRoutes} from '@app/domains/home';
+import {routes as partsRoutes} from '@app/domains/parts';
+import {routes as setsRoutes} from '@app/domains/sets';
+import {routes as settingsRoutes} from '@app/domains/settings';
+import {routes as storageRoutes} from '@app/domains/storage';
+import {createRouterService} from '@script-development/fs-router';
 
 const routes = [
     ...homeRoutes,
