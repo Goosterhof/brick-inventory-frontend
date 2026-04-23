@@ -19,10 +19,12 @@ The war room has standardized an oxfmt configuration (`war-room/templates/oxfmt.
 - Replace `.oxfmtrc.json` with a byte-identical copy of `war-room/templates/oxfmt.json` — **clean template, not the heavily-commented JSONC version** (CEO direction: uniformity across territories, comments reproduced only oxfmt docs).
 - **Update `CLAUDE.md` Building Code section** to reflect `singleQuote: true` — the prior text said "double quotes only (single quotes are a code violation)," which becomes instantly false once the new config lands. Per war-room doctrine's _doctrine propagation check_: if a deployment changes patterns documented in the territory's CLAUDE.md, the deployment includes the CLAUDE.md update. CEO ratified this scope addition after the CFO surfaced the conflict mid-permit.
 - Run `npm run format` to reformat the entire frontend under the new config.
-- Land as three commits for clean `git blame`:
+- **Teach `TestGuardReporter` to double its thresholds under `coverage.enabled`** — the gauntlet surfaced that the Test Guard fires on `test:coverage` at files that don't trip it under `test:unit`, because coverage instrumentation adds ~2x on top of the full-suite load the 2000ms threshold was originally calibrated against. The sibling `CollectGuardReporter` already has this coverage-mode doubling. CEO ratified the scope addition on the grounds that the reformat exposed (did not cause) the gate's tightness, and A was the doctrine-propagation path — if the reformat's gauntlet reveals a downstream gate we have to update, we update it in the same PR.
+- Land as four commits for clean `git blame`:
     1. Config swap + CLAUDE.md Building Code update (`.oxfmtrc.json` and `CLAUDE.md`; permit itself rides here)
-    2. Mechanical reformat (all other files, incl. any husky-regenerated component-registry drift)
-    3. `.git-blame-ignore-revs` pointing at (2)
+    2. `TestGuardReporter` coverage-mode thresholds (logic change only, pre-reformat style — quote flip lands in commit 3)
+    3. Mechanical reformat (all other files, incl. any husky-regenerated component-registry drift; the quote flip on `test-guard-reporter.ts` also lands here)
+    4. `.git-blame-ignore-revs` pointing at (3)
 - Verify the full Quality Gauntlet passes locally.
 - File a construction journal at `.claude/records/journals/2026-04-23-oxfmt-template-adoption.md`.
 
@@ -36,6 +38,7 @@ The war room has standardized an oxfmt configuration (`war-room/templates/oxfmt.
 
 - [ ] `.oxfmtrc.json` matches `war-room/templates/oxfmt.json` byte-for-byte.
 - [ ] `CLAUDE.md` Building Code quote line reflects `singleQuote: true`.
+- [ ] `TestGuardReporter` doubles its thresholds when `vitest.config.coverage.enabled` is true (mirrors `CollectGuardReporter`).
 - [ ] `npm run format:check` — clean.
 - [ ] `npm run lint --type-aware` — no _new_ errors (pre-existing baseline drift documented, not introduced).
 - [ ] `npm run lint:vue` — pass.
@@ -44,7 +47,7 @@ The war room has standardized an oxfmt configuration (`war-room/templates/oxfmt.
 - [ ] `npm run size` — within budget.
 - [ ] `npm test` (or equivalent — adapt to present scripts) — all pass.
 - [ ] `npm run build` — all three apps (families, admin, showcase) build.
-- [ ] Three commits on branch, pushed, PR open.
+- [ ] Four commits on branch, pushed, PR open.
 - [ ] `.git-blame-ignore-revs` exists at frontend root and references the reformat commit.
 - [ ] Construction journal filed.
 
