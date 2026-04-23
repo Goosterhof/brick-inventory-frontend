@@ -68,5 +68,6 @@ The war room has standardized an oxfmt configuration (`war-room/templates/oxfmt.
 
 ---
 
-**Status:** In Progress
-**Journal:** `.claude/records/journals/2026-04-23-oxfmt-template-adoption.md` (to be filed)
+**Status:** Complete
+**Journal:** [`.claude/records/journals/2026-04-23-oxfmt-template-adoption.md`](../journals/2026-04-23-oxfmt-template-adoption.md)
+**PR:** [Goosterhof/lego-storage-frontend#194](https://github.com/Goosterhof/lego-storage-frontend/pull/194)
