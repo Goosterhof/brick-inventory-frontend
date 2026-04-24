@@ -58,19 +58,19 @@ Define these as custom theme colors in `uno.config.ts` so they are available as 
 
 ```ts
 // uno.config.ts
-import {defineConfig} from "unocss";
+import {defineConfig} from 'unocss';
 
 export default defineConfig({
     theme: {
         colors: {
             brick: {
-                ink: "#000000",
-                surface: "#FFFFFF",
-                yellow: {DEFAULT: "#F5C518", subtle: "#FDF0C4"},
-                red: {DEFAULT: "#C41A16", light: "#F8D0CF", dark: "#9B1510"},
-                blue: "#0055BF",
+                ink: '#000000',
+                surface: '#FFFFFF',
+                yellow: {DEFAULT: '#F5C518', subtle: '#FDF0C4'},
+                red: {DEFAULT: '#C41A16', light: '#F8D0CF', dark: '#9B1510'},
+                blue: '#0055BF',
             },
-            baseplate: {green: "#237841"},
+            baseplate: {green: '#237841'},
         },
     },
 });
@@ -151,7 +151,7 @@ Body text stays on system fonts. The original defense still holds for running te
 ```ts
 // uno.config.ts (extend the theme)
 export default defineConfig({
-    theme: {fontFamily: {heading: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"]}},
+    theme: {fontFamily: {heading: ['Space Grotesk', 'ui-sans-serif', 'system-ui', 'sans-serif']}},
     preflights: [
         {
             getCSS: () => `

@@ -1,7 +1,7 @@
-import type {UseValidationErrors} from "@shared/composables/useValidationErrors";
+import type {UseValidationErrors} from '@shared/composables/useValidationErrors';
 
-import {isAxiosError} from "axios";
-import {ref} from "vue";
+import {isAxiosError} from 'axios';
+import {ref} from 'vue';
 
 /** @public */
 export const useFormSubmit = <T extends string>(validationErrors: UseValidationErrors<T>) => {

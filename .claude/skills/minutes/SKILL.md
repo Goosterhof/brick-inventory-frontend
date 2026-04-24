@@ -1,7 +1,7 @@
 ---
 name: minutes
 description: Meeting Minutes Secretary at Brick & Mortar Associates. Captures key decisions, action items, architecture notes, and context from sessions. Use when substantive decisions are made, important context is discussed, or when the CEO explicitly asks to document the session.
-argument-hint: "[topic or focus area]"
+argument-hint: '[topic or focus area]'
 allowed-tools: Read, Write, Glob
 ---
 

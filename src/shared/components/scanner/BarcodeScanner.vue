@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import {ensureRefValueExists} from "@shared/helpers/type-check";
-import {BarcodeDetector} from "barcode-detector";
-import {ref, watch, onMounted, onUnmounted} from "vue";
+import {ensureRefValueExists} from '@shared/helpers/type-check';
+import {BarcodeDetector} from 'barcode-detector';
+import {ref, watch, onMounted, onUnmounted} from 'vue';
 
 const {resetKey} = defineProps<{resetKey?: number; loadingText: string; retryText: string}>();
 const emit = defineEmits<{detect: [barcode: string]; error: [message: string]}>();
 
 const videoRef = ref<HTMLVideoElement | null>(null);
 const stream = ref<MediaStream | null>(null);
-const cameraError = ref("");
+const cameraError = ref('');
 const isLoading = ref(true);
 const isCameraActive = ref(false);
 const isStarting = ref(false);
-const detectedCode = ref("");
+const detectedCode = ref('');
 let scanInterval: ReturnType<typeof setInterval> | undefined;
 let isUnmounted = false;
 
@@ -34,7 +34,7 @@ const stopCamera = () => {
 };
 
 const startScanning = () => {
-    const detector = new BarcodeDetector({formats: ["ean_13", "ean_8", "upc_a", "upc_e", "qr_code"]});
+    const detector = new BarcodeDetector({formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'qr_code']});
 
     scanInterval = setInterval(async () => {
         if (!videoRef.value || !isCameraActive.value || detectedCode.value) {
@@ -45,7 +45,7 @@ const startScanning = () => {
             const barcodes = await detector.detect(videoRef.value);
             if (barcodes.length > 0 && barcodes[0]?.rawValue) {
                 detectedCode.value = barcodes[0].rawValue;
-                emit("detect", detectedCode.value);
+                emit('detect', detectedCode.value);
             }
         } catch {
             // Detection frame failed — ignore and retry on next interval
@@ -60,14 +60,14 @@ const startCamera = async () => {
 
     isStarting.value = true;
     stopCamera();
-    detectedCode.value = "";
+    detectedCode.value = '';
 
     isLoading.value = true;
-    cameraError.value = "";
+    cameraError.value = '';
 
     try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: {facingMode: "environment", width: {ideal: 1280}, height: {ideal: 720}},
+            video: {facingMode: 'environment', width: {ideal: 1280}, height: {ideal: 720}},
         });
 
         if (isUnmounted) {
@@ -90,15 +90,15 @@ const startCamera = async () => {
         startScanning();
     } catch (err) {
         if (err instanceof Error) {
-            if (err.name === "NotAllowedError") {
-                cameraError.value = "Camera access denied. Please allow camera access and try again.";
-            } else if (err.name === "NotFoundError") {
-                cameraError.value = "No camera found. Please connect a camera and try again.";
+            if (err.name === 'NotAllowedError') {
+                cameraError.value = 'Camera access denied. Please allow camera access and try again.';
+            } else if (err.name === 'NotFoundError') {
+                cameraError.value = 'No camera found. Please connect a camera and try again.';
             } else {
                 cameraError.value = `Failed to access camera: ${err.message}`;
             }
         } else {
-            cameraError.value = "An unexpected error occurred while accessing the camera.";
+            cameraError.value = 'An unexpected error occurred while accessing the camera.';
         }
     } finally {
         isLoading.value = false;
@@ -107,7 +107,7 @@ const startCamera = async () => {
 };
 
 const resetScanner = () => {
-    detectedCode.value = "";
+    detectedCode.value = '';
     if (scanInterval) {
         clearInterval(scanInterval);
         scanInterval = undefined;

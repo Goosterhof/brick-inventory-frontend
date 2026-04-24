@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import type {StorageOption} from "@app/types/storageOption";
-import type {Adapted} from "@script-development/fs-adapter-store";
+import type {StorageOption} from '@app/types/storageOption';
+import type {Adapted} from '@script-development/fs-adapter-store';
 
-import {familyLoadingService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
-import {storageOptionStoreModule} from "@app/stores";
-import EmptyState from "@shared/components/EmptyState.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import ListItemButton from "@shared/components/ListItemButton.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {computed, onMounted, ref} from "vue";
+import {familyLoadingService, familyRouterService, familySoundService, familyTranslationService} from '@app/services';
+import {storageOptionStoreModule} from '@app/stores';
+import EmptyState from '@shared/components/EmptyState.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import ListItemButton from '@shared/components/ListItemButton.vue';
+import PageHeader from '@shared/components/PageHeader.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {computed, onMounted, ref} from 'vue';
 
 const {t} = familyTranslationService;
 const {isLoading} = familyLoadingService;
 const {getAll, retrieveAll} = storageOptionStoreModule;
-const searchQuery = ref("");
+const searchQuery = ref('');
 
 const isSearching = computed(() => searchQuery.value.trim().length > 0);
 
@@ -38,11 +38,11 @@ onMounted(async () => {
 });
 
 const goToAdd = async () => {
-    await familyRouterService.goToRoute("storage-add");
+    await familyRouterService.goToRoute('storage-add');
 };
 
 const goToDetail = async (id: number) => {
-    await familyRouterService.goToRoute("storage-detail", id);
+    await familyRouterService.goToRoute('storage-detail', id);
 };
 </script>
 
@@ -50,11 +50,11 @@ const goToDetail = async (id: number) => {
     <div max-w="6xl" m="x-auto">
         <PageHeader :title="t('storage.title').value">
             <PrimaryButton :sound-service="familySoundService" @click="goToAdd">{{
-                t("storage.addStorage").value
+                t('storage.addStorage').value
             }}</PrimaryButton>
         </PageHeader>
 
-        <p v-if="isLoading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
+        <p v-if="isLoading" text="[var(--brick-muted-text)]">{{ t('common.loading').value }}</p>
 
         <EmptyState
             v-else-if="getAll.length === 0"
@@ -107,14 +107,14 @@ const goToDetail = async (id: number) => {
                                     bg="[var(--brick-surface-subtle)]"
                                     font="bold"
                                 >
-                                    {{ t("storage.subLocationsCount", {count: String(parent.childIds.length)}).value }}
+                                    {{ t('storage.subLocationsCount', {count: String(parent.childIds.length)}).value }}
                                 </span>
                                 <span
                                     v-if="parent.row !== null && parent.column !== null"
                                     text="xs [var(--brick-muted-text)]"
                                 >
                                     {{
-                                        t("storage.rowColumnLabel", {
+                                        t('storage.rowColumnLabel', {
                                             row: String(parent.row),
                                             column: String(parent.column),
                                         }).value
@@ -141,7 +141,7 @@ const goToDetail = async (id: number) => {
                                         text="xs [var(--brick-muted-text)]"
                                     >
                                         {{
-                                            t("storage.rowColumnLabel", {
+                                            t('storage.rowColumnLabel', {
                                                 row: String(child.row),
                                                 column: String(child.column),
                                             }).value

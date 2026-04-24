@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {createToastService} from "@script-development/fs-toast";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import ToastMessage from "@shared/components/ToastMessage.vue";
-import {ref} from "vue";
+import {createToastService} from '@script-development/fs-toast';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import ToastMessage from '@shared/components/ToastMessage.vue';
+import {ref} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
 const toastService = createToastService(ToastMessage);
 const lastToastId = ref<string | null>(null);
@@ -15,13 +15,13 @@ const addLog = (entry: string) => {
 };
 
 const showSuccess = () => {
-    const id = toastService.show({message: "Set added to your inventory.", variant: "success"});
+    const id = toastService.show({message: 'Set added to your inventory.', variant: 'success'});
     lastToastId.value = id;
     addLog(`show() -> ${id}`);
 };
 
 const showError = () => {
-    const id = toastService.show({message: "Could not connect to the brick vault.", variant: "error"});
+    const id = toastService.show({message: 'Could not connect to the brick vault.', variant: 'error'});
     lastToastId.value = id;
     addLog(`show() -> ${id}`);
 };
@@ -30,7 +30,7 @@ const showMany = () => {
     for (let i = 1; i <= 6; i++) {
         const id = toastService.show({
             message: `Toast #${i} — oldest get removed when max (4) exceeded.`,
-            variant: i % 2 === 0 ? "error" : "success",
+            variant: i % 2 === 0 ? 'error' : 'success',
         });
         addLog(`show() -> ${id}`);
     }

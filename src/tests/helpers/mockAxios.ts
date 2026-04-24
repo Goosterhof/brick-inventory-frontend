@@ -1,4 +1,4 @@
-import {vi} from "vitest";
+import {vi} from 'vitest';
 
 export class MockAxiosError extends Error {
     response?: {status: number; data: unknown; statusText: string; headers: unknown; config: unknown};

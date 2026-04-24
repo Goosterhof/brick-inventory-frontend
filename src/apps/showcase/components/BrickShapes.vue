@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import LegoArch from "@shared/components/LegoArch.vue";
-import LegoArchSvg from "@shared/components/LegoArchSvg.vue";
-import LegoPlate from "@shared/components/LegoPlate.vue";
-import LegoPlateSvg from "@shared/components/LegoPlateSvg.vue";
-import LegoRound from "@shared/components/LegoRound.vue";
-import LegoRoundSvg from "@shared/components/LegoRoundSvg.vue";
-import LegoSlope from "@shared/components/LegoSlope.vue";
-import LegoSlopeSvg from "@shared/components/LegoSlopeSvg.vue";
-import LegoTechnicBeam from "@shared/components/LegoTechnicBeam.vue";
-import LegoTechnicBeamSvg from "@shared/components/LegoTechnicBeamSvg.vue";
-import LegoTile from "@shared/components/LegoTile.vue";
-import LegoTileSvg from "@shared/components/LegoTileSvg.vue";
-import LegoWedge from "@shared/components/LegoWedge.vue";
-import LegoWedgeSvg from "@shared/components/LegoWedgeSvg.vue";
+import LegoArch from '@shared/components/LegoArch.vue';
+import LegoArchSvg from '@shared/components/LegoArchSvg.vue';
+import LegoPlate from '@shared/components/LegoPlate.vue';
+import LegoPlateSvg from '@shared/components/LegoPlateSvg.vue';
+import LegoRound from '@shared/components/LegoRound.vue';
+import LegoRoundSvg from '@shared/components/LegoRoundSvg.vue';
+import LegoSlope from '@shared/components/LegoSlope.vue';
+import LegoSlopeSvg from '@shared/components/LegoSlopeSvg.vue';
+import LegoTechnicBeam from '@shared/components/LegoTechnicBeam.vue';
+import LegoTechnicBeamSvg from '@shared/components/LegoTechnicBeamSvg.vue';
+import LegoTile from '@shared/components/LegoTile.vue';
+import LegoTileSvg from '@shared/components/LegoTileSvg.vue';
+import LegoWedge from '@shared/components/LegoWedge.vue';
+import LegoWedgeSvg from '@shared/components/LegoWedgeSvg.vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
 const shapes = [
-    {label: "Slope (2x2 45\u00B0)", html: LegoSlope, svg: LegoSlopeSvg, color: "#C41A16"},
-    {label: "Arch (1x4)", html: LegoArch, svg: LegoArchSvg, color: "#0055BF"},
-    {label: "Wedge (2x4)", html: LegoWedge, svg: LegoWedgeSvg, color: "#F5C518"},
-    {label: "Round (1x1)", html: LegoRound, svg: LegoRoundSvg, color: "#237841"},
-    {label: "Plate (2x4)", html: LegoPlate, svg: LegoPlateSvg, color: "#C41A16"},
-    {label: "Tile (1x2)", html: LegoTile, svg: LegoTileSvg, color: "#0055BF"},
-    {label: "Technic Beam (1x4)", html: LegoTechnicBeam, svg: LegoTechnicBeamSvg, color: "#F5C518"},
+    {label: 'Slope (2x2 45\u00B0)', html: LegoSlope, svg: LegoSlopeSvg, color: '#C41A16'},
+    {label: 'Arch (1x4)', html: LegoArch, svg: LegoArchSvg, color: '#0055BF'},
+    {label: 'Wedge (2x4)', html: LegoWedge, svg: LegoWedgeSvg, color: '#F5C518'},
+    {label: 'Round (1x1)', html: LegoRound, svg: LegoRoundSvg, color: '#237841'},
+    {label: 'Plate (2x4)', html: LegoPlate, svg: LegoPlateSvg, color: '#C41A16'},
+    {label: 'Tile (1x2)', html: LegoTile, svg: LegoTileSvg, color: '#0055BF'},
+    {label: 'Technic Beam (1x4)', html: LegoTechnicBeam, svg: LegoTechnicBeamSvg, color: '#F5C518'},
 ];
 </script>
 

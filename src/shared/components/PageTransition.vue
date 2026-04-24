@@ -1,13 +1,13 @@
 <script lang="ts">
-export type TransitionVariant = "brick-snap" | "brick-lift";
+export type TransitionVariant = 'brick-snap' | 'brick-lift';
 </script>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, ref} from 'vue';
 
-type TransitionName = TransitionVariant | "brick-none";
+type TransitionName = TransitionVariant | 'brick-none';
 
-const {routePath, defaultVariant = "brick-snap"} = defineProps<{
+const {routePath, defaultVariant = 'brick-snap'} = defineProps<{
     /** The current route path — used as the transition key */
     routePath: string;
     /** Optional: override the default variant selection */
@@ -15,19 +15,19 @@ const {routePath, defaultVariant = "brick-snap"} = defineProps<{
 }>();
 
 const prefersReducedMotion = ref(
-    typeof window !== "undefined" && typeof window.matchMedia === "function"
-        ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
         : false,
 );
 
-if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
-    window.matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (event) => {
+if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (event) => {
         prefersReducedMotion.value = event.matches;
     });
 }
 
 const transitionName = computed<TransitionName>(() => {
-    if (prefersReducedMotion.value) return "brick-none";
+    if (prefersReducedMotion.value) return 'brick-none';
     return defaultVariant;
 });
 </script>

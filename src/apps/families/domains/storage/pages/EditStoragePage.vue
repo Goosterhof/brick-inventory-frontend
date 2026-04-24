@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import type {StorageOption} from "@app/types/storageOption";
-import type {Adapted} from "@script-development/fs-adapter-store";
+import type {StorageOption} from '@app/types/storageOption';
+import type {Adapted} from '@script-development/fs-adapter-store';
 
-import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
-import {storageOptionStoreModule} from "@app/stores";
-import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
-import DangerButton from "@shared/components/DangerButton.vue";
-import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
-import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import LoadingState from "@shared/components/LoadingState.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {useFormSubmit} from "@shared/composables/useFormSubmit";
-import {useValidationErrors} from "@shared/composables/useValidationErrors";
-import {onMounted, ref} from "vue";
+import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from '@app/services';
+import {storageOptionStoreModule} from '@app/stores';
+import ConfirmDialog from '@shared/components/ConfirmDialog.vue';
+import DangerButton from '@shared/components/DangerButton.vue';
+import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
+import TextareaInput from '@shared/components/forms/inputs/TextareaInput.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import LoadingState from '@shared/components/LoadingState.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {useFormSubmit} from '@shared/composables/useFormSubmit';
+import {useValidationErrors} from '@shared/composables/useValidationErrors';
+import {onMounted, ref} from 'vue';
 
 const {t} = familyTranslationService;
 const adapted = ref<Adapted<StorageOption> | null>(null);
 const loading = ref(true);
 const showDeleteConfirm = ref(false);
 
-type EditStorageField = "name" | "description" | "parentId" | "row" | "column";
+type EditStorageField = 'name' | 'description' | 'parentId' | 'row' | 'column';
 const validationErrors = useValidationErrors<EditStorageField>(familyHttpService);
 const {errors} = validationErrors;
 const {handleSubmit, submitting} = useFormSubmit(validationErrors);
@@ -42,14 +42,14 @@ const onSubmit = () =>
             row: adapted.value.mutable.row,
             column: adapted.value.mutable.column,
         });
-        await familyRouterService.goToRoute("storage-detail", adapted.value.id);
+        await familyRouterService.goToRoute('storage-detail', adapted.value.id);
     });
 
 const handleDelete = async () => {
     if (!adapted.value) return;
 
     await adapted.value.delete();
-    await familyRouterService.goToRoute("storage");
+    await familyRouterService.goToRoute('storage');
 };
 </script>
 
@@ -58,7 +58,7 @@ const handleDelete = async () => {
         <LoadingState v-if="loading" :message="t('common.loading').value" />
 
         <template v-else-if="adapted">
-            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t("storage.editStorage").value }}</h1>
+            <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-2">{{ t('storage.editStorage').value }}</h1>
             <p text="[var(--brick-muted-text)]" m="b-6">{{ adapted.name }}</p>
 
             <form flex="~ col" gap="4" @submit.prevent="onSubmit">
@@ -89,9 +89,9 @@ const handleDelete = async () => {
 
                 <div flex gap="4">
                     <PrimaryButton type="submit" :disabled="submitting" :sound-service="familySoundService" silent>{{
-                        t("storage.save").value
+                        t('storage.save').value
                     }}</PrimaryButton>
-                    <DangerButton @click="showDeleteConfirm = true">{{ t("storage.delete").value }}</DangerButton>
+                    <DangerButton @click="showDeleteConfirm = true">{{ t('storage.delete').value }}</DangerButton>
                 </div>
             </form>
 
@@ -103,8 +103,8 @@ const handleDelete = async () => {
                 @confirm="handleDelete"
                 @cancel="showDeleteConfirm = false"
             >
-                <template #confirm>{{ t("storage.delete").value }}</template>
-                <template #cancel>{{ t("common.cancel").value }}</template>
+                <template #confirm>{{ t('storage.delete').value }}</template>
+                <template #cancel>{{ t('common.cancel').value }}</template>
             </ConfirmDialog>
         </template>
     </div>

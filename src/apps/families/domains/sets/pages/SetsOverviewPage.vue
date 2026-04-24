@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {FamilySetCompletion, FamilySetStatus} from "@app/types/familySet";
+import type {FamilySetCompletion, FamilySetStatus} from '@app/types/familySet';
 
 import {
     familyHttpService,
@@ -7,26 +7,26 @@ import {
     familyRouterService,
     familySoundService,
     familyTranslationService,
-} from "@app/services";
-import {familySetStoreModule} from "@app/stores";
-import BadgeLabel from "@shared/components/BadgeLabel.vue";
-import CollapsibleSection from "@shared/components/CollapsibleSection.vue";
-import EmptyState from "@shared/components/EmptyState.vue";
-import FilterChip from "@shared/components/FilterChip.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import ListItemButton from "@shared/components/ListItemButton.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {downloadCsv, toCsv} from "@shared/helpers/csv";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {computed, onMounted, ref} from "vue";
+} from '@app/services';
+import {familySetStoreModule} from '@app/stores';
+import BadgeLabel from '@shared/components/BadgeLabel.vue';
+import CollapsibleSection from '@shared/components/CollapsibleSection.vue';
+import EmptyState from '@shared/components/EmptyState.vue';
+import FilterChip from '@shared/components/FilterChip.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import ListItemButton from '@shared/components/ListItemButton.vue';
+import PageHeader from '@shared/components/PageHeader.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {downloadCsv, toCsv} from '@shared/helpers/csv';
+import {toCamelCaseTyped} from '@shared/helpers/string';
+import {computed, onMounted, ref} from 'vue';
 
-import CompletionGauge from "../components/CompletionGauge.vue";
+import CompletionGauge from '../components/CompletionGauge.vue';
 
 const {t} = familyTranslationService;
 const {isLoading} = familyLoadingService;
 const {getAll, retrieveAll} = familySetStoreModule;
-const searchQuery = ref("");
+const searchQuery = ref('');
 const activeStatusFilter = ref<FamilySetStatus | null>(null);
 const activeThemeFilters = ref<Set<string>>(new Set());
 const expandedThemes = ref<Set<string>>(new Set());
@@ -35,18 +35,18 @@ const completionLoading = ref(true);
 
 const statusKey: Record<
     FamilySetStatus,
-    "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist"
+    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.incomplete' | 'sets.wishlist'
 > = {
-    sealed: "sets.sealed",
-    built: "sets.built",
-    in_progress: "sets.inProgress",
-    incomplete: "sets.incomplete",
-    wishlist: "sets.wishlist",
+    sealed: 'sets.sealed',
+    built: 'sets.built',
+    in_progress: 'sets.inProgress',
+    incomplete: 'sets.incomplete',
+    wishlist: 'sets.wishlist',
 };
 
-const allStatuses: FamilySetStatus[] = ["sealed", "in_progress", "built", "incomplete", "wishlist"];
+const allStatuses: FamilySetStatus[] = ['sealed', 'in_progress', 'built', 'incomplete', 'wishlist'];
 
-const UNKNOWN_THEME = "Unknown";
+const UNKNOWN_THEME = 'Unknown';
 
 const filteredSets = computed(() => {
     let result = getAll.value;
@@ -126,7 +126,7 @@ const toggleThemeExpanded = (theme: string) => {
 const fetchCompletion = async (): Promise<void> => {
     completionLoading.value = true;
     try {
-        const response = await familyHttpService.getRequest<FamilySetCompletion[]>("/family-sets/completion");
+        const response = await familyHttpService.getRequest<FamilySetCompletion[]>('/family-sets/completion');
         const camelized = response.data.map((item) => toCamelCaseTyped<FamilySetCompletion>(item));
         const next = new Map<number, FamilySetCompletion>();
         for (const entry of camelized) {
@@ -145,20 +145,20 @@ onMounted(async () => {
 });
 
 const goToAdd = async () => {
-    await familyRouterService.goToRoute("sets-add");
+    await familyRouterService.goToRoute('sets-add');
 };
 
 const goToScan = async () => {
-    await familyRouterService.goToRoute("sets-scan");
+    await familyRouterService.goToRoute('sets-scan');
 };
 
 const goToDetail = async (id: number) => {
-    await familyRouterService.goToRoute("sets-detail", id);
+    await familyRouterService.goToRoute('sets-detail', id);
 };
 
-type AdaptedSet = (typeof getAll)["value"][number];
+type AdaptedSet = (typeof getAll)['value'][number];
 
-const orEmpty = (value: string | number | null | undefined): string => String(value ?? "");
+const orEmpty = (value: string | number | null | undefined): string => String(value ?? '');
 
 const toCsvRow = (s: AdaptedSet): string[] => {
     const set = s.set;
@@ -176,8 +176,8 @@ const toCsvRow = (s: AdaptedSet): string[] => {
 };
 
 const exportCsv = () => {
-    const headers = ["Set Number", "Name", "Year", "Theme", "Parts", "Quantity", "Status", "Purchase Date", "Notes"];
-    downloadCsv(toCsv(headers, filteredSets.value.map(toCsvRow)), "lego-sets.csv");
+    const headers = ['Set Number', 'Name', 'Year', 'Theme', 'Parts', 'Quantity', 'Status', 'Purchase Date', 'Notes'];
+    downloadCsv(toCsv(headers, filteredSets.value.map(toCsvRow)), 'lego-sets.csv');
 };
 </script>
 
@@ -186,18 +186,18 @@ const exportCsv = () => {
         <PageHeader :title="t('sets.title').value">
             <div flex gap="2" flex-wrap="wrap">
                 <PrimaryButton :sound-service="familySoundService" @click="goToScan">{{
-                    t("sets.scanSet").value
+                    t('sets.scanSet').value
                 }}</PrimaryButton>
                 <PrimaryButton :sound-service="familySoundService" @click="goToAdd">{{
-                    t("sets.addSet").value
+                    t('sets.addSet').value
                 }}</PrimaryButton>
                 <PrimaryButton v-if="getAll.length > 0" :sound-service="familySoundService" @click="exportCsv">{{
-                    t("common.export").value
+                    t('common.export').value
                 }}</PrimaryButton>
             </div>
         </PageHeader>
 
-        <p v-if="isLoading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
+        <p v-if="isLoading" text="[var(--brick-muted-text)]">{{ t('common.loading').value }}</p>
 
         <EmptyState
             v-else-if="getAll.length === 0"
@@ -274,7 +274,7 @@ const exportCsv = () => {
                                 justify="center"
                                 text="sm [var(--brick-muted-text)]"
                             >
-                                {{ t("common.noImage").value }}
+                                {{ t('common.noImage').value }}
                             </div>
                             <div flex="1" min-w="0">
                                 <p font="bold">{{ familySet.set?.name ?? familySet.setNum }}</p>
@@ -293,7 +293,7 @@ const exportCsv = () => {
                                         text="xs [var(--brick-muted-text)]"
                                         aria-label="set-completion-loading"
                                     >
-                                        {{ t("common.loading").value }}
+                                        {{ t('common.loading').value }}
                                     </p>
                                     <CompletionGauge
                                         v-else

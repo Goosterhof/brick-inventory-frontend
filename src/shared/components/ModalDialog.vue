@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type {SoundService} from "@shared/services/sound";
+import type {SoundService} from '@shared/services/sound';
 
-import {PhX} from "@phosphor-icons/vue";
-import {onMounted, ref, watch} from "vue";
+import {PhX} from '@phosphor-icons/vue';
+import {onMounted, ref, watch} from 'vue';
 
 const {open, soundService = undefined} = defineProps<{open: boolean; soundService?: SoundService}>();
 const emit = defineEmits<{close: []}>();
@@ -13,7 +13,7 @@ const syncDialog = (isOpen: boolean) => {
     const dialog = dialogRef.value;
     if (isOpen && !dialog?.open) {
         dialog?.showModal();
-        soundService?.play("pull");
+        soundService?.play('pull');
     }
     if (!isOpen && dialog?.open) dialog.close();
 };
@@ -23,12 +23,12 @@ watch(() => open, syncDialog);
 
 const handleCancel = (event: Event) => {
     event.preventDefault();
-    emit("close");
+    emit('close');
 };
 
 const handleBackdropClick = (event: MouseEvent) => {
     if (event.target === dialogRef.value) {
-        emit("close");
+        emit('close');
     }
 };
 </script>

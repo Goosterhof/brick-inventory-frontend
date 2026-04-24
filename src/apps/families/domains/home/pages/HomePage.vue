@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type {FamilyStats} from "@app/types/familyStats";
+import type {FamilyStats} from '@app/types/familyStats';
 
-import {familyAuthService, familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
-import {familySetStoreModule} from "@app/stores";
-import CardContainer from "@shared/components/CardContainer.vue";
-import LegoBrick from "@shared/components/LegoBrick.vue";
-import NavLink from "@shared/components/NavLink.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import StatCard from "@shared/components/StatCard.vue";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {computed, onMounted, ref} from "vue";
+import {familyAuthService, familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
+import {familySetStoreModule} from '@app/stores';
+import CardContainer from '@shared/components/CardContainer.vue';
+import LegoBrick from '@shared/components/LegoBrick.vue';
+import NavLink from '@shared/components/NavLink.vue';
+import PageHeader from '@shared/components/PageHeader.vue';
+import StatCard from '@shared/components/StatCard.vue';
+import {toCamelCaseTyped} from '@shared/helpers/string';
+import {computed, onMounted, ref} from 'vue';
 
-import YearDistributionChart from "../components/YearDistributionChart.vue";
+import YearDistributionChart from '../components/YearDistributionChart.vue';
 
 const {t} = familyTranslationService;
 
@@ -21,13 +21,13 @@ const setsLoading = ref(true);
 
 const statusKeys: Record<
     string,
-    "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist"
+    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.incomplete' | 'sets.wishlist'
 > = {
-    sealed: "sets.sealed",
-    built: "sets.built",
-    in_progress: "sets.inProgress",
-    incomplete: "sets.incomplete",
-    wishlist: "sets.wishlist",
+    sealed: 'sets.sealed',
+    built: 'sets.built',
+    in_progress: 'sets.inProgress',
+    incomplete: 'sets.incomplete',
+    wishlist: 'sets.wishlist',
 };
 
 const yearDistribution = computed(() => {
@@ -47,7 +47,7 @@ onMounted(async () => {
     }
 
     const [response] = await Promise.all([
-        familyHttpService.getRequest<FamilyStats>("/family/stats"),
+        familyHttpService.getRequest<FamilyStats>('/family/stats'),
         familySetStoreModule.retrieveAll(),
     ]);
 
@@ -56,12 +56,12 @@ onMounted(async () => {
     setsLoading.value = false;
 });
 
-const goToSets = async () => await familyRouterService.goToRoute("sets");
-const goToStorage = async () => await familyRouterService.goToRoute("storage");
-const goToParts = async () => await familyRouterService.goToRoute("parts");
-const goToScan = async () => await familyRouterService.goToRoute("sets-scan");
-const goToIdentify = async () => await familyRouterService.goToRoute("sets-identify");
-const goToSettings = async () => await familyRouterService.goToRoute("settings");
+const goToSets = async () => await familyRouterService.goToRoute('sets');
+const goToStorage = async () => await familyRouterService.goToRoute('storage');
+const goToParts = async () => await familyRouterService.goToRoute('parts');
+const goToScan = async () => await familyRouterService.goToRoute('sets-scan');
+const goToIdentify = async () => await familyRouterService.goToRoute('sets-identify');
+const goToSettings = async () => await familyRouterService.goToRoute('settings');
 </script>
 
 <template>
@@ -72,13 +72,13 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                 <!-- Copy block -->
                 <div flex="1 ~ col">
                     <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">
-                        {{ t("home.brandTitle").value }}
+                        {{ t('home.brandTitle').value }}
                     </h1>
-                    <p text="[var(--brick-muted-text)]" m="b-2">{{ t("home.tagline").value }}</p>
-                    <p text="[var(--brick-muted-text)]" m="b-6">{{ t("home.brandDescription").value }}</p>
+                    <p text="[var(--brick-muted-text)]" m="b-2">{{ t('home.tagline').value }}</p>
+                    <p text="[var(--brick-muted-text)]" m="b-6">{{ t('home.brandDescription').value }}</p>
 
                     <NavLink to="/register" @click="familyRouterService.goToRoute('register')">
-                        {{ t("auth.createAccount").value }}
+                        {{ t('auth.createAccount').value }}
                     </NavLink>
                 </div>
 
@@ -95,14 +95,14 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
         <template v-else>
             <PageHeader :title="t('home.dashboardTitle').value" />
 
-            <p v-if="loading" text="[var(--brick-muted-text)]">{{ t("home.loadingStats").value }}</p>
+            <p v-if="loading" text="[var(--brick-muted-text)]">{{ t('home.loadingStats').value }}</p>
 
             <template v-else-if="stats">
                 <!-- Headline stats -->
                 <div grid grid-cols="1 sm:2 lg:3" gap="4" m="b-6">
                     <StatCard :label="t('home.statSets').value" :value="String(stats.totalSets)">
                         <p v-if="stats.totalSetQuantity !== stats.totalSets" text="sm [var(--brick-muted-text)]">
-                            {{ t("home.totalIncludingDuplicates", {count: String(stats.totalSetQuantity)}).value }}
+                            {{ t('home.totalIncludingDuplicates', {count: String(stats.totalSetQuantity)}).value }}
                         </p>
                     </StatCard>
 
@@ -113,7 +113,7 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
 
                     <StatCard :label="t('home.statStoredParts').value" :value="String(stats.totalUniqueParts)">
                         <p v-if="stats.totalPartsQuantity > 0" text="sm [var(--brick-muted-text)]">
-                            {{ t("home.totalPieces", {count: String(stats.totalPartsQuantity)}).value }}
+                            {{ t('home.totalPieces', {count: String(stats.totalPartsQuantity)}).value }}
                         </p>
                     </StatCard>
                 </div>
@@ -121,7 +121,7 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                 <!-- Sets by status -->
                 <template v-if="Object.keys(stats.setsByStatus).length > 0">
                     <h2 text="lg" font="bold" uppercase tracking="wide" m="b-4">
-                        {{ t("home.setsByStatus").value }}
+                        {{ t('home.setsByStatus').value }}
                     </h2>
                     <div grid grid-cols="2 sm:4" gap="4" m="b-6">
                         <StatCard
@@ -136,7 +136,7 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                 <!-- Year distribution -->
                 <template v-if="!setsLoading && yearDistribution.size > 0">
                     <h2 text="lg" font="bold" uppercase tracking="wide" m="b-4">
-                        {{ t("home.yearDistribution").value }}
+                        {{ t('home.yearDistribution').value }}
                     </h2>
                     <CardContainer m="b-6">
                         <YearDistributionChart :distribution="yearDistribution" />
@@ -144,20 +144,20 @@ const goToSettings = async () => await familyRouterService.goToRoute("settings")
                 </template>
 
                 <p v-else-if="!setsLoading && yearDistribution.size === 0" text="[var(--brick-muted-text)]" m="b-6">
-                    {{ t("home.yearDistributionEmpty").value }}
+                    {{ t('home.yearDistributionEmpty').value }}
                 </p>
 
                 <!-- Quick actions -->
                 <h2 text="lg" font="bold" uppercase tracking="wide" m="b-4">
-                    {{ t("home.quickActions").value }}
+                    {{ t('home.quickActions').value }}
                 </h2>
                 <div grid grid-cols="2 sm:3" gap="4">
-                    <NavLink to="/sets" @click="goToSets">{{ t("navigation.sets").value }}</NavLink>
-                    <NavLink to="/storage" @click="goToStorage">{{ t("navigation.storage").value }}</NavLink>
-                    <NavLink to="/parts" @click="goToParts">{{ t("navigation.parts").value }}</NavLink>
-                    <NavLink to="/sets/scan" @click="goToScan">{{ t("home.actionScan").value }}</NavLink>
-                    <NavLink to="/sets/identify" @click="goToIdentify">{{ t("home.actionIdentify").value }}</NavLink>
-                    <NavLink to="/settings" @click="goToSettings">{{ t("home.actionImport").value }}</NavLink>
+                    <NavLink to="/sets" @click="goToSets">{{ t('navigation.sets').value }}</NavLink>
+                    <NavLink to="/storage" @click="goToStorage">{{ t('navigation.storage').value }}</NavLink>
+                    <NavLink to="/parts" @click="goToParts">{{ t('navigation.parts').value }}</NavLink>
+                    <NavLink to="/sets/scan" @click="goToScan">{{ t('home.actionScan').value }}</NavLink>
+                    <NavLink to="/sets/identify" @click="goToIdentify">{{ t('home.actionIdentify').value }}</NavLink>
+                    <NavLink to="/settings" @click="goToSettings">{{ t('home.actionImport').value }}</NavLink>
                 </div>
             </template>
         </template>

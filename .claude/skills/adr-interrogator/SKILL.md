@@ -1,7 +1,7 @@
 ---
 name: adr-interrogator
 description: Interrogate the user relentlessly about a proposed architectural decision until the reasoning is airtight and ready to be recorded as an ADR. Use when the user proposes a new pattern, convention, or architectural choice and wants it stress-tested before formalizing it.
-argument-hint: "[proposed decision or topic]"
+argument-hint: '[proposed decision or topic]'
 ---
 
 # ADR Interrogator — Brick & Mortar Associates

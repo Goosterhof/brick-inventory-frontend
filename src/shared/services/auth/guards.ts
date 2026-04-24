@@ -1,7 +1,7 @@
-import type {RouteName, RouterService, UnregisterMiddleware} from "@script-development/fs-router";
-import type {RouteRecordRaw} from "vue-router";
+import type {RouteName, RouterService, UnregisterMiddleware} from '@script-development/fs-router';
+import type {RouteRecordRaw} from 'vue-router';
 
-import type {AuthService} from "./types";
+import type {AuthService} from './types';
 
 export const registerAuthGuard = <Profile, Routes extends RouteRecordRaw[]>(
     authService: AuthService<Profile>,

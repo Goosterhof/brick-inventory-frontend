@@ -1,6 +1,6 @@
-import {createLoadingService, registerLoadingMiddleware} from "@script-development/fs-loading";
+import {createLoadingService, registerLoadingMiddleware} from '@script-development/fs-loading';
 
-import {familyHttpService} from "./http";
+import {familyHttpService} from './http';
 
 export const familyLoadingService = createLoadingService();
 

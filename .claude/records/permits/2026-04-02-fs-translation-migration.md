@@ -22,10 +22,10 @@ Replace the local `translation.ts` shared service with `@script-development/fs-t
 
     ```ts
     // Before
-    import {createTranslationService} from "@shared/services/translation";
+    import {createTranslationService} from '@shared/services/translation';
 
     // After
-    import {createTranslationService} from "@script-development/fs-translation";
+    import {createTranslationService} from '@script-development/fs-translation';
     ```
 
     The rest of the file (translation dictionaries, `familyTranslationService` creation) stays identical.

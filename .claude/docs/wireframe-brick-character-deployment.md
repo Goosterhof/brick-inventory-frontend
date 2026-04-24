@@ -125,13 +125,13 @@ Replace the current logged-out `<template>` block:
         <!-- Copy block â€” existing content, unchanged -->
         <div flex="1 ~ col">
             <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">
-                {{ t("home.brandTitle").value }}
+                {{ t('home.brandTitle').value }}
             </h1>
-            <p text="gray-600" m="b-2">{{ t("home.tagline").value }}</p>
-            <p text="gray-600" m="b-6">{{ t("home.brandDescription").value }}</p>
+            <p text="gray-600" m="b-2">{{ t('home.tagline').value }}</p>
+            <p text="gray-600" m="b-6">{{ t('home.brandDescription').value }}</p>
 
             <NavLink to="/register" @click="familyRouterService.goToRoute('register')">
-                {{ t("auth.createAccount").value }}
+                {{ t('auth.createAccount').value }}
             </NavLink>
         </div>
 
@@ -193,12 +193,12 @@ Add two optional props to `EmptyState.vue`. Defaults preserve current behavior â
 
 ```vue
 <script setup lang="ts">
-import LegoBrick from "@shared/components/LegoBrick.vue";
+import LegoBrick from '@shared/components/LegoBrick.vue';
 
 const {
     message,
     showBrick = false,
-    brickColor = "#F5C518",
+    brickColor = '#F5C518',
 } = defineProps<{message: string; showBrick?: boolean; brickColor?: string}>();
 </script>
 

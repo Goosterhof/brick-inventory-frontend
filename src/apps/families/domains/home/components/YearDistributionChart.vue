@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed} from 'vue';
 
 const {distribution} = defineProps<{distribution: Map<number, number>}>();
 
@@ -14,7 +14,7 @@ const maxCount = computed(() => {
 const sortedEntries = computed(() => [...distribution.entries()].sort(([a], [b]) => a - b));
 
 const barWidthPercent = (count: number): string => {
-    if (maxCount.value === 0) return "0%";
+    if (maxCount.value === 0) return '0%';
     return `${String(Math.round((count / maxCount.value) * 100))}%`;
 };
 </script>

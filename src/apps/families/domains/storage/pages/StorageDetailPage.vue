@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type {StorageOptionPart} from "@app/types/part";
-import type {StorageOption} from "@app/types/storageOption";
-import type {Adapted} from "@script-development/fs-adapter-store";
+import type {StorageOptionPart} from '@app/types/part';
+import type {StorageOption} from '@app/types/storageOption';
+import type {Adapted} from '@script-development/fs-adapter-store';
 
-import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
-import {storageOptionStoreModule} from "@app/stores";
-import BackButton from "@shared/components/BackButton.vue";
-import DetailRow from "@shared/components/DetailRow.vue";
-import EmptyState from "@shared/components/EmptyState.vue";
-import LoadingState from "@shared/components/LoadingState.vue";
-import PartListItem from "@shared/components/PartListItem.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {onMounted, ref} from "vue";
+import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
+import {storageOptionStoreModule} from '@app/stores';
+import BackButton from '@shared/components/BackButton.vue';
+import DetailRow from '@shared/components/DetailRow.vue';
+import EmptyState from '@shared/components/EmptyState.vue';
+import LoadingState from '@shared/components/LoadingState.vue';
+import PartListItem from '@shared/components/PartListItem.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {toCamelCaseTyped} from '@shared/helpers/string';
+import {onMounted, ref} from 'vue';
 
 const {t} = familyTranslationService;
 const adapted = ref<Adapted<StorageOption> | null>(null);
@@ -34,11 +34,11 @@ onMounted(async () => {
 
 const goToEdit = async () => {
     if (!adapted.value) return;
-    await familyRouterService.goToRoute("storage-edit", adapted.value.id);
+    await familyRouterService.goToRoute('storage-edit', adapted.value.id);
 };
 
 const goBack = async () => {
-    await familyRouterService.goToRoute("storage");
+    await familyRouterService.goToRoute('storage');
 };
 </script>
 
@@ -48,7 +48,7 @@ const goBack = async () => {
 
         <template v-else-if="adapted">
             <div m="b-6">
-                <BackButton @click="goBack">&larr; {{ t("storage.backToOverview").value }}</BackButton>
+                <BackButton @click="goBack">&larr; {{ t('storage.backToOverview').value }}</BackButton>
             </div>
 
             <div flex="~ col" gap="3">
@@ -68,13 +68,13 @@ const goBack = async () => {
                 </DetailRow>
 
                 <div m="t-4">
-                    <PrimaryButton @click="goToEdit">{{ t("storage.edit").value }}</PrimaryButton>
+                    <PrimaryButton @click="goToEdit">{{ t('storage.edit').value }}</PrimaryButton>
                 </div>
             </div>
 
             <div m="t-8">
                 <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
-                    {{ t("storage.parts").value }} ({{ storageParts.length }})
+                    {{ t('storage.parts').value }} ({{ storageParts.length }})
                 </h2>
 
                 <LoadingState v-if="partsLoading" :message="t('storage.loadingParts').value" />

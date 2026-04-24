@@ -1,6 +1,6 @@
-import type {SerializedError} from "vitest";
-import type {TestModule, Vitest} from "vitest/node";
-import type {Reporter, TestRunEndReason} from "vitest/reporters";
+import type {SerializedError} from 'vitest';
+import type {TestModule, Vitest} from 'vitest/node';
+import type {Reporter, TestRunEndReason} from 'vitest/reporters';
 
 /**
  * A Vitest reporter that enforces collect-duration limits per test file using
@@ -61,7 +61,7 @@ class CollectGuardReporter implements Reporter {
 
     onTestModuleEnd(module: TestModule): void {
         const rawMs = module.diagnostic().collectDuration;
-        const file = module.moduleId.replace(/.*src\/tests\/unit\//, "");
+        const file = module.moduleId.replace(/.*src\/tests\/unit\//, '');
         const project = module.project.name;
 
         this.entries.push({project, file, rawMs: Math.round(rawMs)});
@@ -123,17 +123,17 @@ class CollectGuardReporter implements Reporter {
             );
 
             const message = [
-                "",
-                "\x1b[1m\x1b[33m COLLECT GUARD \x1b[0m Warning — import chain getting heavy:",
-                "",
-                `  Threshold: ${warnThreshold}ms delta${this.coverageEnabled ? " (coverage mode: 2x)" : ""}`,
-                "",
+                '',
+                '\x1b[1m\x1b[33m COLLECT GUARD \x1b[0m Warning — import chain getting heavy:',
+                '',
+                `  Threshold: ${warnThreshold}ms delta${this.coverageEnabled ? ' (coverage mode: 2x)' : ''}`,
+                '',
                 ...lines,
-                "",
-                "  Consider mocking heavy dependencies with vi.mock(() => ({...})).",
-                "  See ADR-010 for the test isolation policy.",
-                "",
-            ].join("\n");
+                '',
+                '  Consider mocking heavy dependencies with vi.mock(() => ({...})).',
+                '  See ADR-010 for the test isolation policy.',
+                '',
+            ].join('\n');
 
             console.warn(message);
         }
@@ -148,17 +148,17 @@ class CollectGuardReporter implements Reporter {
         );
 
         const message = [
-            "",
-            "\x1b[1m\x1b[31m COLLECT GUARD \x1b[0m Import chain too slow in test files:",
-            "",
-            `  Threshold: ${failThreshold}ms delta / ${hardCap}ms hard cap${this.coverageEnabled ? " (coverage mode: 2x)" : ""}`,
-            "",
+            '',
+            '\x1b[1m\x1b[31m COLLECT GUARD \x1b[0m Import chain too slow in test files:',
+            '',
+            `  Threshold: ${failThreshold}ms delta / ${hardCap}ms hard cap${this.coverageEnabled ? ' (coverage mode: 2x)' : ''}`,
+            '',
             ...lines,
-            "",
-            "  Fix: mock heavy dependencies with vi.mock(() => ({...})) so the import chain stays shallow.",
-            "  See ADR-010 for the test isolation policy.",
-            "",
-        ].join("\n");
+            '',
+            '  Fix: mock heavy dependencies with vi.mock(() => ({...})) so the import chain stays shallow.',
+            '  See ADR-010 for the test isolation policy.',
+            '',
+        ].join('\n');
 
         console.error(message);
 

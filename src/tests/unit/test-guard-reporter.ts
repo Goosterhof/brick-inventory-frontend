@@ -1,6 +1,6 @@
-import type {SerializedError} from "vitest";
-import type {TestModule} from "vitest/node";
-import type {Reporter, TestRunEndReason} from "vitest/reporters";
+import type {SerializedError} from 'vitest';
+import type {TestModule, Vitest} from 'vitest/node';
+import type {Reporter, TestRunEndReason} from 'vitest/reporters';
 
 /**
  * A Vitest reporter that enforces per-file test execution time limits.
@@ -13,11 +13,14 @@ import type {Reporter, TestRunEndReason} from "vitest/reporters";
  *
  * Execution time varies under full-suite load due to thread contention and
  * worker pool pressure — tests routinely measure 1.5–2x slower in the full
- * suite vs isolated project runs.
+ * suite vs isolated project runs, and coverage instrumentation layers another
+ * ~2x on top. The sibling CollectGuardReporter doubles its thresholds under
+ * coverage for exactly this reason; this reporter mirrors that policy so the
+ * gauntlet gates stay consistent across `test:unit` and `test:coverage`.
  *
- * Two tiers:
- * - Warning (300–2000ms): printed but does not fail the suite
- * - Failure (2000ms+): fails the suite with exit code 1
+ * Two tiers (base thresholds; doubled under coverage):
+ * - Warning (300ms base / 600ms under coverage): printed but does not fail the suite
+ * - Failure (2000ms base / 4000ms under coverage): fails the suite with exit code 1
  *
  * See ADR-010 for the full test isolation policy.
  */
@@ -33,22 +36,20 @@ interface FileEntry {
 }
 
 class TestGuardReporter implements Reporter {
-    private warnings: FileEntry[] = [];
-    private violations: FileEntry[] = [];
+    private coverageEnabled = false;
+    private entries: FileEntry[] = [];
+
+    onInit(vitest: Vitest): void {
+        this.coverageEnabled = vitest.config.coverage.enabled;
+    }
 
     onTestModuleEnd(module: TestModule): void {
         const durationMs = Math.round(module.diagnostic().duration);
-        const file = module.moduleId.replace(/.*src\/tests\/unit\//, "");
+        const file = module.moduleId.replace(/.*src\/tests\/unit\//, '');
         const project = module.project.name;
         const testCount = [...module.children.allTests()].length;
 
-        const entry: FileEntry = {project, file, durationMs, testCount};
-
-        if (durationMs >= FAIL_THRESHOLD_MS) {
-            this.violations.push(entry);
-        } else if (durationMs >= WARN_THRESHOLD_MS) {
-            this.warnings.push(entry);
-        }
+        this.entries.push({project, file, durationMs, testCount});
     }
 
     onTestRunEnd(
@@ -56,51 +57,64 @@ class TestGuardReporter implements Reporter {
         _errors: ReadonlyArray<SerializedError>,
         _reason: TestRunEndReason,
     ): void {
-        if (this.warnings.length > 0) {
-            const sorted = this.warnings.sort((a, b) => b.durationMs - a.durationMs);
+        const coverageMultiplier = this.coverageEnabled ? 2 : 1;
+        const warnThreshold = WARN_THRESHOLD_MS * coverageMultiplier;
+        const failThreshold = FAIL_THRESHOLD_MS * coverageMultiplier;
+
+        const warnings: FileEntry[] = [];
+        const violations: FileEntry[] = [];
+
+        for (const entry of this.entries) {
+            if (entry.durationMs >= failThreshold) {
+                violations.push(entry);
+            } else if (entry.durationMs >= warnThreshold) {
+                warnings.push(entry);
+            }
+        }
+
+        if (warnings.length > 0) {
+            const sorted = warnings.sort((a, b) => b.durationMs - a.durationMs);
             const lines = sorted.map((v) => `  [${v.project}] ${v.durationMs}ms | ${v.testCount} tests | ${v.file}`);
 
             const message = [
-                "",
-                "\x1b[1m\x1b[33m TEST GUARD \x1b[0m Test files getting slow:",
-                "",
-                `  Threshold: ${WARN_THRESHOLD_MS}ms`,
-                "",
+                '',
+                '\x1b[1m\x1b[33m TEST GUARD \x1b[0m Test files getting slow:',
+                '',
+                `  Threshold: ${warnThreshold}ms${this.coverageEnabled ? ' (coverage mode: 2x)' : ''}`,
+                '',
                 ...lines,
-                "",
-                "  Consider: mock heavy dependencies, split large files, or reduce setup overhead.",
-                "  See ADR-010 for the test isolation policy.",
-                "",
-            ].join("\n");
+                '',
+                '  Consider: mock heavy dependencies, split large files, or reduce setup overhead.',
+                '  See ADR-010 for the test isolation policy.',
+                '',
+            ].join('\n');
 
             console.warn(message);
         }
 
-        if (this.violations.length === 0) {
+        if (violations.length === 0) {
             return;
         }
 
-        const sorted = this.violations.sort((a, b) => b.durationMs - a.durationMs);
+        const sorted = violations.sort((a, b) => b.durationMs - a.durationMs);
         const lines = sorted.map((v) => `  [${v.project}] ${v.durationMs}ms | ${v.testCount} tests | ${v.file}`);
 
         const message = [
-            "",
-            "\x1b[1m\x1b[31m TEST GUARD \x1b[0m Test files too slow:",
-            "",
-            `  Threshold: ${FAIL_THRESHOLD_MS}ms`,
-            "",
+            '',
+            '\x1b[1m\x1b[31m TEST GUARD \x1b[0m Test files too slow:',
+            '',
+            `  Threshold: ${failThreshold}ms${this.coverageEnabled ? ' (coverage mode: 2x)' : ''}`,
+            '',
             ...lines,
-            "",
-            "  Fix: mock heavy dependencies, split large files, or reduce setup overhead.",
-            "  See ADR-010 for the test isolation policy.",
-            "",
-        ].join("\n");
+            '',
+            '  Fix: mock heavy dependencies, split large files, or reduce setup overhead.',
+            '  See ADR-010 for the test isolation policy.',
+            '',
+        ].join('\n');
 
         console.error(message);
 
-        throw new Error(
-            `Test guard: ${this.violations.length} file(s) exceeded ${FAIL_THRESHOLD_MS}ms execution threshold`,
-        );
+        throw new Error(`Test guard: ${violations.length} file(s) exceeded ${failThreshold}ms execution threshold`);
     }
 }
 

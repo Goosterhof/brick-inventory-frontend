@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import {familyTranslationService} from "@app/services";
-import LegoArch from "@shared/components/LegoArch.vue";
-import LegoArchSvg from "@shared/components/LegoArchSvg.vue";
-import LegoBrick from "@shared/components/LegoBrick.vue";
-import LegoBrickSvg from "@shared/components/LegoBrickSvg.vue";
-import LegoPlate from "@shared/components/LegoPlate.vue";
-import LegoPlateSvg from "@shared/components/LegoPlateSvg.vue";
-import LegoRound from "@shared/components/LegoRound.vue";
-import LegoRoundSvg from "@shared/components/LegoRoundSvg.vue";
-import LegoSlope from "@shared/components/LegoSlope.vue";
-import LegoSlopeSvg from "@shared/components/LegoSlopeSvg.vue";
-import LegoTechnicBeam from "@shared/components/LegoTechnicBeam.vue";
-import LegoTechnicBeamSvg from "@shared/components/LegoTechnicBeamSvg.vue";
-import LegoTile from "@shared/components/LegoTile.vue";
-import LegoTileSvg from "@shared/components/LegoTileSvg.vue";
-import LegoWedge from "@shared/components/LegoWedge.vue";
-import LegoWedgeSvg from "@shared/components/LegoWedgeSvg.vue";
+import {familyTranslationService} from '@app/services';
+import LegoArch from '@shared/components/LegoArch.vue';
+import LegoArchSvg from '@shared/components/LegoArchSvg.vue';
+import LegoBrick from '@shared/components/LegoBrick.vue';
+import LegoBrickSvg from '@shared/components/LegoBrickSvg.vue';
+import LegoPlate from '@shared/components/LegoPlate.vue';
+import LegoPlateSvg from '@shared/components/LegoPlateSvg.vue';
+import LegoRound from '@shared/components/LegoRound.vue';
+import LegoRoundSvg from '@shared/components/LegoRoundSvg.vue';
+import LegoSlope from '@shared/components/LegoSlope.vue';
+import LegoSlopeSvg from '@shared/components/LegoSlopeSvg.vue';
+import LegoTechnicBeam from '@shared/components/LegoTechnicBeam.vue';
+import LegoTechnicBeamSvg from '@shared/components/LegoTechnicBeamSvg.vue';
+import LegoTile from '@shared/components/LegoTile.vue';
+import LegoTileSvg from '@shared/components/LegoTileSvg.vue';
+import LegoWedge from '@shared/components/LegoWedge.vue';
+import LegoWedgeSvg from '@shared/components/LegoWedgeSvg.vue';
 
 const {t} = familyTranslationService;
 
-const RED = "#DC2626";
-const BLUE = "#1D4ED8";
-const GREEN = "#16A34A";
-const YELLOW = "#EAB308";
-const BROWN = "#92400E";
-const GRAY = "#6B7280";
+const RED = '#DC2626';
+const BLUE = '#1D4ED8';
+const GREEN = '#16A34A';
+const YELLOW = '#EAB308';
+const BROWN = '#92400E';
+const GRAY = '#6B7280';
 </script>
 
 <template>
     <div>
-        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">{{ t("about.title").value }}</h1>
-        <p text="[var(--brick-muted-text)]" m="b-6">{{ t("about.description").value }}</p>
+        <h1 text="2xl" font="bold" uppercase tracking="wide" m="b-4">{{ t('about.title').value }}</h1>
+        <p text="[var(--brick-muted-text)]" m="b-6">{{ t('about.description').value }}</p>
         <div flex gap="8">
             <div inline-block style="filter: drop-shadow(4px 4px 0 black)">
                 <!-- Row 1: Red 2×2 + Blue 1×1 (bottom-aligned) -->
@@ -67,7 +67,7 @@ const GRAY = "#6B7280";
         </div>
 
         <!-- Dioramas -->
-        <h2 text="xl" font="bold" uppercase tracking="wide" m="t-8 b-4">{{ t("about.diorama").value }}</h2>
+        <h2 text="xl" font="bold" uppercase tracking="wide" m="t-8 b-4">{{ t('about.diorama').value }}</h2>
         <div flex gap="8" items="end">
             <!-- HTML Diorama -->
             <div data-diorama inline-flex flex="col" items="center" style="filter: drop-shadow(4px 4px 0 black)">

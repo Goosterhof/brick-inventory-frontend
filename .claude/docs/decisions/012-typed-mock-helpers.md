@@ -79,9 +79,9 @@ The override must be structurally compatible with the real interface. You can't 
 ```typescript
 const {mockLogin, mockGoToDashboard} = vi.hoisted(() => ({mockLogin: vi.fn(), mockGoToDashboard: vi.fn()}));
 
-vi.mock("axios", () => createMockAxios());
-vi.mock("string-ts", () => createMockStringTs());
-vi.mock("@app/services", () =>
+vi.mock('axios', () => createMockAxios());
+vi.mock('string-ts', () => createMockStringTs());
+vi.mock('@app/services', () =>
     createMockFamilyServices({
         familyAuthService: {login: mockLogin},
         familyRouterService: {goToDashboard: mockGoToDashboard},

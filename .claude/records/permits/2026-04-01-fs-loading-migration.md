@@ -22,11 +22,11 @@ Replace the local `loading.ts` and `loading-middleware.ts` shared services with 
 
     ```ts
     // Before
-    import {createLoadingService} from "@shared/services/loading";
-    import {registerLoadingMiddleware} from "@shared/services/loading-middleware";
+    import {createLoadingService} from '@shared/services/loading';
+    import {registerLoadingMiddleware} from '@shared/services/loading-middleware';
 
     // After
-    import {createLoadingService, registerLoadingMiddleware} from "@script-development/fs-loading";
+    import {createLoadingService, registerLoadingMiddleware} from '@script-development/fs-loading';
     ```
 
     The rest of the file (`familyLoadingService` creation, middleware registration) stays identical.

@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import type {HttpService} from "@script-development/fs-http";
-import type {AxiosError} from "axios";
+import type {HttpService} from '@script-development/fs-http';
+import type {AxiosError} from 'axios';
 
-import DateInput from "@shared/components/forms/inputs/DateInput.vue";
-import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
-import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
-import TextareaInput from "@shared/components/forms/inputs/TextareaInput.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {useFormSubmit} from "@shared/composables/useFormSubmit";
-import {useValidationErrors} from "@shared/composables/useValidationErrors";
-import {AxiosError as AxiosErrorClass} from "axios";
-import {computed, ref, watch} from "vue";
+import DateInput from '@shared/components/forms/inputs/DateInput.vue';
+import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
+import SelectInput from '@shared/components/forms/inputs/SelectInput.vue';
+import TextareaInput from '@shared/components/forms/inputs/TextareaInput.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {useFormSubmit} from '@shared/composables/useFormSubmit';
+import {useValidationErrors} from '@shared/composables/useValidationErrors';
+import {AxiosError as AxiosErrorClass} from 'axios';
+import {computed, ref, watch} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
-type SetFormField = "name" | "setNumber" | "pieceCount" | "theme" | "purchaseDate" | "notes";
+type SetFormField = 'name' | 'setNumber' | 'pieceCount' | 'theme' | 'purchaseDate' | 'notes';
 
 type CapturedMiddleware = (error: AxiosError<Record<string, unknown>>) => void;
 
@@ -31,26 +31,26 @@ const mockHttpService = {
 const {errors, clearErrors} = useValidationErrors<SetFormField>(mockHttpService);
 const {handleSubmit, submitting} = useFormSubmit<SetFormField>({errors, clearErrors});
 
-const name = ref("");
-const setNumber = ref("");
+const name = ref('');
+const setNumber = ref('');
 const pieceCount = ref<number | null>(null);
-const theme = ref("");
+const theme = ref('');
 const purchaseDate = ref<string | null>(null);
 const notes = ref<string | null>(null);
 
 const successMessage = ref(false);
-const serverError = ref("");
+const serverError = ref('');
 
 const inspectorJson = computed(() => JSON.stringify(errors.value, null, 2));
 
 const resetForm = () => {
-    name.value = "";
-    setNumber.value = "";
+    name.value = '';
+    setNumber.value = '';
     pieceCount.value = null;
-    theme.value = "";
+    theme.value = '';
     purchaseDate.value = null;
     notes.value = null;
-    serverError.value = "";
+    serverError.value = '';
 };
 
 const simulateSuccess = async () => {
@@ -68,20 +68,20 @@ const simulateSuccess = async () => {
 
 const simulate422 = async () => {
     await handleSubmit(async () => {
-        const axiosError = new AxiosErrorClass("Validation failed", "ERR_BAD_REQUEST", undefined, undefined, {
+        const axiosError = new AxiosErrorClass('Validation failed', 'ERR_BAD_REQUEST', undefined, undefined, {
             status: 422,
-            statusText: "Unprocessable Entity",
+            statusText: 'Unprocessable Entity',
             headers: {},
-            config: {headers: new AxiosErrorClass("").config?.headers ?? ({} as never)},
+            config: {headers: new AxiosErrorClass('').config?.headers ?? ({} as never)},
             data: {
-                message: "The given data was invalid.",
+                message: 'The given data was invalid.',
                 errors: {
-                    name: ["The name field is required."],
-                    set_number: ["The set number must be unique."],
-                    piece_count: ["The piece count must be at least 1."],
-                    theme: ["The selected theme is invalid."],
-                    purchase_date: ["The purchase date must be a valid date."],
-                    notes: ["The notes may not be greater than 500 characters."],
+                    name: ['The name field is required.'],
+                    set_number: ['The set number must be unique.'],
+                    piece_count: ['The piece count must be at least 1.'],
+                    theme: ['The selected theme is invalid.'],
+                    purchase_date: ['The purchase date must be a valid date.'],
+                    notes: ['The notes may not be greater than 500 characters.'],
                 },
             },
         } as never);
@@ -95,10 +95,10 @@ const simulate422 = async () => {
 const simulateServerError = async () => {
     try {
         await handleSubmit(async () => {
-            throw new Error("Internal Server Error: The brick vault is offline.");
+            throw new Error('Internal Server Error: The brick vault is offline.');
         });
     } catch {
-        serverError.value = "Internal Server Error: The brick vault is offline.";
+        serverError.value = 'Internal Server Error: The brick vault is offline.';
     }
 };
 
@@ -106,7 +106,7 @@ watch([name, setNumber, pieceCount, theme, purchaseDate, notes], () => {
     if (Object.keys(errors.value).length > 0) {
         clearErrors();
     }
-    serverError.value = "";
+    serverError.value = '';
 });
 </script>
 
@@ -162,7 +162,7 @@ watch([name, setNumber, pieceCount, theme, purchaseDate, notes], () => {
 
                 <div flex="~ wrap" gap="3" items="center">
                     <PrimaryButton :disabled="submitting" @click="simulateSuccess">
-                        {{ submitting ? "Submitting..." : "Submit (Success)" }}
+                        {{ submitting ? 'Submitting...' : 'Submit (Success)' }}
                     </PrimaryButton>
                     <PrimaryButton :disabled="submitting" @click="simulate422">Submit (422 Errors)</PrimaryButton>
                     <PrimaryButton :disabled="submitting" @click="simulateServerError">

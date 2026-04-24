@@ -1,10 +1,10 @@
-import type {StorageService} from "@script-development/fs-storage";
-import type {ComputedRef} from "vue";
+import type {StorageService} from '@script-development/fs-storage';
+import type {ComputedRef} from 'vue';
 
-import {computed, ref} from "vue";
+import {computed, ref} from 'vue';
 
 /** @public */
-export type SoundType = "snap" | "pull" | "cascade" | "thud";
+export type SoundType = 'snap' | 'pull' | 'cascade' | 'thud';
 
 export interface SoundService {
     isEnabled: ComputedRef<boolean>;
@@ -12,10 +12,10 @@ export interface SoundService {
     play: (sound: SoundType) => void;
 }
 
-const STORAGE_KEY = "sound-enabled";
+const STORAGE_KEY = 'sound-enabled';
 const VOLUME = 0.3;
 
-const prefersReducedMotion = (): boolean => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prefersReducedMotion = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const createNoiseBuffer = (context: AudioContext, duration: number): AudioBuffer => {
     const sampleRate = context.sampleRate;
@@ -37,7 +37,7 @@ const synthesizeSnap: SoundSynthesizer = (context) => {
     const gain = context.createGain();
 
     source.buffer = buffer;
-    filter.type = "bandpass";
+    filter.type = 'bandpass';
     filter.frequency.value = 3000;
     filter.Q.value = 1;
 
@@ -59,7 +59,7 @@ const synthesizePull: SoundSynthesizer = (context) => {
     const gain = context.createGain();
 
     source.buffer = buffer;
-    filter.type = "bandpass";
+    filter.type = 'bandpass';
     filter.frequency.value = 1150;
     filter.Q.value = 1;
 
@@ -84,7 +84,7 @@ const synthesizeCascade: SoundSynthesizer = (context) => {
         const gain = context.createGain();
 
         source.buffer = buffer;
-        filter.type = "bandpass";
+        filter.type = 'bandpass';
         filter.frequency.value = 3000;
         filter.Q.value = 1;
 
@@ -107,7 +107,7 @@ const synthesizeThud: SoundSynthesizer = (context) => {
     const gain = context.createGain();
 
     source.buffer = buffer;
-    filter.type = "bandpass";
+    filter.type = 'bandpass';
     filter.frequency.value = 450;
     filter.Q.value = 1;
 

@@ -311,13 +311,13 @@ Our design language is neo-brutalist, inspired by actual LEGO bricks:
 
 ## Formatting Standards — The Building Code
 
-These are enforced by oxfmt. Non-compliance is a demolition order.
+These are enforced by oxfmt. The config is `.oxfmtrc.json`, adopted byte-for-byte from `war-room/templates/oxfmt.json` on 2026-04-23 (permit: `2026-04-23-oxfmt-template-adoption`). Non-compliance is a demolition order.
 
 - **Print width:** 120 characters
 - **Indent:** 4 spaces (tabs are contraband)
 - **Trailing commas:** always
 - **Semicolons:** required
-- **Quotes:** double quotes only (single quotes are a code violation)
+- **Quotes:** single quotes only (double quotes are a code violation) — flipped 2026-04-23 to align with the war-room template and Pint on the backend side. Every other war-room territory uses single quotes; BIO opting out would have created cross-territory inconsistency.
 - **Bracket spacing:** none (`{a: 1}` not `{ a: 1 }`)
 - **Line endings:** LF
 - **Final newline:** required

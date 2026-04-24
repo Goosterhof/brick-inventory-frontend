@@ -1,6 +1,6 @@
-import SettingsPage from "@app/domains/settings/pages/SettingsPage.vue";
-import {shallowMount} from "@vue/test-utils";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import SettingsPage from '@app/domains/settings/pages/SettingsPage.vue';
+import {shallowMount} from '@vue/test-utils';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 const {
     createMockAxiosWithError,
@@ -11,18 +11,18 @@ const {
     createMockFormField,
     createMockFormLabel,
     createMockFormError,
-} = await vi.hoisted(() => import("../../../../../../helpers"));
+} = await vi.hoisted(() => import('../../../../../../helpers'));
 
-vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
-vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
-vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
+vi.mock('@shared/components/forms/FormError.vue', () => createMockFormError());
+vi.mock('@shared/components/forms/FormField.vue', () => createMockFormField());
+vi.mock('@shared/components/forms/FormLabel.vue', () => createMockFormLabel());
 
-vi.mock("axios", () => createMockAxiosWithError());
-vi.mock("string-ts", () => createMockStringTs());
-vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
+vi.mock('axios', () => createMockAxiosWithError());
+vi.mock('string-ts', () => createMockStringTs());
+vi.mock('@script-development/fs-helpers', () => createMockFsHelpers());
 
 const {mockGetRequest, mockUserId, mockIsDark, mockToggleTheme} = await vi.hoisted(async () => {
-    const {ref} = await import("vue");
+    const {ref} = await import('vue');
     return {
         mockGetRequest: vi.fn<(url: string) => Promise<unknown>>(),
         mockUserId: vi.fn<() => number>(),
@@ -31,7 +31,7 @@ const {mockGetRequest, mockUserId, mockIsDark, mockToggleTheme} = await vi.hoist
     };
 });
 
-vi.mock("@app/services", () =>
+vi.mock('@app/services', () =>
     createMockFamilyServices({
         familyHttpService: {getRequest: mockGetRequest},
         familyAuthService: {isLoggedIn: {value: true}, userId: mockUserId},
@@ -41,19 +41,19 @@ vi.mock("@app/services", () =>
 
 const mockMembersAndNoInviteCode = () => {
     mockGetRequest.mockImplementation((url: string) => {
-        if (url === "/family/members") {
-            return Promise.resolve({data: [{id: 1, name: "Jan", email: "jan@example.com", isHead: true}]});
+        if (url === '/family/members') {
+            return Promise.resolve({data: [{id: 1, name: 'Jan', email: 'jan@example.com', isHead: true}]});
         }
-        if (url === "/family/invite-code") {
-            const error = new MockAxiosError("Not Found");
-            error.response = {status: 404, data: null, statusText: "Not Found", headers: {}, config: {}};
+        if (url === '/family/invite-code') {
+            const error = new MockAxiosError('Not Found');
+            error.response = {status: 404, data: null, statusText: 'Not Found', headers: {}, config: {}};
             return Promise.reject(error);
         }
         return Promise.reject(new Error(`Unexpected GET: ${url}`));
     });
 };
 
-describe("SettingsPage — theme", () => {
+describe('SettingsPage — theme', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mockUserId.mockReturnValue(1);
@@ -61,23 +61,23 @@ describe("SettingsPage — theme", () => {
         mockIsDark.value = false;
     });
 
-    it("should render theme section title", () => {
+    it('should render theme section title', () => {
         // Arrange & Act
         const wrapper = shallowMount(SettingsPage);
 
         // Assert
-        expect(wrapper.text()).toContain("settings.themeTitle");
+        expect(wrapper.text()).toContain('settings.themeTitle');
     });
 
-    it("should render theme section description", () => {
+    it('should render theme section description', () => {
         // Arrange & Act
         const wrapper = shallowMount(SettingsPage);
 
         // Assert
-        expect(wrapper.text()).toContain("settings.themeDescription");
+        expect(wrapper.text()).toContain('settings.themeDescription');
     });
 
-    it("should show light mode label when theme is light", () => {
+    it('should show light mode label when theme is light', () => {
         // Arrange
         mockIsDark.value = false;
 
@@ -85,10 +85,10 @@ describe("SettingsPage — theme", () => {
         const wrapper = shallowMount(SettingsPage);
 
         // Assert
-        expect(wrapper.text()).toContain("settings.themeLight");
+        expect(wrapper.text()).toContain('settings.themeLight');
     });
 
-    it("should show dark mode label when theme is dark", () => {
+    it('should show dark mode label when theme is dark', () => {
         // Arrange
         mockIsDark.value = true;
 
@@ -96,35 +96,35 @@ describe("SettingsPage — theme", () => {
         const wrapper = shallowMount(SettingsPage);
 
         // Assert
-        expect(wrapper.text()).toContain("settings.themeDark");
+        expect(wrapper.text()).toContain('settings.themeDark');
     });
 
-    it("should call toggleTheme when toggle button is clicked", async () => {
+    it('should call toggleTheme when toggle button is clicked', async () => {
         // Arrange
         const wrapper = shallowMount(SettingsPage);
 
         // Act
-        const buttons = wrapper.findAll("button");
+        const buttons = wrapper.findAll('button');
         const themeButton = buttons.find(
-            (btn) => btn.text() === "settings.themeLight" || btn.text() === "settings.themeDark",
+            (btn) => btn.text() === 'settings.themeLight' || btn.text() === 'settings.themeDark',
         );
-        await themeButton?.trigger("click");
+        await themeButton?.trigger('click');
 
         // Assert
         expect(mockToggleTheme).toHaveBeenCalledOnce();
     });
 
-    it("should reactively update label when isDark changes", async () => {
+    it('should reactively update label when isDark changes', async () => {
         // Arrange
         mockIsDark.value = false;
         const wrapper = shallowMount(SettingsPage);
-        expect(wrapper.text()).toContain("settings.themeLight");
+        expect(wrapper.text()).toContain('settings.themeLight');
 
         // Act
         mockIsDark.value = true;
         await wrapper.vm.$nextTick();
 
         // Assert
-        expect(wrapper.text()).toContain("settings.themeDark");
+        expect(wrapper.text()).toContain('settings.themeDark');
     });
 });

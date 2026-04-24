@@ -8,7 +8,7 @@
  * See ADR-013 Resolved Questions for the rationale.
  */
 
-const iconStub = {template: "<i />", props: ["size", "weight"]};
+const iconStub = {template: '<i />', props: ['size', 'weight']};
 
 // Icons used in src/shared/components/
 export const PhX = iconStub;

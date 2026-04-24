@@ -1,3 +1,3 @@
-import {createStorageService} from "@script-development/fs-storage";
+import {createStorageService} from '@script-development/fs-storage';
 
-export const familyStorageService = createStorageService("families");
+export const familyStorageService = createStorageService('families');

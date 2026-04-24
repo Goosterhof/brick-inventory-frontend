@@ -15,14 +15,14 @@
  *   node scripts/generate-component-registry.mjs --check   # Check if registry is stale
  */
 
-import {execSync} from "node:child_process";
-import {existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync} from "node:fs";
-import {basename, dirname, join, relative, resolve} from "node:path";
+import {execSync} from 'node:child_process';
+import {existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
+import {basename, dirname, join, relative, resolve} from 'node:path';
 
 const ROOT = process.cwd();
-const SHARED_COMPONENTS_DIR = join(ROOT, "src/shared/components");
-const OUTPUT_PATH = join(ROOT, "src/shared/generated/component-registry.json");
-const CHECK_MODE = process.argv.includes("--check");
+const SHARED_COMPONENTS_DIR = join(ROOT, 'src/shared/components');
+const OUTPUT_PATH = join(ROOT, 'src/shared/generated/component-registry.json');
+const CHECK_MODE = process.argv.includes('--check');
 const CHURN_WINDOW_DAYS = 30;
 
 // ── File Discovery ──────────────────────────────────────────────────
@@ -32,7 +32,7 @@ const findFiles = (dir, extensions) => {
     for (const entry of readdirSync(dir)) {
         const path = join(dir, entry);
         if (statSync(path).isDirectory()) {
-            if (entry !== "node_modules" && entry !== "dist" && entry !== "coverage") {
+            if (entry !== 'node_modules' && entry !== 'dist' && entry !== 'coverage') {
                 files.push(...findFiles(path, extensions));
             }
         } else if (extensions.some((ext) => entry.endsWith(ext))) {
@@ -43,19 +43,19 @@ const findFiles = (dir, extensions) => {
 };
 
 const discoverComponents = () =>
-    findFiles(SHARED_COMPONENTS_DIR, [".vue"])
+    findFiles(SHARED_COMPONENTS_DIR, ['.vue'])
         .map((absolutePath) => {
             const relativePath = relative(ROOT, absolutePath);
-            const name = basename(absolutePath, ".vue");
+            const name = basename(absolutePath, '.vue');
             const subdir = relative(SHARED_COMPONENTS_DIR, dirname(absolutePath));
             return {name, absolutePath, relativePath, category: subdir || null};
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 
 const discoverSourceFiles = () => {
-    const srcDir = join(ROOT, "src");
-    return findFiles(srcDir, [".vue", ".ts"])
-        .filter((abs) => !abs.includes("/tests/"))
+    const srcDir = join(ROOT, 'src');
+    return findFiles(srcDir, ['.vue', '.ts'])
+        .filter((abs) => !abs.includes('/tests/'))
         .map((absolutePath) => ({absolutePath, relativePath: relative(ROOT, absolutePath)}));
 };
 
@@ -64,7 +64,7 @@ const discoverSourceFiles = () => {
 const IMPORT_FROM_REGEX = /\bfrom\s+["']([^"']+)["']/g;
 
 const extractImports = (filePath) => {
-    const content = readFileSync(filePath, "utf-8");
+    const content = readFileSync(filePath, 'utf-8');
     const imports = [];
     let match;
     while ((match = IMPORT_FROM_REGEX.exec(content)) !== null) {
@@ -75,11 +75,11 @@ const extractImports = (filePath) => {
 };
 
 const resolveToComponent = (importPath, components, importerRelativePath) => {
-    if (importPath.startsWith("@shared/components/")) {
-        const resolved = importPath.replace("@shared/", "src/shared/");
+    if (importPath.startsWith('@shared/components/')) {
+        const resolved = importPath.replace('@shared/', 'src/shared/');
         return components.find((c) => c.relativePath === resolved);
     }
-    if (importPath.startsWith(".") && importerRelativePath) {
+    if (importPath.startsWith('.') && importerRelativePath) {
         const importerDir = dirname(importerRelativePath);
         const resolved = relative(ROOT, resolve(ROOT, importerDir, importPath));
         return components.find((c) => c.relativePath === resolved);
@@ -95,8 +95,8 @@ const classifyFile = (relativePath) => {
         const domainMatch = relativePath.match(/^src\/apps\/[^/]+\/domains\/([^/]+)/);
         return {app: appMatch[1], domain: domainMatch ? domainMatch[1] : null};
     }
-    if (relativePath.startsWith("src/shared/")) {
-        return {app: "shared", domain: null};
+    if (relativePath.startsWith('src/shared/')) {
+        return {app: 'shared', domain: null};
     }
     return {app: null, domain: null};
 };
@@ -121,7 +121,7 @@ const buildConsumerMap = (components, sourceFiles) => {
 
             const consumers = result[comp.name];
             if (!consumers[app]) consumers[app] = {};
-            const key = domain || "_root";
+            const key = domain || '_root';
             if (!consumers[app][key]) consumers[app][key] = [];
             if (!consumers[app][key].includes(file.relativePath)) {
                 consumers[app][key].push(file.relativePath);
@@ -144,12 +144,12 @@ const buildConsumerMap = (components, sourceFiles) => {
 // ── Metric 2: Adoption Breadth ──────────────────────────────────────
 
 const calculateAdoption = (consumers) => {
-    const apps = Object.keys(consumers).filter((a) => a !== "shared");
+    const apps = Object.keys(consumers).filter((a) => a !== 'shared');
     let domainCount = 0;
     for (const [app, appConsumers] of Object.entries(consumers)) {
-        if (app === "shared") continue;
+        if (app === 'shared') continue;
         for (const key of Object.keys(appConsumers)) {
-            if (key !== "_root") domainCount++;
+            if (key !== '_root') domainCount++;
         }
     }
     return {apps: apps.length, domains: domainCount};
@@ -190,7 +190,7 @@ const parseModels = (content) => {
     const modelRegex = /defineModel<[^>]+>\(\s*(?:"([^"]+)"[,\s]*)?(?:\{([^}]*)\})?\s*\)/g;
     let m;
     while ((m = modelRegex.exec(content)) !== null) {
-        models.push({name: m[1] || "modelValue", required: (m[2] || "").includes("required")});
+        models.push({name: m[1] || 'modelValue', required: (m[2] || '').includes('required')});
     }
     return models;
 };
@@ -207,7 +207,7 @@ const parseSlots = (content) => {
     while ((m = slotRegex.exec(template)) !== null) {
         const attrs = m[1];
         const nameMatch = attrs.match(/name="([^"]*)"/);
-        const name = nameMatch ? nameMatch[1] : "default";
+        const name = nameMatch ? nameMatch[1] : 'default';
         if (!seen.has(name)) {
             seen.add(name);
             slots.push({name});
@@ -217,7 +217,7 @@ const parseSlots = (content) => {
 };
 
 const parseApiSurface = (absolutePath) => {
-    const content = readFileSync(absolutePath, "utf-8");
+    const content = readFileSync(absolutePath, 'utf-8');
     return {
         props: parseProps(content),
         emits: parseEmits(content),
@@ -236,19 +236,19 @@ const calculateChurnData = (components) => {
 
     try {
         // Use HEAD date for deterministic output given same git state
-        const headDate = execSync("git log -1 --format=%aI HEAD", {encoding: "utf-8"}).trim();
+        const headDate = execSync('git log -1 --format=%aI HEAD', {encoding: 'utf-8'}).trim();
         const sinceDate = new Date(new Date(headDate).getTime() - CHURN_WINDOW_DAYS * 24 * 60 * 60 * 1000);
-        const since = sinceDate.toISOString().split("T")[0];
+        const since = sinceDate.toISOString().split('T')[0];
 
         // Commit counts — use COMMIT marker to delimit per-commit file lists
         const commitLog = execSync(
             `git log --since="${since}" --name-only --pretty=format:"COMMIT" -- "src/shared/components/"`,
-            {encoding: "utf-8"},
+            {encoding: 'utf-8'},
         );
 
         let currentCommitFiles = new Set();
-        for (const line of commitLog.split("\n")) {
-            if (line.trim() === "COMMIT") {
+        for (const line of commitLog.split('\n')) {
+            if (line.trim() === 'COMMIT') {
                 for (const file of currentCommitFiles) {
                     if (churnMap.has(file)) churnMap.get(file).commits++;
                 }
@@ -265,16 +265,16 @@ const calculateChurnData = (components) => {
         // Line changes
         const numstatLog = execSync(
             `git log --since="${since}" --numstat --pretty=format:"" -- "src/shared/components/"`,
-            {encoding: "utf-8"},
+            {encoding: 'utf-8'},
         );
 
-        for (const line of numstatLog.split("\n")) {
-            const parts = line.trim().split("\t");
+        for (const line of numstatLog.split('\n')) {
+            const parts = line.trim().split('\t');
             if (parts.length === 3) {
                 const [added, deleted, file] = parts;
                 if (churnMap.has(file)) {
-                    const a = added === "-" ? 0 : Number.parseInt(added, 10);
-                    const d = deleted === "-" ? 0 : Number.parseInt(deleted, 10);
+                    const a = added === '-' ? 0 : Number.parseInt(added, 10);
+                    const d = deleted === '-' ? 0 : Number.parseInt(deleted, 10);
                     churnMap.get(file).linesChanged += a + d;
                 }
             }
@@ -381,20 +381,20 @@ const start = performance.now();
 const components = discoverComponents();
 const sourceFiles = discoverSourceFiles();
 const registry = generateRegistry(components, sourceFiles);
-const json = JSON.stringify(registry, null, 4) + "\n";
+const json = JSON.stringify(registry, null, 4) + '\n';
 
 const elapsed = (performance.now() - start).toFixed(0);
 
 if (CHECK_MODE) {
     if (!existsSync(OUTPUT_PATH)) {
-        console.error("Registry file does not exist. Run `npm run registry` to generate it.");
+        console.error('Registry file does not exist. Run `npm run registry` to generate it.');
         process.exit(1);
     }
-    const existing = readFileSync(OUTPUT_PATH, "utf-8");
+    const existing = readFileSync(OUTPUT_PATH, 'utf-8');
     const existingRegistry = JSON.parse(existing);
 
     if (stripChurn(registry) !== stripChurn(existingRegistry)) {
-        console.error("Component registry is stale. Run `npm run registry` to regenerate.");
+        console.error('Component registry is stale. Run `npm run registry` to regenerate.');
         process.exit(1);
     }
     console.log(`Registry is up to date — ${components.length} components (${elapsed}ms)`);

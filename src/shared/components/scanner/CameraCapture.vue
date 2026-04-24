@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ensureRefValueExists} from "@shared/helpers/type-check";
-import {ref, onMounted, onUnmounted} from "vue";
+import {ensureRefValueExists} from '@shared/helpers/type-check';
+import {ref, onMounted, onUnmounted} from 'vue';
 
 const {loadingText, retryText, captureText} = defineProps<{
     loadingText: string;
@@ -13,7 +13,7 @@ const emit = defineEmits<{capture: [imageData: Blob]; error: [message: string]}>
 const videoRef = ref<HTMLVideoElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const stream = ref<MediaStream | null>(null);
-const cameraError = ref<string>("");
+const cameraError = ref<string>('');
 const isLoading = ref(true);
 const isCameraActive = ref(false);
 const isStarting = ref(false);
@@ -41,11 +41,11 @@ const startCamera = async () => {
     stopCamera();
 
     isLoading.value = true;
-    cameraError.value = "";
+    cameraError.value = '';
 
     try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: {facingMode: "environment", width: {ideal: 1280}, height: {ideal: 720}},
+            video: {facingMode: 'environment', width: {ideal: 1280}, height: {ideal: 720}},
         });
 
         if (isUnmounted) {
@@ -67,15 +67,15 @@ const startCamera = async () => {
         isCameraActive.value = true;
     } catch (err) {
         if (err instanceof Error) {
-            if (err.name === "NotAllowedError") {
-                cameraError.value = "Camera access denied. Please allow camera access and try again.";
-            } else if (err.name === "NotFoundError") {
-                cameraError.value = "No camera found. Please connect a camera and try again.";
+            if (err.name === 'NotAllowedError') {
+                cameraError.value = 'Camera access denied. Please allow camera access and try again.';
+            } else if (err.name === 'NotFoundError') {
+                cameraError.value = 'No camera found. Please connect a camera and try again.';
             } else {
                 cameraError.value = `Failed to access camera: ${err.message}`;
             }
         } else {
-            cameraError.value = "An unexpected error occurred while accessing the camera.";
+            cameraError.value = 'An unexpected error occurred while accessing the camera.';
         }
     } finally {
         isLoading.value = false;
@@ -86,10 +86,10 @@ const startCamera = async () => {
 const captureImage = () => {
     const video = ensureRefValueExists(videoRef);
     const canvas = ensureRefValueExists(canvasRef);
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext('2d');
 
     if (!context) {
-        emit("error", "Unable to capture image. Canvas context not available.");
+        emit('error', 'Unable to capture image. Canvas context not available.');
         return;
     }
 
@@ -100,7 +100,7 @@ const captureImage = () => {
         // Ensure metadata is loaded before attempting to capture to avoid a 0x0 canvas.
         if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
             video.addEventListener(
-                "loadedmetadata",
+                'loadedmetadata',
                 () => {
                     captureImage();
                 },
@@ -117,12 +117,12 @@ const captureImage = () => {
     canvas.toBlob(
         (blob) => {
             if (blob) {
-                emit("capture", blob);
+                emit('capture', blob);
             } else {
-                emit("error", "Failed to capture image. Please try again.");
+                emit('error', 'Failed to capture image. Please try again.');
             }
         },
-        "image/jpeg",
+        'image/jpeg',
         0.9,
     );
 };

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import LegoBrick from "@shared/components/LegoBrick.vue";
-import LegoPlate from "@shared/components/LegoPlate.vue";
-import LegoRound from "@shared/components/LegoRound.vue";
+import LegoBrick from '@shared/components/LegoBrick.vue';
+import LegoPlate from '@shared/components/LegoPlate.vue';
+import LegoRound from '@shared/components/LegoRound.vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
 const bricks = [
-    {cols: 2, rows: 4, label: "2x4 Brick", component: LegoBrick},
-    {cols: 2, rows: 2, label: "2x2 Brick", component: LegoBrick},
-    {cols: 1, rows: 2, label: "1x2 Plate", component: LegoPlate},
-    {cols: 1, rows: 1, label: "1x1 Round", component: LegoRound},
+    {cols: 2, rows: 4, label: '2x4 Brick', component: LegoBrick},
+    {cols: 2, rows: 2, label: '2x2 Brick', component: LegoBrick},
+    {cols: 1, rows: 2, label: '1x2 Plate', component: LegoPlate},
+    {cols: 1, rows: 1, label: '1x1 Round', component: LegoRound},
 ];
 </script>
 
@@ -91,7 +91,7 @@ const bricks = [
             <div flex="~ col" gap="4">
                 <div v-for="mult in [1, 2, 3, 4, 6, 8]" :key="mult" flex items="center" gap="4">
                     <span text="xs" font="mono" w="16" text-color="gray-500" flex="shrink-0">
-                        {{ mult }} stud{{ mult > 1 ? "s" : "" }}
+                        {{ mult }} stud{{ mult > 1 ? 's' : '' }}
                     </span>
                     <div h="6" bg="[#F5C518]" class="brick-border" :style="{width: `${mult * 2.5}rem`}" />
                     <span text="xs" font="mono" text-color="gray-400"> {{ mult * 8 }}px </span>

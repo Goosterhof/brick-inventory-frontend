@@ -1,13 +1,13 @@
-import PartsMissingPage from "@app/domains/parts/pages/PartsMissingPage.vue";
-import BackButton from "@shared/components/BackButton.vue";
-import EmptyState from "@shared/components/EmptyState.vue";
-import FilterChip from "@shared/components/FilterChip.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import PartListItem from "@shared/components/PartListItem.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {flushPromises, shallowMount} from "@vue/test-utils";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import PartsMissingPage from '@app/domains/parts/pages/PartsMissingPage.vue';
+import BackButton from '@shared/components/BackButton.vue';
+import EmptyState from '@shared/components/EmptyState.vue';
+import FilterChip from '@shared/components/FilterChip.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import PageHeader from '@shared/components/PageHeader.vue';
+import PartListItem from '@shared/components/PartListItem.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {flushPromises, shallowMount} from '@vue/test-utils';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 const {
     createMockAxios,
@@ -17,73 +17,73 @@ const {
     createMockFormField,
     createMockFormLabel,
     createMockFormError,
-} = await vi.hoisted(() => import("../../../../../../helpers"));
+} = await vi.hoisted(() => import('../../../../../../helpers'));
 
 const {mockGetRequest, mockGoToRoute, mockToBrickLinkXml, mockDownloadBrickLink, mockDownloadCsv, mockToCsv} =
     vi.hoisted(() => ({
         mockGetRequest: vi.fn<() => Promise<unknown>>(),
         mockGoToRoute: vi.fn<() => Promise<void>>(),
-        mockToBrickLinkXml: vi.fn<(entries: readonly unknown[]) => string>(() => "<xml />"),
+        mockToBrickLinkXml: vi.fn<(entries: readonly unknown[]) => string>(() => '<xml />'),
         mockDownloadBrickLink: vi.fn<(xml: string, filename: string) => void>(),
         mockDownloadCsv: vi.fn<(csv: string, filename: string) => void>(),
-        mockToCsv: vi.fn<(headers: string[], rows: string[][]) => string>(() => "csv"),
+        mockToCsv: vi.fn<(headers: string[], rows: string[][]) => string>(() => 'csv'),
     }));
 
-vi.mock("axios", () => createMockAxios());
-vi.mock("string-ts", () => createMockStringTs());
-vi.mock("@script-development/fs-helpers", () => createMockFsHelpers());
+vi.mock('axios', () => createMockAxios());
+vi.mock('string-ts', () => createMockStringTs());
+vi.mock('@script-development/fs-helpers', () => createMockFsHelpers());
 
-vi.mock("@shared/components/forms/FormError.vue", () => createMockFormError());
-vi.mock("@shared/components/forms/FormField.vue", () => createMockFormField());
-vi.mock("@shared/components/forms/FormLabel.vue", () => createMockFormLabel());
+vi.mock('@shared/components/forms/FormError.vue', () => createMockFormError());
+vi.mock('@shared/components/forms/FormField.vue', () => createMockFormField());
+vi.mock('@shared/components/forms/FormLabel.vue', () => createMockFormLabel());
 
-vi.mock("@shared/components/BackButton.vue", () => ({
-    default: {name: "BackButton", template: "<button @click='$emit(\"click\")'><slot /></button>"},
+vi.mock('@shared/components/BackButton.vue', () => ({
+    default: {name: 'BackButton', template: '<button @click=\'$emit("click")\'><slot /></button>'},
 }));
 
-vi.mock("@shared/components/EmptyState.vue", () => ({
-    default: {name: "EmptyState", template: "<span><slot /></span>", props: ["message"]},
+vi.mock('@shared/components/EmptyState.vue', () => ({
+    default: {name: 'EmptyState', template: '<span><slot /></span>', props: ['message']},
 }));
 
-vi.mock("@shared/components/FilterChip.vue", () => ({
-    default: {name: "FilterChip", template: "<button @click='$emit(\"click\")'><slot /></button>", props: ["active"]},
+vi.mock('@shared/components/FilterChip.vue', () => ({
+    default: {name: 'FilterChip', template: '<button @click=\'$emit("click")\'><slot /></button>', props: ['active']},
 }));
 
-vi.mock("@shared/components/forms/inputs/TextInput.vue", () => ({
+vi.mock('@shared/components/forms/inputs/TextInput.vue', () => ({
     default: {
-        name: "TextInput",
-        template: "<input @input='$emit(\"update:modelValue\", $event.target.value)' />",
-        props: ["modelValue"],
+        name: 'TextInput',
+        template: '<input @input=\'$emit("update:modelValue", $event.target.value)\' />',
+        props: ['modelValue'],
     },
 }));
 
-vi.mock("@shared/components/PageHeader.vue", () => ({
-    default: {name: "PageHeader", template: "<header><h1>{{ title }}</h1><slot /></header>", props: ["title"]},
+vi.mock('@shared/components/PageHeader.vue', () => ({
+    default: {name: 'PageHeader', template: '<header><h1>{{ title }}</h1><slot /></header>', props: ['title']},
 }));
 
-vi.mock("@shared/components/PartListItem.vue", () => ({
+vi.mock('@shared/components/PartListItem.vue', () => ({
     default: {
-        name: "PartListItem",
-        template: "<div><slot /></div>",
-        props: ["name", "partNum", "quantity", "imageUrl", "colorName", "colorRgb"],
+        name: 'PartListItem',
+        template: '<div><slot /></div>',
+        props: ['name', 'partNum', 'quantity', 'imageUrl', 'colorName', 'colorRgb'],
     },
 }));
 
-vi.mock("@shared/components/PrimaryButton.vue", () => ({
+vi.mock('@shared/components/PrimaryButton.vue', () => ({
     default: {
-        name: "PrimaryButton",
-        template: "<button @click='$emit(\"click\")'><slot /></button>",
-        props: ["variant"],
+        name: 'PrimaryButton',
+        template: '<button @click=\'$emit("click")\'><slot /></button>',
+        props: ['variant'],
     },
 }));
 
-vi.mock("@shared/helpers/csv", () => ({downloadCsv: mockDownloadCsv, toCsv: mockToCsv}));
-vi.mock("@shared/helpers/bricklinkWantedList", () => ({
+vi.mock('@shared/helpers/csv', () => ({downloadCsv: mockDownloadCsv, toCsv: mockToCsv}));
+vi.mock('@shared/helpers/bricklinkWantedList', () => ({
     toBrickLinkWantedListXml: mockToBrickLinkXml,
     downloadBrickLinkWantedList: mockDownloadBrickLink,
 }));
 
-vi.mock("@app/services", () =>
+vi.mock('@app/services', () =>
     createMockFamilyServices({
         familyHttpService: {getRequest: mockGetRequest},
         familyAuthService: {isLoggedIn: {value: true}},
@@ -93,12 +93,12 @@ vi.mock("@app/services", () =>
 
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
     partId: 10,
-    partNum: "3001",
-    partName: "Brick 2 x 4",
-    partImageUrl: "https://example.com/3001.jpg",
+    partNum: '3001',
+    partName: 'Brick 2 x 4',
+    partImageUrl: 'https://example.com/3001.jpg',
     colorId: 1,
-    colorName: "Red",
-    colorRgb: "CC0000",
+    colorName: 'Red',
+    colorRgb: 'CC0000',
     brickLinkColorId: 5,
     quantityNeeded: 10,
     quantityStored: 3,
@@ -111,12 +111,12 @@ const makePayload = (entries: Record<string, unknown>[] = [makeEntry()], unknown
     data: {entries, unknownFamilySetIds},
 });
 
-describe("PartsMissingPage", () => {
+describe('PartsMissingPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
-    it("renders the page title from translation keys", async () => {
+    it('renders the page title from translation keys', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([]));
 
@@ -125,10 +125,10 @@ describe("PartsMissingPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(PageHeader).props("title")).toBe("parts.missingTitle");
+        expect(wrapper.findComponent(PageHeader).props('title')).toBe('parts.missingTitle');
     });
 
-    it("fetches the master shopping list on mount", async () => {
+    it('fetches the master shopping list on mount', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([]));
 
@@ -137,10 +137,10 @@ describe("PartsMissingPage", () => {
         await flushPromises();
 
         // Assert
-        expect(mockGetRequest).toHaveBeenCalledWith("/family-sets/missing-parts");
+        expect(mockGetRequest).toHaveBeenCalledWith('/family-sets/missing-parts');
     });
 
-    it("shows the loading state while the request is in flight", () => {
+    it('shows the loading state while the request is in flight', () => {
         // Arrange
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
@@ -151,7 +151,7 @@ describe("PartsMissingPage", () => {
         expect(wrapper.find("[data-testid='missing-loading']").exists()).toBe(true);
     });
 
-    it("shows the empty state when there are no entries and no unknown sets", async () => {
+    it('shows the empty state when there are no entries and no unknown sets', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([]));
 
@@ -160,12 +160,12 @@ describe("PartsMissingPage", () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(EmptyState).props("message")).toBe("parts.missingEmpty");
+        expect(wrapper.findComponent(EmptyState).props('message')).toBe('parts.missingEmpty');
     });
 
-    it("shows a non-intrusive error message when the fetch fails", async () => {
+    it('shows a non-intrusive error message when the fetch fails', async () => {
         // Arrange
-        mockGetRequest.mockRejectedValue(new Error("Network error"));
+        mockGetRequest.mockRejectedValue(new Error('Network error'));
 
         // Act
         const wrapper = shallowMount(PartsMissingPage);
@@ -175,12 +175,12 @@ describe("PartsMissingPage", () => {
         expect(wrapper.find("[data-testid='missing-error']").exists()).toBe(true);
     });
 
-    it("renders one PartListItem per entry with shortfall as the quantity", async () => {
+    it('renders one PartListItem per entry with shortfall as the quantity', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(
             makePayload([
-                makeEntry({partId: 1, partName: "Brick A", shortfall: 2}),
-                makeEntry({partId: 2, partName: "Brick B", shortfall: 5}),
+                makeEntry({partId: 1, partName: 'Brick A', shortfall: 2}),
+                makeEntry({partId: 2, partName: 'Brick B', shortfall: 5}),
             ]),
         );
 
@@ -191,11 +191,11 @@ describe("PartsMissingPage", () => {
         // Assert
         const items = wrapper.findAllComponents(PartListItem);
         expect(items).toHaveLength(2);
-        const brickB = items.find((i) => i.props("name") === "Brick B");
-        expect(brickB?.props("quantity")).toBe(5);
+        const brickB = items.find((i) => i.props('name') === 'Brick B');
+        expect(brickB?.props('quantity')).toBe(5);
     });
 
-    it("shows the summary totals (shortfall count and distinct sets)", async () => {
+    it('shows the summary totals (shortfall count and distinct sets)', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(
             makePayload([
@@ -209,12 +209,12 @@ describe("PartsMissingPage", () => {
         await flushPromises();
 
         // Assert
-        const summaryLine = wrapper.find("[data-total-shortfall]");
-        expect(summaryLine.attributes("data-total-shortfall")).toBe("7");
-        expect(summaryLine.attributes("data-affected-sets")).toBe("3");
+        const summaryLine = wrapper.find('[data-total-shortfall]');
+        expect(summaryLine.attributes('data-total-shortfall')).toBe('7');
+        expect(summaryLine.attributes('data-affected-sets')).toBe('3');
     });
 
-    it("surfaces the unknown-sets callout when unknownFamilySetIds is non-empty", async () => {
+    it('surfaces the unknown-sets callout when unknownFamilySetIds is non-empty', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()], [42, 43]));
 
@@ -225,10 +225,10 @@ describe("PartsMissingPage", () => {
         // Assert
         const callout = wrapper.find("[data-testid='missing-unknown-sets']");
         expect(callout.exists()).toBe(true);
-        expect(callout.attributes("data-unknown-count")).toBe("2");
+        expect(callout.attributes('data-unknown-count')).toBe('2');
     });
 
-    it("hides the unknown-sets callout when unknownFamilySetIds is empty", async () => {
+    it('hides the unknown-sets callout when unknownFamilySetIds is empty', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
 
@@ -240,7 +240,7 @@ describe("PartsMissingPage", () => {
         expect(wrapper.find("[data-testid='missing-unknown-sets']").exists()).toBe(false);
     });
 
-    it("renders the unknown-sets callout even when there are no entries", async () => {
+    it('renders the unknown-sets callout even when there are no entries', async () => {
         // Arrange — an edge case: all owned sets are unsynced, no shortfall rows
         mockGetRequest.mockResolvedValue(makePayload([], [11, 12]));
 
@@ -253,61 +253,61 @@ describe("PartsMissingPage", () => {
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
     });
 
-    it("navigates back to the parts inventory when the back button is clicked", async () => {
+    it('navigates back to the parts inventory when the back button is clicked', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
         const wrapper = shallowMount(PartsMissingPage);
         await flushPromises();
 
         // Act
-        await wrapper.findComponent(BackButton).trigger("click");
+        await wrapper.findComponent(BackButton).trigger('click');
 
         // Assert
-        expect(mockGoToRoute).toHaveBeenCalledWith("parts");
+        expect(mockGoToRoute).toHaveBeenCalledWith('parts');
     });
 
-    it("navigates to settings when the unknown-sets sync link is clicked", async () => {
+    it('navigates to settings when the unknown-sets sync link is clicked', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()], [7]));
         const wrapper = shallowMount(PartsMissingPage);
         await flushPromises();
 
         // Act
-        await wrapper.find("[data-testid='missing-unknown-sets-link']").trigger("click");
+        await wrapper.find("[data-testid='missing-unknown-sets-link']").trigger('click');
 
         // Assert
-        expect(mockGoToRoute).toHaveBeenCalledWith("settings");
+        expect(mockGoToRoute).toHaveBeenCalledWith('settings');
     });
 
-    describe("search", () => {
-        it("filters by part name (case insensitive)", async () => {
+    describe('search', () => {
+        it('filters by part name (case insensitive)', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
-                makePayload([makeEntry({partId: 1, partName: "Plate"}), makeEntry({partId: 2, partName: "Brick"})]),
+                makePayload([makeEntry({partId: 1, partName: 'Plate'}), makeEntry({partId: 2, partName: 'Brick'})]),
             );
             const wrapper = shallowMount(PartsMissingPage);
             await flushPromises();
 
             // Act
-            await wrapper.findComponent(TextInput).setValue("brick");
+            await wrapper.findComponent(TextInput).setValue('brick');
             await flushPromises();
 
             // Assert
             const items = wrapper.findAllComponents(PartListItem);
             expect(items).toHaveLength(1);
-            expect(items.find((i) => i.props("name") === "Brick")?.exists()).toBe(true);
+            expect(items.find((i) => i.props('name') === 'Brick')?.exists()).toBe(true);
         });
 
-        it("filters by part number", async () => {
+        it('filters by part number', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
-                makePayload([makeEntry({partId: 1, partNum: "3001"}), makeEntry({partId: 2, partNum: "3002"})]),
+                makePayload([makeEntry({partId: 1, partNum: '3001'}), makeEntry({partId: 2, partNum: '3002'})]),
             );
             const wrapper = shallowMount(PartsMissingPage);
             await flushPromises();
 
             // Act
-            await wrapper.findComponent(TextInput).setValue("3001");
+            await wrapper.findComponent(TextInput).setValue('3001');
             await flushPromises();
 
             // Assert
@@ -321,23 +321,23 @@ describe("PartsMissingPage", () => {
             await flushPromises();
 
             // Act
-            await wrapper.findComponent(TextInput).setValue("zzzzzz");
+            await wrapper.findComponent(TextInput).setValue('zzzzzz');
             await flushPromises();
 
             // Assert
             const emptyStates = wrapper.findAllComponents(EmptyState);
-            expect(emptyStates.find((e) => e.props("message") === "parts.missingNoResults")?.exists()).toBe(true);
+            expect(emptyStates.find((e) => e.props('message') === 'parts.missingNoResults')?.exists()).toBe(true);
         });
     });
 
-    describe("sort", () => {
-        it("sorts by shortfall descending by default", async () => {
+    describe('sort', () => {
+        it('sorts by shortfall descending by default', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
-                    makeEntry({partId: 1, partName: "Small", shortfall: 2}),
-                    makeEntry({partId: 2, partName: "Large", shortfall: 10}),
-                    makeEntry({partId: 3, partName: "Medium", shortfall: 5}),
+                    makeEntry({partId: 1, partName: 'Small', shortfall: 2}),
+                    makeEntry({partId: 2, partName: 'Large', shortfall: 10}),
+                    makeEntry({partId: 3, partName: 'Medium', shortfall: 5}),
                 ]),
             );
 
@@ -346,55 +346,55 @@ describe("PartsMissingPage", () => {
             await flushPromises();
 
             // Assert
-            const quantities = wrapper.findAllComponents(PartListItem).map((i) => i.props("quantity"));
+            const quantities = wrapper.findAllComponents(PartListItem).map((i) => i.props('quantity'));
             expect(quantities).toEqual([10, 5, 2]);
         });
 
-        it("sorts by part name when the name chip is clicked", async () => {
+        it('sorts by part name when the name chip is clicked', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
-                    makeEntry({partId: 1, partName: "Charlie"}),
-                    makeEntry({partId: 2, partName: "Alpha"}),
-                    makeEntry({partId: 3, partName: "Bravo"}),
+                    makeEntry({partId: 1, partName: 'Charlie'}),
+                    makeEntry({partId: 2, partName: 'Alpha'}),
+                    makeEntry({partId: 3, partName: 'Bravo'}),
                 ]),
             );
             const wrapper = shallowMount(PartsMissingPage);
             await flushPromises();
 
             // Act
-            const nameChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === "parts.missingSortName");
-            nameChip?.vm.$emit("click");
+            const nameChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === 'parts.missingSortName');
+            nameChip?.vm.$emit('click');
             await flushPromises();
 
             // Assert
-            const names = wrapper.findAllComponents(PartListItem).map((i) => i.props("name"));
-            expect(names).toEqual(["Alpha", "Bravo", "Charlie"]);
+            const names = wrapper.findAllComponents(PartListItem).map((i) => i.props('name'));
+            expect(names).toEqual(['Alpha', 'Bravo', 'Charlie']);
         });
 
-        it("sorts by color name when the color chip is clicked, treating null colors as empty strings", async () => {
+        it('sorts by color name when the color chip is clicked, treating null colors as empty strings', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
-                    makeEntry({partId: 1, colorName: "Red"}),
+                    makeEntry({partId: 1, colorName: 'Red'}),
                     makeEntry({partId: 2, colorName: null}),
-                    makeEntry({partId: 3, colorName: "Blue"}),
+                    makeEntry({partId: 3, colorName: 'Blue'}),
                 ]),
             );
             const wrapper = shallowMount(PartsMissingPage);
             await flushPromises();
 
             // Act
-            const colorChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === "parts.missingSortColor");
-            colorChip?.vm.$emit("click");
+            const colorChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === 'parts.missingSortColor');
+            colorChip?.vm.$emit('click');
             await flushPromises();
 
             // Assert
-            const colors = wrapper.findAllComponents(PartListItem).map((i) => i.props("colorName"));
-            expect(colors).toEqual([null, "Blue", "Red"]);
+            const colors = wrapper.findAllComponents(PartListItem).map((i) => i.props('colorName'));
+            expect(colors).toEqual([null, 'Blue', 'Red']);
         });
 
-        it("marks the active sort chip as active", async () => {
+        it('marks the active sort chip as active', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
 
@@ -405,13 +405,13 @@ describe("PartsMissingPage", () => {
             // Assert — shortfall is active by default
             const shortfallChip = wrapper
                 .findAllComponents(FilterChip)
-                .find((c) => c.text() === "parts.missingSortShortfall");
-            expect(shortfallChip?.props("active")).toBe(true);
+                .find((c) => c.text() === 'parts.missingSortShortfall');
+            expect(shortfallChip?.props('active')).toBe(true);
         });
     });
 
-    describe("export", () => {
-        it("shows the export buttons when there are entries", async () => {
+    describe('export', () => {
+        it('shows the export buttons when there are entries', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
 
@@ -421,11 +421,11 @@ describe("PartsMissingPage", () => {
 
             // Assert
             const labels = wrapper.findAllComponents(PrimaryButton).map((b) => b.text());
-            expect(labels).toContain("parts.missingExportBrickLink");
-            expect(labels).toContain("parts.missingExportCsv");
+            expect(labels).toContain('parts.missingExportBrickLink');
+            expect(labels).toContain('parts.missingExportCsv');
         });
 
-        it("hides the export buttons when there are no entries", async () => {
+        it('hides the export buttons when there are no entries', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(makePayload([], [1]));
 
@@ -435,44 +435,44 @@ describe("PartsMissingPage", () => {
 
             // Assert
             const labels = wrapper.findAllComponents(PrimaryButton).map((b) => b.text());
-            expect(labels).not.toContain("parts.missingExportBrickLink");
-            expect(labels).not.toContain("parts.missingExportCsv");
+            expect(labels).not.toContain('parts.missingExportBrickLink');
+            expect(labels).not.toContain('parts.missingExportCsv');
         });
 
-        it("passes filtered entries (search + sort respected) to the BrickLink helper", async () => {
+        it('passes filtered entries (search + sort respected) to the BrickLink helper', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
-                    makeEntry({partId: 1, partNum: "3001", brickLinkColorId: 5, shortfall: 3}),
-                    makeEntry({partId: 2, partNum: "3002", brickLinkColorId: null, shortfall: 7}),
+                    makeEntry({partId: 1, partNum: '3001', brickLinkColorId: 5, shortfall: 3}),
+                    makeEntry({partId: 2, partNum: '3002', brickLinkColorId: null, shortfall: 7}),
                 ]),
             );
             const wrapper = shallowMount(PartsMissingPage);
             await flushPromises();
 
             // Act
-            await wrapper.findComponent(TextInput).setValue("3002");
+            await wrapper.findComponent(TextInput).setValue('3002');
             await flushPromises();
             const exportBtn = wrapper
                 .findAllComponents(PrimaryButton)
-                .find((b) => b.text() === "parts.missingExportBrickLink");
-            exportBtn?.vm.$emit("click");
+                .find((b) => b.text() === 'parts.missingExportBrickLink');
+            exportBtn?.vm.$emit('click');
             await flushPromises();
 
             // Assert
-            expect(mockToBrickLinkXml).toHaveBeenCalledWith([{partNum: "3002", brickLinkColorId: null, shortfall: 7}]);
-            expect(mockDownloadBrickLink).toHaveBeenCalledWith("<xml />", "bricklink-wanted-list.xml");
+            expect(mockToBrickLinkXml).toHaveBeenCalledWith([{partNum: '3002', brickLinkColorId: null, shortfall: 7}]);
+            expect(mockDownloadBrickLink).toHaveBeenCalledWith('<xml />', 'bricklink-wanted-list.xml');
         });
 
-        it("passes the full column set to the CSV helper", async () => {
+        it('passes the full column set to the CSV helper', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
                     makeEntry({
                         partId: 1,
-                        partNum: "3001",
-                        partName: "Brick 2 x 4",
-                        colorName: "Red",
+                        partNum: '3001',
+                        partName: 'Brick 2 x 4',
+                        colorName: 'Red',
                         quantityNeeded: 10,
                         quantityStored: 3,
                         shortfall: 7,
@@ -486,27 +486,27 @@ describe("PartsMissingPage", () => {
             // Act
             const exportBtn = wrapper
                 .findAllComponents(PrimaryButton)
-                .find((b) => b.text() === "parts.missingExportCsv");
-            exportBtn?.vm.$emit("click");
+                .find((b) => b.text() === 'parts.missingExportCsv');
+            exportBtn?.vm.$emit('click');
             await flushPromises();
 
             // Assert
             expect(mockToCsv).toHaveBeenCalledWith(
                 [
-                    "Part Number",
-                    "Part Name",
-                    "Color",
-                    "Quantity Needed",
-                    "Quantity Stored",
-                    "Shortfall",
-                    "Needed By Sets",
+                    'Part Number',
+                    'Part Name',
+                    'Color',
+                    'Quantity Needed',
+                    'Quantity Stored',
+                    'Shortfall',
+                    'Needed By Sets',
                 ],
-                [["3001", "Brick 2 x 4", "Red", "10", "3", "7", "2"]],
+                [['3001', 'Brick 2 x 4', 'Red', '10', '3', '7', '2']],
             );
-            expect(mockDownloadCsv).toHaveBeenCalledWith("csv", "master-shopping-list.csv");
+            expect(mockDownloadCsv).toHaveBeenCalledWith('csv', 'master-shopping-list.csv');
         });
 
-        it("emits a CSV row with an empty color when the color name is null", async () => {
+        it('emits a CSV row with an empty color when the color name is null', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
@@ -526,13 +526,13 @@ describe("PartsMissingPage", () => {
             // Act
             const exportBtn = wrapper
                 .findAllComponents(PrimaryButton)
-                .find((b) => b.text() === "parts.missingExportCsv");
-            exportBtn?.vm.$emit("click");
+                .find((b) => b.text() === 'parts.missingExportCsv');
+            exportBtn?.vm.$emit('click');
             await flushPromises();
 
             // Assert
             const rowArg = mockToCsv.mock.calls[0]?.[1];
-            expect(rowArg?.[0]?.[2]).toBe("");
+            expect(rowArg?.[0]?.[2]).toBe('');
         });
     });
 });

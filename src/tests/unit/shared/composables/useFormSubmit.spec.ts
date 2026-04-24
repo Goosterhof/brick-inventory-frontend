@@ -1,11 +1,11 @@
-import type {UseValidationErrors, ValidationErrors} from "@shared/composables/useValidationErrors";
+import type {UseValidationErrors, ValidationErrors} from '@shared/composables/useValidationErrors';
 
-import {useFormSubmit} from "@shared/composables/useFormSubmit";
-import {AxiosError} from "axios";
-import {describe, expect, it, vi} from "vitest";
-import {ref} from "vue";
+import {useFormSubmit} from '@shared/composables/useFormSubmit';
+import {AxiosError} from 'axios';
+import {describe, expect, it, vi} from 'vitest';
+import {ref} from 'vue';
 
-type TestField = "name" | "email";
+type TestField = 'name' | 'email';
 
 const createMockValidationErrors = (): UseValidationErrors<TestField> => ({
     errors: ref<ValidationErrors<TestField>>({}),
@@ -13,10 +13,10 @@ const createMockValidationErrors = (): UseValidationErrors<TestField> => ({
 });
 
 const createAxiosError = (status: number): AxiosError => {
-    const error = new AxiosError("Request failed", AxiosError.ERR_BAD_REQUEST, undefined, undefined, {
+    const error = new AxiosError('Request failed', AxiosError.ERR_BAD_REQUEST, undefined, undefined, {
         status,
-        data: {message: "Error"},
-        statusText: "",
+        data: {message: 'Error'},
+        statusText: '',
         headers: {},
         config: {} as never,
     });
@@ -24,8 +24,8 @@ const createAxiosError = (status: number): AxiosError => {
     return error;
 };
 
-describe("useFormSubmit", () => {
-    it("should return handleSubmit and submitting", () => {
+describe('useFormSubmit', () => {
+    it('should return handleSubmit and submitting', () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
 
@@ -37,7 +37,7 @@ describe("useFormSubmit", () => {
         expect(submitting.value).toBe(false);
     });
 
-    it("should clear errors before executing the action", async () => {
+    it('should clear errors before executing the action', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
@@ -51,7 +51,7 @@ describe("useFormSubmit", () => {
         expect(validationErrors.clearErrors).toHaveBeenCalledBefore(action);
     });
 
-    it("should execute the provided action", async () => {
+    it('should execute the provided action', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
@@ -64,7 +64,7 @@ describe("useFormSubmit", () => {
         expect(action).toHaveBeenCalledOnce();
     });
 
-    it("should swallow 422 axios errors silently", async () => {
+    it('should swallow 422 axios errors silently', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
@@ -75,7 +75,7 @@ describe("useFormSubmit", () => {
         await expect(handleSubmit(action)).resolves.toBeUndefined();
     });
 
-    it("should re-throw non-422 axios errors", async () => {
+    it('should re-throw non-422 axios errors', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
@@ -86,18 +86,18 @@ describe("useFormSubmit", () => {
         await expect(handleSubmit(action)).rejects.toThrow(error);
     });
 
-    it("should re-throw non-axios errors", async () => {
+    it('should re-throw non-axios errors', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
-        const error = new Error("Network failure");
+        const error = new Error('Network failure');
         const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act & Assert
-        await expect(handleSubmit(action)).rejects.toThrow("Network failure");
+        await expect(handleSubmit(action)).rejects.toThrow('Network failure');
     });
 
-    it("should clear errors even when the action throws a 422 error", async () => {
+    it('should clear errors even when the action throws a 422 error', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
@@ -111,7 +111,7 @@ describe("useFormSubmit", () => {
         expect(validationErrors.clearErrors).toHaveBeenCalledOnce();
     });
 
-    it("should clear errors even when the action throws a non-422 error", async () => {
+    it('should clear errors even when the action throws a non-422 error', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
@@ -129,18 +129,18 @@ describe("useFormSubmit", () => {
         expect(validationErrors.clearErrors).toHaveBeenCalledOnce();
     });
 
-    it("should re-throw axios errors without a response", async () => {
+    it('should re-throw axios errors without a response', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit} = useFormSubmit(validationErrors);
-        const error = new AxiosError("Network Error", AxiosError.ERR_NETWORK);
+        const error = new AxiosError('Network Error', AxiosError.ERR_NETWORK);
         const action = vi.fn<() => Promise<void>>().mockRejectedValue(error);
 
         // Act & Assert
         await expect(handleSubmit(action)).rejects.toThrow(error);
     });
 
-    it("should set submitting to true during action execution", async () => {
+    it('should set submitting to true during action execution', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
@@ -158,7 +158,7 @@ describe("useFormSubmit", () => {
         expect(submitting.value).toBe(false);
     });
 
-    it("should reset submitting to false after a 422 error", async () => {
+    it('should reset submitting to false after a 422 error', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
@@ -172,7 +172,7 @@ describe("useFormSubmit", () => {
         expect(submitting.value).toBe(false);
     });
 
-    it("should reset submitting to false after a non-422 error", async () => {
+    it('should reset submitting to false after a non-422 error', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);
@@ -190,7 +190,7 @@ describe("useFormSubmit", () => {
         expect(submitting.value).toBe(false);
     });
 
-    it("should no-op when handleSubmit is called while already submitting", async () => {
+    it('should no-op when handleSubmit is called while already submitting', async () => {
         // Arrange
         const validationErrors = createMockValidationErrors();
         const {handleSubmit, submitting} = useFormSubmit(validationErrors);

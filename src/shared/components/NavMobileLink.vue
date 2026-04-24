@@ -5,7 +5,7 @@ const emit = defineEmits<{click: []}>();
 
 const handleClick = (event: Event) => {
     event.preventDefault();
-    emit("click");
+    emit('click');
 };
 </script>
 

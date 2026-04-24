@@ -31,7 +31,7 @@ const routes = {
 const makeResponse = <T>(data: T): {data: T; status: number; statusText: string; headers: object; config: object} => ({
     data,
     status: 200,
-    statusText: "OK",
+    statusText: 'OK',
     headers: {},
     config: {},
 });
@@ -55,14 +55,14 @@ const noop = () => () => {};
  * Middleware registration methods are no-ops since we bypass axios entirely.
  */
 export const mockHttpService = {
-    getRequest: <T = unknown>(endpoint: string) => resolveRoute<T>("GET", endpoint),
-    postRequest: <T = unknown>(endpoint: string, _data: unknown) => resolveRoute<T>("POST", endpoint),
-    putRequest: <T = unknown>(endpoint: string, _data: unknown) => resolveRoute<T>("PUT", endpoint),
-    patchRequest: <T = unknown>(endpoint: string, _data: unknown) => resolveRoute<T>("PATCH", endpoint),
-    deleteRequest: <T = unknown>(endpoint: string) => resolveRoute<T>("DELETE", endpoint),
-    downloadRequest: () => Promise.reject(new Error("[mock-server] downloadRequest not implemented")),
-    previewRequest: () => Promise.reject(new Error("[mock-server] previewRequest not implemented")),
-    streamRequest: () => Promise.reject(new Error("[mock-server] streamRequest not implemented")),
+    getRequest: <T = unknown>(endpoint: string) => resolveRoute<T>('GET', endpoint),
+    postRequest: <T = unknown>(endpoint: string, _data: unknown) => resolveRoute<T>('POST', endpoint),
+    putRequest: <T = unknown>(endpoint: string, _data: unknown) => resolveRoute<T>('PUT', endpoint),
+    patchRequest: <T = unknown>(endpoint: string, _data: unknown) => resolveRoute<T>('PATCH', endpoint),
+    deleteRequest: <T = unknown>(endpoint: string) => resolveRoute<T>('DELETE', endpoint),
+    downloadRequest: () => Promise.reject(new Error('[mock-server] downloadRequest not implemented')),
+    previewRequest: () => Promise.reject(new Error('[mock-server] previewRequest not implemented')),
+    streamRequest: () => Promise.reject(new Error('[mock-server] streamRequest not implemented')),
     registerRequestMiddleware: noop,
     registerResponseMiddleware: noop,
     registerResponseErrorMiddleware: noop,

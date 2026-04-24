@@ -1,7 +1,7 @@
-import type {Item} from "@shared/types/item";
+import type {Item} from '@shared/types/item';
 
-import {deepSnakeKeys, toCamelCaseTyped} from "@shared/helpers/string";
-import {describe, expect, it} from "vitest";
+import {deepSnakeKeys, toCamelCaseTyped} from '@shared/helpers/string';
+import {describe, expect, it} from 'vitest';
 
 interface TestItem extends Item {
     id: number;
@@ -9,60 +9,60 @@ interface TestItem extends Item {
     createdAt: string;
 }
 
-describe("toCamelCaseTyped", () => {
-    it("should convert snake_case keys to camelCase", () => {
+describe('toCamelCaseTyped', () => {
+    it('should convert snake_case keys to camelCase', () => {
         // Arrange
-        const snakeCase = {id: 1, user_name: "test", created_at: "2024-01-01"};
+        const snakeCase = {id: 1, user_name: 'test', created_at: '2024-01-01'};
 
         // Act
         const result = toCamelCaseTyped<TestItem>(snakeCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userName: "test", createdAt: "2024-01-01"});
+        expect(result).toEqual({id: 1, userName: 'test', createdAt: '2024-01-01'});
     });
 
-    it("should handle already camelCase data", () => {
+    it('should handle already camelCase data', () => {
         // Arrange
-        const camelCase: TestItem = {id: 1, userName: "test", createdAt: "2024-01-01"};
+        const camelCase: TestItem = {id: 1, userName: 'test', createdAt: '2024-01-01'};
 
         // Act
         const result = toCamelCaseTyped<TestItem>(camelCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userName: "test", createdAt: "2024-01-01"});
+        expect(result).toEqual({id: 1, userName: 'test', createdAt: '2024-01-01'});
     });
 
-    it("should handle nested snake_case objects", () => {
+    it('should handle nested snake_case objects', () => {
         // Arrange
         interface NestedItem extends Item {
             id: number;
             userProfile: {firstName: string; lastName: string};
         }
-        const snakeCase = {id: 1, user_profile: {first_name: "John", last_name: "Doe"}};
+        const snakeCase = {id: 1, user_profile: {first_name: 'John', last_name: 'Doe'}};
 
         // Act
         const result = toCamelCaseTyped<NestedItem>(snakeCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userProfile: {firstName: "John", lastName: "Doe"}});
+        expect(result).toEqual({id: 1, userProfile: {firstName: 'John', lastName: 'Doe'}});
     });
 
-    it("should handle arrays with snake_case objects", () => {
+    it('should handle arrays with snake_case objects', () => {
         // Arrange
         interface ItemWithArray extends Item {
             id: number;
             userTags: Array<{tagName: string}>;
         }
-        const snakeCase = {id: 1, user_tags: [{tag_name: "admin"}, {tag_name: "user"}]};
+        const snakeCase = {id: 1, user_tags: [{tag_name: 'admin'}, {tag_name: 'user'}]};
 
         // Act
         const result = toCamelCaseTyped<ItemWithArray>(snakeCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userTags: [{tagName: "admin"}, {tagName: "user"}]});
+        expect(result).toEqual({id: 1, userTags: [{tagName: 'admin'}, {tagName: 'user'}]});
     });
 
-    it("should preserve primitive values", () => {
+    it('should preserve primitive values', () => {
         // Arrange
         interface ItemWithPrimitives extends Item {
             id: number;
@@ -80,37 +80,37 @@ describe("toCamelCaseTyped", () => {
     });
 });
 
-describe("deepSnakeKeys", () => {
-    it("should convert camelCase keys to snake_case", () => {
+describe('deepSnakeKeys', () => {
+    it('should convert camelCase keys to snake_case', () => {
         // Arrange
-        const camelCase = {userName: "test", createdAt: "2024-01-01"};
+        const camelCase = {userName: 'test', createdAt: '2024-01-01'};
 
         // Act
         const result = deepSnakeKeys(camelCase);
 
         // Assert
-        expect(result).toEqual({user_name: "test", created_at: "2024-01-01"});
+        expect(result).toEqual({user_name: 'test', created_at: '2024-01-01'});
     });
 
-    it("should handle nested camelCase objects", () => {
+    it('should handle nested camelCase objects', () => {
         // Arrange
-        const camelCase = {userProfile: {firstName: "John", lastName: "Doe"}};
+        const camelCase = {userProfile: {firstName: 'John', lastName: 'Doe'}};
 
         // Act
         const result = deepSnakeKeys(camelCase);
 
         // Assert
-        expect(result).toEqual({user_profile: {first_name: "John", last_name: "Doe"}});
+        expect(result).toEqual({user_profile: {first_name: 'John', last_name: 'Doe'}});
     });
 
-    it("should handle already snake_case data", () => {
+    it('should handle already snake_case data', () => {
         // Arrange
-        const snakeCase = {user_name: "test", created_at: "2024-01-01"};
+        const snakeCase = {user_name: 'test', created_at: '2024-01-01'};
 
         // Act
         const result = deepSnakeKeys(snakeCase);
 
         // Assert
-        expect(result).toEqual({user_name: "test", created_at: "2024-01-01"});
+        expect(result).toEqual({user_name: 'test', created_at: '2024-01-01'});
     });
 });

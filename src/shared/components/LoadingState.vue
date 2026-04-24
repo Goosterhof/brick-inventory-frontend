@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {message = "Loading..."} = defineProps<{message?: string}>();
+const {message = 'Loading...'} = defineProps<{message?: string}>();
 </script>
 
 <template>

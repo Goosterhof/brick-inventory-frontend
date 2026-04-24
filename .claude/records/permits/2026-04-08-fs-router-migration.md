@@ -30,14 +30,14 @@ Replace the local `src/shared/services/router/` service with `@script-developmen
 3. **Create a thin BIO wrapper** — Replace `src/shared/services/router/index.ts` with a wrapper that adds the BIO-specific features on top of the package:
 
     ```ts
-    import type {RouteRecordRaw} from "vue-router";
+    import type {RouteRecordRaw} from 'vue-router';
     import type {
         RouterService,
         RouteName,
         UnregisterMiddleware,
         BeforeRouteMiddleware,
-    } from "@script-development/fs-router";
-    import {createRouterService as createBaseRouterService} from "@script-development/fs-router";
+    } from '@script-development/fs-router';
+    import {createRouterService as createBaseRouterService} from '@script-development/fs-router';
 
     export interface BioRouterService<Routes extends RouteRecordRaw[]> extends RouterService<Routes> {
         dashboardRouteName: RouteName<Routes>;
@@ -77,11 +77,11 @@ Replace the local `src/shared/services/router/` service with `@script-developmen
 
     ```ts
     // Before
-    import type {RouterService, UnregisterMiddleware} from "@shared/services/router/types";
+    import type {RouterService, UnregisterMiddleware} from '@shared/services/router/types';
 
     // After — import BioRouterService from the local wrapper, UnregisterMiddleware from package
-    import type {UnregisterMiddleware} from "@script-development/fs-router";
-    import type {BioRouterService} from "@shared/services/router";
+    import type {UnregisterMiddleware} from '@script-development/fs-router';
+    import type {BioRouterService} from '@shared/services/router';
     ```
 
     Update the function signature to use `BioRouterService<Routes>` instead of `RouterService<Routes>` (it references `dashboardRouteName`).
@@ -89,13 +89,13 @@ Replace the local `src/shared/services/router/` service with `@script-developmen
 5. **Re-export route factories from the wrapper** — Domain route files don't currently use `createCrudRoutes` etc. directly, but the wrapper should still re-export them for future use:
 
     ```ts
-    export {createCrudRoutes, createNestedCrudRoutes, createStandardRouteConfig} from "@script-development/fs-router";
+    export {createCrudRoutes, createNestedCrudRoutes, createStandardRouteConfig} from '@script-development/fs-router';
     export type {
         RouterService,
         RouteName,
         UnregisterMiddleware,
         BeforeRouteMiddleware,
-    } from "@script-development/fs-router";
+    } from '@script-development/fs-router';
     ```
 
 6. **Delete replaced local files** — Once the wrapper is in place:
