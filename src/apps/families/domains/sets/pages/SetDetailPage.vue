@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type {FamilySet} from "@app/types/familySet";
-import type {SetPart, SetWithParts, StorageMapEntry} from "@app/types/part";
-import type {Adapted} from "@script-development/fs-adapter-store";
+import type {FamilySet} from '@app/types/familySet';
+import type {SetPart, SetWithParts, StorageMapEntry} from '@app/types/part';
+import type {Adapted} from '@script-development/fs-adapter-store';
 
-import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
-import {familySetStoreModule} from "@app/stores";
-import BackButton from "@shared/components/BackButton.vue";
-import LoadingState from "@shared/components/LoadingState.vue";
-import PartListItem from "@shared/components/PartListItem.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {computed, onMounted, ref} from "vue";
+import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
+import {familySetStoreModule} from '@app/stores';
+import BackButton from '@shared/components/BackButton.vue';
+import LoadingState from '@shared/components/LoadingState.vue';
+import PartListItem from '@shared/components/PartListItem.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {toCamelCaseTyped} from '@shared/helpers/string';
+import {computed, onMounted, ref} from 'vue';
 
-import AssignPartModal from "../modals/AssignPartModal.vue";
+import AssignPartModal from '../modals/AssignPartModal.vue';
 
 const {t} = familyTranslationService;
 const adapted = ref<Adapted<FamilySet> | null>(null);
@@ -24,14 +24,14 @@ const selectedPart = ref<SetPart | null>(null);
 const showAssignModal = ref(false);
 
 const statusKey: Record<
-    FamilySet["status"],
-    "sets.sealed" | "sets.built" | "sets.inProgress" | "sets.incomplete" | "sets.wishlist"
+    FamilySet['status'],
+    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.incomplete' | 'sets.wishlist'
 > = {
-    sealed: "sets.sealed",
-    built: "sets.built",
-    in_progress: "sets.inProgress",
-    incomplete: "sets.incomplete",
-    wishlist: "sets.wishlist",
+    sealed: 'sets.sealed',
+    built: 'sets.built',
+    in_progress: 'sets.inProgress',
+    incomplete: 'sets.incomplete',
+    wishlist: 'sets.wishlist',
 };
 
 const storageByPartKey = computed(() => {
@@ -57,7 +57,7 @@ const getAvailableQuantity = (setPart: SetPart): number => {
 
 const buildStats = computed(() => {
     if (!setWithParts.value || storageMap.value.length === 0) return null;
-    if (adapted.value?.status === "wishlist") return null;
+    if (adapted.value?.status === 'wishlist') return null;
 
     const regularParts = setWithParts.value.parts.filter((p) => !p.isSpare);
     let partsComplete = 0;
@@ -118,10 +118,10 @@ onMounted(async () => {
     loading.value = false;
 });
 
-const ownedStatuses: FamilySet["status"][] = ["sealed", "in_progress", "built", "incomplete"];
+const ownedStatuses: FamilySet['status'][] = ['sealed', 'in_progress', 'built', 'incomplete'];
 const statusUpdating = ref(false);
 
-const updateStatus = async (newStatus: FamilySet["status"]) => {
+const updateStatus = async (newStatus: FamilySet['status']) => {
     if (!adapted.value || adapted.value.status === newStatus) return;
 
     statusUpdating.value = true;
@@ -134,11 +134,11 @@ const updateStatus = async (newStatus: FamilySet["status"]) => {
 
 const goToEdit = async () => {
     if (!adapted.value) return;
-    await familyRouterService.goToRoute("sets-edit", adapted.value.id);
+    await familyRouterService.goToRoute('sets-edit', adapted.value.id);
 };
 
 const goBack = async () => {
-    await familyRouterService.goToRoute("sets");
+    await familyRouterService.goToRoute('sets');
 };
 
 const openAssignModal = (part: SetPart) => {
@@ -166,7 +166,7 @@ const handleAssigned = () => {
 
         <template v-else-if="adapted">
             <div m="b-6">
-                <BackButton @click="goBack">&larr; {{ t("sets.backToOverview").value }}</BackButton>
+                <BackButton @click="goBack">&larr; {{ t('sets.backToOverview').value }}</BackButton>
             </div>
 
             <div flex="~ col md:row" gap="6">
@@ -189,7 +189,7 @@ const handleAssigned = () => {
                         justify="center"
                         text="[var(--brick-muted-text)]"
                     >
-                        {{ t("common.noImage").value }}
+                        {{ t('common.noImage').value }}
                     </div>
                 </div>
 
@@ -201,23 +201,23 @@ const handleAssigned = () => {
 
                     <div flex="~ col" gap="2" m="t-2">
                         <div flex gap="2">
-                            <span font="bold">{{ t("sets.year").value }}:</span>
-                            <span>{{ adapted.set?.year ?? t("sets.unknown").value }}</span>
+                            <span font="bold">{{ t('sets.year').value }}:</span>
+                            <span>{{ adapted.set?.year ?? t('sets.unknown').value }}</span>
                         </div>
                         <div flex gap="2">
-                            <span font="bold">{{ t("sets.theme").value }}:</span>
-                            <span>{{ adapted.set?.theme ?? t("sets.unknown").value }}</span>
+                            <span font="bold">{{ t('sets.theme').value }}:</span>
+                            <span>{{ adapted.set?.theme ?? t('sets.unknown').value }}</span>
                         </div>
                         <div flex gap="2">
-                            <span font="bold">{{ t("sets.numParts").value }}:</span>
-                            <span>{{ adapted.set?.numParts ?? t("sets.unknown").value }}</span>
+                            <span font="bold">{{ t('sets.numParts').value }}:</span>
+                            <span>{{ adapted.set?.numParts ?? t('sets.unknown').value }}</span>
                         </div>
                         <div flex gap="2">
-                            <span font="bold">{{ t("sets.quantity").value }}:</span>
+                            <span font="bold">{{ t('sets.quantity').value }}:</span>
                             <span>{{ adapted.quantity }}x</span>
                         </div>
                         <div v-if="adapted.status !== 'wishlist'" flex="~ col" gap="2">
-                            <span font="bold">{{ t("sets.status").value }}:</span>
+                            <span font="bold">{{ t('sets.status').value }}:</span>
                             <div flex gap="2" flex-wrap="wrap">
                                 <button
                                     v-for="status in ownedStatuses"
@@ -246,26 +246,26 @@ const handleAssigned = () => {
                         </div>
                         <div v-if="adapted.status === 'wishlist'">
                             <PrimaryButton :disabled="statusUpdating" @click="updateStatus('sealed')">
-                                {{ t("sets.addToCollection").value }}
+                                {{ t('sets.addToCollection').value }}
                             </PrimaryButton>
                         </div>
                         <div v-if="adapted.purchaseDate" flex gap="2">
-                            <span font="bold">{{ t("sets.purchaseDate").value }}:</span>
+                            <span font="bold">{{ t('sets.purchaseDate').value }}:</span>
                             <span>{{ adapted.purchaseDate }}</span>
                         </div>
                         <div v-if="adapted.notes" flex gap="2">
-                            <span font="bold">{{ t("sets.notes").value }}:</span>
+                            <span font="bold">{{ t('sets.notes').value }}:</span>
                             <span>{{ adapted.notes }}</span>
                         </div>
                     </div>
 
                     <div flex gap="4" m="t-4">
-                        <PrimaryButton @click="goToEdit">{{ t("sets.edit").value }}</PrimaryButton>
+                        <PrimaryButton @click="goToEdit">{{ t('sets.edit').value }}</PrimaryButton>
                         <PrimaryButton
                             v-if="!setWithParts && adapted.status !== 'wishlist'"
                             @click="loadParts(adapted.set?.setNum ?? adapted.setNum)"
                         >
-                            {{ t("sets.loadParts").value }}
+                            {{ t('sets.loadParts').value }}
                         </PrimaryButton>
                     </div>
                 </div>
@@ -284,23 +284,23 @@ const handleAssigned = () => {
                     :bg="buildStats.canBuild ? 'baseplate-green/15' : '[var(--brick-card-bg)]'"
                 >
                     <h2 text="xl" font="bold" uppercase tracking="wide" m="b-3">
-                        {{ t("sets.buildCheck").value }}
+                        {{ t('sets.buildCheck').value }}
                     </h2>
                     <p
                         font="bold"
                         text="lg"
                         :class="buildStats.canBuild ? 'text-baseplate-green' : 'text-brick-red-dark'"
                     >
-                        {{ buildStats.canBuild ? t("sets.readyToBuild").value : t("sets.notReadyToBuild").value }}
+                        {{ buildStats.canBuild ? t('sets.readyToBuild').value : t('sets.notReadyToBuild').value }}
                     </p>
                     <div flex gap="6" m="t-2" text="sm">
                         <span>
-                            {{ t("sets.uniqueParts").value }}: {{ buildStats.uniquePartsComplete }}/{{
+                            {{ t('sets.uniqueParts').value }}: {{ buildStats.uniquePartsComplete }}/{{
                                 buildStats.uniquePartsTotal
                             }}
                         </span>
                         <span>
-                            {{ t("sets.totalPieces").value }}: {{ buildStats.totalAvailable }}/{{
+                            {{ t('sets.totalPieces').value }}: {{ buildStats.totalAvailable }}/{{
                                 buildStats.totalNeeded
                             }}
                         </span>
@@ -321,8 +321,8 @@ const handleAssigned = () => {
                             class="brick-transition"
                             @click="showMissingParts = !showMissingParts"
                         >
-                            {{ showMissingParts ? "&#9662;" : "&#9656;" }}
-                            {{ t("sets.missingBricks").value }} ({{ missingParts.length }})
+                            {{ showMissingParts ? '&#9662;' : '&#9656;' }}
+                            {{ t('sets.missingBricks').value }} ({{ missingParts.length }})
                         </button>
 
                         <div v-if="showMissingParts" flex="~ col" gap="2" m="t-3">
@@ -373,7 +373,7 @@ const handleAssigned = () => {
                 </div>
 
                 <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
-                    {{ t("sets.parts").value }} ({{ setWithParts.parts.filter((p) => !p.isSpare).length }})
+                    {{ t('sets.parts').value }} ({{ setWithParts.parts.filter((p) => !p.isSpare).length }})
                 </h2>
 
                 <div flex="~ col" gap="2">
@@ -432,7 +432,7 @@ const handleAssigned = () => {
 
                 <div v-if="setWithParts.parts.filter((p) => p.isSpare).length > 0" m="t-6">
                     <h2 text="xl" font="bold" uppercase tracking="wide" m="b-4">
-                        {{ t("sets.spareParts").value }} ({{ setWithParts.parts.filter((p) => p.isSpare).length }})
+                        {{ t('sets.spareParts').value }} ({{ setWithParts.parts.filter((p) => p.isSpare).length }})
                     </h2>
 
                     <div flex="~ col" gap="2">

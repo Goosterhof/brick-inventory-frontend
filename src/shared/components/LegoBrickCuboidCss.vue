@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed} from 'vue';
 
 /**
  * Pure-CSS 3D LEGO brick (6x2, fixed footprint).
@@ -15,7 +15,7 @@ import {computed} from "vue";
  * automatically. No JS motion logic required.
  */
 
-const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
+const {color = '#DC2626', shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
 
 // Fixed 6x2 footprint. All measurements in pixels.
 const COLS = 6;

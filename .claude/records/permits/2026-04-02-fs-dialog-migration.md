@@ -22,10 +22,10 @@ Replace the local `dialog.ts` shared service with `@script-development/fs-dialog
 
     ```ts
     // Before
-    import {createDialogService} from "@shared/services/dialog";
+    import {createDialogService} from '@shared/services/dialog';
 
     // After
-    import {createDialogService} from "@script-development/fs-dialog";
+    import {createDialogService} from '@script-development/fs-dialog';
     ```
 
     The rest of the file (error middleware registration) stays identical.
@@ -34,10 +34,10 @@ Replace the local `dialog.ts` shared service with `@script-development/fs-dialog
 
     ```ts
     // Before
-    import {createDialogService} from "@shared/services/dialog";
+    import {createDialogService} from '@shared/services/dialog';
 
     // After
-    import {createDialogService} from "@script-development/fs-dialog";
+    import {createDialogService} from '@script-development/fs-dialog';
     ```
 
 4. **Update any type imports** — Search for `DialogService` or `DialogErrorHandler` type imports from `@shared/services/dialog` and point them to the package.

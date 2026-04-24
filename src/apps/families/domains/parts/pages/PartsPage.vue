@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import type {CursorPaginatedParts, FamilyPartEntry, GroupedFamilyPart} from "@app/types/part";
+import type {CursorPaginatedParts, FamilyPartEntry, GroupedFamilyPart} from '@app/types/part';
 
-import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
-import EmptyState from "@shared/components/EmptyState.vue";
-import FilterChip from "@shared/components/FilterChip.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import PartListItem from "@shared/components/PartListItem.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {downloadCsv, toCsv} from "@shared/helpers/csv";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {computed, onMounted, ref} from "vue";
+import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from '@app/services';
+import EmptyState from '@shared/components/EmptyState.vue';
+import FilterChip from '@shared/components/FilterChip.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import PageHeader from '@shared/components/PageHeader.vue';
+import PartListItem from '@shared/components/PartListItem.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {downloadCsv, toCsv} from '@shared/helpers/csv';
+import {toCamelCaseTyped} from '@shared/helpers/string';
+import {computed, onMounted, ref} from 'vue';
 
-type SortField = "name" | "quantity" | "color";
+type SortField = 'name' | 'quantity' | 'color';
 
 const {t} = familyTranslationService;
 const entries = ref<FamilyPartEntry[]>([]);
 const loading = ref(true);
 const loadingMore = ref(false);
 const nextCursor = ref<string | null>(null);
-const searchQuery = ref("");
+const searchQuery = ref('');
 const activeColorFilter = ref<string | null>(null);
 const showOrphansOnly = ref(false);
-const activeSortField = ref<SortField>("name");
+const activeSortField = ref<SortField>('name');
 
 const fetchParts = async (cursor?: string): Promise<CursorPaginatedParts> => {
-    const params = new URLSearchParams({per_page: "100"});
+    const params = new URLSearchParams({per_page: '100'});
     if (cursor) {
-        params.set("cursor", cursor);
+        params.set('cursor', cursor);
     }
     const response = await familyHttpService.getRequest<CursorPaginatedParts>(`/family/parts?${params.toString()}`);
-    return response.data;
+    return toCamelCaseTyped<CursorPaginatedParts>(response.data);
 };
 
 onMounted(async () => {
     try {
         const envelope = await fetchParts();
-        entries.value = envelope.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
-        nextCursor.value = envelope.next_cursor;
+        entries.value = envelope.data;
+        nextCursor.value = envelope.nextCursor;
     } catch {
         entries.value = [];
     } finally {
@@ -52,9 +52,8 @@ const loadMore = async () => {
     loadingMore.value = true;
     try {
         const envelope = await fetchParts(nextCursor.value);
-        const newEntries = envelope.data.map((item) => toCamelCaseTyped<FamilyPartEntry>(item));
-        entries.value = [...entries.value, ...newEntries];
-        nextCursor.value = envelope.next_cursor;
+        entries.value = [...entries.value, ...envelope.data];
+        nextCursor.value = envelope.nextCursor;
     } finally {
         loadingMore.value = false;
     }
@@ -125,13 +124,13 @@ const setSortField = (field: SortField) => {
 };
 
 const compareParts = (a: GroupedFamilyPart, b: GroupedFamilyPart): number => {
-    if (activeSortField.value === "name") {
+    if (activeSortField.value === 'name') {
         return a.partName.localeCompare(b.partName);
     }
-    if (activeSortField.value === "quantity") {
+    if (activeSortField.value === 'quantity') {
         return b.totalQuantity - a.totalQuantity;
     }
-    return (a.colorName ?? "").localeCompare(b.colorName ?? "");
+    return (a.colorName ?? '').localeCompare(b.colorName ?? '');
 };
 
 const filteredParts = computed(() => {
@@ -156,26 +155,26 @@ const filteredParts = computed(() => {
 });
 
 const exportCsv = () => {
-    const headers = ["Part Number", "Name", "Color", "Total Quantity", "Storage Locations"];
+    const headers = ['Part Number', 'Name', 'Color', 'Total Quantity', 'Storage Locations'];
     const rows = filteredParts.value.map((p) => [
         p.partNum,
         p.partName,
-        p.colorName ?? "",
+        p.colorName ?? '',
         String(p.totalQuantity),
-        p.locations.map((l) => `${l.storageOptionName} (${l.quantity}x)`).join("; "),
+        p.locations.map((l) => `${l.storageOptionName} (${l.quantity}x)`).join('; '),
     ]);
-    downloadCsv(toCsv(headers, rows), "lego-parts.csv");
+    downloadCsv(toCsv(headers, rows), 'lego-parts.csv');
 };
 
-const sortLabelKey: Record<SortField, "parts.sortName" | "parts.sortQuantity" | "parts.sortColor"> = {
-    name: "parts.sortName",
-    quantity: "parts.sortQuantity",
-    color: "parts.sortColor",
+const sortLabelKey: Record<SortField, 'parts.sortName' | 'parts.sortQuantity' | 'parts.sortColor'> = {
+    name: 'parts.sortName',
+    quantity: 'parts.sortQuantity',
+    color: 'parts.sortColor',
 };
-const allSortFields: SortField[] = ["name", "quantity", "color"];
+const allSortFields: SortField[] = ['name', 'quantity', 'color'];
 
 const goToMissing = async () => {
-    await familyRouterService.goToRoute("parts-missing");
+    await familyRouterService.goToRoute('parts-missing');
 };
 </script>
 
@@ -187,15 +186,15 @@ const goToMissing = async () => {
                     :sound-service="familySoundService"
                     data-testid="parts-missing-cta"
                     @click="goToMissing"
-                    >{{ t("parts.seeMissingCta").value }}</PrimaryButton
+                    >{{ t('parts.seeMissingCta').value }}</PrimaryButton
                 >
                 <PrimaryButton v-if="groupedParts.length > 0" :sound-service="familySoundService" @click="exportCsv">{{
-                    t("common.export").value
+                    t('common.export').value
                 }}</PrimaryButton>
             </div>
         </PageHeader>
 
-        <p v-if="loading" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
+        <p v-if="loading" text="[var(--brick-muted-text)]">{{ t('common.loading').value }}</p>
 
         <EmptyState
             v-else-if="groupedParts.length === 0"
@@ -228,7 +227,7 @@ const goToMissing = async () => {
 
                     <div flex gap="2" flex-wrap="wrap">
                         <FilterChip :active="!activeColorFilter" @click="activeColorFilter = null">
-                            {{ t("parts.allColors").value }}
+                            {{ t('parts.allColors').value }}
                         </FilterChip>
                         <FilterChip
                             v-for="color in uniqueColors"
@@ -242,7 +241,7 @@ const goToMissing = async () => {
 
                     <div flex gap="2" flex-wrap="wrap">
                         <FilterChip :active="showOrphansOnly" @click="toggleOrphanFilter">
-                            {{ t("parts.orphanParts").value }}
+                            {{ t('parts.orphanParts').value }}
                         </FilterChip>
                     </div>
                 </div>
@@ -283,7 +282,7 @@ const goToMissing = async () => {
                             class="brick-border"
                             border="1"
                         >
-                            {{ t("parts.orphanParts").value }}
+                            {{ t('parts.orphanParts').value }}
                         </span>
                     </div>
                 </PartListItem>
@@ -302,7 +301,7 @@ const goToMissing = async () => {
                     data-testid="load-more-button"
                     @click="loadMore"
                 >
-                    {{ loadingMore ? t("parts.loadingMore").value : t("parts.loadMore").value }}
+                    {{ loadingMore ? t('parts.loadingMore').value : t('parts.loadMore').value }}
                 </button>
             </div>
         </template>

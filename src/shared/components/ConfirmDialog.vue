@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type {SoundService} from "@shared/services/sound";
+import type {SoundService} from '@shared/services/sound';
 
-import ModalDialog from "@shared/components/ModalDialog.vue";
+import ModalDialog from '@shared/components/ModalDialog.vue';
 
 const {
     open,
@@ -12,8 +12,8 @@ const {
 const emit = defineEmits<{confirm: []; cancel: []}>();
 
 const handleConfirm = () => {
-    soundService?.play("thud");
-    emit("confirm");
+    soundService?.play('thud');
+    emit('confirm');
 };
 </script>
 

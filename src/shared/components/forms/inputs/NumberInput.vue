@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import FormError from "@shared/components/forms/FormError.vue";
-import FormField from "@shared/components/forms/FormField.vue";
-import FormLabel from "@shared/components/forms/FormLabel.vue";
-import {computed, useId} from "vue";
+import FormError from '@shared/components/forms/FormError.vue';
+import FormField from '@shared/components/forms/FormField.vue';
+import FormLabel from '@shared/components/forms/FormLabel.vue';
+import {computed, useId} from 'vue';
 
 const {
     label,
-    placeholder = "",
+    placeholder = '',
     disabled = false,
     optional = false,
-    error = "",
+    error = '',
     min,
     max,
     step,
@@ -37,12 +37,12 @@ const errorId = `${inputId}-error`;
 
 const inputStateClass = computed(() => {
     if (disabled) {
-        return "brick-disabled";
+        return 'brick-disabled';
     }
     if (error) {
-        return "bg-brick-red-light border-brick-red brick-shadow-error focus:brick-shadow-error-hover";
+        return 'bg-brick-red-light border-brick-red brick-shadow-error focus:brick-shadow-error-hover';
     }
-    return "bg-[var(--brick-card-bg)] brick-shadow focus:brick-shadow-hover focus:bg-brick-yellow";
+    return 'bg-[var(--brick-card-bg)] brick-shadow focus:brick-shadow-hover focus:bg-brick-yellow';
 });
 </script>
 

@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import type {MasterShoppingListEntry, MasterShoppingListResponse} from "@app/types/part";
+import type {MasterShoppingListEntry, MasterShoppingListResponse} from '@app/types/part';
 
-import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from "@app/services";
-import BackButton from "@shared/components/BackButton.vue";
-import EmptyState from "@shared/components/EmptyState.vue";
-import FilterChip from "@shared/components/FilterChip.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import PartListItem from "@shared/components/PartListItem.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {downloadBrickLinkWantedList, toBrickLinkWantedListXml} from "@shared/helpers/bricklinkWantedList";
-import {downloadCsv, toCsv} from "@shared/helpers/csv";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {computed, onMounted, ref} from "vue";
+import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from '@app/services';
+import BackButton from '@shared/components/BackButton.vue';
+import EmptyState from '@shared/components/EmptyState.vue';
+import FilterChip from '@shared/components/FilterChip.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import PageHeader from '@shared/components/PageHeader.vue';
+import PartListItem from '@shared/components/PartListItem.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {downloadBrickLinkWantedList, toBrickLinkWantedListXml} from '@shared/helpers/bricklinkWantedList';
+import {downloadCsv, toCsv} from '@shared/helpers/csv';
+import {toCamelCaseTyped} from '@shared/helpers/string';
+import {computed, onMounted, ref} from 'vue';
 
-type SortField = "shortfall" | "name" | "color";
+type SortField = 'shortfall' | 'name' | 'color';
 
 const {t} = familyTranslationService;
 const entries = ref<MasterShoppingListEntry[]>([]);
 const unknownFamilySetIds = ref<number[]>([]);
 const loading = ref(true);
 const loadError = ref(false);
-const searchQuery = ref("");
-const activeSortField = ref<SortField>("shortfall");
+const searchQuery = ref('');
+const activeSortField = ref<SortField>('shortfall');
 
 const fetchMissingParts = async (): Promise<void> => {
     loading.value = true;
     loadError.value = false;
     try {
-        const response = await familyHttpService.getRequest<MasterShoppingListResponse>("/family-sets/missing-parts");
+        const response = await familyHttpService.getRequest<MasterShoppingListResponse>('/family-sets/missing-parts');
         const payload = toCamelCaseTyped<MasterShoppingListResponse>(response.data);
         entries.value = payload.entries;
         unknownFamilySetIds.value = payload.unknownFamilySetIds;
@@ -44,11 +44,11 @@ const fetchMissingParts = async (): Promise<void> => {
 onMounted(fetchMissingParts);
 
 const goBackToParts = async () => {
-    await familyRouterService.goToRoute("parts");
+    await familyRouterService.goToRoute('parts');
 };
 
 const goToSettings = async () => {
-    await familyRouterService.goToRoute("settings");
+    await familyRouterService.goToRoute('settings');
 };
 
 const totalShortfall = computed(() => entries.value.reduce((sum, entry) => sum + entry.shortfall, 0));
@@ -68,13 +68,13 @@ const setSortField = (field: SortField) => {
 };
 
 const compareEntries = (a: MasterShoppingListEntry, b: MasterShoppingListEntry): number => {
-    if (activeSortField.value === "shortfall") {
+    if (activeSortField.value === 'shortfall') {
         return b.shortfall - a.shortfall;
     }
-    if (activeSortField.value === "name") {
+    if (activeSortField.value === 'name') {
         return a.partName.localeCompare(b.partName);
     }
-    return (a.colorName ?? "").localeCompare(b.colorName ?? "");
+    return (a.colorName ?? '').localeCompare(b.colorName ?? '');
 };
 
 const filteredEntries = computed(() => {
@@ -97,46 +97,46 @@ const exportBrickLink = () => {
         shortfall: entry.shortfall,
     }));
     const xml = toBrickLinkWantedListXml(bricklinkEntries);
-    downloadBrickLinkWantedList(xml, "bricklink-wanted-list.xml");
+    downloadBrickLinkWantedList(xml, 'bricklink-wanted-list.xml');
 };
 
 const exportCsvFile = () => {
     const headers = [
-        "Part Number",
-        "Part Name",
-        "Color",
-        "Quantity Needed",
-        "Quantity Stored",
-        "Shortfall",
-        "Needed By Sets",
+        'Part Number',
+        'Part Name',
+        'Color',
+        'Quantity Needed',
+        'Quantity Stored',
+        'Shortfall',
+        'Needed By Sets',
     ];
     const rows = filteredEntries.value.map((e) => [
         e.partNum,
         e.partName,
-        e.colorName ?? "",
+        e.colorName ?? '',
         String(e.quantityNeeded),
         String(e.quantityStored),
         String(e.shortfall),
         String(e.neededByFamilySetIds.length),
     ]);
-    downloadCsv(toCsv(headers, rows), "master-shopping-list.csv");
+    downloadCsv(toCsv(headers, rows), 'master-shopping-list.csv');
 };
 
 const sortLabelKey: Record<
     SortField,
-    "parts.missingSortShortfall" | "parts.missingSortName" | "parts.missingSortColor"
+    'parts.missingSortShortfall' | 'parts.missingSortName' | 'parts.missingSortColor'
 > = {
-    shortfall: "parts.missingSortShortfall",
-    name: "parts.missingSortName",
-    color: "parts.missingSortColor",
+    shortfall: 'parts.missingSortShortfall',
+    name: 'parts.missingSortName',
+    color: 'parts.missingSortColor',
 };
-const allSortFields: SortField[] = ["shortfall", "name", "color"];
+const allSortFields: SortField[] = ['shortfall', 'name', 'color'];
 </script>
 
 <template>
     <div max-w="6xl" m="x-auto">
         <BackButton data-testid="missing-back" @click="goBackToParts">{{
-            t("parts.missingBackToParts").value
+            t('parts.missingBackToParts').value
         }}</BackButton>
 
         <PageHeader :title="t('parts.missingTitle').value">
@@ -146,20 +146,20 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                     :sound-service="familySoundService"
                     data-testid="export-bricklink"
                     @click="exportBrickLink"
-                    >{{ t("parts.missingExportBrickLink").value }}</PrimaryButton
+                    >{{ t('parts.missingExportBrickLink').value }}</PrimaryButton
                 >
                 <PrimaryButton
                     v-if="filteredEntries.length > 0"
                     :sound-service="familySoundService"
                     data-testid="export-csv"
                     @click="exportCsvFile"
-                    >{{ t("parts.missingExportCsv").value }}</PrimaryButton
+                    >{{ t('parts.missingExportCsv').value }}</PrimaryButton
                 >
             </div>
         </PageHeader>
 
         <p v-if="loading" text="[var(--brick-muted-text)]" data-testid="missing-loading">
-            {{ t("common.loading").value }}
+            {{ t('common.loading').value }}
         </p>
 
         <template v-else>
@@ -171,7 +171,7 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                 class="brick-border brick-shadow"
                 data-testid="missing-error"
             >
-                <p font="bold" text="[var(--brick-page-text)]">{{ t("parts.missingLoadError").value }}</p>
+                <p font="bold" text="[var(--brick-page-text)]">{{ t('parts.missingLoadError').value }}</p>
             </div>
 
             <EmptyState
@@ -191,9 +191,9 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                         :data-affected-sets="affectedSetCount"
                     >
                         {{
-                            t("parts.missingSummary")
-                                .value.replace("{parts}", String(totalShortfall))
-                                .replace("{sets}", String(affectedSetCount))
+                            t('parts.missingSummary')
+                                .value.replace('{parts}', String(totalShortfall))
+                                .replace('{sets}', String(affectedSetCount))
                         }}
                     </p>
                     <div
@@ -206,8 +206,8 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                     >
                         <p text="sm [var(--brick-page-text)]">
                             {{
-                                t("parts.missingUnknownSets").value.replace(
-                                    "{count}",
+                                t('parts.missingUnknownSets').value.replace(
+                                    '{count}',
                                     String(unknownFamilySetIds.length),
                                 )
                             }}
@@ -219,7 +219,7 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                                 data-testid="missing-unknown-sets-link"
                                 @click="goToSettings"
                             >
-                                {{ t("parts.missingUnknownSetsLink").value }}
+                                {{ t('parts.missingUnknownSetsLink').value }}
                             </button>
                         </p>
                     </div>
@@ -269,7 +269,7 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                                     border="1"
                                     text="[var(--brick-page-text)]"
                                 >
-                                    {{ t("parts.missingNeedLabel").value }}: {{ entry.quantityNeeded }}x
+                                    {{ t('parts.missingNeedLabel').value }}: {{ entry.quantityNeeded }}x
                                 </span>
                                 <span
                                     p="x-2 y-0.5"
@@ -279,7 +279,7 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                                     border="1"
                                     text="[var(--brick-page-text)]"
                                 >
-                                    {{ t("parts.missingStoredLabel").value }}: {{ entry.quantityStored }}x
+                                    {{ t('parts.missingStoredLabel').value }}: {{ entry.quantityStored }}x
                                 </span>
                                 <span
                                     p="x-2 y-0.5"
@@ -291,8 +291,8 @@ const allSortFields: SortField[] = ["shortfall", "name", "color"];
                                     :title="entry.neededByFamilySetIds.join(', ')"
                                 >
                                     {{
-                                        t("parts.missingNeededBy").value.replace(
-                                            "{count}",
+                                        t('parts.missingNeededBy').value.replace(
+                                            '{count}',
                                             String(entry.neededByFamilySetIds.length),
                                         )
                                     }}

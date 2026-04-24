@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {PhCaretRight} from "@phosphor-icons/vue";
+import {PhCaretRight} from '@phosphor-icons/vue';
 
 const {expanded = false} = defineProps<{title: string; count?: number; expanded?: boolean}>();
 

@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type {TransitionVariant} from "@shared/components/PageTransition.vue";
+import type {TransitionVariant} from '@shared/components/PageTransition.vue';
 
-import PageTransition from "@shared/components/PageTransition.vue";
-import {computed, ref} from "vue";
+import PageTransition from '@shared/components/PageTransition.vue';
+import {computed, ref} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
-const pages = ["Home", "Sets", "Storage", "Parts"] as const;
-const currentPage = ref<(typeof pages)[number]>("Home");
-const selectedVariant = ref<TransitionVariant>("brick-snap");
+const pages = ['Home', 'Sets', 'Storage', 'Parts'] as const;
+const currentPage = ref<(typeof pages)[number]>('Home');
+const selectedVariant = ref<TransitionVariant>('brick-snap');
 
 const prefersReducedMotion = ref(
-    typeof window !== "undefined" && typeof window.matchMedia === "function"
-        ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
         : false,
 );
 
-if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
-    window.matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", (event) => {
+if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (event) => {
         prefersReducedMotion.value = event.matches;
     });
 }
@@ -34,23 +34,23 @@ const navigateTo = (page: (typeof pages)[number]): void => {
 
 const parameters = computed(() => {
     if (prefersReducedMotion.value) {
-        return {name: "brick-none", enterDuration: "0ms", leaveDuration: "0ms", easing: "none", distance: "0px"};
+        return {name: 'brick-none', enterDuration: '0ms', leaveDuration: '0ms', easing: 'none', distance: '0px'};
     }
-    if (selectedVariant.value === "brick-lift") {
+    if (selectedVariant.value === 'brick-lift') {
         return {
-            name: "brick-lift",
-            enterDuration: "200ms",
-            leaveDuration: "140ms",
-            easing: "cubic-bezier(0.2, 0, 0, 1)",
-            distance: "12px (up on enter, down on leave)",
+            name: 'brick-lift',
+            enterDuration: '200ms',
+            leaveDuration: '140ms',
+            easing: 'cubic-bezier(0.2, 0, 0, 1)',
+            distance: '12px (up on enter, down on leave)',
         };
     }
     return {
-        name: "brick-snap",
-        enterDuration: "220ms",
-        leaveDuration: "140ms",
-        easing: "cubic-bezier(0.2, 0, 0, 1)",
-        distance: "12px (up on enter), 4px (up on leave)",
+        name: 'brick-snap',
+        enterDuration: '220ms',
+        leaveDuration: '140ms',
+        easing: 'cubic-bezier(0.2, 0, 0, 1)',
+        distance: '12px (up on enter), 4px (up on leave)',
     };
 });
 </script>

@@ -1,5 +1,5 @@
-import {EntryNotFoundError} from "@script-development/fs-adapter-store";
-import {createDialogService} from "@script-development/fs-dialog";
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
+import {createDialogService} from '@script-development/fs-dialog';
 
 export const familyDialogService = createDialogService();
 

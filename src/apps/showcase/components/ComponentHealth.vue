@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import registry from "@shared/generated/component-registry.json";
-import {computed, ref} from "vue";
+import registry from '@shared/generated/component-registry.json';
+import {computed, ref} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
 type ApiSurfaceItem = {name: string; required?: boolean};
 
@@ -197,7 +197,7 @@ const compositeCount = computed(() => entries.value.filter((c) => c.dependencyDe
                                             class="brick-border"
                                             :bg="prop.required ? '[#F5C518]' : 'white'"
                                         >
-                                            {{ prop.name }}{{ prop.required ? "*" : "" }}
+                                            {{ prop.name }}{{ prop.required ? '*' : '' }}
                                         </span>
                                     </div>
                                 </div>
@@ -245,7 +245,7 @@ const compositeCount = computed(() => entries.value.filter((c) => c.dependencyDe
                                             class="brick-border"
                                             :bg="model.required ? '[#F5C518]' : 'white'"
                                         >
-                                            {{ model.name }}{{ model.required ? "*" : "" }}
+                                            {{ model.name }}{{ model.required ? '*' : '' }}
                                         </span>
                                     </div>
                                 </div>
@@ -272,7 +272,7 @@ const compositeCount = computed(() => entries.value.filter((c) => c.dependencyDe
                                     <p text="xs" font="bold mono" uppercase m="b-2">{{ app }}</p>
                                     <div v-for="(files, domain) in domains" :key="domain" m="b-1 last:b-0">
                                         <p text="xs" font="mono" text-color="gray-500" m="b-1">
-                                            {{ domain === "_root" ? "(root)" : domain }}
+                                            {{ domain === '_root' ? '(root)' : domain }}
                                         </p>
                                         <p
                                             v-for="file in files"
@@ -283,7 +283,7 @@ const compositeCount = computed(() => entries.value.filter((c) => c.dependencyDe
                                             truncate
                                             :title="file"
                                         >
-                                            {{ file.split("/").pop() }}
+                                            {{ file.split('/').pop() }}
                                         </p>
                                     </div>
                                 </div>

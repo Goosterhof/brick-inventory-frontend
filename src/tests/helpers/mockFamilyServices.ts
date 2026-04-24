@@ -1,12 +1,12 @@
-import type {HttpService} from "@script-development/fs-http";
-import type {ThemeService} from "@script-development/fs-theme";
-import type {AuthService} from "@shared/services/auth/types";
-import type {Mock} from "vitest";
+import type {HttpService} from '@script-development/fs-http';
+import type {ThemeService} from '@script-development/fs-theme';
+import type {AuthService} from '@shared/services/auth/types';
+import type {Mock} from 'vitest';
 
-import {vi} from "vitest";
-import {ref} from "vue";
+import {vi} from 'vitest';
+import {ref} from 'vue';
 
-import type {MockedService} from "./mockTypes";
+import type {MockedService} from './mockTypes';
 
 export interface FamilyServicesMock {
     familyHttpService: MockedService<HttpService>;
@@ -32,17 +32,17 @@ type FamilyServicesOverrides = {
 export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): FamilyServicesMock => {
     const defaults: FamilyServicesMock = {
         familyHttpService: {
-            getRequest: vi.fn<HttpService["getRequest"]>(),
-            postRequest: vi.fn<HttpService["postRequest"]>(),
-            putRequest: vi.fn<HttpService["putRequest"]>(),
-            patchRequest: vi.fn<HttpService["patchRequest"]>(),
-            deleteRequest: vi.fn<HttpService["deleteRequest"]>(),
-            downloadRequest: vi.fn<HttpService["downloadRequest"]>(),
-            previewRequest: vi.fn<HttpService["previewRequest"]>(),
-            streamRequest: vi.fn<HttpService["streamRequest"]>(),
-            registerRequestMiddleware: vi.fn<HttpService["registerRequestMiddleware"]>(() => vi.fn<() => void>()),
-            registerResponseMiddleware: vi.fn<HttpService["registerResponseMiddleware"]>(() => vi.fn<() => void>()),
-            registerResponseErrorMiddleware: vi.fn<HttpService["registerResponseErrorMiddleware"]>(() =>
+            getRequest: vi.fn<HttpService['getRequest']>(),
+            postRequest: vi.fn<HttpService['postRequest']>(),
+            putRequest: vi.fn<HttpService['putRequest']>(),
+            patchRequest: vi.fn<HttpService['patchRequest']>(),
+            deleteRequest: vi.fn<HttpService['deleteRequest']>(),
+            downloadRequest: vi.fn<HttpService['downloadRequest']>(),
+            previewRequest: vi.fn<HttpService['previewRequest']>(),
+            streamRequest: vi.fn<HttpService['streamRequest']>(),
+            registerRequestMiddleware: vi.fn<HttpService['registerRequestMiddleware']>(() => vi.fn<() => void>()),
+            registerResponseMiddleware: vi.fn<HttpService['registerResponseMiddleware']>(() => vi.fn<() => void>()),
+            registerResponseErrorMiddleware: vi.fn<HttpService['registerResponseErrorMiddleware']>(() =>
                 vi.fn<() => void>(),
             ),
         },
@@ -63,13 +63,13 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
             goToShowPage: vi.fn<() => Promise<void>>(),
             goBack: vi.fn<() => void>(),
         },
-        familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: "en"}},
+        familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: 'en'}},
         familyLoadingService: {},
         familySoundService: {},
         familyStorageService: {},
         familyThemeService: {isDark: ref(false), toggleTheme: vi.fn<() => void>()},
-        FamilyRouterView: {template: "<div><slot /></div>"},
-        FamilyRouterLink: {template: "<a><slot /></a>"},
+        FamilyRouterView: {template: '<div><slot /></div>'},
+        FamilyRouterLink: {template: '<a><slot /></a>'},
     };
 
     if (!overrides) return defaults;

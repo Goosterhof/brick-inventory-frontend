@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {useId} from "vue";
+import {useId} from 'vue';
 
-const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
+const {color = '#DC2626', shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
 
 const CELL = 40;
 const PAD = 10;
@@ -32,7 +32,7 @@ const slopePoints = [
     `${halfStroke},${halfStroke}`,
     `${halfStroke + bodyWidth},${halfStroke}`,
     `${halfStroke},${halfStroke + PAD + CELL}`,
-].join(" ");
+].join(' ');
 </script>
 
 <template>

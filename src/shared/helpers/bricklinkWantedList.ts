@@ -20,11 +20,11 @@ export interface BrickLinkWantedListEntry {
 
 const escapeXml = (value: string): string =>
     value
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&apos;");
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
 
 const renderItem = (entry: BrickLinkWantedListEntry): string | null => {
     if (entry.shortfall <= 0) {
@@ -32,8 +32,8 @@ const renderItem = (entry: BrickLinkWantedListEntry): string | null => {
     }
 
     const lines = [
-        "    <ITEM>",
-        "        <ITEMTYPE>P</ITEMTYPE>",
+        '    <ITEM>',
+        '        <ITEMTYPE>P</ITEMTYPE>',
         `        <ITEMID>${escapeXml(entry.partNum)}</ITEMID>`,
     ];
 
@@ -41,9 +41,9 @@ const renderItem = (entry: BrickLinkWantedListEntry): string | null => {
         lines.push(`        <COLOR>${String(entry.brickLinkColorId)}</COLOR>`);
     }
 
-    lines.push(`        <MINQTY>${String(entry.shortfall)}</MINQTY>`, "    </ITEM>");
+    lines.push(`        <MINQTY>${String(entry.shortfall)}</MINQTY>`, '    </ITEM>');
 
-    return lines.join("\n");
+    return lines.join('\n');
 };
 
 /**
@@ -55,16 +55,16 @@ const renderItem = (entry: BrickLinkWantedListEntry): string | null => {
  */
 export const toBrickLinkWantedListXml = (entries: readonly BrickLinkWantedListEntry[]): string => {
     const items = entries.map(renderItem).filter((item): item is string => item !== null);
-    return ['<?xml version="1.0" encoding="UTF-8"?>', "<INVENTORY>", ...items, "</INVENTORY>"].join("\n");
+    return ['<?xml version="1.0" encoding="UTF-8"?>', '<INVENTORY>', ...items, '</INVENTORY>'].join('\n');
 };
 
 /**
  * Trigger a BrickLink wanted-list XML file download in the browser.
  */
 export const downloadBrickLinkWantedList = (xml: string, filename: string): void => {
-    const blob = new Blob([xml], {type: "application/xml;charset=utf-8;"});
+    const blob = new Blob([xml], {type: 'application/xml;charset=utf-8;'});
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     link.click();

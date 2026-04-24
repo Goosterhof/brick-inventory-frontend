@@ -1,5 +1,5 @@
-import type {RouterService, UnregisterMiddleware} from "@script-development/fs-router";
-import type {RouteRecordRaw} from "vue-router";
+import type {RouterService, UnregisterMiddleware} from '@script-development/fs-router';
+import type {RouteRecordRaw} from 'vue-router';
 
 export const registerFromQueryMiddleware = <Routes extends RouteRecordRaw[]>(
     routerService: RouterService<Routes>,

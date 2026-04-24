@@ -1,9 +1,9 @@
-import {createHttpService} from "@script-development/fs-http";
-import {NotLoggedInError} from "@shared/errors/not-logged-in";
-import {createAuthService} from "@shared/services/auth";
-import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
-import {describe, expect, it} from "vitest";
+import {createHttpService} from '@script-development/fs-http';
+import {NotLoggedInError} from '@shared/errors/not-logged-in';
+import {createAuthService} from '@shared/services/auth';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import {describe, expect, it} from 'vitest';
 
 interface TestProfile {
     id: number;
@@ -11,11 +11,11 @@ interface TestProfile {
     createdAt: string;
 }
 
-describe("auth service", () => {
-    const baseURL = "https://api.example.com";
+describe('auth service', () => {
+    const baseURL = 'https://api.example.com';
 
-    describe("createAuthService", () => {
-        it("should return all expected methods and properties", () => {
+    describe('createAuthService', () => {
+        it('should return all expected methods and properties', () => {
             // Arrange
             const httpService = createHttpService(baseURL);
 
@@ -23,15 +23,15 @@ describe("auth service", () => {
             const authService = createAuthService<TestProfile>(httpService);
 
             // Assert
-            expect(authService).toHaveProperty("isLoggedIn");
-            expect(authService).toHaveProperty("user");
-            expect(authService).toHaveProperty("userId");
-            expect(authService).toHaveProperty("login");
-            expect(authService).toHaveProperty("logout");
-            expect(authService).toHaveProperty("checkIfLoggedIn");
+            expect(authService).toHaveProperty('isLoggedIn');
+            expect(authService).toHaveProperty('user');
+            expect(authService).toHaveProperty('userId');
+            expect(authService).toHaveProperty('login');
+            expect(authService).toHaveProperty('logout');
+            expect(authService).toHaveProperty('checkIfLoggedIn');
         });
 
-        it("should initialize with user as null", () => {
+        it('should initialize with user as null', () => {
             // Arrange
             const httpService = createHttpService(baseURL);
 
@@ -42,7 +42,7 @@ describe("auth service", () => {
             expect(authService.user.value).toBeNull();
         });
 
-        it("should initialize with isLoggedIn as false", () => {
+        it('should initialize with isLoggedIn as false', () => {
             // Arrange
             const httpService = createHttpService(baseURL);
 
@@ -54,14 +54,14 @@ describe("auth service", () => {
         });
     });
 
-    describe("login", () => {
-        it("should set user after successful login", async () => {
+    describe('login', () => {
+        it('should set user after successful login', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const credentials = {email: "test@example.com", password: "password123"};
-            const responseData = {id: 1, email: "test@example.com", created_at: "2024-01-01T00:00:00Z"};
+            const credentials = {email: 'test@example.com', password: 'password123'};
+            const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onPost(`${baseURL}/login`, credentials).reply(200, responseData);
 
             // Act
@@ -70,20 +70,20 @@ describe("auth service", () => {
             // Assert
             expect(authService.user.value).toEqual({
                 id: 1,
-                email: "test@example.com",
-                createdAt: "2024-01-01T00:00:00Z",
+                email: 'test@example.com',
+                createdAt: '2024-01-01T00:00:00Z',
             });
 
             mock.restore();
         });
 
-        it("should set isLoggedIn to true after successful login", async () => {
+        it('should set isLoggedIn to true after successful login', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const credentials = {email: "test@example.com", password: "password123"};
-            const responseData = {id: 1, email: "test@example.com", created_at: "2024-01-01T00:00:00Z"};
+            const credentials = {email: 'test@example.com', password: 'password123'};
+            const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onPost(`${baseURL}/login`, credentials).reply(200, responseData);
 
             // Act
@@ -95,13 +95,13 @@ describe("auth service", () => {
             mock.restore();
         });
 
-        it("should throw error on failed login", async () => {
+        it('should throw error on failed login', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const credentials = {email: "test@example.com", password: "wrongpassword"};
-            mock.onPost(`${baseURL}/login`, credentials).reply(401, {message: "Invalid credentials"});
+            const credentials = {email: 'test@example.com', password: 'wrongpassword'};
+            mock.onPost(`${baseURL}/login`, credentials).reply(401, {message: 'Invalid credentials'});
 
             // Act & Assert
             await expect(authService.login(credentials)).rejects.toThrow();
@@ -110,14 +110,14 @@ describe("auth service", () => {
         });
     });
 
-    describe("logout", () => {
-        it("should set user to null after logout", async () => {
+    describe('logout', () => {
+        it('should set user to null after logout', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const credentials = {email: "test@example.com", password: "password123"};
-            const responseData = {id: 1, email: "test@example.com", created_at: "2024-01-01T00:00:00Z"};
+            const credentials = {email: 'test@example.com', password: 'password123'};
+            const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onPost(`${baseURL}/login`, credentials).reply(200, responseData);
             mock.onPost(`${baseURL}/logout`, {}).reply(200);
             await authService.login(credentials);
@@ -131,13 +131,13 @@ describe("auth service", () => {
             mock.restore();
         });
 
-        it("should set isLoggedIn to false after logout", async () => {
+        it('should set isLoggedIn to false after logout', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const credentials = {email: "test@example.com", password: "password123"};
-            const responseData = {id: 1, email: "test@example.com", created_at: "2024-01-01T00:00:00Z"};
+            const credentials = {email: 'test@example.com', password: 'password123'};
+            const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onPost(`${baseURL}/login`, credentials).reply(200, responseData);
             mock.onPost(`${baseURL}/logout`, {}).reply(200);
             await authService.login(credentials);
@@ -152,14 +152,14 @@ describe("auth service", () => {
         });
     });
 
-    describe("userId", () => {
-        it("should return user id when logged in", async () => {
+    describe('userId', () => {
+        it('should return user id when logged in', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const credentials = {email: "test@example.com", password: "password123"};
-            const responseData = {id: 42, email: "test@example.com", created_at: "2024-01-01T00:00:00Z"};
+            const credentials = {email: 'test@example.com', password: 'password123'};
+            const responseData = {id: 42, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onPost(`${baseURL}/login`, credentials).reply(200, responseData);
             await authService.login(credentials);
 
@@ -172,7 +172,7 @@ describe("auth service", () => {
             mock.restore();
         });
 
-        it("should throw NotLoggedInError when not logged in", () => {
+        it('should throw NotLoggedInError when not logged in', () => {
             // Arrange
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
@@ -181,23 +181,23 @@ describe("auth service", () => {
             expect(() => authService.userId()).toThrow(NotLoggedInError);
         });
 
-        it("should throw error with correct message when not logged in", () => {
+        it('should throw error with correct message when not logged in', () => {
             // Arrange
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
 
             // Act & Assert
-            expect(() => authService.userId()).toThrow("User is not logged in");
+            expect(() => authService.userId()).toThrow('User is not logged in');
         });
     });
 
-    describe("checkIfLoggedIn", () => {
-        it("should set user when /me returns profile", async () => {
+    describe('checkIfLoggedIn', () => {
+        it('should set user when /me returns profile', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const responseData = {id: 1, email: "test@example.com", created_at: "2024-01-01T00:00:00Z"};
+            const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onGet(`${baseURL}/me`).reply(200, responseData);
 
             // Act
@@ -206,19 +206,19 @@ describe("auth service", () => {
             // Assert
             expect(authService.user.value).toEqual({
                 id: 1,
-                email: "test@example.com",
-                createdAt: "2024-01-01T00:00:00Z",
+                email: 'test@example.com',
+                createdAt: '2024-01-01T00:00:00Z',
             });
 
             mock.restore();
         });
 
-        it("should set isLoggedIn to true when /me returns profile", async () => {
+        it('should set isLoggedIn to true when /me returns profile', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
-            const responseData = {id: 1, email: "test@example.com", created_at: "2024-01-01T00:00:00Z"};
+            const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onGet(`${baseURL}/me`).reply(200, responseData);
 
             // Act
@@ -230,7 +230,7 @@ describe("auth service", () => {
             mock.restore();
         });
 
-        it("should set user to null when /me returns 401", async () => {
+        it('should set user to null when /me returns 401', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
@@ -246,7 +246,7 @@ describe("auth service", () => {
             mock.restore();
         });
 
-        it("should set isLoggedIn to false when /me returns 401", async () => {
+        it('should set isLoggedIn to false when /me returns 401', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);
@@ -262,7 +262,7 @@ describe("auth service", () => {
             mock.restore();
         });
 
-        it("should throw error when /me returns non-401 error", async () => {
+        it('should throw error when /me returns non-401 error', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
             const httpService = createHttpService(baseURL);

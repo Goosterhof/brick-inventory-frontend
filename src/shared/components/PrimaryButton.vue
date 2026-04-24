@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type {SoundService} from "@shared/services/sound";
+import type {SoundService} from '@shared/services/sound';
 
 const {
-    type = "button",
+    type = 'button',
     disabled = false,
     silent = false,
     soundService = undefined,
 } = defineProps<{
-    type?: "button" | "submit" | "reset";
+    type?: 'button' | 'submit' | 'reset';
     disabled?: boolean;
     silent?: boolean;
     soundService?: SoundService;
@@ -15,7 +15,7 @@ const {
 
 const handleClick = () => {
     if (!silent && soundService) {
-        soundService.play("snap");
+        soundService.play('snap');
     }
 };
 </script>

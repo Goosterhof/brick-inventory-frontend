@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import type {Adapted, AdapterStoreModule, NewAdapted} from "@script-development/fs-adapter-store";
-import type {HttpService} from "@script-development/fs-http";
-import type {LoadingService} from "@script-development/fs-loading";
-import type {StorageService} from "@script-development/fs-storage";
-import type {Item} from "@shared/types/item";
+import type {Adapted, AdapterStoreModule, NewAdapted} from '@script-development/fs-adapter-store';
+import type {HttpService} from '@script-development/fs-http';
+import type {LoadingService} from '@script-development/fs-loading';
+import type {StorageService} from '@script-development/fs-storage';
+import type {Item} from '@shared/types/item';
 
-import {createAdapterStoreModule, resourceAdapter} from "@script-development/fs-adapter-store";
-import DangerButton from "@shared/components/DangerButton.vue";
-import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {deepSnakeKeys} from "@shared/helpers/string";
-import {computed, ref, shallowRef, watch} from "vue";
+import {createAdapterStoreModule, resourceAdapter} from '@script-development/fs-adapter-store';
+import DangerButton from '@shared/components/DangerButton.vue';
+import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {deepSnakeKeys} from '@shared/helpers/string';
+import {computed, ref, shallowRef, watch} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
 interface Minifig extends Item {
     displayName: string;
@@ -25,7 +25,7 @@ let nextId = 1;
 
 const mockStorageData = ref<Record<string, unknown>>({});
 
-const mockStorageService: Pick<StorageService, "get" | "put"> = {
+const mockStorageService: Pick<StorageService, 'get' | 'put'> = {
     get: <T>(key: string, defaultValue?: T): T => {
         const stored = mockStorageData.value[key];
         return (stored ?? defaultValue) as T;
@@ -35,7 +35,7 @@ const mockStorageService: Pick<StorageService, "get" | "put"> = {
     },
 };
 
-const mockLoadingService = {} as unknown as Pick<LoadingService, "ensureLoadingFinished">;
+const mockLoadingService = {} as unknown as Pick<LoadingService, 'ensureLoadingFinished'>;
 
 const mockHttpService = {
     postRequest: <T>(_endpoint: string, data: unknown) => {
@@ -53,19 +53,19 @@ function minifigAdapter(
     resourceGetter?: () => Minifig,
 ): Adapted<Minifig> | NewAdapted<Minifig> {
     if (resourceGetter) {
-        return resourceAdapter(resourceGetter, "minifigs", storeModule, mockHttpService);
+        return resourceAdapter(resourceGetter, 'minifigs', storeModule, mockHttpService);
     }
 
     return resourceAdapter<Minifig>(
-        {displayName: "", partCount: 4, themeGroup: "City"},
-        "minifigs",
+        {displayName: '', partCount: 4, themeGroup: 'City'},
+        'minifigs',
         storeModule,
         mockHttpService,
     );
 }
 
 const storeModule = createAdapterStoreModule<Minifig>({
-    domainName: "minifigs",
+    domainName: 'minifigs',
     adapter: minifigAdapter,
     httpService: mockHttpService,
     storageService: mockStorageService,
@@ -78,7 +78,7 @@ const toSnakeSnapshot = (item: {mutable: {value: Record<string, unknown>}}): Rec
     deepSnakeKeys({...item.mutable.value});
 
 const newSnakeSnapshot = computed(() => toSnakeSnapshot(newAdapted.value));
-const lastAction = ref("");
+const lastAction = ref('');
 const selectedId = ref<number | null>(null);
 const selectedItem = computed(() =>
     selectedId.value !== null ? storeModule.getById(selectedId.value).value : undefined,
@@ -114,7 +114,7 @@ const handleDelete = async (item: Adapted<Minifig>) => {
 
 const clearStorage = () => {
     mockStorageData.value = {};
-    lastAction.value = "Cleared localStorage mock";
+    lastAction.value = 'Cleared localStorage mock';
 };
 
 const storageJson = computed(() => JSON.stringify(mockStorageData.value, null, 2));
@@ -122,7 +122,7 @@ const storeCount = computed(() => storeModule.getAll.value.length);
 
 const resetNewForm = () => {
     newAdapted.value.reset();
-    lastAction.value = "Reset new minifig form";
+    lastAction.value = 'Reset new minifig form';
 };
 
 watch(
@@ -226,7 +226,7 @@ watch(
         <!-- Store Contents -->
         <div m="b-12">
             <p class="brick-label" m="b-4">
-                Adapter Store ({{ storeCount }} {{ storeCount === 1 ? "item" : "items" }})
+                Adapter Store ({{ storeCount }} {{ storeCount === 1 ? 'item' : 'items' }})
             </p>
             <div p="6" class="brick-border" bg="gray-50">
                 <p text="xs" font="mono" text-color="gray-500" m="b-4">
@@ -250,7 +250,7 @@ watch(
                         w="full"
                         @click="selectedId = item.id"
                     >
-                        <p font="bold" text="sm">{{ item.displayName || "(unnamed)" }}</p>
+                        <p font="bold" text="sm">{{ item.displayName || '(unnamed)' }}</p>
                         <p text="xs gray-600">
                             #{{ item.id }} &middot; {{ item.partCount }} parts &middot; {{ item.themeGroup }}
                         </p>

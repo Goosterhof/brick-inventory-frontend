@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {type = "button", disabled = false} = defineProps<{type?: "button" | "submit" | "reset"; disabled?: boolean}>();
+const {type = 'button', disabled = false} = defineProps<{type?: 'button' | 'submit' | 'reset'; disabled?: boolean}>();
 </script>
 
 <template>

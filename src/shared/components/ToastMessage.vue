@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {PhCheckCircle, PhWarningCircle, PhX} from "@phosphor-icons/vue";
+import {PhCheckCircle, PhWarningCircle, PhX} from '@phosphor-icons/vue';
 
-const {message, variant = "success"} = defineProps<{message: string; variant?: "success" | "error"}>();
+const {message, variant = 'success'} = defineProps<{message: string; variant?: 'success' | 'error'}>();
 defineEmits<{close: []}>();
 </script>
 

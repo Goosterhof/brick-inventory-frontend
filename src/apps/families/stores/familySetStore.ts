@@ -1,12 +1,12 @@
-import type {FamilySet} from "@app/types/familySet";
-import type {Adapted, AdapterStoreModule, NewAdapted} from "@script-development/fs-adapter-store";
+import type {FamilySet} from '@app/types/familySet';
+import type {Adapted, AdapterStoreModule, NewAdapted} from '@script-development/fs-adapter-store';
 
-import {familyHttpService} from "@app/services/http";
-import {familyLoadingService} from "@app/services/loading";
-import {familyStorageService} from "@app/services/storage";
-import {createAdapterStoreModule, resourceAdapter} from "@script-development/fs-adapter-store";
+import {familyHttpService} from '@app/services/http';
+import {familyLoadingService} from '@app/services/loading';
+import {familyStorageService} from '@app/services/storage';
+import {createAdapterStoreModule, resourceAdapter} from '@script-development/fs-adapter-store';
 
-const DOMAIN_NAME = "family-sets";
+const DOMAIN_NAME = 'family-sets';
 
 function familySetAdapter(storeModule: AdapterStoreModule<FamilySet>): NewAdapted<FamilySet>;
 function familySetAdapter(
@@ -22,7 +22,7 @@ function familySetAdapter(
     }
 
     return resourceAdapter<FamilySet>(
-        {setId: 0, setNum: "", quantity: 1, status: "sealed", purchaseDate: null, notes: null},
+        {setId: 0, setNum: '', quantity: 1, status: 'sealed', purchaseDate: null, notes: null},
         DOMAIN_NAME,
         storeModule,
         familyHttpService,

@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import type {SetSummary} from "@app/types/familySet";
+import type {SetSummary} from '@app/types/familySet';
 
-import {familyHttpService, familyRouterService, familyTranslationService} from "@app/services";
-import {familySetStoreModule} from "@app/stores";
-import {createToastService} from "@script-development/fs-toast";
-import BackButton from "@shared/components/BackButton.vue";
-import PageHeader from "@shared/components/PageHeader.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import BarcodeScanner from "@shared/components/scanner/BarcodeScanner.vue";
-import ToastMessage from "@shared/components/ToastMessage.vue";
-import {deepSnakeKeys, toCamelCaseTyped} from "@shared/helpers/string";
-import {computed, ref} from "vue";
+import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
+import {familySetStoreModule} from '@app/stores';
+import {createToastService} from '@script-development/fs-toast';
+import BackButton from '@shared/components/BackButton.vue';
+import PageHeader from '@shared/components/PageHeader.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import BarcodeScanner from '@shared/components/scanner/BarcodeScanner.vue';
+import ToastMessage from '@shared/components/ToastMessage.vue';
+import {deepSnakeKeys, toCamelCaseTyped} from '@shared/helpers/string';
+import {computed, ref} from 'vue';
 
 const {t} = familyTranslationService;
 const toastService = createToastService(ToastMessage);
 const resetKey = ref(0);
-const scannedCode = ref("");
+const scannedCode = ref('');
 const foundSet = ref<SetSummary | null>(null);
 const isSearching = ref(false);
 const hasSearched = ref(false);
 const isAdding = ref(false);
-const addError = ref("");
+const addError = ref('');
 const duplicateDismissed = ref(false);
 const setsAddedCount = ref(0);
 
@@ -40,7 +40,7 @@ const onDetect = async (barcode: string) => {
     isSearching.value = true;
     hasSearched.value = false;
     foundSet.value = null;
-    addError.value = "";
+    addError.value = '';
     duplicateDismissed.value = false;
 
     try {
@@ -58,50 +58,50 @@ const addToCollection = async () => {
     if (!foundSet.value) return;
 
     isAdding.value = true;
-    addError.value = "";
+    addError.value = '';
 
     const setName = foundSet.value.name;
     const setNum = foundSet.value.setNum;
 
     try {
         await familyHttpService.postRequest<{id: number}>(
-            "/family-sets",
-            deepSnakeKeys({setNum: foundSet.value.setNum, quantity: 1, status: "sealed"}),
+            '/family-sets',
+            deepSnakeKeys({setNum: foundSet.value.setNum, quantity: 1, status: 'sealed'}),
         );
         setsAddedCount.value++;
         toastService.show({
-            message: t("sets.scanAddedToast").value.replace("{name}", setName).replace("{setNum}", setNum),
-            variant: "success",
+            message: t('sets.scanAddedToast').value.replace('{name}', setName).replace('{setNum}', setNum),
+            variant: 'success',
         });
         scanAgain();
     } catch {
-        addError.value = t("sets.scanAddError").value;
+        addError.value = t('sets.scanAddError').value;
     } finally {
         isAdding.value = false;
     }
 };
 
 const scanAgain = () => {
-    scannedCode.value = "";
+    scannedCode.value = '';
     foundSet.value = null;
     hasSearched.value = false;
-    addError.value = "";
+    addError.value = '';
     resetKey.value++;
 };
 
 const goBack = async () => {
-    await familyRouterService.goToRoute("sets");
+    await familyRouterService.goToRoute('sets');
 };
 </script>
 
 <template>
     <div max-w="md" m="x-auto">
         <PageHeader :title="t('sets.scanSet').value">
-            <BackButton @click="goBack">{{ t("sets.backToOverview").value }}</BackButton>
+            <BackButton @click="goBack">{{ t('sets.backToOverview').value }}</BackButton>
         </PageHeader>
 
         <p v-if="setsAddedCount > 0" m="b-4" p="3" bg="green-50" class="brick-border" font="bold" text="sm">
-            {{ t("sets.setsAddedCount").value.replace("{count}", String(setsAddedCount)) }}
+            {{ t('sets.setsAddedCount').value.replace('{count}', String(setsAddedCount)) }}
         </p>
 
         <BarcodeScanner
@@ -113,9 +113,9 @@ const goBack = async () => {
         />
 
         <div v-if="scannedCode" m="t-6" flex="~ col" gap="4">
-            <p font="bold" text="lg">{{ t("sets.scannedCode").value }}: {{ scannedCode }}</p>
+            <p font="bold" text="lg">{{ t('sets.scannedCode').value }}: {{ scannedCode }}</p>
 
-            <p v-if="isSearching" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
+            <p v-if="isSearching" text="[var(--brick-muted-text)]">{{ t('common.loading').value }}</p>
 
             <template v-else-if="hasSearched">
                 <div v-if="foundSet" flex="~ col" gap="4">
@@ -141,7 +141,7 @@ const goBack = async () => {
                                     >{{ foundSet.year }}</span
                                 >
                                 <span v-if="foundSet.numParts" text="xs [var(--brick-muted-text)]"
-                                    >{{ t("sets.numParts").value }}: {{ foundSet.numParts }}</span
+                                    >{{ t('sets.numParts').value }}: {{ foundSet.numParts }}</span
                                 >
                             </div>
                         </div>
@@ -159,9 +159,9 @@ const goBack = async () => {
                     >
                         <p font="bold" text="sm">
                             {{
-                                t("sets.duplicateWarning")
-                                    .value.replace("{quantity}", String(duplicateMatch?.quantity ?? 0))
-                                    .replace("{status}", duplicateMatch?.status ?? "")
+                                t('sets.duplicateWarning')
+                                    .value.replace('{quantity}', String(duplicateMatch?.quantity ?? 0))
+                                    .replace('{status}', duplicateMatch?.status ?? '')
                             }}
                         </p>
                         <button
@@ -173,26 +173,26 @@ const goBack = async () => {
                             self="start"
                             @click="dismissDuplicate"
                         >
-                            {{ t("sets.duplicateDismiss").value }}
+                            {{ t('sets.duplicateDismiss').value }}
                         </button>
                     </div>
 
                     <p v-if="addError" text="brick-red-dark" font="bold">{{ addError }}</p>
 
                     <PrimaryButton :disabled="isAdding" @click="addToCollection">{{
-                        t("sets.addToCollection").value
+                        t('sets.addToCollection').value
                     }}</PrimaryButton>
                 </div>
 
                 <div v-else flex="~ col" gap="4">
-                    <p text="[var(--brick-muted-text)]">{{ t("sets.scanNoResult").value }}</p>
+                    <p text="[var(--brick-muted-text)]">{{ t('sets.scanNoResult').value }}</p>
                 </div>
             </template>
 
-            <PrimaryButton @click="scanAgain">{{ t("sets.scanAgain").value }}</PrimaryButton>
+            <PrimaryButton @click="scanAgain">{{ t('sets.scanAgain').value }}</PrimaryButton>
         </div>
 
-        <PrimaryButton v-if="setsAddedCount > 0" m="t-6" @click="goBack">{{ t("sets.scanDone").value }}</PrimaryButton>
+        <PrimaryButton v-if="setsAddedCount > 0" m="t-6" @click="goBack">{{ t('sets.scanDone').value }}</PrimaryButton>
 
         <component
             :is="toastService.ToastContainerComponent"

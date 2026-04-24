@@ -1,21 +1,21 @@
-import type {StorageOption} from "@app/types/storageOption";
-import type {Adapted} from "@script-development/fs-adapter-store";
+import type {StorageOption} from '@app/types/storageOption';
+import type {Adapted} from '@script-development/fs-adapter-store';
 
-import EditStoragePage from "@app/domains/storage/pages/EditStoragePage.vue";
-import {familyRouterService} from "@app/services";
-import {storageOptionStoreModule} from "@app/stores";
-import {mockServer} from "@integration/helpers/mock-server";
-import ConfirmDialog from "@shared/components/ConfirmDialog.vue";
-import DangerButton from "@shared/components/DangerButton.vue";
-import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
-import TextInput from "@shared/components/forms/inputs/TextInput.vue";
-import LoadingState from "@shared/components/LoadingState.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {flushPromises, mount} from "@vue/test-utils";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import EditStoragePage from '@app/domains/storage/pages/EditStoragePage.vue';
+import {familyRouterService} from '@app/services';
+import {storageOptionStoreModule} from '@app/stores';
+import {mockServer} from '@integration/helpers/mock-server';
+import ConfirmDialog from '@shared/components/ConfirmDialog.vue';
+import DangerButton from '@shared/components/DangerButton.vue';
+import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
+import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import LoadingState from '@shared/components/LoadingState.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {flushPromises, mount} from '@vue/test-utils';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-vi.mock("@script-development/fs-http", async () => {
-    const {mockHttpService} = await import("@integration/helpers/mock-server");
+vi.mock('@script-development/fs-http', async () => {
+    const {mockHttpService} = await import('@integration/helpers/mock-server');
     return {createHttpService: () => mockHttpService};
 });
 
@@ -31,30 +31,30 @@ const mockDelete = vi.fn<() => Promise<void>>();
 const makeAdapted = () =>
     ({
         id: 1,
-        name: "Shelf A",
-        mutable: {name: "Shelf A", description: "Top shelf", parentId: null, row: 1, column: 2},
+        name: 'Shelf A',
+        mutable: {name: 'Shelf A', description: 'Top shelf', parentId: null, row: 1, column: 2},
         patch: mockPatch,
         delete: mockDelete,
     }) as unknown as Adapted<StorageOption>;
 
-describe("EditStoragePage — integration", () => {
+describe('EditStoragePage — integration', () => {
     beforeEach(async () => {
         vi.clearAllMocks();
         mockServer.reset();
         localStorage.clear();
-        await familyRouterService.goToRoute("storage-edit", 1);
+        await familyRouterService.goToRoute('storage-edit', 1);
     });
 
-    it("renders real LoadingState while loading", () => {
-        vi.spyOn(storageOptionStoreModule, "getOrFailById").mockReturnValue(new Promise(() => {}));
+    it('renders real LoadingState while loading', () => {
+        vi.spyOn(storageOptionStoreModule, 'getOrFailById').mockReturnValue(new Promise(() => {}));
         const wrapper = mount(EditStoragePage);
 
         const loadingState = wrapper.findComponent(LoadingState);
         expect(loadingState.exists()).toBe(true);
     });
 
-    it("renders form with real input components after loading", async () => {
-        vi.spyOn(storageOptionStoreModule, "getOrFailById").mockResolvedValue(makeAdapted());
+    it('renders form with real input components after loading', async () => {
+        vi.spyOn(storageOptionStoreModule, 'getOrFailById').mockResolvedValue(makeAdapted());
         const wrapper = mount(EditStoragePage);
         await flushPromises();
 
@@ -64,49 +64,49 @@ describe("EditStoragePage — integration", () => {
         expect(numberInputs).toHaveLength(2);
     });
 
-    it("renders real PrimaryButton and DangerButton", async () => {
-        vi.spyOn(storageOptionStoreModule, "getOrFailById").mockResolvedValue(makeAdapted());
+    it('renders real PrimaryButton and DangerButton', async () => {
+        vi.spyOn(storageOptionStoreModule, 'getOrFailById').mockResolvedValue(makeAdapted());
         const wrapper = mount(EditStoragePage);
         await flushPromises();
 
         const primaryBtn = wrapper.findComponent(PrimaryButton);
-        expect(primaryBtn.find("button").attributes("type")).toBe("submit");
+        expect(primaryBtn.find('button').attributes('type')).toBe('submit');
 
         const dangerBtn = wrapper.findComponent(DangerButton);
-        expect(dangerBtn.text()).toContain("Delete");
+        expect(dangerBtn.text()).toContain('Delete');
     });
 
-    it("opens real ConfirmDialog when clicking delete", async () => {
-        vi.spyOn(storageOptionStoreModule, "getOrFailById").mockResolvedValue(makeAdapted());
+    it('opens real ConfirmDialog when clicking delete', async () => {
+        vi.spyOn(storageOptionStoreModule, 'getOrFailById').mockResolvedValue(makeAdapted());
         const wrapper = mount(EditStoragePage);
         await flushPromises();
 
         const dangerBtn = wrapper.findComponent(DangerButton);
-        await dangerBtn.find("button").trigger("click");
+        await dangerBtn.find('button').trigger('click');
 
         const confirmDialog = wrapper.findComponent(ConfirmDialog);
-        expect(confirmDialog.props("open")).toBe(true);
-        expect(confirmDialog.props("title")).toBe("Delete");
+        expect(confirmDialog.props('open')).toBe(true);
+        expect(confirmDialog.props('title')).toBe('Delete');
     });
 
-    it("submits edit through real component tree", async () => {
+    it('submits edit through real component tree', async () => {
         mockPatch.mockResolvedValue(undefined);
-        vi.spyOn(storageOptionStoreModule, "getOrFailById").mockResolvedValue(makeAdapted());
+        vi.spyOn(storageOptionStoreModule, 'getOrFailById').mockResolvedValue(makeAdapted());
         const wrapper = mount(EditStoragePage);
         await flushPromises();
 
-        await wrapper.find("form").trigger("submit");
+        await wrapper.find('form').trigger('submit');
         await flushPromises();
 
         expect(mockPatch).toHaveBeenCalled();
         // No assertion on navigation — integration tests verify composition, not side effects.
     });
 
-    it("renders storage name in subtitle", async () => {
-        vi.spyOn(storageOptionStoreModule, "getOrFailById").mockResolvedValue(makeAdapted());
+    it('renders storage name in subtitle', async () => {
+        vi.spyOn(storageOptionStoreModule, 'getOrFailById').mockResolvedValue(makeAdapted());
         const wrapper = mount(EditStoragePage);
         await flushPromises();
 
-        expect(wrapper.text()).toContain("Shelf A");
+        expect(wrapper.text()).toContain('Shelf A');
     });
 });

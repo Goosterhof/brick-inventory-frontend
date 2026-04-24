@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {variant = "default"} = defineProps<{variant?: "default" | "highlight" | "muted"}>();
+const {variant = 'default'} = defineProps<{variant?: 'default' | 'highlight' | 'muted'}>();
 </script>
 
 <template>

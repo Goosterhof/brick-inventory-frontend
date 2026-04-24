@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const {color = "#DC2626", shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
+const {color = '#DC2626', shadow = true} = defineProps<{color?: string; shadow?: boolean}>();
 
 const CELL = 40;
 const PAD = 10;

@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import DangerButton from "@shared/components/DangerButton.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {computed, ref} from "vue";
+import DangerButton from '@shared/components/DangerButton.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {computed, ref} from 'vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 
-type Scenario = "success" | "auth-error" | "validation-error" | "network-error";
+type Scenario = 'success' | 'auth-error' | 'validation-error' | 'network-error';
 
 interface StageSnapshot {
     label: string;
     description: string;
     before: string;
     after: string;
-    status: "pending" | "active" | "done" | "error";
+    status: 'pending' | 'active' | 'done' | 'error';
 }
 
 const STEP_DELAY_MS = 600;
@@ -23,98 +23,98 @@ const isRunning = ref(false);
 const stages = ref<StageSnapshot[]>([]);
 
 const scenarioLabels: Record<Scenario, string> = {
-    success: "200 Success",
-    "auth-error": "401 Auth Error",
-    "validation-error": "422 Validation Error",
-    "network-error": "Network Error",
+    success: '200 Success',
+    'auth-error': '401 Auth Error',
+    'validation-error': '422 Validation Error',
+    'network-error': 'Network Error',
 };
 
 const scenarioLabel = computed(() => {
     const scenario = activeScenario.value;
-    return scenario ? scenarioLabels[scenario] : "";
+    return scenario ? scenarioLabels[scenario] : '';
 });
 
-const sampleRequestBody = {displayName: "Police Officer", partCount: 4, themeGroup: "City"};
+const sampleRequestBody = {displayName: 'Police Officer', partCount: 4, themeGroup: 'City'};
 
-const sampleSnakeBody = {display_name: "Police Officer", part_count: 4, theme_group: "City"};
+const sampleSnakeBody = {display_name: 'Police Officer', part_count: 4, theme_group: 'City'};
 
 const successResponseSnake = {
     id: 42,
-    display_name: "Police Officer",
+    display_name: 'Police Officer',
     part_count: 4,
-    theme_group: "City",
-    created_at: "2026-03-28T12:00:00Z",
+    theme_group: 'City',
+    created_at: '2026-03-28T12:00:00Z',
 };
 
 const successResponseCamel = {
     id: 42,
-    displayName: "Police Officer",
+    displayName: 'Police Officer',
     partCount: 4,
-    themeGroup: "City",
-    createdAt: "2026-03-28T12:00:00Z",
+    themeGroup: 'City',
+    createdAt: '2026-03-28T12:00:00Z',
 };
 
 const validationErrorBody = {
-    message: "The given data was invalid.",
-    errors: {display_name: ["The display name field is required."], part_count: ["The part count must be at least 1."]},
+    message: 'The given data was invalid.',
+    errors: {display_name: ['The display name field is required.'], part_count: ['The part count must be at least 1.']},
 };
 
 function buildRequestStages(scenario: Scenario): StageSnapshot[] {
     return [
         {
-            label: "1. Auth Token Injection",
-            description: "Request middleware injects the auth token into headers.",
-            before: json({headers: {Accept: "application/json"}, data: sampleRequestBody}),
+            label: '1. Auth Token Injection',
+            description: 'Request middleware injects the auth token into headers.',
+            before: json({headers: {Accept: 'application/json'}, data: sampleRequestBody}),
             after: json({
-                headers: {Accept: "application/json", Authorization: "Bearer eyJhbGciOi..."},
+                headers: {Accept: 'application/json', Authorization: 'Bearer eyJhbGciOi...'},
                 data: sampleRequestBody,
             }),
-            status: "pending",
+            status: 'pending',
         },
         {
-            label: "2. Loading State Start",
-            description: "Loading middleware increments the active request counter.",
+            label: '2. Loading State Start',
+            description: 'Loading middleware increments the active request counter.',
             before: json({isLoading: false, activeCount: 0}),
             after: json({isLoading: true, activeCount: 1}),
-            status: "pending",
+            status: 'pending',
         },
         {
-            label: "3. Request Transform",
-            description: "camelCase keys are converted to snake_case before sending to the API.",
+            label: '3. Request Transform',
+            description: 'camelCase keys are converted to snake_case before sending to the API.',
             before: json(sampleRequestBody),
             after: json(sampleSnakeBody),
-            status: "pending",
+            status: 'pending',
         },
         {
-            label: "4. Network Call",
+            label: '4. Network Call',
             description: buildNetworkDescription(scenario),
-            before: json({method: "POST", url: "/api/minifigs", body: sampleSnakeBody}),
+            before: json({method: 'POST', url: '/api/minifigs', body: sampleSnakeBody}),
             after: buildNetworkAfter(scenario),
-            status: "pending",
+            status: 'pending',
         },
     ];
 }
 
 function buildResponseStages(scenario: Scenario): StageSnapshot[] {
     const loadingStop: StageSnapshot = {
-        label: scenario === "success" ? "6. Loading State Stop" : "5. Loading State Stop",
+        label: scenario === 'success' ? '6. Loading State Stop' : '5. Loading State Stop',
         description:
-            scenario === "success"
-                ? "Loading middleware decrements the active request counter."
-                : "Loading middleware decrements on error responses too.",
+            scenario === 'success'
+                ? 'Loading middleware decrements the active request counter.'
+                : 'Loading middleware decrements on error responses too.',
         before: json({isLoading: true, activeCount: 1}),
         after: json({isLoading: false, activeCount: 0}),
-        status: "pending",
+        status: 'pending',
     };
 
-    if (scenario === "success") {
+    if (scenario === 'success') {
         return [
             {
-                label: "5. Response Transform",
-                description: "snake_case keys from API are converted to camelCase for the app.",
+                label: '5. Response Transform',
+                description: 'snake_case keys from API are converted to camelCase for the app.',
                 before: json(successResponseSnake),
                 after: json(successResponseCamel),
-                status: "pending",
+                status: 'pending',
             },
             loadingStop,
         ];
@@ -123,35 +123,35 @@ function buildResponseStages(scenario: Scenario): StageSnapshot[] {
     return [loadingStop, buildErrorStage(scenario)];
 }
 
-type ErrorScenario = "auth-error" | "validation-error" | "network-error";
+type ErrorScenario = 'auth-error' | 'validation-error' | 'network-error';
 
 function buildErrorStage(scenario: ErrorScenario): StageSnapshot {
     const errorStages: Record<ErrorScenario, StageSnapshot> = {
-        "auth-error": {
-            label: "6. Error Handling (401)",
-            description: "Auth error middleware detects 401, clears user state, redirects to login.",
-            before: json({status: 401, data: {message: "Unauthenticated."}}),
-            after: json({user: null, redirect: "/login"}),
-            status: "pending",
+        'auth-error': {
+            label: '6. Error Handling (401)',
+            description: 'Auth error middleware detects 401, clears user state, redirects to login.',
+            before: json({status: 401, data: {message: 'Unauthenticated.'}}),
+            after: json({user: null, redirect: '/login'}),
+            status: 'pending',
         },
-        "validation-error": {
-            label: "6. Error Handling (422)",
-            description: "Validation error middleware parses field errors from the 422 response.",
+        'validation-error': {
+            label: '6. Error Handling (422)',
+            description: 'Validation error middleware parses field errors from the 422 response.',
             before: json(validationErrorBody),
             after: json({
                 fieldErrors: {
-                    displayName: "The display name field is required.",
-                    partCount: "The part count must be at least 1.",
+                    displayName: 'The display name field is required.',
+                    partCount: 'The part count must be at least 1.',
                 },
             }),
-            status: "pending",
+            status: 'pending',
         },
-        "network-error": {
-            label: "6. Error Handling (Network)",
-            description: "Network errors have no response object. The error propagates to the caller.",
-            before: json({code: "ERR_NETWORK", message: "Network Error", response: null}),
-            after: json({thrown: true, message: "Network Error — check your connection"}),
-            status: "pending",
+        'network-error': {
+            label: '6. Error Handling (Network)',
+            description: 'Network errors have no response object. The error propagates to the caller.',
+            before: json({code: 'ERR_NETWORK', message: 'Network Error', response: null}),
+            after: json({thrown: true, message: 'Network Error — check your connection'}),
+            status: 'pending',
         },
     };
     return errorStages[scenario];
@@ -163,25 +163,25 @@ function buildStagesForScenario(scenario: Scenario): StageSnapshot[] {
 
 function buildNetworkDescription(scenario: Scenario): string {
     const descriptions: Record<Scenario, string> = {
-        success: "The request reaches the server and returns 200 with the created resource.",
-        "auth-error": "The server rejects the request with 401 Unauthenticated.",
-        "validation-error": "The server rejects the request with 422 and field-level validation errors.",
-        "network-error": "The request fails to reach the server — connection refused or timeout.",
+        success: 'The request reaches the server and returns 200 with the created resource.',
+        'auth-error': 'The server rejects the request with 401 Unauthenticated.',
+        'validation-error': 'The server rejects the request with 422 and field-level validation errors.',
+        'network-error': 'The request fails to reach the server — connection refused or timeout.',
     };
     return descriptions[scenario];
 }
 
 function buildNetworkAfter(scenario: Scenario): string {
-    if (scenario === "success") {
+    if (scenario === 'success') {
         return json({status: 200, data: successResponseSnake});
     }
-    if (scenario === "auth-error") {
-        return json({status: 401, data: {message: "Unauthenticated."}});
+    if (scenario === 'auth-error') {
+        return json({status: 401, data: {message: 'Unauthenticated.'}});
     }
-    if (scenario === "validation-error") {
+    if (scenario === 'validation-error') {
         return json({status: 422, data: validationErrorBody});
     }
-    return json({error: "ERR_NETWORK", message: "Network Error", response: null});
+    return json({error: 'ERR_NETWORK', message: 'Network Error', response: null});
 }
 
 function json(data: unknown): string {
@@ -202,11 +202,11 @@ async function runScenario(scenario: Scenario): Promise<void> {
 
     for (const [i, stage] of stages.value.entries()) {
         currentStageIndex.value = i;
-        stage.status = "active";
+        stage.status = 'active';
         await sleep(STEP_DELAY_MS);
 
-        const isErrorStage = stage.label.includes("Error Handling");
-        stage.status = isErrorStage ? "error" : "done";
+        const isErrorStage = stage.label.includes('Error Handling');
+        stage.status = isErrorStage ? 'error' : 'done';
     }
 
     isRunning.value = false;
@@ -219,19 +219,19 @@ function resetPipeline(): void {
     stages.value = [];
 }
 
-const stageColor = (status: StageSnapshot["status"]): string => {
-    const colors: Record<StageSnapshot["status"], string> = {
-        pending: "gray-200",
-        active: "brick-yellow",
-        done: "[#237841]",
-        error: "[#C41A16]",
+const stageColor = (status: StageSnapshot['status']): string => {
+    const colors: Record<StageSnapshot['status'], string> = {
+        pending: 'gray-200',
+        active: 'brick-yellow',
+        done: '[#237841]',
+        error: '[#C41A16]',
     };
     return colors[status];
 };
 
-const stageTextColor = (status: StageSnapshot["status"]): string => {
-    if (status === "done" || status === "error") return "white";
-    return "black";
+const stageTextColor = (status: StageSnapshot['status']): string => {
+    if (status === 'done' || status === 'error') return 'white';
+    return 'black';
 };
 </script>
 

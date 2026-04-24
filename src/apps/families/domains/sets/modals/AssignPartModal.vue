@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type {SetPart, StorageMapEntry} from "@app/types/part";
-import type {StorageOption} from "@app/types/storageOption";
+import type {SetPart, StorageMapEntry} from '@app/types/part';
+import type {StorageOption} from '@app/types/storageOption';
 
-import {familyHttpService, familyTranslationService} from "@app/services";
-import NumberInput from "@shared/components/forms/inputs/NumberInput.vue";
-import SelectInput from "@shared/components/forms/inputs/SelectInput.vue";
-import ModalDialog from "@shared/components/ModalDialog.vue";
-import PrimaryButton from "@shared/components/PrimaryButton.vue";
-import {toCamelCaseTyped} from "@shared/helpers/string";
-import {onMounted, ref} from "vue";
+import {familyHttpService, familyTranslationService} from '@app/services';
+import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
+import SelectInput from '@shared/components/forms/inputs/SelectInput.vue';
+import ModalDialog from '@shared/components/ModalDialog.vue';
+import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {toCamelCaseTyped} from '@shared/helpers/string';
+import {onMounted, ref} from 'vue';
 
 const {part, existingLocations = []} = defineProps<{
     open: boolean;
@@ -20,15 +20,15 @@ const emit = defineEmits<{close: []; assigned: []}>();
 const {t} = familyTranslationService;
 
 const storageOptions = ref<StorageOption[]>([]);
-const selectedStorageId = ref("");
+const selectedStorageId = ref('');
 const quantity = ref<number | null>(1);
 const saving = ref(false);
-const error = ref("");
+const error = ref('');
 const loadingOptions = ref(true);
 
 onMounted(async () => {
     try {
-        const response = await familyHttpService.getRequest<StorageOption[]>("/storage-options");
+        const response = await familyHttpService.getRequest<StorageOption[]>('/storage-options');
         storageOptions.value = response.data.map((item) => toCamelCaseTyped(item));
     } catch {
         storageOptions.value = [];
@@ -42,7 +42,7 @@ const handleSubmit = async () => {
     if (!storageId) return;
 
     saving.value = true;
-    error.value = "";
+    error.value = '';
 
     try {
         await familyHttpService.postRequest(`/storage-options/${storageId}/parts`, {
@@ -50,10 +50,10 @@ const handleSubmit = async () => {
             color_id: part.color.id,
             quantity: quantity.value ?? 1,
         });
-        emit("assigned");
-        emit("close");
+        emit('assigned');
+        emit('close');
     } catch {
-        error.value = t("sets.assignError").value;
+        error.value = t('sets.assignError').value;
     } finally {
         saving.value = false;
     }
@@ -62,7 +62,7 @@ const handleSubmit = async () => {
 
 <template>
     <ModalDialog :open="open" @close="emit('close')">
-        <template #title>{{ t("sets.assignPartTitle").value }}</template>
+        <template #title>{{ t('sets.assignPartTitle').value }}</template>
 
         <div flex="~ col" gap="4">
             <div flex gap="3" items="center" p="3" bg="[var(--brick-surface-subtle)]" class="brick-border">
@@ -81,7 +81,7 @@ const handleSubmit = async () => {
             </div>
 
             <div v-if="existingLocations.length > 0" p="3" bg="yellow-100" class="brick-border" border="1">
-                <p text="sm" font="bold" m="b-1">{{ t("sets.alreadyStored").value }}</p>
+                <p text="sm" font="bold" m="b-1">{{ t('sets.alreadyStored').value }}</p>
                 <div flex gap="1" flex-wrap="wrap">
                     <span
                         v-for="loc in existingLocations"
@@ -99,11 +99,11 @@ const handleSubmit = async () => {
             </div>
 
             <form flex="~ col" gap="4" @submit.prevent="handleSubmit">
-                <p v-if="loadingOptions" text="[var(--brick-muted-text)]">{{ t("common.loading").value }}</p>
+                <p v-if="loadingOptions" text="[var(--brick-muted-text)]">{{ t('common.loading').value }}</p>
 
                 <template v-else>
                     <SelectInput v-model="selectedStorageId" :label="t('sets.selectStorage').value" :error="error">
-                        <option value="" disabled>{{ t("sets.selectStoragePlaceholder").value }}</option>
+                        <option value="" disabled>{{ t('sets.selectStoragePlaceholder').value }}</option>
                         <option v-for="option in storageOptions" :key="option.id" :value="option.id">
                             {{ option.name }}
                         </option>
@@ -112,7 +112,7 @@ const handleSubmit = async () => {
                     <NumberInput v-model="quantity" :label="t('sets.quantity').value" :min="1" />
 
                     <PrimaryButton type="submit" :disabled="saving || !selectedStorageId">
-                        {{ t("sets.assignPart").value }}
+                        {{ t('sets.assignPart').value }}
                     </PrimaryButton>
                 </template>
             </form>

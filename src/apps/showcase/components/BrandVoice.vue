@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {PhCheckCircle, PhTrash, PhWarningCircle} from "@phosphor-icons/vue";
+import {PhCheckCircle, PhTrash, PhWarningCircle} from '@phosphor-icons/vue';
 
-import SectionHeading from "./SectionHeading.vue";
+import SectionHeading from './SectionHeading.vue';
 </script>
 
 <template>
