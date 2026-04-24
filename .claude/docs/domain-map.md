@@ -43,7 +43,7 @@ Every wing of the building table, mapped. Update this when adding or modifying d
 - **Pages**: PartsPage, PartsMissingPage
 - **Components**: —
 - **Modals**: —
-- **API**: `GET /family/parts`, `GET /family-sets/missing-parts`
+- **API**: `GET /family-sets/missing-parts`
 
 #### storage
 
