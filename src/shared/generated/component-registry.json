@@ -442,7 +442,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 240},
+            "churn": {"commits": 1, "linesChanged": 236},
             "dependencyDepth": 0
         },
         "LegoBrickIsometricSvg": {
@@ -459,7 +459,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 267},
+            "churn": {"commits": 1, "linesChanged": 254},
             "dependencyDepth": 0
         },
         "LegoBrickSideSvg": {
