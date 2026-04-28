@@ -71,7 +71,7 @@ export interface GroupedFamilyPart {
 export interface CursorPaginatedParts {
     data: FamilyPartEntry[];
     nextCursor: string | null;
-    prevCursor: string | null;
+    prevCursor: string | null; // API returns prevCursor but pagination is forward-only; retained for type accuracy
     path: string;
     perPage: number;
 }
