@@ -298,7 +298,9 @@ describe('SetDetailPage', () => {
     it('should fetch and display parts when load parts button is clicked', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -322,7 +324,9 @@ describe('SetDetailPage', () => {
     it('should display spare parts in separate section', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -344,7 +348,9 @@ describe('SetDetailPage', () => {
     it('should hide load parts button after parts are loaded', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -363,7 +369,9 @@ describe('SetDetailPage', () => {
     it('should render color swatches for parts', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -382,7 +390,9 @@ describe('SetDetailPage', () => {
     it('should render part images when available', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -400,7 +410,9 @@ describe('SetDetailPage', () => {
     it('should fetch storage map after loading parts', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -416,9 +428,9 @@ describe('SetDetailPage', () => {
 
     it('should display storage location badges on parts', async () => {
         // Arrange
-        const storageMapData = [
-            {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 8},
-        ];
+        const storageMapData = {
+            entries: [{partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 8}],
+        };
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
             .mockResolvedValueOnce({data: mockSetWithPartsResponse})
@@ -439,7 +451,9 @@ describe('SetDetailPage', () => {
     it('should not display storage badges when no storage map data', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -453,11 +467,58 @@ describe('SetDetailPage', () => {
         expect(wrapper.text()).not.toContain('Drawer');
     });
 
+    it('should display every storage location when multiple entries map to one part', async () => {
+        // Arrange
+        const storageMapData = {
+            entries: [
+                {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 4},
+                {partId: 10, colorId: 1, storageOptionId: 6, storageOptionName: 'Drawer B', quantity: 6},
+            ],
+        };
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: storageMapData});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes('sets.loadParts'));
+        await loadPartsButton?.trigger('click');
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.text()).toContain('Drawer A (4x)');
+        expect(wrapper.text()).toContain('Drawer B (6x)');
+    });
+
+    it('should fall back to empty storage map when the request fails', async () => {
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockRejectedValueOnce(new Error('boom'));
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const buttons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = buttons.find((btn) => btn.text().includes('sets.loadParts'));
+        await loadPartsButton?.trigger('click');
+        await flushPromises();
+
+        // Assert — no badges, no build check, but the page still rendered the parts list
+        expect(wrapper.text()).not.toContain('Drawer');
+        expect(wrapper.text()).not.toContain('sets.buildCheck');
+        const parts = wrapper.findAllComponents(PartListItem);
+        const regularPart = parts.find((p) => !p.props('spare'));
+        expect(regularPart?.props('name')).toBe('Brick 2 x 4');
+    });
+
     it('should show build check when all parts are available', async () => {
         // Arrange
-        const storageMapData = [
-            {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 10},
-        ];
+        const storageMapData = {
+            entries: [{partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 10}],
+        };
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
             .mockResolvedValueOnce({data: mockSetWithPartsResponse})
@@ -480,9 +541,9 @@ describe('SetDetailPage', () => {
 
     it('should show missing parts when not all available', async () => {
         // Arrange
-        const storageMapData = [
-            {partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 3},
-        ];
+        const storageMapData = {
+            entries: [{partId: 10, colorId: 1, storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 3}],
+        };
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
             .mockResolvedValueOnce({data: mockSetWithPartsResponse})
@@ -505,7 +566,9 @@ describe('SetDetailPage', () => {
     it('should not show build check when no storage map data', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
 
@@ -522,7 +585,9 @@ describe('SetDetailPage', () => {
     it('should open assign modal when a part is clicked', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
         const primaryButtons = wrapper.findAllComponents(PrimaryButton);
@@ -545,7 +610,9 @@ describe('SetDetailPage', () => {
     it('should close assign modal on close event', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
-        mockGetRequest.mockResolvedValueOnce({data: mockSetWithPartsResponse}).mockResolvedValueOnce({data: []});
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
         const wrapper = shallowMount(SetDetailPage);
         await flushPromises();
         const primaryButtons = wrapper.findAllComponents(PrimaryButton);

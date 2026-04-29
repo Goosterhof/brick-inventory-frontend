@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {FamilySet} from '@app/types/familySet';
-import type {SetPart, SetWithParts, StorageMapEntry} from '@app/types/part';
+import type {SetPart, SetWithParts, StorageMapEntry, StorageMapResponse} from '@app/types/part';
 import type {Adapted} from '@script-development/fs-adapter-store';
 
 import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
@@ -103,8 +103,9 @@ const loadParts = async (setNum: string) => {
     setWithParts.value = toCamelCaseTyped(response.data);
 
     try {
-        const mapResponse = await familyHttpService.getRequest<StorageMapEntry[]>(`/sets/${setNum}/storage-map`);
-        storageMap.value = mapResponse.data.map((item) => toCamelCaseTyped<StorageMapEntry>(item));
+        const mapResponse = await familyHttpService.getRequest<StorageMapResponse>(`/sets/${setNum}/storage-map`);
+        // Why: familyHttpService has no snake↔camel middleware; convert the wrapped payload in one pass.
+        storageMap.value = toCamelCaseTyped<StorageMapResponse>(mapResponse.data).entries;
     } catch {
         storageMap.value = [];
     }

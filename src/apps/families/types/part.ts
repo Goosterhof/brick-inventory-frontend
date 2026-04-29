@@ -41,6 +41,10 @@ export interface StorageMapEntry {
     quantity: number;
 }
 
+export interface StorageMapResponse {
+    entries: StorageMapEntry[];
+}
+
 export interface FamilyPartEntry {
     partId: number;
     partNum: string;

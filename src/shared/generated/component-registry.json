@@ -134,7 +134,7 @@
                 "slots": [{"name": "confirm"}, {"name": "cancel"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 30},
+            "churn": {"commits": 2, "linesChanged": 12},
             "dependencyDepth": 1
         },
         "DangerButton": {
@@ -246,7 +246,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 20},
+            "churn": {"commits": 2, "linesChanged": 6},
             "dependencyDepth": 1
         },
         "FilterChip": {
@@ -877,7 +877,7 @@
                 "slots": [{"name": "title"}, {"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 25},
+            "churn": {"commits": 2, "linesChanged": 16},
             "dependencyDepth": 0
         },
         "NavHeader": {
@@ -1115,7 +1115,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 33},
+            "churn": {"commits": 2, "linesChanged": 12},
             "dependencyDepth": 0
         },
         "SectionDivider": {
