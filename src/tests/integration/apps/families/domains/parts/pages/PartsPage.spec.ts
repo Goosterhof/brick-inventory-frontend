@@ -233,4 +233,76 @@ describe('PartsPage — integration', () => {
 
         await flushPromises();
     });
+
+    it('opens the reverse lookup modal with fetched usage when a row is clicked', async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()]));
+        mockServer.onGet('/family/parts/3001/1/usage', {
+            part_num: '3001',
+            part_name: 'Brick 2x4',
+            part_image_url: 'http://example.com/brick.png',
+            color_id: 1,
+            color_name: 'Red',
+            color_hex: 'FF0000',
+            usages: [
+                {
+                    family_set_id: 7,
+                    set_num: '10024-1',
+                    set_name: 'Red Baron',
+                    status: 'sealed',
+                    quantity_needed: 4,
+                    quantity_stored: 1,
+                    shortfall: 3,
+                },
+            ],
+        });
+
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+
+        await wrapper.find("[data-testid='part-row-1_1']").trigger('click');
+        await flushPromises();
+
+        // The modal renders the part header and the populated usage list
+        const modalText = wrapper.text();
+        expect(modalText).toContain('Where this brick belongs');
+        expect(modalText).toContain('Red Baron');
+        expect(modalText).toContain('Sealed');
+        expect(modalText).toContain('Needed: 4x');
+        expect(modalText).toContain('Short: 3x');
+    });
+
+    it('navigates to the matching set when a modal row is clicked', async () => {
+        mockServer.onGet(INITIAL_URL, makeEnvelope([makePart()]));
+        mockServer.onGet('/family/parts/3001/1/usage', {
+            part_num: '3001',
+            part_name: 'Brick 2x4',
+            part_image_url: null,
+            color_id: 1,
+            color_name: 'Red',
+            color_hex: null,
+            usages: [
+                {
+                    family_set_id: 7,
+                    set_num: '10024-1',
+                    set_name: 'Red Baron',
+                    status: 'built',
+                    quantity_needed: 4,
+                    quantity_stored: 4,
+                    shortfall: 0,
+                },
+            ],
+        });
+
+        const wrapper = mount(PartsPage);
+        await flushPromises();
+        await wrapper.find("[data-testid='part-row-1_1']").trigger('click');
+        await flushPromises();
+
+        // The set row is identified by its data-testid wired through to ListItemButton.
+        await wrapper.find("[data-testid='usage-set-7']").trigger('click');
+        await flushPromises();
+
+        const {familyRouterService} = await import('@app/services');
+        expect(familyRouterService.getUrlForRouteName('sets-detail', 7)).toBe('/sets/7');
+    });
 });

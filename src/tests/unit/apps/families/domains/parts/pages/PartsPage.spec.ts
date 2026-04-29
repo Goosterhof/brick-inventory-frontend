@@ -1,3 +1,4 @@
+import PartUsageModal from '@app/domains/parts/modals/PartUsageModal.vue';
 import PartsPage from '@app/domains/parts/pages/PartsPage.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
 import FilterChip from '@shared/components/FilterChip.vue';
@@ -723,6 +724,73 @@ describe('PartsPage', () => {
 
             // Assert
             expect(mockGoToRoute).toHaveBeenCalledWith('parts-missing');
+        });
+    });
+
+    describe('reverse lookup modal', () => {
+        it('opens PartUsageModal with the row partNum and colorId when a row is clicked', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // No modal until a row is clicked (gated by colorId !== 0)
+            expect(wrapper.findComponent(PartUsageModal).exists()).toBe(false);
+
+            // Act — click the Brick 2 x 4 / Red row (partId 10, colorId 1)
+            await wrapper.find("[data-testid='part-row-10_1']").trigger('click');
+
+            // Assert
+            const modal = wrapper.findComponent(PartUsageModal);
+            expect(modal.exists()).toBe(true);
+            expect(modal.props('open')).toBe(true);
+            expect(modal.props('partNum')).toBe('3001');
+            expect(modal.props('colorId')).toBe(1);
+        });
+
+        it('closes the modal when it emits close', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+            await wrapper.find("[data-testid='part-row-10_1']").trigger('click');
+
+            // Act
+            wrapper.findComponent(PartUsageModal).vm.$emit('close');
+            await flushPromises();
+
+            // Assert — modal stays mounted (we keep the last partNum/colorId) but is closed
+            expect(wrapper.findComponent(PartUsageModal).props('open')).toBe(false);
+        });
+
+        it('does not open the modal for orphan rows whose colorId is null', async () => {
+            // Arrange — orphan row with colorId null
+            const orphanData = [
+                {
+                    partId: 30,
+                    partNum: '3003',
+                    partName: 'Mystery Brick',
+                    partImageUrl: null,
+                    colorId: null,
+                    colorName: null,
+                    colorRgb: null,
+                    storageOptionId: 9,
+                    storageOptionName: 'Drawer Z',
+                    quantity: 2,
+                    familySetId: null,
+                },
+            ];
+            mockGetRequest.mockResolvedValue({data: makeEnvelope(orphanData)});
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Act
+            const orphanRow = wrapper.find("[data-testid='part-row-30_null']");
+            expect(orphanRow.attributes('disabled')).toBeDefined();
+            await orphanRow.trigger('click');
+
+            // Assert — modal stays unmounted because colorId never left the initial 0 sentinel
+            expect(wrapper.findComponent(PartUsageModal).exists()).toBe(false);
         });
     });
 });

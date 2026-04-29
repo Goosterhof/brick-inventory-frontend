@@ -103,3 +103,23 @@ export interface MasterShoppingListResponse {
     entries: MasterShoppingListEntry[];
     unknownFamilySetIds: number[];
 }
+
+export interface FamilyPartUsageEntry {
+    familySetId: number;
+    setNum: string;
+    setName: string;
+    status: 'sealed' | 'built' | 'in_progress' | 'incomplete' | 'wishlist';
+    quantityNeeded: number;
+    quantityStored: number;
+    shortfall: number;
+}
+
+export interface FamilyPartUsageResponse {
+    partNum: string;
+    partName: string | null;
+    partImageUrl: string | null;
+    colorId: number;
+    colorName: string | null;
+    colorHex: string | null;
+    usages: FamilyPartUsageEntry[];
+}

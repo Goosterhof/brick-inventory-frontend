@@ -12,6 +12,8 @@ import {downloadCsv, toCsv} from '@shared/helpers/csv';
 import {toCamelCaseTyped} from '@shared/helpers/string';
 import {computed, onMounted, ref} from 'vue';
 
+import PartUsageModal from '../modals/PartUsageModal.vue';
+
 type SortField = 'name' | 'quantity' | 'color';
 
 const {t} = familyTranslationService;
@@ -176,6 +178,21 @@ const allSortFields: SortField[] = ['name', 'quantity', 'color'];
 const goToMissing = async () => {
     await familyRouterService.goToRoute('parts-missing');
 };
+
+const usageModalOpen = ref(false);
+const usagePartNum = ref('');
+const usageColorId = ref(0);
+
+const openUsageModal = (part: GroupedFamilyPart) => {
+    if (part.colorId === null) return;
+    usagePartNum.value = part.partNum;
+    usageColorId.value = part.colorId;
+    usageModalOpen.value = true;
+};
+
+const closeUsageModal = () => {
+    usageModalOpen.value = false;
+};
 </script>
 
 <template>
@@ -250,43 +267,68 @@ const goToMissing = async () => {
             <EmptyState v-if="filteredParts.length === 0" :message="t('parts.noResults').value" />
 
             <div v-else flex="~ col" gap="2">
-                <PartListItem
+                <button
                     v-for="part in filteredParts"
                     :key="`${part.partId}_${part.colorId}`"
-                    :name="part.partName"
-                    :part-num="part.partNum"
-                    :quantity="part.totalQuantity"
-                    :image-url="part.partImageUrl"
-                    :color-name="part.colorName"
-                    :color-rgb="part.colorRgb"
+                    type="button"
+                    block
+                    w="full"
+                    p="0"
+                    bg="transparent"
+                    text="left"
+                    border="0"
+                    cursor="pointer"
+                    outline="none"
+                    focus-visible:brick-focus
+                    :disabled="part.colorId === null"
+                    :data-testid="`part-row-${part.partId}_${part.colorId}`"
+                    :aria-label="t('parts.usageOpenModalLabel').value"
+                    @click="openUsageModal(part)"
                 >
-                    <div flex gap="1" m="t-1" flex-wrap="wrap">
-                        <span
-                            v-for="loc in part.locations"
-                            :key="loc.storageOptionId"
-                            text="xs"
-                            p="x-2 y-0.5"
-                            bg="yellow-300"
-                            font="bold"
-                            class="brick-border"
-                            border="1"
-                        >
-                            {{ loc.storageOptionName }} ({{ loc.quantity }}x)
-                        </span>
-                        <span
-                            v-if="part.isOrphan"
-                            text="xs"
-                            p="x-2 y-0.5"
-                            bg="red-200"
-                            font="bold"
-                            class="brick-border"
-                            border="1"
-                        >
-                            {{ t('parts.orphanParts').value }}
-                        </span>
-                    </div>
-                </PartListItem>
+                    <PartListItem
+                        :name="part.partName"
+                        :part-num="part.partNum"
+                        :quantity="part.totalQuantity"
+                        :image-url="part.partImageUrl"
+                        :color-name="part.colorName"
+                        :color-rgb="part.colorRgb"
+                    >
+                        <div flex gap="1" m="t-1" flex-wrap="wrap">
+                            <span
+                                v-for="loc in part.locations"
+                                :key="loc.storageOptionId"
+                                text="xs"
+                                p="x-2 y-0.5"
+                                bg="yellow-300"
+                                font="bold"
+                                class="brick-border"
+                                border="1"
+                            >
+                                {{ loc.storageOptionName }} ({{ loc.quantity }}x)
+                            </span>
+                            <span
+                                v-if="part.isOrphan"
+                                text="xs"
+                                p="x-2 y-0.5"
+                                bg="red-200"
+                                font="bold"
+                                class="brick-border"
+                                border="1"
+                            >
+                                {{ t('parts.orphanParts').value }}
+                            </span>
+                        </div>
+                    </PartListItem>
+                </button>
             </div>
+
+            <PartUsageModal
+                v-if="usageColorId !== 0"
+                :open="usageModalOpen"
+                :part-num="usagePartNum"
+                :color-id="usageColorId"
+                @close="closeUsageModal"
+            />
 
             <div v-if="nextCursor" flex justify="center" m="t-6">
                 <button
