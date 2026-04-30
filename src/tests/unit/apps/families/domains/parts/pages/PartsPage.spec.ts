@@ -734,7 +734,7 @@ describe('PartsPage', () => {
             const wrapper = shallowMount(PartsPage);
             await flushPromises();
 
-            // No modal until a row is clicked (gated by colorId !== 0)
+            // No modal until a row is clicked (gated by usageColorId !== null)
             expect(wrapper.findComponent(PartUsageModal).exists()).toBe(false);
 
             // Act — click the Brick 2 x 4 / Red row (partId 10, colorId 1)
@@ -763,6 +763,18 @@ describe('PartsPage', () => {
             expect(wrapper.findComponent(PartUsageModal).props('open')).toBe(false);
         });
 
+        it('includes the part name in the aria-label for each row button', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Assert — generic label alone is insufficient; the part name must be appended
+            const row = wrapper.find("[data-testid='part-row-10_1']");
+            expect(row.attributes('aria-label')).toContain('parts.usageOpenModalLabel');
+            expect(row.attributes('aria-label')).toContain('Brick 2 x 4');
+        });
+
         it('does not open the modal for orphan rows whose colorId is null', async () => {
             // Arrange — orphan row with colorId null
             const orphanData = [
@@ -789,7 +801,7 @@ describe('PartsPage', () => {
             expect(orphanRow.attributes('disabled')).toBeDefined();
             await orphanRow.trigger('click');
 
-            // Assert — modal stays unmounted because colorId never left the initial 0 sentinel
+            // Assert — modal stays unmounted because usageColorId never left its null initial value
             expect(wrapper.findComponent(PartUsageModal).exists()).toBe(false);
         });
     });

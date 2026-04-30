@@ -181,7 +181,7 @@ const goToMissing = async () => {
 
 const usageModalOpen = ref(false);
 const usagePartNum = ref('');
-const usageColorId = ref(0);
+const usageColorId = ref<number | null>(null);
 
 const openUsageModal = (part: GroupedFamilyPart) => {
     if (part.colorId === null) return;
@@ -193,6 +193,9 @@ const openUsageModal = (part: GroupedFamilyPart) => {
 const closeUsageModal = () => {
     usageModalOpen.value = false;
 };
+
+const usageButtonLabel = (part: GroupedFamilyPart) =>
+    `${t('parts.usageOpenModalLabel').value}: ${part.partName ?? part.partNum}`;
 </script>
 
 <template>
@@ -282,7 +285,7 @@ const closeUsageModal = () => {
                     focus-visible:brick-focus
                     :disabled="part.colorId === null"
                     :data-testid="`part-row-${part.partId}_${part.colorId}`"
-                    :aria-label="t('parts.usageOpenModalLabel').value"
+                    :aria-label="usageButtonLabel(part)"
                     @click="openUsageModal(part)"
                 >
                     <PartListItem
@@ -323,7 +326,7 @@ const closeUsageModal = () => {
             </div>
 
             <PartUsageModal
-                v-if="usageColorId !== 0"
+                v-if="usageColorId !== null"
                 :open="usageModalOpen"
                 :part-num="usagePartNum"
                 :color-id="usageColorId"
