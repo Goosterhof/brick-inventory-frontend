@@ -91,24 +91,28 @@ vi.mock('@app/services', () =>
     }),
 );
 
+/**
+ * Fixture mirrors the real `/family-sets/missing-parts` shortfall row shape
+ * after camelCase conversion at the HTTP boundary. Verified against
+ * `app/Http/Resources/FamilyMissingPartsResourceData.php` +
+ * `app/Actions/FamilySet/GetFamilyMissingPartsAction.php` (Liaison M3).
+ */
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
-    partId: 10,
     partNum: '3001',
+    colorId: 4,
     partName: 'Brick 2 x 4',
-    partImageUrl: 'https://example.com/3001.jpg',
-    colorId: 1,
     colorName: 'Red',
-    colorRgb: 'CC0000',
-    brickLinkColorId: 5,
+    colorHex: 'C91A09',
+    partImageUrl: 'https://example.com/3001.jpg',
     quantityNeeded: 10,
     quantityStored: 3,
     shortfall: 7,
-    neededByFamilySetIds: [100, 200],
+    neededBySetNums: ['75313-1', '10497-1'],
     ...overrides,
 });
 
-const makePayload = (entries: Record<string, unknown>[] = [makeEntry()], unknownFamilySetIds: number[] = []) => ({
-    data: {entries, unknownFamilySetIds},
+const makePayload = (shortfalls: Record<string, unknown>[] = [makeEntry()], unknownFamilySetIds: string[] = []) => ({
+    data: {shortfalls, unknownFamilySetIds},
 });
 
 describe('PartsMissingPage', () => {
@@ -196,11 +200,11 @@ describe('PartsMissingPage', () => {
     });
 
     it('shows the summary totals (shortfall count and distinct sets)', async () => {
-        // Arrange
+        // Arrange — three distinct LEGO set numbers across the two shortfalls.
         mockGetRequest.mockResolvedValue(
             makePayload([
-                makeEntry({partId: 1, shortfall: 3, neededByFamilySetIds: [100, 200]}),
-                makeEntry({partId: 2, shortfall: 4, neededByFamilySetIds: [200, 300]}),
+                makeEntry({partNum: '3001', shortfall: 3, neededBySetNums: ['75313-1', '10497-1']}),
+                makeEntry({partNum: '3002', shortfall: 4, neededBySetNums: ['10497-1', '21034-1']}),
             ]),
         );
 
@@ -215,8 +219,8 @@ describe('PartsMissingPage', () => {
     });
 
     it('surfaces the unknown-sets callout when unknownFamilySetIds is non-empty', async () => {
-        // Arrange
-        mockGetRequest.mockResolvedValue(makePayload([makeEntry()], [42, 43]));
+        // Arrange — backend stringifies family_set ids on this endpoint.
+        mockGetRequest.mockResolvedValue(makePayload([makeEntry()], ['42', '43']));
 
         // Act
         const wrapper = shallowMount(PartsMissingPage);
@@ -242,7 +246,7 @@ describe('PartsMissingPage', () => {
 
     it('renders the unknown-sets callout even when there are no entries', async () => {
         // Arrange — an edge case: all owned sets are unsynced, no shortfall rows
-        mockGetRequest.mockResolvedValue(makePayload([], [11, 12]));
+        mockGetRequest.mockResolvedValue(makePayload([], ['11', '12']));
 
         // Act
         const wrapper = shallowMount(PartsMissingPage);
@@ -268,7 +272,7 @@ describe('PartsMissingPage', () => {
 
     it('navigates to settings when the unknown-sets sync link is clicked', async () => {
         // Arrange
-        mockGetRequest.mockResolvedValue(makePayload([makeEntry()], [7]));
+        mockGetRequest.mockResolvedValue(makePayload([makeEntry()], ['7']));
         const wrapper = shallowMount(PartsMissingPage);
         await flushPromises();
 
@@ -372,13 +376,14 @@ describe('PartsMissingPage', () => {
             expect(names).toEqual(['Alpha', 'Bravo', 'Charlie']);
         });
 
-        it('sorts by color name when the color chip is clicked, treating null colors as empty strings', async () => {
-            // Arrange
+        it('sorts by color name when the color chip is clicked (empty strings sort first)', async () => {
+            // Arrange — backend always ships a color name string; an empty string
+            // (defensive edge case) sorts before alphabetic names via localeCompare.
             mockGetRequest.mockResolvedValue(
                 makePayload([
-                    makeEntry({partId: 1, colorName: 'Red'}),
-                    makeEntry({partId: 2, colorName: null}),
-                    makeEntry({partId: 3, colorName: 'Blue'}),
+                    makeEntry({partNum: '3001', colorName: 'Red'}),
+                    makeEntry({partNum: '3002', colorName: ''}),
+                    makeEntry({partNum: '3003', colorName: 'Blue'}),
                 ]),
             );
             const wrapper = shallowMount(PartsMissingPage);
@@ -391,7 +396,7 @@ describe('PartsMissingPage', () => {
 
             // Assert
             const colors = wrapper.findAllComponents(PartListItem).map((i) => i.props('colorName'));
-            expect(colors).toEqual([null, 'Blue', 'Red']);
+            expect(colors).toEqual(['', 'Blue', 'Red']);
         });
 
         it('marks the active sort chip as active', async () => {
@@ -427,7 +432,7 @@ describe('PartsMissingPage', () => {
 
         it('hides the export buttons when there are no entries', async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue(makePayload([], [1]));
+            mockGetRequest.mockResolvedValue(makePayload([], ['1']));
 
             // Act
             const wrapper = shallowMount(PartsMissingPage);
@@ -440,12 +445,11 @@ describe('PartsMissingPage', () => {
         });
 
         it('passes filtered entries (search + sort respected) to the BrickLink helper', async () => {
-            // Arrange
+            // Arrange — backend has no Rebrickable→BrickLink colour mapping yet, so
+            // the page emits `brickLinkColorId: null` for every entry (the helper
+            // omits `<COLOR>` for null/undefined). See bricklinkWantedList.ts CAVEAT.
             mockGetRequest.mockResolvedValue(
-                makePayload([
-                    makeEntry({partId: 1, partNum: '3001', brickLinkColorId: 5, shortfall: 3}),
-                    makeEntry({partId: 2, partNum: '3002', brickLinkColorId: null, shortfall: 7}),
-                ]),
+                makePayload([makeEntry({partNum: '3001', shortfall: 3}), makeEntry({partNum: '3002', shortfall: 7})]),
             );
             const wrapper = shallowMount(PartsMissingPage);
             await flushPromises();
@@ -469,14 +473,13 @@ describe('PartsMissingPage', () => {
             mockGetRequest.mockResolvedValue(
                 makePayload([
                     makeEntry({
-                        partId: 1,
                         partNum: '3001',
                         partName: 'Brick 2 x 4',
                         colorName: 'Red',
                         quantityNeeded: 10,
                         quantityStored: 3,
                         shortfall: 7,
-                        neededByFamilySetIds: [100, 200],
+                        neededBySetNums: ['75313-1', '10497-1'],
                     }),
                 ]),
             );
@@ -506,17 +509,18 @@ describe('PartsMissingPage', () => {
             expect(mockDownloadCsv).toHaveBeenCalledWith('csv', 'master-shopping-list.csv');
         });
 
-        it('emits a CSV row with an empty color when the color name is null', async () => {
-            // Arrange
+        it('emits a CSV row with the color name verbatim (defensive empty-string case)', async () => {
+            // Arrange — defensive: if backend ever ships an empty colorName,
+            // the CSV column should reflect that without crashing.
             mockGetRequest.mockResolvedValue(
                 makePayload([
                     makeEntry({
-                        partId: 1,
-                        colorName: null,
+                        partNum: '3001',
+                        colorName: '',
                         quantityNeeded: 1,
                         quantityStored: 0,
                         shortfall: 1,
-                        neededByFamilySetIds: [1],
+                        neededBySetNums: ['10497-1'],
                     }),
                 ]),
             );

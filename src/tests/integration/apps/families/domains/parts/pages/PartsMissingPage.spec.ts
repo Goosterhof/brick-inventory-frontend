@@ -22,25 +22,29 @@ vi.mock('@shared/helpers/bricklinkWantedList', () => ({
     downloadBrickLinkWantedList: vi.fn<() => void>(),
 }));
 
-/** Snake_case fixture — matching the real API response format. */
+/**
+ * Snake_case fixture — matching the real `/family-sets/missing-parts`
+ * response shape verified against
+ * `app/Http/Resources/FamilyMissingPartsResourceData.php` +
+ * `app/Actions/FamilySet/GetFamilyMissingPartsAction.php` (Liaison M3,
+ * 2026-04-30).
+ */
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
-    part_id: 10,
     part_num: '3001',
+    color_id: 4,
     part_name: 'Brick 2x4',
-    part_image_url: 'https://example.com/3001.jpg',
-    color_id: 1,
     color_name: 'Red',
-    color_rgb: 'CC0000',
-    brick_link_color_id: 5,
+    color_hex: 'C91A09',
+    part_image_url: 'https://example.com/3001.jpg',
     quantity_needed: 10,
     quantity_stored: 3,
     shortfall: 7,
-    needed_by_family_set_ids: [100, 200],
+    needed_by_set_nums: ['75313-1', '10497-1'],
     ...overrides,
 });
 
-const makePayload = (entries: Record<string, unknown>[] = [], unknownFamilySetIds: number[] = []) => ({
-    entries,
+const makePayload = (entries: Record<string, unknown>[] = [], unknownFamilySetIds: string[] = []) => ({
+    shortfalls: entries,
     unknown_family_set_ids: unknownFamilySetIds,
 });
 
@@ -87,7 +91,7 @@ describe('PartsMissingPage — integration', () => {
     });
 
     it('shows the unknown-sets callout when the backend reports unsynced sets', async () => {
-        mockServer.onGet(URL_MISSING, makePayload([makeEntry()], [42, 43]));
+        mockServer.onGet(URL_MISSING, makePayload([makeEntry()], ['42', '43']));
 
         const wrapper = mount(PartsMissingPage);
         await flushPromises();
@@ -136,7 +140,7 @@ describe('PartsMissingPage — integration', () => {
             URL_MISSING,
             makePayload([
                 makeEntry({part_name: 'Brick 2x4', part_num: '3001'}),
-                makeEntry({part_id: 11, part_name: 'Plate 1x2', part_num: '3023'}),
+                makeEntry({part_name: 'Plate 1x2', part_num: '3023'}),
             ]),
         );
 
@@ -157,8 +161,8 @@ describe('PartsMissingPage — integration', () => {
         mockServer.onGet(
             URL_MISSING,
             makePayload([
-                makeEntry({part_id: 10, part_name: 'Brick 2x4', shortfall: 9}),
-                makeEntry({part_id: 11, part_name: 'Axle 2', shortfall: 2}),
+                makeEntry({part_name: 'Brick 2x4', part_num: '3001', shortfall: 9}),
+                makeEntry({part_name: 'Axle 2', part_num: '3705', shortfall: 2}),
             ]),
         );
 
@@ -176,5 +180,71 @@ describe('PartsMissingPage — integration', () => {
         // After switching to name sort: Axle 2 < Brick 2x4 alphabetically
         const namesByName = wrapper.findAllComponents(PartListItem).map((i) => i.props('name'));
         expect(namesByName).toEqual(['Axle 2', 'Brick 2x4']);
+    });
+
+    /**
+     * Backend-contract regression guard (Liaison M3 / Medic 2026-04-30).
+     *
+     * The page previously consumed an imagined contract — `payload.entries`,
+     * per-entry `neededByFamilySetIds: number[]`, and `brickLinkColorId`. The
+     * real `/family-sets/missing-parts` response ships `shortfalls`,
+     * `needed_by_set_nums: list<string>` (LEGO set numbers like "75313-1"), and
+     * `unknown_family_set_ids: list<string>` — verified against
+     * `app/Http/Resources/FamilyMissingPartsResourceData.php` +
+     * `app/Actions/FamilySet/GetFamilyMissingPartsAction.php`. This block fails
+     * the page if it ever regresses to the phantom contract.
+     */
+    describe('real backend contract', () => {
+        it('renders a PartListItem for every shortfall the backend ships', async () => {
+            mockServer.onGet(URL_MISSING, makePayload([makeEntry({part_name: 'Plate 1x2', shortfall: 4})]));
+
+            const wrapper = mount(PartsMissingPage);
+            await flushPromises();
+
+            const items = wrapper.findAllComponents(PartListItem);
+            expect(items).toHaveLength(1);
+            const item = items[0];
+            expect(item?.props('name')).toBe('Plate 1x2');
+            expect(item?.props('quantity')).toBe(4);
+        });
+
+        it('counts distinct set_nums across all shortfalls in the affected-sets summary', async () => {
+            mockServer.onGet(
+                URL_MISSING,
+                makePayload([
+                    makeEntry({part_num: '3001', shortfall: 3, needed_by_set_nums: ['75313-1', '10497-1']}),
+                    makeEntry({part_num: '3002', shortfall: 4, needed_by_set_nums: ['10497-1', '21034-1']}),
+                ]),
+            );
+
+            const wrapper = mount(PartsMissingPage);
+            await flushPromises();
+
+            const summaryLine = wrapper.find('[data-total-shortfall]');
+            expect(summaryLine.attributes('data-total-shortfall')).toBe('7');
+            // Three distinct set_nums: 75313-1, 10497-1, 21034-1.
+            expect(summaryLine.attributes('data-affected-sets')).toBe('3');
+        });
+
+        it('renders the unknown-sets callout for string-typed family_set_ids', async () => {
+            mockServer.onGet(URL_MISSING, makePayload([makeEntry()], ['42', '43']));
+
+            const wrapper = mount(PartsMissingPage);
+            await flushPromises();
+
+            const callout = wrapper.find("[data-testid='missing-unknown-sets']");
+            expect(callout.exists()).toBe(true);
+            expect(callout.attributes('data-unknown-count')).toBe('2');
+        });
+
+        it('renders the unknown-sets callout when shortfalls is empty but unknown sets are present', async () => {
+            mockServer.onGet(URL_MISSING, makePayload([], ['11', '12']));
+
+            const wrapper = mount(PartsMissingPage);
+            await flushPromises();
+
+            expect(wrapper.find("[data-testid='missing-unknown-sets']").exists()).toBe(true);
+            expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+        });
     });
 });
