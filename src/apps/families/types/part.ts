@@ -88,24 +88,43 @@ export interface StorageOptionPart {
     color: Color | null;
 }
 
+/**
+ * One row of the master shopping list — a (part_num, color_id) pair the
+ * family is short on across all non-wishlist owned sets.
+ *
+ * Shape mirrors `App\Http\Resources\FamilyMissingPartsResourceData`'s
+ * `shortfalls` array (camelCased at the HTTP boundary by `toCamelCaseTyped`).
+ * The backend identifies parts by `part_num` (LEGO catalog string id), not by
+ * a numeric `partId` — there is no internal id in this payload. Likewise the
+ * backend ships `color_hex` (hex RGB) from `colors.rgb`, not a separate
+ * `color_rgb` column.
+ */
 export interface MasterShoppingListEntry {
-    partId: number;
     partNum: string;
+    colorId: number;
     partName: string;
+    colorName: string;
+    colorHex: string;
     partImageUrl: string | null;
-    colorId: number | null;
-    colorName: string | null;
-    colorRgb: string | null;
-    brickLinkColorId: number | null;
     quantityNeeded: number;
     quantityStored: number;
     shortfall: number;
-    neededByFamilySetIds: number[];
+    /**
+     * LEGO set numbers (e.g. "75313-1", "10497-1") that need this part —
+     * NOT family_set ids. Matches `needed_by_set_nums: list<string>` in the
+     * backend Resource.
+     */
+    neededBySetNums: string[];
 }
 
+/**
+ * `unknownFamilySetIds` is `string[]` because the backend casts each
+ * family_set id with `(string)` before serializing — see
+ * `GetFamilyMissingPartsAction::execute()` line 178. Treat as opaque ids.
+ */
 export interface MasterShoppingListResponse {
-    entries: MasterShoppingListEntry[];
-    unknownFamilySetIds: number[];
+    shortfalls: MasterShoppingListEntry[];
+    unknownFamilySetIds: string[];
 }
 
 export interface FamilyPartUsageEntry {

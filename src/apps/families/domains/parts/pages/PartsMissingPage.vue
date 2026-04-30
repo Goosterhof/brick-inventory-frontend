@@ -18,7 +18,7 @@ type SortField = 'shortfall' | 'name' | 'color';
 
 const {t} = familyTranslationService;
 const entries = ref<MasterShoppingListEntry[]>([]);
-const unknownFamilySetIds = ref<number[]>([]);
+const unknownFamilySetIds = ref<string[]>([]);
 const loading = ref(true);
 const loadError = ref(false);
 const searchQuery = ref('');
@@ -30,7 +30,7 @@ const fetchMissingParts = async (): Promise<void> => {
     try {
         const response = await familyHttpService.getRequest<MasterShoppingListResponse>('/family-sets/missing-parts');
         const payload = toCamelCaseTyped<MasterShoppingListResponse>(response.data);
-        entries.value = payload.entries;
+        entries.value = payload.shortfalls;
         unknownFamilySetIds.value = payload.unknownFamilySetIds;
     } catch {
         entries.value = [];
@@ -54,13 +54,13 @@ const goToSettings = async () => {
 const totalShortfall = computed(() => entries.value.reduce((sum, entry) => sum + entry.shortfall, 0));
 
 const affectedSetCount = computed(() => {
-    const ids = new Set<number>();
+    const setNums = new Set<string>();
     for (const entry of entries.value) {
-        for (const id of entry.neededByFamilySetIds) {
-            ids.add(id);
+        for (const setNum of entry.neededBySetNums) {
+            setNums.add(setNum);
         }
     }
-    return ids.size;
+    return setNums.size;
 });
 
 const setSortField = (field: SortField) => {
@@ -74,7 +74,7 @@ const compareEntries = (a: MasterShoppingListEntry, b: MasterShoppingListEntry):
     if (activeSortField.value === 'name') {
         return a.partName.localeCompare(b.partName);
     }
-    return (a.colorName ?? '').localeCompare(b.colorName ?? '');
+    return a.colorName.localeCompare(b.colorName);
 };
 
 const filteredEntries = computed(() => {
@@ -91,9 +91,12 @@ const filteredEntries = computed(() => {
 });
 
 const exportBrickLink = () => {
+    // The backend does not yet ship a Rebrickable→BrickLink color mapping —
+    // see the CAVEAT in `bricklinkWantedList.ts`. Until that mapping exists,
+    // emit color-agnostic entries (the helper omits `<COLOR>` for null/undefined).
     const bricklinkEntries = filteredEntries.value.map((entry) => ({
         partNum: entry.partNum,
-        brickLinkColorId: entry.brickLinkColorId,
+        brickLinkColorId: null,
         shortfall: entry.shortfall,
     }));
     const xml = toBrickLinkWantedListXml(bricklinkEntries);
@@ -113,11 +116,11 @@ const exportCsvFile = () => {
     const rows = filteredEntries.value.map((e) => [
         e.partNum,
         e.partName,
-        e.colorName ?? '',
+        e.colorName,
         String(e.quantityNeeded),
         String(e.quantityStored),
         String(e.shortfall),
-        String(e.neededByFamilySetIds.length),
+        String(e.neededBySetNums.length),
     ]);
     downloadCsv(toCsv(headers, rows), 'master-shopping-list.csv');
 };
@@ -252,13 +255,13 @@ const allSortFields: SortField[] = ['shortfall', 'name', 'color'];
                     <div v-else flex="~ col" gap="2">
                         <PartListItem
                             v-for="entry in filteredEntries"
-                            :key="`${entry.partId}_${entry.colorId}`"
+                            :key="`${entry.partNum}_${entry.colorId}`"
                             :name="entry.partName"
                             :part-num="entry.partNum"
                             :quantity="entry.shortfall"
                             :image-url="entry.partImageUrl"
                             :color-name="entry.colorName"
-                            :color-rgb="entry.colorRgb"
+                            :color-rgb="entry.colorHex"
                         >
                             <div flex gap="1" m="t-1" flex-wrap="wrap" text="xs">
                                 <span
@@ -288,12 +291,12 @@ const allSortFields: SortField[] = ['shortfall', 'name', 'color'];
                                     class="brick-border"
                                     border="1"
                                     text="[var(--brick-page-text)]"
-                                    :title="entry.neededByFamilySetIds.join(', ')"
+                                    :title="entry.neededBySetNums.join(', ')"
                                 >
                                     {{
                                         t('parts.missingNeededBy').value.replace(
                                             '{count}',
-                                            String(entry.neededByFamilySetIds.length),
+                                            String(entry.neededBySetNums.length),
                                         )
                                     }}
                                 </span>
