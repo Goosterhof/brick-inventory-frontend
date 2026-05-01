@@ -1,3 +1,5 @@
+import type {FamilySetStatus} from './familySet';
+
 export interface Part {
     id: number;
     partNum: string;
@@ -131,7 +133,7 @@ export interface FamilyPartUsageEntry {
     familySetId: number;
     setNum: string;
     setName: string;
-    status: 'sealed' | 'built' | 'in_progress' | 'incomplete' | 'wishlist';
+    status: FamilySetStatus;
     quantityNeeded: number;
     quantityStored: number;
     shortfall: number;
