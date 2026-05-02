@@ -126,6 +126,7 @@ describe('StorageDetailPage — integration', () => {
     });
 
     it('navigates back via BackButton click', async () => {
+        const goToRouteSpy = vi.spyOn(familyRouterService, 'goToRoute').mockResolvedValue(undefined);
         vi.spyOn(storageOptionStoreModule, 'getOrFailById').mockResolvedValue(makeAdapted());
         mockServer.onGet('/storage-options/1/parts', []);
         const wrapper = mount(StorageDetailPage);
@@ -135,6 +136,7 @@ describe('StorageDetailPage — integration', () => {
         await backButton.find('button').trigger('click');
         await flushPromises();
 
-        // No assertion on navigation — integration tests verify composition, not side effects.
+        expect(goToRouteSpy).toHaveBeenCalledWith('storage');
+        goToRouteSpy.mockRestore();
     });
 });

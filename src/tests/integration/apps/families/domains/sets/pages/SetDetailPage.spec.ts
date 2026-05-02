@@ -95,6 +95,7 @@ describe('SetDetailPage — integration', () => {
     });
 
     it('navigates back via real BackButton click', async () => {
+        const goToRouteSpy = vi.spyOn(familyRouterService, 'goToRoute').mockResolvedValue(undefined);
         vi.spyOn(familySetStoreModule, 'getOrFailById').mockResolvedValue(makeAdapted());
         const wrapper = mount(SetDetailPage);
         await flushPromises();
@@ -103,7 +104,8 @@ describe('SetDetailPage — integration', () => {
         await backButton.find('button').trigger('click');
         await flushPromises();
 
-        // No assertion on navigation — integration tests verify composition, not side effects.
+        expect(goToRouteSpy).toHaveBeenCalledWith('sets');
+        goToRouteSpy.mockRestore();
     });
 
     it('hides load parts button for wishlist sets', async () => {

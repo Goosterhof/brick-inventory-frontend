@@ -1,4 +1,5 @@
 import AddSetPage from '@app/domains/sets/pages/AddSetPage.vue';
+import {familyRouterService} from '@app/services';
 import {mockServer} from '@integration/helpers/mock-server';
 import DateInput from '@shared/components/forms/inputs/DateInput.vue';
 import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
@@ -65,14 +66,15 @@ describe('AddSetPage — integration', () => {
     });
 
     it('submits form through real component tree', async () => {
+        const goToRouteSpy = vi.spyOn(familyRouterService, 'goToRoute').mockResolvedValue(undefined);
         const wrapper = await mountPage();
 
         mockServer.onPost('family-sets', {id: 42});
         await wrapper.find('form').trigger('submit');
         await flushPromises();
 
-        // No assertion on navigation — integration tests verify composition, not side effects.
-        // The create() call posts to family-sets; goToRoute navigates to detail.
+        expect(goToRouteSpy).toHaveBeenCalledWith('sets-detail', 42);
+        goToRouteSpy.mockRestore();
     });
 
     it('does not show duplicate warning when setNum is empty', async () => {

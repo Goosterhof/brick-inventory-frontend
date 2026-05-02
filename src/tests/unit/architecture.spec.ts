@@ -1,3 +1,4 @@
+/* eslint-disable jest/valid-expect -- Vitest supports expect(value, 'message') as a custom failure label; the jest plugin does not recognise this API. */
 import {readdirSync, readFileSync} from 'node:fs';
 import {basename, dirname, join, relative, resolve, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';

@@ -1,4 +1,5 @@
 import RegisterPage from '@app/domains/auth/pages/RegisterPage.vue';
+import {familyRouterService} from '@app/services';
 import {mockServer} from '@integration/helpers/mock-server';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
@@ -54,14 +55,15 @@ describe('RegisterPage — integration', () => {
     });
 
     it('flows form submission through real components', async () => {
+        const goToRouteSpy = vi.spyOn(familyRouterService, 'goToRoute').mockResolvedValue(undefined);
         mockServer.onPost('/register', {id: 1, name: 'Jane', email: 'jane@example.com'});
         const wrapper = mountPage();
 
         await wrapper.find('form').trigger('submit');
         await flushPromises();
 
-        // No assertion on navigation — integration tests verify composition, not side effects.
-        // The form submission fires register() on the real auth service, then goToRoute("home") on the real router.
+        expect(goToRouteSpy).toHaveBeenCalledWith('home');
+        goToRouteSpy.mockRestore();
     });
 
     it('renders a real PrimaryButton for submission', () => {

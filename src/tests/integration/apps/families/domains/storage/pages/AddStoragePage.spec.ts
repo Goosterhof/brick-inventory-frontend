@@ -1,4 +1,5 @@
 import AddStoragePage from '@app/domains/storage/pages/AddStoragePage.vue';
+import {familyRouterService} from '@app/services';
 import {mockServer} from '@integration/helpers/mock-server';
 import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
 import TextareaInput from '@shared/components/forms/inputs/TextareaInput.vue';
@@ -52,6 +53,7 @@ describe('AddStoragePage — integration', () => {
     });
 
     it('submits form through real component tree', async () => {
+        const goToRouteSpy = vi.spyOn(familyRouterService, 'goToRoute').mockResolvedValue(undefined);
         mockServer.onPost('storage-options', {
             id: 7,
             name: '',
@@ -66,7 +68,8 @@ describe('AddStoragePage — integration', () => {
         await wrapper.find('form').trigger('submit');
         await flushPromises();
 
-        // No assertion on navigation — integration tests verify composition, not side effects.
+        expect(goToRouteSpy).toHaveBeenCalledWith('storage-detail', 7);
+        goToRouteSpy.mockRestore();
     });
 
     it('renders page title', () => {

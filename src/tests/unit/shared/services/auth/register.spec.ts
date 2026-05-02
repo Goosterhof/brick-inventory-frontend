@@ -85,7 +85,7 @@ describe('auth service register', () => {
         });
 
         // Act & Assert
-        await expect(authService.register(registrationData)).rejects.toThrow();
+        await expect(authService.register(registrationData)).rejects.toThrow(Error);
 
         mock.restore();
     });
