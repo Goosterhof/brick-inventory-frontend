@@ -57,7 +57,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 35},
+            "churn": {"commits": 1, "linesChanged": 32},
             "dependencyDepth": 0
         },
         "CameraCapture": {
@@ -75,7 +75,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 35},
+            "churn": {"commits": 1, "linesChanged": 32},
             "dependencyDepth": 0
         },
         "CardContainer": {
