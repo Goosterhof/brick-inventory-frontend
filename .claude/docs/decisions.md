@@ -30,20 +30,21 @@ No decision record lands here without passing through all three.
 
 ## Index
 
-| #   | Decision                                                                                                                                | Date       | Status   |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------- |
-| 001 | [Custom RouterService over Vue Router plugin](./decisions/001-custom-routerservice.md)                                                  | 2026-03-17 | accepted |
-| 002 | [Factory pattern for services, no singletons](./decisions/002-factory-services.md)                                                      | 2026-03-17 | accepted |
-| 003 | [UnoCSS attributify over CSS files](./decisions/003-unocss-attributify.md)                                                              | 2026-03-17 | accepted |
-| 004 | [Snake/camel case conversion at HTTP boundary](./decisions/004-case-conversion-boundary.md)                                             | 2026-03-17 | accepted |
-| 005 | [Istanbul coverage with zero ignore comments](./decisions/005-istanbul-coverage-no-ignores.md)                                          | 2026-03-17 | accepted |
-| 006 | [Resource adapter with frozen base and mutable ref](./decisions/006-resource-adapter-frozen-mutable.md)                                 | 2026-03-18 | accepted |
-| 007 | [Adapter store module over Pinia/Vuex](./decisions/007-adapter-store-no-pinia.md)                                                       | 2026-03-18 | accepted |
-| 008 | [Domain isolation via lint rules and architecture tests](./decisions/008-domain-isolation.md)                                           | 2026-03-18 | accepted |
-| 009 | [Component health registry — five metrics powering the Showcase app](./decisions/009-brick-catalog-health-metrics.md)                   | 2026-03-19 | accepted |
-| 010 | [Test isolation via execution-time guard, collect-duration guard, and factory mocking](./decisions/010-test-isolation-collect-guard.md) | 2026-03-20 | accepted |
-| 011 | [Domain-based Vitest project split with factory configuration](./decisions/011-domain-based-vitest-projects.md)                         | 2026-03-22 | accepted |
-| 012 | [Typed mock helpers with MockedService mapped type](./decisions/012-typed-mock-helpers.md)                                              | 2026-03-22 | accepted |
-| 013 | [Page integration tests with real component composition](./decisions/013-page-integration-tests.md)                                     | 2026-03-27 | accepted |
-| 014 | [Domain-driven vertical slices over technical layers](./decisions/014-domain-driven-vertical-slices.md)                                 | 2026-03-08 | accepted |
-| 015 | [Creative Engine agent — dedicated design & animation role](./decisions/015-creative-engine-agent.md)                                   | 2026-04-09 | accepted |
+| #   | Decision                                                                                                                                | Date       | Status            |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------- |
+| 001 | [Custom RouterService over Vue Router plugin](./decisions/001-custom-routerservice.md)                                                  | 2026-03-17 | accepted          |
+| 002 | [Factory pattern for services, no singletons](./decisions/002-factory-services.md)                                                      | 2026-03-17 | accepted          |
+| 003 | [UnoCSS attributify over CSS files](./decisions/003-unocss-attributify.md)                                                              | 2026-03-17 | accepted          |
+| 004 | [Snake/camel case conversion at HTTP boundary](./decisions/004-case-conversion-boundary.md)                                             | 2026-03-17 | superseded by 016 |
+| 005 | [Istanbul coverage with zero ignore comments](./decisions/005-istanbul-coverage-no-ignores.md)                                          | 2026-03-17 | accepted          |
+| 006 | [Resource adapter with frozen base and mutable ref](./decisions/006-resource-adapter-frozen-mutable.md)                                 | 2026-03-18 | accepted          |
+| 007 | [Adapter store module over Pinia/Vuex](./decisions/007-adapter-store-no-pinia.md)                                                       | 2026-03-18 | accepted          |
+| 008 | [Domain isolation via lint rules and architecture tests](./decisions/008-domain-isolation.md)                                           | 2026-03-18 | accepted          |
+| 009 | [Component health registry — five metrics powering the Showcase app](./decisions/009-brick-catalog-health-metrics.md)                   | 2026-03-19 | accepted          |
+| 010 | [Test isolation via execution-time guard, collect-duration guard, and factory mocking](./decisions/010-test-isolation-collect-guard.md) | 2026-03-20 | accepted          |
+| 011 | [Domain-based Vitest project split with factory configuration](./decisions/011-domain-based-vitest-projects.md)                         | 2026-03-22 | accepted          |
+| 012 | [Typed mock helpers with MockedService mapped type](./decisions/012-typed-mock-helpers.md)                                              | 2026-03-22 | accepted          |
+| 013 | [Page integration tests with real component composition](./decisions/013-page-integration-tests.md)                                     | 2026-03-27 | accepted          |
+| 014 | [Domain-driven vertical slices over technical layers](./decisions/014-domain-driven-vertical-slices.md)                                 | 2026-03-08 | accepted          |
+| 015 | [Creative Engine agent — dedicated design & animation role](./decisions/015-creative-engine-agent.md)                                   | 2026-04-09 | accepted          |
+| 016 | [Case conversion via HTTP middleware](./decisions/016-case-conversion-via-http-middleware.md)                                           | 2026-05-05 | accepted          |
