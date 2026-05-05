@@ -20,11 +20,12 @@ const setsLoading = ref(true);
 
 const statusKeys: Record<
     string,
-    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.incomplete' | 'sets.wishlist'
+    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.inStorage' | 'sets.incomplete' | 'sets.wishlist'
 > = {
     sealed: 'sets.sealed',
     built: 'sets.built',
     in_progress: 'sets.inProgress',
+    in_storage: 'sets.inStorage',
     incomplete: 'sets.incomplete',
     wishlist: 'sets.wishlist',
 };

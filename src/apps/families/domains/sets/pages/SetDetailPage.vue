@@ -24,11 +24,12 @@ const showAssignModal = ref(false);
 
 const statusKey: Record<
     FamilySet['status'],
-    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.incomplete' | 'sets.wishlist'
+    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.inStorage' | 'sets.incomplete' | 'sets.wishlist'
 > = {
     sealed: 'sets.sealed',
     built: 'sets.built',
     in_progress: 'sets.inProgress',
+    in_storage: 'sets.inStorage',
     incomplete: 'sets.incomplete',
     wishlist: 'sets.wishlist',
 };
@@ -117,7 +118,7 @@ onMounted(async () => {
     loading.value = false;
 });
 
-const ownedStatuses: FamilySet['status'][] = ['sealed', 'in_progress', 'built', 'incomplete'];
+const ownedStatuses: FamilySet['status'][] = ['sealed', 'in_progress', 'built', 'in_storage', 'incomplete'];
 const statusUpdating = ref(false);
 
 const updateStatus = async (newStatus: FamilySet['status']) => {

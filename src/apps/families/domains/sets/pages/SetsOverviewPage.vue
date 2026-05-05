@@ -34,16 +34,17 @@ const completionLoading = ref(true);
 
 const statusKey: Record<
     FamilySetStatus,
-    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.incomplete' | 'sets.wishlist'
+    'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.inStorage' | 'sets.incomplete' | 'sets.wishlist'
 > = {
     sealed: 'sets.sealed',
     built: 'sets.built',
     in_progress: 'sets.inProgress',
+    in_storage: 'sets.inStorage',
     incomplete: 'sets.incomplete',
     wishlist: 'sets.wishlist',
 };
 
-const allStatuses: FamilySetStatus[] = ['sealed', 'in_progress', 'built', 'incomplete', 'wishlist'];
+const allStatuses: FamilySetStatus[] = ['sealed', 'in_progress', 'built', 'in_storage', 'incomplete', 'wishlist'];
 
 const UNKNOWN_THEME = 'Unknown';
 

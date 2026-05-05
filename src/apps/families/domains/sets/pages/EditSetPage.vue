@@ -28,11 +28,12 @@ const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 const statusOptions: {
     value: FamilySetStatus;
-    key: 'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.incomplete' | 'sets.wishlist';
+    key: 'sets.sealed' | 'sets.built' | 'sets.inProgress' | 'sets.inStorage' | 'sets.incomplete' | 'sets.wishlist';
 }[] = [
     {value: 'sealed', key: 'sets.sealed'},
     {value: 'built', key: 'sets.built'},
     {value: 'in_progress', key: 'sets.inProgress'},
+    {value: 'in_storage', key: 'sets.inStorage'},
     {value: 'incomplete', key: 'sets.incomplete'},
     {value: 'wishlist', key: 'sets.wishlist'},
 ];

@@ -171,6 +171,7 @@ const noop = () => {};
                         <option value="sealed">Sealed</option>
                         <option value="built">Built</option>
                         <option value="in_progress">In Progress</option>
+                        <option value="in_storage">In Storage</option>
                         <option value="incomplete">Incomplete</option>
                     </SelectInput>
                 </div>
