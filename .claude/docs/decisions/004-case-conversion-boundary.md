@@ -2,8 +2,10 @@
 
 **Date**: 2026-03-17
 **Feature**: API communication layer
-**Status**: accepted
+**Status**: superseded by [ADR-016](./016-case-conversion-via-http-middleware.md) (2026-05-05)
 **Transferability**: universal
+
+> **Superseded 2026-05-05.** The `fs-adapter-store` package migration on 2026-04-01 removed the centralized conversion choke point this ADR's reasoning depended on. The "explicit at every boundary" approach silently broke when the adapter no longer participated in conversion. ADR-016 adopts HTTP request/response middleware (matching Kendo's pattern) and accepts that the original middleware-rejection argument no longer holds in the post-migration world. The historical reasoning below is preserved for context.
 
 ## Context
 
