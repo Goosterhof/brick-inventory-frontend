@@ -143,7 +143,7 @@ const saveToken = async () => {
 
     try {
         await familyHttpService.putRequest('/family/rebrickable-token', {
-            rebrickable_user_token: rebrickableToken.value,
+            rebrickableUserToken: rebrickableToken.value,
         });
         tokenSaved.value = true;
         rebrickableToken.value = '';

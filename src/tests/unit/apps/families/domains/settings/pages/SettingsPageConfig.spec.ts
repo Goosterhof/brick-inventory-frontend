@@ -110,7 +110,7 @@ describe('SettingsPage — config', () => {
 
             // Assert
             expect(mockPutRequest).toHaveBeenCalledWith('/family/rebrickable-token', {
-                rebrickable_user_token: 'my-secret-token',
+                rebrickableUserToken: 'my-secret-token',
             });
         });
 
