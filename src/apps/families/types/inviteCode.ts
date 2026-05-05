@@ -4,3 +4,8 @@ export interface InviteCode {
     expiresAt: string;
     createdAt: string;
 }
+
+export interface EmailInviteCodeRequest {
+    recipientEmail: string;
+    recipientName?: string;
+}
