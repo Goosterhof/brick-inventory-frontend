@@ -149,8 +149,8 @@ describe('AssignPartModal', () => {
 
             // Assert
             expect(mockPostRequest).toHaveBeenCalledWith('/storage-options/1/parts', {
-                part_id: 10,
-                color_id: 1,
+                partId: 10,
+                colorId: 1,
                 quantity: 5,
             });
         });

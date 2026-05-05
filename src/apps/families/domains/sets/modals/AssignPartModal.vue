@@ -45,8 +45,8 @@ const handleSubmit = async () => {
 
     try {
         await familyHttpService.postRequest(`/storage-options/${storageId}/parts`, {
-            part_id: part.part.id,
-            color_id: part.color.id,
+            partId: part.part.id,
+            colorId: part.color.id,
             quantity: quantity.value ?? 1,
         });
         emit('assigned');
