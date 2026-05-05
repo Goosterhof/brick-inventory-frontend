@@ -11,16 +11,19 @@ import TextInput from '@shared/components/forms/inputs/TextInput.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {useFormSubmit} from '@shared/composables/useFormSubmit';
 import {useValidationErrors} from '@shared/composables/useValidationErrors';
+import {isAxiosError} from 'axios';
 import {computed, ref, watch} from 'vue';
 
 const {t} = familyTranslationService;
 const adapted = familySetStoreModule.generateNew();
 const duplicateDismissed = ref(false);
+const notFoundError = ref('');
 
 watch(
     () => adapted.mutable.value.setNum,
     () => {
         duplicateDismissed.value = false;
+        notFoundError.value = '';
     },
 );
 
@@ -52,11 +55,21 @@ const statusOptions: {
     {value: 'wishlist', key: 'sets.wishlist'},
 ];
 
-const onSubmit = () =>
-    handleSubmit(async () => {
-        const created = await adapted.create();
-        await familyRouterService.goToRoute('sets-detail', created.id);
+const onSubmit = () => {
+    notFoundError.value = '';
+    return handleSubmit(async () => {
+        try {
+            const created = await adapted.create();
+            await familyRouterService.goToRoute('sets-detail', created.id);
+        } catch (error) {
+            if (isAxiosError(error) && error.response?.status === 404) {
+                notFoundError.value = t('sets.setNotFound').value;
+                return;
+            }
+            throw error;
+        }
     });
+};
 </script>
 
 <template>
@@ -69,6 +82,18 @@ const onSubmit = () =>
                 :label="t('sets.setNumber').value"
                 :error="errors.setNum"
             />
+
+            <div
+                v-if="notFoundError"
+                p="4"
+                bg="red-100"
+                text="red-900"
+                class="brick-border"
+                border="1"
+                data-testid="not-found-error"
+            >
+                <p font="bold" text="sm">{{ notFoundError }}</p>
+            </div>
 
             <div
                 v-if="showDuplicateWarning"

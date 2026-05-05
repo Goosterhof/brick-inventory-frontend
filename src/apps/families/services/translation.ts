@@ -156,6 +156,7 @@ const translations = {
             capturePhoto: 'Capture Photo',
             duplicateWarning: 'You already own this set (quantity: {quantity}, status: {status}). Add another copy?',
             duplicateDismiss: 'Dismiss',
+            setNotFound: 'Set number not found. Double-check the number or look it up on rebrickable.com.',
             scanAddedToast: 'Added {name} ({setNum}) to your collection!',
             setsAddedCount: '{count} sets added this session',
             scanDone: 'Done scanning',
@@ -436,6 +437,7 @@ const translations = {
             duplicateWarning:
                 'Je hebt deze set al (aantal: {quantity}, status: {status}). Nog een exemplaar toevoegen?',
             duplicateDismiss: 'Sluiten',
+            setNotFound: 'Setnummer niet gevonden. Controleer het nummer of zoek op rebrickable.com.',
             scanAddedToast: '{name} ({setNum}) toegevoegd aan je collectie!',
             setsAddedCount: '{count} sets toegevoegd deze sessie',
             scanDone: 'Klaar met scannen',

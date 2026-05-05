@@ -143,6 +143,43 @@ describe('AddSetPage', () => {
         expect(mockGoToRoute).not.toHaveBeenCalled();
     });
 
+    it('should show not-found error on 404 and not navigate', async () => {
+        // Arrange
+        const axiosError = new AxiosError('Not found');
+        axiosError.response = {status: 404, data: {}, statusText: '', headers: {}, config: {} as never};
+        mockCreate.mockRejectedValue(axiosError);
+        const wrapper = shallowMount(AddSetPage);
+
+        // Act
+        await wrapper.find('form').trigger('submit');
+        await flushPromises();
+
+        // Assert
+        const notFound = wrapper.find("[data-testid='not-found-error']");
+        expect(notFound.exists()).toBe(true);
+        expect(notFound.text()).toBe('sets.setNotFound');
+        expect(mockGoToRoute).not.toHaveBeenCalled();
+    });
+
+    it('should clear not-found error when set number changes', async () => {
+        // Arrange
+        const axiosError = new AxiosError('Not found');
+        axiosError.response = {status: 404, data: {}, statusText: '', headers: {}, config: {} as never};
+        mockCreate.mockRejectedValue(axiosError);
+        const wrapper = shallowMount(AddSetPage);
+        await wrapper.find('form').trigger('submit');
+        await flushPromises();
+        expect(wrapper.find("[data-testid='not-found-error']").exists()).toBe(true);
+
+        // Act
+        const textInput = wrapper.findComponent(TextInput);
+        textInput.vm.$emit('update:modelValue', '10179-1');
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.find("[data-testid='not-found-error']").exists()).toBe(false);
+    });
+
     it('should rethrow non-422 errors', async () => {
         // Arrange
         const axiosError = new AxiosError('Server error');
