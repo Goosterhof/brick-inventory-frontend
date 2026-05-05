@@ -1,4 +1,5 @@
 import {createHttpService} from '@script-development/fs-http';
+import {deepCamelKeys, deepSnakeKeys} from '@shared/helpers/string';
 import {createAuthService} from '@shared/services/auth';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -10,13 +11,28 @@ interface TestProfile {
     createdAt: string;
 }
 
+// Mirrors the production wiring in `apps/families/services/http.ts` (ADR-016):
+// the auth service relies on registered request/response middleware to
+// convert camelCase ↔ snake_case. The contract under test is the wired
+// service, not the raw httpService.
+const createWiredHttpService = (baseURL: string) => {
+    const httpService = createHttpService(baseURL);
+    httpService.registerRequestMiddleware((config) => {
+        if (config.data && !(config.data instanceof FormData)) config.data = deepSnakeKeys(config.data);
+    });
+    httpService.registerResponseMiddleware((response) => {
+        if (response.data && typeof response.data === 'object') response.data = deepCamelKeys(response.data);
+    });
+    return httpService;
+};
+
 describe('auth service register', () => {
     const baseURL = 'https://api.example.com';
 
     it('should set user after successful registration', async () => {
         // Arrange
         const mock = new MockAdapter(axios);
-        const httpService = createHttpService(baseURL);
+        const httpService = createWiredHttpService(baseURL);
         const authService = createAuthService<TestProfile>(httpService);
         const registrationData = {
             familyName: 'Smith',
@@ -46,7 +62,7 @@ describe('auth service register', () => {
     it('should set isLoggedIn to true after successful registration', async () => {
         // Arrange
         const mock = new MockAdapter(axios);
-        const httpService = createHttpService(baseURL);
+        const httpService = createWiredHttpService(baseURL);
         const authService = createAuthService<TestProfile>(httpService);
         const registrationData = {
             familyName: 'Smith',
@@ -70,7 +86,7 @@ describe('auth service register', () => {
     it('should throw error on failed registration', async () => {
         // Arrange
         const mock = new MockAdapter(axios);
-        const httpService = createHttpService(baseURL);
+        const httpService = createWiredHttpService(baseURL);
         const authService = createAuthService<TestProfile>(httpService);
         const registrationData = {
             familyName: 'Smith',
@@ -93,7 +109,7 @@ describe('auth service register', () => {
     it('should convert camelCase to snake_case for API request', async () => {
         // Arrange
         const mock = new MockAdapter(axios);
-        const httpService = createHttpService(baseURL);
+        const httpService = createWiredHttpService(baseURL);
         const authService = createAuthService<TestProfile>(httpService);
         const registrationData = {
             familyName: 'Smith',

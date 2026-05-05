@@ -9,7 +9,6 @@ import PageHeader from '@shared/components/PageHeader.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {downloadCsv, toCsv} from '@shared/helpers/csv';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {computed, onMounted, ref} from 'vue';
 
 import PartUsageModal from '../modals/PartUsageModal.vue';
@@ -32,7 +31,7 @@ const fetchParts = async (cursor?: string): Promise<CursorPaginatedParts> => {
         params.set('cursor', cursor);
     }
     const response = await familyHttpService.getRequest<CursorPaginatedParts>(`/family/parts?${params.toString()}`);
-    return toCamelCaseTyped<CursorPaginatedParts>(response.data);
+    return response.data;
 };
 
 onMounted(async () => {

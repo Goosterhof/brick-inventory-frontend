@@ -11,7 +11,6 @@ import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {downloadBrickLinkWantedList, toBrickLinkWantedListXml} from '@shared/helpers/bricklinkWantedList';
 import {downloadCsv, toCsv} from '@shared/helpers/csv';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {computed, onMounted, ref} from 'vue';
 
 type SortField = 'shortfall' | 'name' | 'color';
@@ -29,9 +28,8 @@ const fetchMissingParts = async (): Promise<void> => {
     loadError.value = false;
     try {
         const response = await familyHttpService.getRequest<MasterShoppingListResponse>('/family-sets/missing-parts');
-        const payload = toCamelCaseTyped<MasterShoppingListResponse>(response.data);
-        entries.value = payload.shortfalls;
-        unknownFamilySetIds.value = payload.unknownFamilySetIds;
+        entries.value = response.data.shortfalls;
+        unknownFamilySetIds.value = response.data.unknownFamilySetIds;
     } catch {
         entries.value = [];
         unknownFamilySetIds.value = [];

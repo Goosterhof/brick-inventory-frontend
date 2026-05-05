@@ -9,7 +9,6 @@ import BackButton from '@shared/components/BackButton.vue';
 import LoadingState from '@shared/components/LoadingState.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {computed, onMounted, ref} from 'vue';
 
 import AssignPartModal from '../modals/AssignPartModal.vue';
@@ -100,12 +99,11 @@ const brickLinkUrl = (partNum: string): string =>
 const loadParts = async (setNum: string) => {
     partsLoading.value = true;
     const response = await familyHttpService.getRequest<SetWithParts>(`/sets/${setNum}/parts`);
-    setWithParts.value = toCamelCaseTyped(response.data);
+    setWithParts.value = response.data;
 
     try {
         const mapResponse = await familyHttpService.getRequest<StorageMapResponse>(`/sets/${setNum}/storage-map`);
-        // Why: familyHttpService has no snake↔camel middleware; convert the wrapped payload in one pass.
-        storageMap.value = toCamelCaseTyped<StorageMapResponse>(mapResponse.data).entries;
+        storageMap.value = mapResponse.data.entries;
     } catch {
         storageMap.value = [];
     }

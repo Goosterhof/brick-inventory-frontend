@@ -6,7 +6,6 @@ import BackButton from '@shared/components/BackButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import CameraCapture from '@shared/components/scanner/CameraCapture.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {ref} from 'vue';
 
 const {t} = familyTranslationService;
@@ -25,7 +24,7 @@ const onCapture = async (imageData: Blob) => {
 
     try {
         const response = await familyHttpService.postRequest<Part>('/identify-brick', formData);
-        identifiedPart.value = toCamelCaseTyped(response.data);
+        identifiedPart.value = response.data;
     } catch {
         error.value = t('sets.identifyError').value;
     } finally {

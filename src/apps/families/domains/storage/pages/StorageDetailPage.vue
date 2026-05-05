@@ -11,7 +11,6 @@ import EmptyState from '@shared/components/EmptyState.vue';
 import LoadingState from '@shared/components/LoadingState.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {onMounted, ref} from 'vue';
 
 const {t} = familyTranslationService;
@@ -27,7 +26,7 @@ onMounted(async () => {
         familyHttpService.getRequest<StorageOptionPart[]>(`/storage-options/${id}/parts`),
     ]);
     adapted.value = storageOption;
-    storageParts.value = partsResponse.data.map((item) => toCamelCaseTyped(item));
+    storageParts.value = partsResponse.data;
     loading.value = false;
     partsLoading.value = false;
 });

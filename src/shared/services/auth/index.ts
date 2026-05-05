@@ -1,9 +1,7 @@
 import type {HttpService} from '@script-development/fs-http';
-import type {DeepSnakeKeys} from '@shared/helpers/string';
 import type {ComputedRef, ShallowRef} from 'vue';
 
 import {NotLoggedInError} from '@shared/errors/not-logged-in';
-import {deepSnakeKeys, toCamelCaseTyped} from '@shared/helpers/string';
 import {isAxiosError} from 'axios';
 import {computed, shallowRef} from 'vue';
 
@@ -23,16 +21,13 @@ export const createAuthService = <Profile extends {id: number}>(httpService: Htt
     };
 
     const register = async (registrationData: RegistrationData): Promise<void> => {
-        const {data} = await httpService.postRequest<DeepSnakeKeys<Profile>>(
-            '/register',
-            deepSnakeKeys(registrationData),
-        );
-        userRef.value = toCamelCaseTyped<Profile>(data);
+        const {data} = await httpService.postRequest<Profile>('/register', registrationData);
+        userRef.value = data;
     };
 
     const login = async (loginData: Credentials): Promise<void> => {
-        const {data} = await httpService.postRequest<DeepSnakeKeys<Profile>>('/login', loginData);
-        userRef.value = toCamelCaseTyped<Profile>(data);
+        const {data} = await httpService.postRequest<Profile>('/login', loginData);
+        userRef.value = data;
     };
 
     const logout = async (): Promise<void> => {
@@ -42,8 +37,8 @@ export const createAuthService = <Profile extends {id: number}>(httpService: Htt
 
     const checkIfLoggedIn = async (): Promise<void> => {
         try {
-            const {data} = await httpService.getRequest<DeepSnakeKeys<Profile>>('/me');
-            userRef.value = toCamelCaseTyped<Profile>(data);
+            const {data} = await httpService.getRequest<Profile>('/me');
+            userRef.value = data;
         } catch (error) {
             if (isAxiosError(error) && error.response?.status === 401) {
                 userRef.value = null;

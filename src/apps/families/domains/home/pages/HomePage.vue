@@ -8,7 +8,6 @@ import LegoBrick from '@shared/components/LegoBrick.vue';
 import NavLink from '@shared/components/NavLink.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import StatCard from '@shared/components/StatCard.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {computed, onMounted, ref} from 'vue';
 
 import YearDistributionChart from '../components/YearDistributionChart.vue';
@@ -51,7 +50,7 @@ onMounted(async () => {
         familySetStoreModule.retrieveAll(),
     ]);
 
-    stats.value = toCamelCaseTyped<FamilyStats>(response.data);
+    stats.value = response.data;
     loading.value = false;
     setsLoading.value = false;
 });

@@ -16,7 +16,6 @@ import DangerButton from '@shared/components/DangerButton.vue';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {isAxiosError} from 'axios';
 import {computed, onMounted, onUnmounted, ref} from 'vue';
 
@@ -90,12 +89,12 @@ let pollInterval: ReturnType<typeof setInterval> | null = null;
 
 onMounted(async () => {
     const response = await familyHttpService.getRequest<FamilyMember[]>('/family/members');
-    members.value = response.data.map((item) => toCamelCaseTyped<FamilyMember>(item));
+    members.value = response.data;
     membersLoading.value = false;
 
     try {
         const codeResponse = await familyHttpService.getRequest<InviteCode>('/family/invite-code');
-        inviteCode.value = toCamelCaseTyped<InviteCode>(codeResponse.data);
+        inviteCode.value = codeResponse.data;
     } catch (error: unknown) {
         if (!isAxiosError(error) || error.response?.status !== 404) {
             inviteCodeError.value = t('settings.inviteCodeError').value;
@@ -109,7 +108,7 @@ const generateInviteCode = async () => {
 
     try {
         const response = await familyHttpService.postRequest<InviteCode>('/family/invite-code', {});
-        inviteCode.value = toCamelCaseTyped<InviteCode>(response.data);
+        inviteCode.value = response.data;
     } catch {
         inviteCodeError.value = t('settings.inviteCodeError').value;
     } finally {
@@ -167,7 +166,7 @@ const pollImportStatus = () => {
     pollInterval = setInterval(async () => {
         try {
             const response = await familyHttpService.getRequest<ImportJob>('/family-sets/import-status');
-            importJob.value = toCamelCaseTyped<ImportJob>(response.data);
+            importJob.value = response.data;
 
             if (importJob.value.status === 'completed' || importJob.value.status === 'failed') {
                 stopPolling();
@@ -191,7 +190,7 @@ const importSets = async () => {
 
     try {
         const response = await familyHttpService.postRequest<ImportJob>('/family-sets/import-from-rebrickable', {});
-        importJob.value = toCamelCaseTyped<ImportJob>(response.data);
+        importJob.value = response.data;
         pollImportStatus();
     } catch (error: unknown) {
         importing.value = false;

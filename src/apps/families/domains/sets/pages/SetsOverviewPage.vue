@@ -18,7 +18,6 @@ import ListItemButton from '@shared/components/ListItemButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {downloadCsv, toCsv} from '@shared/helpers/csv';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {computed, onMounted, ref} from 'vue';
 
 import CompletionGauge from '../components/CompletionGauge.vue';
@@ -127,9 +126,8 @@ const fetchCompletion = async (): Promise<void> => {
     completionLoading.value = true;
     try {
         const response = await familyHttpService.getRequest<FamilySetCompletion[]>('/family-sets/completion');
-        const camelized = response.data.map((item) => toCamelCaseTyped<FamilySetCompletion>(item));
         const next = new Map<number, FamilySetCompletion>();
-        for (const entry of camelized) {
+        for (const entry of response.data) {
             next.set(entry.familySetId, entry);
         }
         completionByFamilySetId.value = next;
