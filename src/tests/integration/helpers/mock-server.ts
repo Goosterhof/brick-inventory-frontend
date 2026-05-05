@@ -143,11 +143,30 @@ export const mockServer = {
         routes.DELETE.set(endpoint, responseData);
     },
 
-    /** Clear all registered routes and middleware. Call in beforeEach. */
+    /**
+     * Clear all registered routes. Call in beforeEach.
+     *
+     * Registered middleware is intentionally NOT cleared here — in production,
+     * `familyHttpService` registers its snake↔camel middleware once at module
+     * load and the registration lives for the lifetime of the app. Mirroring
+     * that, the mock keeps middleware across tests so the second test in a
+     * file doesn't silently lose the conversion the first test had.
+     *
+     * Use `clearMiddleware()` separately if a test needs a clean slate.
+     */
     reset: (): void => {
         for (const map of Object.values(routes)) {
             map.clear();
         }
+    },
+
+    /**
+     * Clear all registered middleware. Rarely needed — the production wiring
+     * registers middleware at module-load time and never tears it down. Use
+     * this only when a test specifically wants to assert behavior with no
+     * middleware registered.
+     */
+    clearMiddleware: (): void => {
         requestMiddleware.length = 0;
         responseMiddleware.length = 0;
         responseErrorMiddleware.length = 0;

@@ -1,5 +1,6 @@
 import {createHttpService} from '@script-development/fs-http';
 import {NotLoggedInError} from '@shared/errors/not-logged-in';
+import {deepCamelKeys, deepSnakeKeys} from '@shared/helpers/string';
 import {createAuthService} from '@shared/services/auth';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -11,13 +12,28 @@ interface TestProfile {
     createdAt: string;
 }
 
+// Mirrors the production wiring in `apps/families/services/http.ts` (ADR-016):
+// the auth service relies on registered request/response middleware to
+// convert camelCase ↔ snake_case. The contract under test is the wired
+// service, not the raw httpService.
+const createWiredHttpService = (baseURL: string) => {
+    const httpService = createHttpService(baseURL);
+    httpService.registerRequestMiddleware((config) => {
+        if (config.data && !(config.data instanceof FormData)) config.data = deepSnakeKeys(config.data);
+    });
+    httpService.registerResponseMiddleware((response) => {
+        if (response.data && typeof response.data === 'object') response.data = deepCamelKeys(response.data);
+    });
+    return httpService;
+};
+
 describe('auth service', () => {
     const baseURL = 'https://api.example.com';
 
     describe('createAuthService', () => {
         it('should return all expected methods and properties', () => {
             // Arrange
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
 
             // Act
             const authService = createAuthService<TestProfile>(httpService);
@@ -33,7 +49,7 @@ describe('auth service', () => {
 
         it('should initialize with user as null', () => {
             // Arrange
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
 
             // Act
             const authService = createAuthService<TestProfile>(httpService);
@@ -44,7 +60,7 @@ describe('auth service', () => {
 
         it('should initialize with isLoggedIn as false', () => {
             // Arrange
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
 
             // Act
             const authService = createAuthService<TestProfile>(httpService);
@@ -58,7 +74,7 @@ describe('auth service', () => {
         it('should set user after successful login', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const credentials = {email: 'test@example.com', password: 'password123'};
             const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
@@ -80,7 +96,7 @@ describe('auth service', () => {
         it('should set isLoggedIn to true after successful login', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const credentials = {email: 'test@example.com', password: 'password123'};
             const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
@@ -98,7 +114,7 @@ describe('auth service', () => {
         it('should throw error on failed login', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const credentials = {email: 'test@example.com', password: 'wrongpassword'};
             mock.onPost(`${baseURL}/login`, credentials).reply(401, {message: 'Invalid credentials'});
@@ -114,7 +130,7 @@ describe('auth service', () => {
         it('should set user to null after logout', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const credentials = {email: 'test@example.com', password: 'password123'};
             const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
@@ -134,7 +150,7 @@ describe('auth service', () => {
         it('should set isLoggedIn to false after logout', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const credentials = {email: 'test@example.com', password: 'password123'};
             const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
@@ -156,7 +172,7 @@ describe('auth service', () => {
         it('should return user id when logged in', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const credentials = {email: 'test@example.com', password: 'password123'};
             const responseData = {id: 42, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
@@ -174,7 +190,7 @@ describe('auth service', () => {
 
         it('should throw NotLoggedInError when not logged in', () => {
             // Arrange
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
 
             // Act & Assert
@@ -183,7 +199,7 @@ describe('auth service', () => {
 
         it('should throw error with correct message when not logged in', () => {
             // Arrange
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
 
             // Act & Assert
@@ -195,7 +211,7 @@ describe('auth service', () => {
         it('should set user when /me returns profile', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onGet(`${baseURL}/me`).reply(200, responseData);
@@ -216,7 +232,7 @@ describe('auth service', () => {
         it('should set isLoggedIn to true when /me returns profile', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             const responseData = {id: 1, email: 'test@example.com', created_at: '2024-01-01T00:00:00Z'};
             mock.onGet(`${baseURL}/me`).reply(200, responseData);
@@ -233,7 +249,7 @@ describe('auth service', () => {
         it('should set user to null when /me returns 401', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             mock.onGet(`${baseURL}/me`).reply(401);
 
@@ -249,7 +265,7 @@ describe('auth service', () => {
         it('should set isLoggedIn to false when /me returns 401', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             mock.onGet(`${baseURL}/me`).reply(401);
 
@@ -265,7 +281,7 @@ describe('auth service', () => {
         it('should throw error when /me returns non-401 error', async () => {
             // Arrange
             const mock = new MockAdapter(axios);
-            const httpService = createHttpService(baseURL);
+            const httpService = createWiredHttpService(baseURL);
             const authService = createAuthService<TestProfile>(httpService);
             mock.onGet(`${baseURL}/me`).reply(500);
 

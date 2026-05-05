@@ -7,7 +7,6 @@ import EmptyState from '@shared/components/EmptyState.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import SectionDivider from '@shared/components/SectionDivider.vue';
 import StatCard from '@shared/components/StatCard.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {onMounted, ref} from 'vue';
 
 const {t} = familyTranslationService;
@@ -18,7 +17,7 @@ const loading = ref(true);
 onMounted(async () => {
     try {
         const response = await familyHttpService.getRequest<BrickDna>('/family/brick-dna');
-        dna.value = toCamelCaseTyped<BrickDna>(response.data);
+        dna.value = response.data;
     } catch {
         dna.value = null;
     } finally {

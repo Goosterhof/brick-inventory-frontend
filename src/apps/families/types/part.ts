@@ -95,11 +95,11 @@ export interface StorageOptionPart {
  * family is short on across all non-wishlist owned sets.
  *
  * Shape mirrors `App\Http\Resources\FamilyMissingPartsResourceData`'s
- * `shortfalls` array (camelCased at the HTTP boundary by `toCamelCaseTyped`).
- * The backend identifies parts by `part_num` (LEGO catalog string id), not by
- * a numeric `partId` — there is no internal id in this payload. Likewise the
- * backend ships `color_hex` (hex RGB) from `colors.rgb`, not a separate
- * `color_rgb` column.
+ * `shortfalls` array (camelCased at the HTTP boundary by the response
+ * middleware on `familyHttpService` — see ADR-016). The backend identifies
+ * parts by `part_num` (LEGO catalog string id), not by a numeric `partId` —
+ * there is no internal id in this payload. Likewise the backend ships
+ * `color_hex` (hex RGB) from `colors.rgb`, not a separate `color_rgb` column.
  */
 export interface MasterShoppingListEntry {
     partNum: string;

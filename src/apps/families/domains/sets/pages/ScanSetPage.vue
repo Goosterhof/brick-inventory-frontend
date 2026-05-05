@@ -9,7 +9,6 @@ import PageHeader from '@shared/components/PageHeader.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import BarcodeScanner from '@shared/components/scanner/BarcodeScanner.vue';
 import ToastMessage from '@shared/components/ToastMessage.vue';
-import {deepSnakeKeys, toCamelCaseTyped} from '@shared/helpers/string';
 import {computed, ref} from 'vue';
 
 const {t} = familyTranslationService;
@@ -45,7 +44,7 @@ const onDetect = async (barcode: string) => {
 
     try {
         const response = await familyHttpService.getRequest<SetSummary>(`/sets/ean/${barcode}`);
-        foundSet.value = toCamelCaseTyped(response.data);
+        foundSet.value = response.data;
     } catch {
         foundSet.value = null;
     } finally {
@@ -64,10 +63,11 @@ const addToCollection = async () => {
     const setNum = foundSet.value.setNum;
 
     try {
-        await familyHttpService.postRequest<{id: number}>(
-            '/family-sets',
-            deepSnakeKeys({setNum: foundSet.value.setNum, quantity: 1, status: 'sealed'}),
-        );
+        await familyHttpService.postRequest<{id: number}>('/family-sets', {
+            setNum: foundSet.value.setNum,
+            quantity: 1,
+            status: 'sealed',
+        });
         setsAddedCount.value++;
         toastService.show({
             message: t('sets.scanAddedToast').value.replace('{name}', setName).replace('{setNum}', setNum),

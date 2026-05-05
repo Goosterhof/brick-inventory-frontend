@@ -7,7 +7,6 @@ import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
 import SelectInput from '@shared/components/forms/inputs/SelectInput.vue';
 import ModalDialog from '@shared/components/ModalDialog.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {onMounted, ref} from 'vue';
 
 const {part, existingLocations = []} = defineProps<{
@@ -29,7 +28,7 @@ const loadingOptions = ref(true);
 onMounted(async () => {
     try {
         const response = await familyHttpService.getRequest<StorageOption[]>('/storage-options');
-        storageOptions.value = response.data.map((item) => toCamelCaseTyped(item));
+        storageOptions.value = response.data;
     } catch {
         storageOptions.value = [];
     } finally {

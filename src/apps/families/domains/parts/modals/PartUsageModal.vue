@@ -8,7 +8,6 @@ import EmptyState from '@shared/components/EmptyState.vue';
 import ListItemButton from '@shared/components/ListItemButton.vue';
 import ModalDialog from '@shared/components/ModalDialog.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
-import {toCamelCaseTyped} from '@shared/helpers/string';
 import {ref, watch} from 'vue';
 
 const {open, partNum, colorId} = defineProps<{open: boolean; partNum: string; colorId: number}>();
@@ -39,7 +38,7 @@ const fetchUsage = async (): Promise<void> => {
         const response = await familyHttpService.getRequest<FamilyPartUsageResponse>(
             `/family/parts/${partNum}/${colorId}/usage`,
         );
-        data.value = toCamelCaseTyped<FamilyPartUsageResponse>(response.data);
+        data.value = response.data;
     } catch {
         loadError.value = true;
     } finally {
