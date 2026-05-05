@@ -98,14 +98,20 @@ describe('SettingsPage — config', () => {
     });
 
     describe('save token', () => {
+        const findTokenInput = (wrapper: ReturnType<typeof shallowMount>) =>
+            wrapper.findAllComponents(TextInput).find((i) => i.props('label') === 'settings.rebrickableToken');
+
         it('should save token via PUT request', async () => {
             // Arrange
             mockPutRequest.mockResolvedValue({});
             const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue('my-secret-token');
+            await flushPromises();
+            await findTokenInput(wrapper)?.setValue('my-secret-token');
 
             // Act
-            await wrapper.find('form').trigger('submit');
+            const allForms = wrapper.findAll('form');
+            const [, tokenForm] = allForms;
+            await tokenForm?.trigger('submit');
             await flushPromises();
 
             // Assert
@@ -118,10 +124,13 @@ describe('SettingsPage — config', () => {
             // Arrange
             mockPutRequest.mockResolvedValue({});
             const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue('my-secret-token');
+            await flushPromises();
+            await findTokenInput(wrapper)?.setValue('my-secret-token');
 
             // Act
-            await wrapper.find('form').trigger('submit');
+            const allForms = wrapper.findAll('form');
+            const [, tokenForm] = allForms;
+            await tokenForm?.trigger('submit');
             await flushPromises();
 
             // Assert
@@ -132,14 +141,17 @@ describe('SettingsPage — config', () => {
             // Arrange
             mockPutRequest.mockResolvedValue({});
             const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue('my-secret-token');
+            await flushPromises();
+            await findTokenInput(wrapper)?.setValue('my-secret-token');
 
             // Act
-            await wrapper.find('form').trigger('submit');
+            const allForms = wrapper.findAll('form');
+            const [, tokenForm] = allForms;
+            await tokenForm?.trigger('submit');
             await flushPromises();
 
             // Assert
-            expect(wrapper.findComponent(TextInput).props('modelValue')).toBe('');
+            expect(findTokenInput(wrapper)?.props('modelValue')).toBe('');
         });
 
         it('should show error when not family head (403)', async () => {
@@ -148,28 +160,34 @@ describe('SettingsPage — config', () => {
             axiosError.response = {status: 403, data: null, statusText: 'Forbidden', headers: {}, config: {}};
             mockPutRequest.mockRejectedValue(axiosError);
             const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue('my-secret-token');
+            await flushPromises();
+            await findTokenInput(wrapper)?.setValue('my-secret-token');
 
             // Act
-            await wrapper.find('form').trigger('submit');
+            const allForms = wrapper.findAll('form');
+            const [, tokenForm] = allForms;
+            await tokenForm?.trigger('submit');
             await flushPromises();
 
             // Assert
-            expect(wrapper.findComponent(TextInput).props('error')).toBe('settings.notFamilyHead');
+            expect(findTokenInput(wrapper)?.props('error')).toBe('settings.notFamilyHead');
         });
 
         it('should show generic error on failure', async () => {
             // Arrange
             mockPutRequest.mockRejectedValue(new Error('Network error'));
             const wrapper = shallowMount(SettingsPage);
-            await wrapper.findComponent(TextInput).setValue('my-secret-token');
+            await flushPromises();
+            await findTokenInput(wrapper)?.setValue('my-secret-token');
 
             // Act
-            await wrapper.find('form').trigger('submit');
+            const allForms = wrapper.findAll('form');
+            const [, tokenForm] = allForms;
+            await tokenForm?.trigger('submit');
             await flushPromises();
 
             // Assert
-            expect(wrapper.findComponent(TextInput).props('error')).toBe('settings.tokenSaveError');
+            expect(findTokenInput(wrapper)?.props('error')).toBe('settings.tokenSaveError');
         });
     });
 

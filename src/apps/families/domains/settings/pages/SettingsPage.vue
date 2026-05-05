@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {ImportJob} from '@app/types/importJob';
-import type {InviteCode} from '@app/types/inviteCode';
+import type {EmailInviteCodeRequest, InviteCode} from '@app/types/inviteCode';
 import type {FamilyMember} from '@app/types/profile';
 
 import {
@@ -16,6 +16,8 @@ import DangerButton from '@shared/components/DangerButton.vue';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
+import {useFormSubmit} from '@shared/composables/useFormSubmit';
+import {useValidationErrors} from '@shared/composables/useValidationErrors';
 import {isAxiosError} from 'axios';
 import {computed, onMounted, onUnmounted, ref} from 'vue';
 
@@ -135,6 +137,37 @@ const copyCode = async () => {
     await navigator.clipboard.writeText(inviteCode.value.code);
     codeCopied.value = true;
 };
+
+const recipientEmail = ref('');
+const recipientName = ref('');
+const inviteEmailSent = ref(false);
+const inviteEmailError = ref('');
+
+const inviteEmailValidation = useValidationErrors<'recipientEmail' | 'recipientName'>(familyHttpService);
+const {errors: inviteEmailErrors} = inviteEmailValidation;
+const {handleSubmit: handleInviteEmailSubmit, submitting: inviteEmailSubmitting} = useFormSubmit(inviteEmailValidation);
+
+const sendInviteByEmail = () =>
+    handleInviteEmailSubmit(async () => {
+        inviteEmailSent.value = false;
+        inviteEmailError.value = '';
+
+        try {
+            const body: EmailInviteCodeRequest = {recipientEmail: recipientEmail.value};
+            if (recipientName.value) body.recipientName = recipientName.value;
+
+            const response = await familyHttpService.postRequest<InviteCode>('/family/invite-code/email', body);
+            inviteCode.value = response.data;
+            inviteEmailSent.value = true;
+            recipientEmail.value = '';
+            recipientName.value = '';
+        } catch (error: unknown) {
+            const status = isAxiosError(error) ? error.response?.status : undefined;
+            if (status === 422) throw error;
+            inviteEmailError.value =
+                status === 429 ? t('settings.inviteEmailRateLimited').value : t('settings.inviteEmailError').value;
+        }
+    });
 
 const saveToken = async () => {
     tokenSaving.value = true;
@@ -316,6 +349,30 @@ onUnmounted(() => {
                 >
                     {{ t('settings.generateInviteCode').value }}
                 </PrimaryButton>
+
+                <form flex="~ col" gap="3" @submit.prevent="sendInviteByEmail">
+                    <TextInput
+                        v-model="recipientEmail"
+                        type="email"
+                        :label="t('settings.recipientEmail').value"
+                        :error="inviteEmailErrors.recipientEmail"
+                    />
+                    <TextInput
+                        v-model="recipientName"
+                        :label="t('settings.recipientName').value"
+                        :error="inviteEmailErrors.recipientName"
+                        :optional="true"
+                    />
+
+                    <p v-if="inviteEmailSent" text="baseplate-green" font="bold">
+                        {{ t('settings.inviteEmailSent').value }}
+                    </p>
+                    <p v-if="inviteEmailError" text="brick-red-dark" font="bold">{{ inviteEmailError }}</p>
+
+                    <PrimaryButton type="submit" :disabled="inviteEmailSubmitting" :sound-service="familySoundService">
+                        {{ t('settings.sendInviteByEmail').value }}
+                    </PrimaryButton>
+                </form>
             </section>
 
             <hr v-if="isHead" border="t-3 [var(--brick-border-color)]" />

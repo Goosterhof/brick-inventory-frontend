@@ -8,14 +8,16 @@ const {createMockAxios, createMockFsHelpers, createMockStringTs, createMockFamil
     () => import('../../../../../../helpers'),
 );
 
-const {mockRegister, mockGoToRoute} = vi.hoisted(() => ({
+const {mockRegister, mockGoToRoute, routeQuery} = vi.hoisted(() => ({
     mockRegister: vi.fn<() => Promise<void>>(),
     mockGoToRoute: vi.fn<() => Promise<void>>(),
+    routeQuery: {value: {} as Record<string, unknown>},
 }));
 
 vi.mock('axios', () => createMockAxios());
 vi.mock('string-ts', () => createMockStringTs());
 vi.mock('@script-development/fs-helpers', () => createMockFsHelpers());
+vi.mock('vue-router', () => ({useRoute: () => ({query: routeQuery.value})}));
 vi.mock('@app/services', () =>
     createMockFamilyServices({
         familyAuthService: {register: mockRegister},
@@ -26,6 +28,7 @@ vi.mock('@app/services', () =>
 describe('RegisterPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        routeQuery.value = {};
     });
 
     it('should render all form fields', () => {
@@ -178,5 +181,47 @@ describe('RegisterPage', () => {
 
         // Assert
         expect(wrapper.find('h1').text()).toBe('auth.createAccount');
+    });
+
+    describe('invite-code query param', () => {
+        it('should pre-fill the inviteCode field from ?invite={code}', () => {
+            // Arrange
+            routeQuery.value = {invite: 'BRICK-ABCD'};
+
+            // Act
+            const wrapper = shallowMount(RegisterPage);
+
+            // Assert
+            const inviteCodeInput = wrapper
+                .findAllComponents(TextInput)
+                .find((i) => i.props('label') === 'auth.inviteCode');
+            expect(inviteCodeInput?.props('modelValue')).toBe('BRICK-ABCD');
+        });
+
+        it('should leave the inviteCode field empty when no query is present', () => {
+            // Arrange — beforeEach already resets routeQuery to {}
+            // Act
+            const wrapper = shallowMount(RegisterPage);
+
+            // Assert
+            const inviteCodeInput = wrapper
+                .findAllComponents(TextInput)
+                .find((i) => i.props('label') === 'auth.inviteCode');
+            expect(inviteCodeInput?.props('modelValue')).toBe('');
+        });
+
+        it('should leave the inviteCode field empty when the query is array-shaped', () => {
+            // Arrange — Vue Router emits string[] for ?invite=A&invite=B
+            routeQuery.value = {invite: ['A', 'B']};
+
+            // Act
+            const wrapper = shallowMount(RegisterPage);
+
+            // Assert
+            const inviteCodeInput = wrapper
+                .findAllComponents(TextInput)
+                .find((i) => i.props('label') === 'auth.inviteCode');
+            expect(inviteCodeInput?.props('modelValue')).toBe('');
+        });
     });
 });
