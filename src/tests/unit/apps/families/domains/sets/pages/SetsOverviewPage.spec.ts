@@ -363,6 +363,53 @@ describe('SetsOverviewPage', () => {
             expect(wrapper.text()).toContain('Titanic');
         });
 
+        it('should render filter chips for all 6 statuses including in_storage', async () => {
+            // Arrange
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Assert
+            const chips = wrapper.findAllComponents({name: 'FilterChip'});
+            expect(chips).toHaveLength(6);
+            expect(chips.map((c) => c.text())).toContain('sets.inStorage');
+        });
+
+        it('should filter sets by in_storage status', async () => {
+            // Arrange
+            const inStorageSet = {
+                id: 3,
+                setId: 30,
+                setNum: '42110-1',
+                quantity: 1,
+                status: 'in_storage' as const,
+                purchaseDate: null,
+                notes: null,
+                set: {
+                    id: 30,
+                    setNum: '42110-1',
+                    name: 'Land Rover Defender',
+                    year: 2019,
+                    theme: 'Technic',
+                    numParts: 2573,
+                    imageUrl: null,
+                },
+            };
+            mockAllItems.value = [mockAdaptedSet, inStorageSet];
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Act — click "in_storage" status filter chip
+            const inStorageChip = wrapper
+                .findAllComponents({name: 'FilterChip'})
+                .find((chip) => chip.text() === 'sets.inStorage');
+            await inStorageChip?.trigger('click');
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.text()).toContain('Land Rover Defender');
+            expect(wrapper.text()).not.toContain('Millennium Falcon');
+        });
+
         it('should show no results when search matches nothing', async () => {
             // Arrange
             mockAllItems.value = [mockAdaptedSet];

@@ -281,6 +281,36 @@ describe('SetDetailPage', () => {
         expect(mockPatch).not.toHaveBeenCalled();
     });
 
+    it('should render in_storage as a status button option', async () => {
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+
+        // Act
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Assert
+        const statusButtons = wrapper.findAll('button').filter((btn) => btn.text() !== '');
+        const inStorageButton = statusButtons.find((btn) => btn.text() === 'sets.inStorage');
+        expect(inStorageButton?.exists()).toBe(true);
+    });
+
+    it('should update status to in_storage when the in_storage button is clicked', async () => {
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockPatch.mockResolvedValue({});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Act
+        const inStorageButton = wrapper.findAll('button').find((btn) => btn.text() === 'sets.inStorage');
+        await inStorageButton?.trigger('click');
+        await flushPromises();
+
+        // Assert
+        expect(mockPatch).toHaveBeenCalledWith({status: 'in_storage'});
+    });
+
     it('should show load parts button initially', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());

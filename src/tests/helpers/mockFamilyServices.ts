@@ -62,6 +62,7 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
             goToEditPage: vi.fn<() => Promise<void>>(),
             goToShowPage: vi.fn<() => Promise<void>>(),
             goBack: vi.fn<() => void>(),
+            currentRouteRef: ref({name: '', path: '', query: {} as Record<string, unknown>}),
         },
         familyTranslationService: {t: (key: string) => ({value: key}), locale: {value: 'en'}},
         familyLoadingService: {},
