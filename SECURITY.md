@@ -24,7 +24,7 @@ The frontend has no server-side surface; the dominant threat axes for this codeb
 - **Authentication-flow handling** between the SPA and the backend (cookie-based sessions; the SPA does not store tokens client-side).
 - **Build-time configuration leaks** through environment variables that end up in the client bundle.
 
-Vulnerabilities in the **backend API** itself should be reported against the [`Goosterhof/lego-storage`](https://github.com/Goosterhof/lego-storage) repository directly.
+Vulnerabilities in the **backend API** itself should be reported against the [`Goosterhof/brick-inventory-backend`](https://github.com/Goosterhof/brick-inventory-backend) repository directly.
 
 ## Response Timeline
 

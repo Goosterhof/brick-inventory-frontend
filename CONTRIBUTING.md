@@ -1,4 +1,4 @@
-# Contributing to Lego Storage Frontend
+# Contributing to Brick Inventory Frontend
 
 Thank you for your interest in contributing! This guide will help you get started.
 
@@ -7,8 +7,8 @@ Thank you for your interest in contributing! This guide will help you get starte
 1. **Fork and clone the repository**
 
     ```bash
-    git clone https://github.com/YOUR_USERNAME/lego-storage-frontend.git
-    cd lego-storage-frontend
+    git clone https://github.com/YOUR_USERNAME/brick-inventory-frontend.git
+    cd brick-inventory-frontend
     ```
 
 2. **Install dependencies**

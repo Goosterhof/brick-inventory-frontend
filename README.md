@@ -1,8 +1,8 @@
-# Lego Storage Frontend
+# Brick Inventory Frontend
 
 A Vue 3 multi-app monorepo for managing LEGO brick inventory. Built with TypeScript, Vite, and modern tooling.
 
-This repository is the **frontend SPA** ("the Plate") — one of three repositories in the project. The companion repositories are the [backend API (`Goosterhof/lego-storage`)](https://github.com/Goosterhof/lego-storage) and the [orchestrator (`Goosterhof/brick-inventory-orchestrator`)](https://github.com/Goosterhof/brick-inventory-orchestrator) which ties them together via Docker Compose for local development and Playwright E2E testing. This repo can be cloned and run standalone — the orchestrator is required only for end-to-end testing.
+This repository is the **frontend SPA** ("the Plate") — one of three repositories in the project. The companion repositories are the [backend API (`Goosterhof/brick-inventory-backend`)](https://github.com/Goosterhof/brick-inventory-backend) and the [orchestrator (`Goosterhof/brick-inventory-orchestrator`)](https://github.com/Goosterhof/brick-inventory-orchestrator) which ties them together via Docker Compose for local development and Playwright E2E testing. This repo can be cloned and run standalone — the orchestrator is required only for end-to-end testing.
 
 ## Features
 
@@ -34,8 +34,8 @@ This repository is the **frontend SPA** ("the Plate") — one of three repositor
 1. **Clone the repository**
 
     ```bash
-    git clone https://github.com/Goosterhof/lego-storage-frontend.git
-    cd lego-storage-frontend
+    git clone https://github.com/Goosterhof/brick-inventory-frontend.git
+    cd brick-inventory-frontend
     ```
 
 2. **Install dependencies**
