@@ -5,6 +5,15 @@
     "compilerOptions": {
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
 
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "isolatedModules": true,
+
         "paths": {
             "@/*": ["./src/*"],
             "@shared/*": ["./src/shared/*"],

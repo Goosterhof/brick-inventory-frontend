@@ -78,7 +78,7 @@ const projectedExtents = computed(() => {
 const studExtentTop = computed(() => projectedExtents.value.minY - STUD_HEIGHT);
 
 const viewBox = computed(() => {
-    const {minX, maxX, minY, maxY} = projectedExtents.value;
+    const {minX, maxX, maxY} = projectedExtents.value;
     // Reserve stud height above, shadow offset below-right.
     const pad = STROKE + STUD_HEIGHT;
     const x = minX - pad;
