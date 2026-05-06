@@ -26,7 +26,7 @@ Migrate the remaining 16 integration test files from the old holder-ref mock pat
 
 ### Not in This Set
 
-- Kendo integration tests (separate territory, separate campaign)
+- Sibling-territory integration tests (separate territory, separate campaign)
 - New integration tests for pages that don't have them yet
 - Changes to production source code
 - Changes to unit tests

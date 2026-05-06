@@ -40,7 +40,7 @@ Replace the local `adapter-store.ts`, `resource-adapter.ts`, `copy.ts` (deepCopy
 
 ### Not in This Set
 
-- Kendo migration — separate deployment
+- Sibling territory migration — separate deployment
 - Case conversion middleware changes — the existing middleware already handles snake/camel conversion before data reaches the store
 - `ensureRefValueExists` extraction — BIO-specific, stays local
 - `csv.ts` or other helpers — not in the package, stay local

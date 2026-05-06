@@ -28,7 +28,7 @@ Replace the current integration test mock pattern (4x `vi.mock()` with holder re
 ### Not in This Set
 
 - Migrating the other 16 integration tests (follow-up permit after pattern is proven)
-- Kendo integration tests (separate territory, separate campaign)
+- Sibling-territory integration tests (separate territory, separate campaign)
 - Reducing router mock (stays mocked — side-effect boundary)
 - Reducing loading service mock (stays mocked — controls async timing)
 - Changes to `@script-development/fs-http` package (the mock works around the encapsulated axios instance, not through it)

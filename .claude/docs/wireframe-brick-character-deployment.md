@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 **Created:** 2026-03-29
-**Author:** The Artisan (via War Room dispatch from the Mad Scientist's laboratory)
+**Author:** The Artisan (via War Room dispatch from a sovereign sister territory)
 **Permit:** `.claude/records/permits/2026-03-29-brick-character-deployment.md`
 
 ---

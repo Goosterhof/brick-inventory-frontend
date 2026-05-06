@@ -79,7 +79,7 @@ The Chaos Monkey audited the full Brick & Mortar frontend and scored it 7/10. Th
 
 ## Notes from the Issuer
 
-This permit comes from a Chaos Monkey autopsy run by the laboratory's General (the Mad Scientist). The CFO's rebuttal shaped the scope — the voice overhaul is phased (10 keys now, full sweep later if the pattern proves maintainable in two languages), the sound wiring includes a `silent` prop escape hatch, and the landing page scope is bounded to component addition rather than redesign.
+This permit comes from a Chaos Monkey autopsy run by a sovereign sister territory. The CFO's rebuttal shaped the scope — the voice overhaul is phased (10 keys now, full sweep later if the pattern proves maintainable in two languages), the sound wiring includes a `silent` prop escape hatch, and the landing page scope is bounded to component addition rather than redesign.
 
 The core thesis: the infrastructure for character already exists in this codebase. `LegoBrick.vue` is built and tested. The sound service synthesizes four distinct sounds. The Brand Voice specification in the Showcase demonstrates what voiced copy looks like. This permit is about _deploying_ what was built, not building new things. That makes it low-risk and high-impact.
 

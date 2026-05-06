@@ -10,7 +10,7 @@
 
 ## The Job
 
-Replace the local `src/shared/services/router/` service with `@script-development/fs-router`. The package was extracted from this codebase and kendo — the core API is identical. BIO-specific features (`dashboardRouteName`, `goToDashboard`, `from` query middleware) stay as a thin local wrapper.
+Replace the local `src/shared/services/router/` service with `@script-development/fs-router`. The package was extracted from this codebase and a sibling territory — the core API is identical. BIO-specific features (`dashboardRouteName`, `goToDashboard`, `from` query middleware) stay as a thin local wrapper.
 
 ## Scope
 
