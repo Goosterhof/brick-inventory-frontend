@@ -514,7 +514,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 6},
+            "churn": {"commits": 1, "linesChanged": 4},
             "dependencyDepth": 0
         },
         "LegoPlate": {
