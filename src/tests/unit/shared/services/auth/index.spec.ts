@@ -120,7 +120,7 @@ describe('auth service', () => {
             mock.onPost(`${baseURL}/login`, credentials).reply(401, {message: 'Invalid credentials'});
 
             // Act & Assert
-            await expect(authService.login(credentials)).rejects.toThrow();
+            await expect(authService.login(credentials)).rejects.toThrow(Error);
 
             mock.restore();
         });
@@ -286,7 +286,7 @@ describe('auth service', () => {
             mock.onGet(`${baseURL}/me`).reply(500);
 
             // Act & Assert
-            await expect(authService.checkIfLoggedIn()).rejects.toThrow();
+            await expect(authService.checkIfLoggedIn()).rejects.toThrow(Error);
 
             mock.restore();
         });

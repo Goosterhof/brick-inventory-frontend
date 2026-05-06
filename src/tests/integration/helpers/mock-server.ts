@@ -139,7 +139,7 @@ export const mockServer = {
     },
 
     /** Register a DELETE route. */
-    onDelete: (endpoint: string, responseData: unknown = undefined): void => {
+    onDelete: (endpoint: string, responseData?: unknown): void => {
         routes.DELETE.set(endpoint, responseData);
     },
 
