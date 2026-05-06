@@ -607,7 +607,7 @@ describe('CameraCapture', () => {
             // Assert
             const metadataCall = addEventListenerCalls.find((c) => c.event === 'loadedmetadata');
             expect(metadataCall).toBeDefined();
-            expect(metadataCall?.options).toEqual({once: true});
+            expect(metadataCall?.options).toStrictEqual({once: true});
             expect(wrapper.emitted('capture')).toBeUndefined();
         });
 

@@ -98,7 +98,7 @@ describe('useValidationErrors', () => {
 
         // Assert
         const vm = wrapper.vm as unknown as ReturnType<typeof useValidationErrors>;
-        expect(vm.errors).toEqual({name: 'Name is required', email: 'Email is invalid'});
+        expect(vm.errors).toStrictEqual({name: 'Name is required', email: 'Email is invalid'});
 
         wrapper.unmount();
     });
@@ -129,7 +129,7 @@ describe('useValidationErrors', () => {
 
         // Assert
         const vm = wrapper.vm as unknown as ReturnType<typeof useValidationErrors>;
-        expect(vm.errors).toEqual({
+        expect(vm.errors).toStrictEqual({
             firstName: 'First name is required',
             lastName: 'Last name is required',
             emailAddress: 'Invalid email',
@@ -160,7 +160,7 @@ describe('useValidationErrors', () => {
 
         // Assert
         const vm = wrapper.vm as unknown as ReturnType<typeof useValidationErrors>;
-        expect(vm.errors).toEqual({name: 'Name is required'});
+        expect(vm.errors).toStrictEqual({name: 'Name is required'});
 
         wrapper.unmount();
     });
@@ -185,7 +185,7 @@ describe('useValidationErrors', () => {
 
         // Assert
         const vm = wrapper.vm as unknown as ReturnType<typeof useValidationErrors>;
-        expect(vm.errors).toEqual({});
+        expect(vm.errors).toStrictEqual({});
 
         wrapper.unmount();
     });
@@ -207,13 +207,13 @@ describe('useValidationErrors', () => {
         capturedMiddleware?.(error);
 
         const vm = wrapper.vm as unknown as ReturnType<typeof useValidationErrors>;
-        expect(vm.errors).toEqual({name: 'Name is required'});
+        expect(vm.errors).toStrictEqual({name: 'Name is required'});
 
         // Act
         vm.clearErrors();
 
         // Assert
-        expect(vm.errors).toEqual({});
+        expect(vm.errors).toStrictEqual({});
 
         wrapper.unmount();
     });
@@ -238,7 +238,7 @@ describe('useValidationErrors', () => {
 
         // Assert
         const vm = wrapper.vm as unknown as ReturnType<typeof useValidationErrors>;
-        expect(vm.errors).toEqual({});
+        expect(vm.errors).toStrictEqual({});
 
         wrapper.unmount();
     });

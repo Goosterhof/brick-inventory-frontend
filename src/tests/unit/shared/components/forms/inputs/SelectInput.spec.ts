@@ -53,7 +53,7 @@ describe('SelectInput', () => {
         // Assert
         const emitted = wrapper.emitted('update:modelValue');
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0]).toEqual(['b']);
+        expect(emitted?.[0]).toStrictEqual(['b']);
     });
 
     it('should be required by default', () => {

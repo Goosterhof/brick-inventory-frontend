@@ -18,7 +18,7 @@ describe('toCamelCaseTyped', () => {
         const result = toCamelCaseTyped<TestItem>(snakeCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userName: 'test', createdAt: '2024-01-01'});
+        expect(result).toStrictEqual({id: 1, userName: 'test', createdAt: '2024-01-01'});
     });
 
     it('should handle already camelCase data', () => {
@@ -29,7 +29,7 @@ describe('toCamelCaseTyped', () => {
         const result = toCamelCaseTyped<TestItem>(camelCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userName: 'test', createdAt: '2024-01-01'});
+        expect(result).toStrictEqual({id: 1, userName: 'test', createdAt: '2024-01-01'});
     });
 
     it('should handle nested snake_case objects', () => {
@@ -44,7 +44,7 @@ describe('toCamelCaseTyped', () => {
         const result = toCamelCaseTyped<NestedItem>(snakeCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userProfile: {firstName: 'John', lastName: 'Doe'}});
+        expect(result).toStrictEqual({id: 1, userProfile: {firstName: 'John', lastName: 'Doe'}});
     });
 
     it('should handle arrays with snake_case objects', () => {
@@ -59,7 +59,7 @@ describe('toCamelCaseTyped', () => {
         const result = toCamelCaseTyped<ItemWithArray>(snakeCase);
 
         // Assert
-        expect(result).toEqual({id: 1, userTags: [{tagName: 'admin'}, {tagName: 'user'}]});
+        expect(result).toStrictEqual({id: 1, userTags: [{tagName: 'admin'}, {tagName: 'user'}]});
     });
 
     it('should preserve primitive values', () => {
@@ -76,7 +76,7 @@ describe('toCamelCaseTyped', () => {
         const result = toCamelCaseTyped<ItemWithPrimitives>(snakeCase);
 
         // Assert
-        expect(result).toEqual({id: 1, isActive: true, score: 42, description: null});
+        expect(result).toStrictEqual({id: 1, isActive: true, score: 42, description: null});
     });
 });
 
@@ -89,7 +89,7 @@ describe('deepSnakeKeys', () => {
         const result = deepSnakeKeys(camelCase);
 
         // Assert
-        expect(result).toEqual({user_name: 'test', created_at: '2024-01-01'});
+        expect(result).toStrictEqual({user_name: 'test', created_at: '2024-01-01'});
     });
 
     it('should handle nested camelCase objects', () => {
@@ -100,7 +100,7 @@ describe('deepSnakeKeys', () => {
         const result = deepSnakeKeys(camelCase);
 
         // Assert
-        expect(result).toEqual({user_profile: {first_name: 'John', last_name: 'Doe'}});
+        expect(result).toStrictEqual({user_profile: {first_name: 'John', last_name: 'Doe'}});
     });
 
     it('should handle already snake_case data', () => {
@@ -111,6 +111,6 @@ describe('deepSnakeKeys', () => {
         const result = deepSnakeKeys(snakeCase);
 
         // Assert
-        expect(result).toEqual({user_name: 'test', created_at: '2024-01-01'});
+        expect(result).toStrictEqual({user_name: 'test', created_at: '2024-01-01'});
     });
 });

@@ -171,7 +171,7 @@ describe('PartsMissingPage — integration', () => {
 
         // Default sort: shortfall descending — Brick 2x4 (9) first
         const namesByShortfall = wrapper.findAllComponents(PartListItem).map((i) => i.props('name'));
-        expect(namesByShortfall).toEqual(['Brick 2x4', 'Axle 2']);
+        expect(namesByShortfall).toStrictEqual(['Brick 2x4', 'Axle 2']);
 
         const nameChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === 'Part name');
         await nameChip?.find('button').trigger('click');
@@ -179,7 +179,7 @@ describe('PartsMissingPage — integration', () => {
 
         // After switching to name sort: Axle 2 < Brick 2x4 alphabetically
         const namesByName = wrapper.findAllComponents(PartListItem).map((i) => i.props('name'));
-        expect(namesByName).toEqual(['Axle 2', 'Brick 2x4']);
+        expect(namesByName).toStrictEqual(['Axle 2', 'Brick 2x4']);
     });
 
     /**

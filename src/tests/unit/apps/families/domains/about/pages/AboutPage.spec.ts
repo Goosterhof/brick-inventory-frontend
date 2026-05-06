@@ -69,7 +69,7 @@ describe('AboutPage', () => {
 
         const bricks = wrapper.findAllComponents(LegoBrick);
         const demoColors = bricks.slice(0, 4).map((brick) => brick.props('color'));
-        expect(demoColors).toEqual(['#DC2626', '#1D4ED8', '#EAB308', '#16A34A']);
+        expect(demoColors).toStrictEqual(['#DC2626', '#1D4ED8', '#EAB308', '#16A34A']);
     });
 
     it('should render bricks with correct dimensions in the demo section', () => {
@@ -79,7 +79,7 @@ describe('AboutPage', () => {
         const demoDimensions = bricks
             .slice(0, 4)
             .map((brick) => ({columns: brick.props('columns'), rows: brick.props('rows')}));
-        expect(demoDimensions).toEqual([
+        expect(demoDimensions).toStrictEqual([
             {columns: 2, rows: 2},
             {columns: 1, rows: 1},
             {columns: 2, rows: 3},
@@ -125,7 +125,7 @@ describe('AboutPage', () => {
 
         const svgBricks = wrapper.findAllComponents(LegoBrickSvg);
         const demoColors = svgBricks.slice(0, 4).map((brick) => brick.props('color'));
-        expect(demoColors).toEqual(['#DC2626', '#1D4ED8', '#EAB308', '#16A34A']);
+        expect(demoColors).toStrictEqual(['#DC2626', '#1D4ED8', '#EAB308', '#16A34A']);
     });
 
     it('should render SVG bricks with correct dimensions in the demo section', () => {
@@ -135,7 +135,7 @@ describe('AboutPage', () => {
         const dimensions = svgBricks
             .slice(0, 4)
             .map((brick) => ({columns: brick.props('columns'), rows: brick.props('rows')}));
-        expect(dimensions).toEqual([
+        expect(dimensions).toStrictEqual([
             {columns: 2, rows: 2},
             {columns: 1, rows: 1},
             {columns: 2, rows: 3},
@@ -190,7 +190,7 @@ describe('AboutPage', () => {
         const slopes = wrapper.findAllComponents(LegoSlope);
         expect(slopes).toHaveLength(2);
         const colors = slopes.map((s) => s.props('color'));
-        expect(colors).toEqual(['#EAB308', '#EAB308']);
+        expect(colors).toStrictEqual(['#EAB308', '#EAB308']);
     });
 
     it('should mirror the second slope to form a roof peak', () => {
@@ -198,7 +198,7 @@ describe('AboutPage', () => {
 
         const slopes = wrapper.findAllComponents(LegoSlope);
         const styles = slopes.map((s) => s.attributes('style') ?? '');
-        expect(styles).toEqual([expect.not.stringContaining('scaleX'), expect.stringContaining('scaleX(-1)')]);
+        expect(styles).toStrictEqual([expect.not.stringContaining('scaleX'), expect.stringContaining('scaleX(-1)')]);
     });
 
     it('should render a LegoTile as a window', () => {
@@ -206,7 +206,7 @@ describe('AboutPage', () => {
 
         const tiles = wrapper.findAllComponents(LegoTile);
         expect(tiles).toHaveLength(1);
-        expect(tiles.map((t) => t.props('color'))).toEqual(['#1D4ED8']);
+        expect(tiles.map((t) => t.props('color'))).toStrictEqual(['#1D4ED8']);
     });
 
     it('should render a LegoArch as a door', () => {
@@ -214,7 +214,7 @@ describe('AboutPage', () => {
 
         const arches = wrapper.findAllComponents(LegoArch);
         expect(arches).toHaveLength(1);
-        expect(arches.map((a) => a.props('color'))).toEqual(['#DC2626']);
+        expect(arches.map((a) => a.props('color'))).toStrictEqual(['#DC2626']);
     });
 
     it('should render a LegoRound as a tree top', () => {
@@ -222,7 +222,7 @@ describe('AboutPage', () => {
 
         const rounds = wrapper.findAllComponents(LegoRound);
         expect(rounds).toHaveLength(1);
-        expect(rounds.map((r) => r.props('color'))).toEqual(['#16A34A']);
+        expect(rounds.map((r) => r.props('color'))).toStrictEqual(['#16A34A']);
     });
 
     it('should render a LegoPlate as ground', () => {
@@ -230,7 +230,7 @@ describe('AboutPage', () => {
 
         const plates = wrapper.findAllComponents(LegoPlate);
         expect(plates).toHaveLength(1);
-        expect(plates.map((p) => p.props('color'))).toEqual(['#16A34A']);
+        expect(plates.map((p) => p.props('color'))).toStrictEqual(['#16A34A']);
     });
 
     it('should render a LegoTechnicBeam in the ground row', () => {
@@ -238,7 +238,7 @@ describe('AboutPage', () => {
 
         const beams = wrapper.findAllComponents(LegoTechnicBeam);
         expect(beams).toHaveLength(1);
-        expect(beams.map((b) => b.props('color'))).toEqual(['#6B7280']);
+        expect(beams.map((b) => b.props('color'))).toStrictEqual(['#6B7280']);
     });
 
     it('should render a LegoWedge in the ground row', () => {
@@ -246,7 +246,7 @@ describe('AboutPage', () => {
 
         const wedges = wrapper.findAllComponents(LegoWedge);
         expect(wedges).toHaveLength(1);
-        expect(wedges.map((w) => w.props('color'))).toEqual(['#6B7280']);
+        expect(wedges.map((w) => w.props('color'))).toStrictEqual(['#6B7280']);
     });
 
     it('should disable shadow on all HTML diorama pieces', () => {
@@ -274,7 +274,7 @@ describe('AboutPage', () => {
         const dioramaBricks = bricks
             .slice(4)
             .map((b) => ({color: b.props('color'), columns: b.props('columns'), rows: b.props('rows')}));
-        expect(dioramaBricks).toEqual([
+        expect(dioramaBricks).toStrictEqual([
             {color: '#DC2626', columns: 1, rows: 1},
             {color: '#DC2626', columns: 1, rows: 1},
             {color: '#92400E', columns: 1, rows: 2},
@@ -287,7 +287,7 @@ describe('AboutPage', () => {
         const slopes = wrapper.findAllComponents(LegoSlopeSvg);
         expect(slopes).toHaveLength(2);
         const colors = slopes.map((s) => s.props('color'));
-        expect(colors).toEqual(['#EAB308', '#EAB308']);
+        expect(colors).toStrictEqual(['#EAB308', '#EAB308']);
     });
 
     it('should mirror the second SVG slope via its wrapper', () => {
@@ -296,7 +296,7 @@ describe('AboutPage', () => {
         const svgDiorama = wrapper.find('[data-diorama-svg]');
         const slopeWrappers = svgDiorama.findAll("[w='\\[75px\\]']");
         const styles = slopeWrappers.map((w) => w.attributes('style') ?? '');
-        expect(styles).toEqual([expect.not.stringContaining('scaleX'), expect.stringContaining('scaleX(-1)')]);
+        expect(styles).toStrictEqual([expect.not.stringContaining('scaleX'), expect.stringContaining('scaleX(-1)')]);
     });
 
     it('should render a LegoTileSvg as a window', () => {
@@ -304,7 +304,7 @@ describe('AboutPage', () => {
 
         const tiles = wrapper.findAllComponents(LegoTileSvg);
         expect(tiles).toHaveLength(1);
-        expect(tiles.map((t) => t.props('color'))).toEqual(['#1D4ED8']);
+        expect(tiles.map((t) => t.props('color'))).toStrictEqual(['#1D4ED8']);
     });
 
     it('should render a LegoArchSvg as a door', () => {
@@ -312,7 +312,7 @@ describe('AboutPage', () => {
 
         const arches = wrapper.findAllComponents(LegoArchSvg);
         expect(arches).toHaveLength(1);
-        expect(arches.map((a) => a.props('color'))).toEqual(['#DC2626']);
+        expect(arches.map((a) => a.props('color'))).toStrictEqual(['#DC2626']);
     });
 
     it('should render a LegoRoundSvg as a tree top', () => {
@@ -320,7 +320,7 @@ describe('AboutPage', () => {
 
         const rounds = wrapper.findAllComponents(LegoRoundSvg);
         expect(rounds).toHaveLength(1);
-        expect(rounds.map((r) => r.props('color'))).toEqual(['#16A34A']);
+        expect(rounds.map((r) => r.props('color'))).toStrictEqual(['#16A34A']);
     });
 
     it('should render a LegoPlateSvg as ground', () => {
@@ -328,7 +328,7 @@ describe('AboutPage', () => {
 
         const plates = wrapper.findAllComponents(LegoPlateSvg);
         expect(plates).toHaveLength(1);
-        expect(plates.map((p) => p.props('color'))).toEqual(['#16A34A']);
+        expect(plates.map((p) => p.props('color'))).toStrictEqual(['#16A34A']);
     });
 
     it('should render a LegoTechnicBeamSvg in the ground row', () => {
@@ -336,7 +336,7 @@ describe('AboutPage', () => {
 
         const beams = wrapper.findAllComponents(LegoTechnicBeamSvg);
         expect(beams).toHaveLength(1);
-        expect(beams.map((b) => b.props('color'))).toEqual(['#6B7280']);
+        expect(beams.map((b) => b.props('color'))).toStrictEqual(['#6B7280']);
     });
 
     it('should render a LegoWedgeSvg in the ground row', () => {
@@ -344,7 +344,7 @@ describe('AboutPage', () => {
 
         const wedges = wrapper.findAllComponents(LegoWedgeSvg);
         expect(wedges).toHaveLength(1);
-        expect(wedges.map((w) => w.props('color'))).toEqual(['#6B7280']);
+        expect(wedges.map((w) => w.props('color'))).toStrictEqual(['#6B7280']);
     });
 
     it('should render SVG diorama BrickSvg pieces with correct colors and dimensions', () => {
@@ -355,7 +355,7 @@ describe('AboutPage', () => {
         const dioramaBricks = svgBricks
             .slice(4)
             .map((b) => ({color: b.props('color'), columns: b.props('columns'), rows: b.props('rows')}));
-        expect(dioramaBricks).toEqual([
+        expect(dioramaBricks).toStrictEqual([
             {color: '#DC2626', columns: 1, rows: 1},
             {color: '#DC2626', columns: 1, rows: 1},
             {color: '#92400E', columns: 1, rows: 2},

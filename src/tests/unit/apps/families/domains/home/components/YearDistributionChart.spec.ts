@@ -16,7 +16,7 @@ describe('YearDistributionChart', () => {
 
         // Assert
         const yearLabels = wrapper.findAll('span').filter((s) => /^\d{4}$/.test(s.text()));
-        expect(yearLabels.map((s) => s.text())).toEqual(['2015', '2018', '2020']);
+        expect(yearLabels.map((s) => s.text())).toStrictEqual(['2015', '2018', '2020']);
     });
 
     it('should render count labels for each year', () => {
@@ -96,7 +96,7 @@ describe('YearDistributionChart', () => {
 
         // Assert
         const yearLabels = wrapper.findAll('span').filter((s) => /^\d{4}$/.test(s.text()));
-        expect(yearLabels.map((s) => s.text())).toEqual(['1990', '2000', '2010', '2023']);
+        expect(yearLabels.map((s) => s.text())).toStrictEqual(['1990', '2000', '2010', '2023']);
     });
 
     it('should round bar width percentages', () => {

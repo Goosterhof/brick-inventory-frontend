@@ -44,7 +44,14 @@ describe('RegisterPage — integration', () => {
 
         const inputs = wrapper.findAllComponents(TextInput);
         const labels = inputs.map((i) => i.props('label'));
-        expect(labels).toEqual(['Invite Code', 'Family Name', 'Name', 'Email', 'Password', 'Password Confirmation']);
+        expect(labels).toStrictEqual([
+            'Invite Code',
+            'Family Name',
+            'Name',
+            'Email',
+            'Password',
+            'Password Confirmation',
+        ]);
     });
 
     it('marks invite code as optional, all others as required', () => {
@@ -52,7 +59,7 @@ describe('RegisterPage — integration', () => {
 
         const inputs = wrapper.findAllComponents(TextInput);
         const optionals = inputs.map((i) => i.props('optional'));
-        expect(optionals).toEqual([true, false, false, false, false, false]);
+        expect(optionals).toStrictEqual([true, false, false, false, false, false]);
     });
 
     it('renders password fields with password type', () => {
@@ -60,7 +67,7 @@ describe('RegisterPage — integration', () => {
 
         const inputs = wrapper.findAllComponents(TextInput);
         const types = inputs.map((i) => i.props('type'));
-        expect(types).toEqual(['text', 'text', 'text', 'email', 'password', 'password']);
+        expect(types).toStrictEqual(['text', 'text', 'text', 'email', 'password', 'password']);
     });
 
     it('flows form submission through real components', async () => {

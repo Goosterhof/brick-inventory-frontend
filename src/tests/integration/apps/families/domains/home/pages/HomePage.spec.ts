@@ -58,7 +58,7 @@ describe('HomePage — integration', () => {
         expect(statCards).toHaveLength(3);
 
         const labels = statCards.map((c) => c.props('label'));
-        expect(labels).toEqual(['Sets', 'Storage locations', 'Stored parts']);
+        expect(labels).toStrictEqual(['Sets', 'Storage locations', 'Stored parts']);
     });
 
     it('renders quick action NavLinks that delegate navigation to router service', async () => {

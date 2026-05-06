@@ -56,7 +56,7 @@ describe('AboutPage — integration', () => {
             shadow: b.props('shadow'),
         }));
 
-        expect(props).toEqual([
+        expect(props).toStrictEqual([
             {color: '#DC2626', columns: 2, rows: 2, shadow: false},
             {color: '#1D4ED8', columns: 1, rows: 1, shadow: false},
             {color: '#EAB308', columns: 2, rows: 3, shadow: false},
@@ -145,7 +145,7 @@ describe('AboutPage — integration', () => {
                 rows: b.props('rows'),
                 shadow: b.props('shadow'),
             }));
-        expect(dioramaBricks).toEqual([
+        expect(dioramaBricks).toStrictEqual([
             {color: '#DC2626', columns: 1, rows: 1, shadow: false},
             {color: '#DC2626', columns: 1, rows: 1, shadow: false},
             {color: '#92400E', columns: 1, rows: 2, shadow: false},

@@ -404,7 +404,7 @@ describe('PartsPage', () => {
 
             // Assert
             const names = wrapper.findAllComponents(PartListItem).map((i) => i.props('name'));
-            expect(names).toEqual(['Brick 2 x 3', 'Brick 2 x 4']);
+            expect(names).toStrictEqual(['Brick 2 x 3', 'Brick 2 x 4']);
         });
 
         it('should sort by quantity descending when quantity chip is clicked', async () => {
@@ -420,7 +420,7 @@ describe('PartsPage', () => {
 
             // Assert
             const quantities = wrapper.findAllComponents(PartListItem).map((i) => i.props('quantity'));
-            expect(quantities).toEqual([12, 3]);
+            expect(quantities).toStrictEqual([12, 3]);
         });
 
         it('should sort by color name when color sort chip is clicked', async () => {
@@ -436,7 +436,7 @@ describe('PartsPage', () => {
 
             // Assert
             const colors = wrapper.findAllComponents(PartListItem).map((i) => i.props('colorName'));
-            expect(colors).toEqual(['Blue', 'Red']);
+            expect(colors).toStrictEqual(['Blue', 'Red']);
         });
 
         it('should mark the active sort chip', async () => {
