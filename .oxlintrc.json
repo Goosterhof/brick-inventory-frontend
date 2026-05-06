@@ -1,8 +1,9 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
     "plugins": ["typescript", "import", "unicorn", "promise", "vue", "vitest", "jsx-a11y"],
-    "env": {"browser": true, "es2024": true},
-    "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "node_modules/**", "scripts/**"],
+    "categories": {"correctness": "error"},
+    "env": {"builtin": true, "browser": true, "es2024": true},
+    "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "node_modules/**", "public/**", "scripts/**"],
     "rules": {
         // Core rules
         "no-console": "error",
@@ -17,7 +18,7 @@
         "no-self-compare": "error",
         "no-template-curly-in-string": "error",
         "no-unreachable": "error",
-        "no-unsafe-negation": "error",
+        // no-unsafe-negation: covered by correctness category
         // no-return-await: removed from oxlint (ESLint deprecated it in v8.46); superseded by typescript/return-await (type-aware)
         "no-throw-literal": "error",
         "no-unneeded-ternary": "warn",
@@ -182,7 +183,12 @@
         "vitest/no-conditional-tests": "error",
         "vitest/no-import-node-test": "error",
         "vitest/consistent-test-filename": ["warn", {"pattern": ".*\\.spec\\.ts$"}],
-        "vitest/prefer-to-be-object": "warn"
+        "vitest/prefer-to-be-object": "warn",
+        // Activated by `categories.correctness: error` but disabled with rationale (both jest/* and vitest/* spellings — oxlint fires both from the correctness category):
+        "vitest/valid-expect": "off", // BIO uses Vitest's documented expect(value, message) API for richer arch-test failure diagnostics; rule is jest-shaped and rejects the second argument
+        "jest/valid-expect": "off", // see vitest/valid-expect note
+        "vitest/expect-expect": "off", // BIO integration tests intentionally smoke-test composition without explicit assertions (e.g., "navigates back via BackButton click" — see in-test comment)
+        "jest/expect-expect": "off" // see vitest/expect-expect note
     },
     "overrides": [
         {"files": ["*.vue"], "rules": {"no-undef": "off"}},

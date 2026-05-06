@@ -341,6 +341,30 @@ Not adopted from canonical: `target/module/lib/types/jsx/moduleResolution` (sove
 
 ---
 
+## Linting Standards — The Building Inspector
+
+The lint config is `.oxlintrc.json`, mostly aligned with `war-room/templates/oxlintrc.json` (canonical doctrine sourced from fs-packages). Drift protection is on: `categories.correctness: error` ensures rule additions/removals from oxlint upstream land as a deliberate diff rather than silently activate or deactivate.
+
+**BIO deviations from the canonical, all per-territory overrides allowed by the templates README:**
+
+- **Stricter than canonical:** `no-console: "error"` (canonical: `"warn"`) and `max-lines-per-function: "error"` (canonical: `"warn"`).
+- **Filename pattern:** `vitest/consistent-test-filename` enforces `.spec.ts$` only (canonical accepts `(spec|test).ts$`).
+- **Path-alias enforcement:** the `no-restricted-imports` doctrine across `src/shared/`, `src/apps/families/`, `src/apps/admin/`, and `src/apps/*/domains/` is BIO-shaped (`@app/`/`@shared/` aliases, app-isolation, no cross-domain imports). The canonical defers all `no-restricted-imports` to territories.
+- **Default-export ban for TS:** `import/no-default-export: "error"` for `src/**/*.ts` (Vue components keep defaults; TS files require named exports).
+- **`scripts/`** added to `ignorePatterns` (BIO has a scripts/ dir for component registry + Vue-conventions linter; canonical has no equivalent).
+- **Singleton exemption:** `src/shared/services/storage.ts` exempts `no-console` and `no-restricted-globals` (the storage service IS the canonical localStorage wrapper — exempted from its own rule).
+
+**Disabled correctness-category rules with rationale:**
+
+- `vitest/valid-expect` + `jest/valid-expect` — BIO uses Vitest's documented `expect(value, message)` API for richer arch-test failure diagnostics; both rule spellings are jest-shaped and reject the second argument. Oxlint fires both when `categories.correctness: error` is set.
+- `vitest/expect-expect` + `jest/expect-expect` — BIO integration tests intentionally smoke-test composition without explicit assertions (e.g., "navigates back via BackButton click" — the in-test comment makes this explicit).
+
+**Deferred decision (not adopted):** the canonical's full 9-rule test-file vitest expansion (`prefer-strict-equal`, `prefer-to-be`, `prefer-to-contain`, `no-disabled-tests`, `no-focused-tests`, `no-identical-title`, `no-conditional-expect`, `valid-describe-callback`, `no-commented-out-tests`). `prefer-strict-equal` has behavioral nuance vs `toEqual` (undefined-key tolerance) that needs per-call-site review. Revisit after architecture-test refactor or when the test suite shape stabilizes.
+
+Adopted 2026-05-06 alongside the tsconfig partial adoption. War-room precedent commit recorded in `templates/README.md`.
+
+---
+
 ## Complexity Limits — Structural Load Ratings
 
 The building inspectors enforce these maximums:
