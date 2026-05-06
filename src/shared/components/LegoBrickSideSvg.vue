@@ -27,9 +27,7 @@ const viewBox = computed(
 const studs = computed(() => {
     const result: Array<{x: number}> = [];
     for (let col = 0; col < columns; col++) {
-        result.push({
-            x: STROKE / 2 + PAD + col * CELL + (CELL - STUD_WIDTH) / 2,
-        });
+        result.push({x: STROKE / 2 + PAD + col * CELL + (CELL - STUD_WIDTH) / 2});
     }
     return result;
 });

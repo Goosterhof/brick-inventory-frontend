@@ -32,10 +32,7 @@ const studs = computed(() => {
     const result: Array<{x: number; y: number}> = [];
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
-            result.push({
-                x: col * CELL + CELL / 2,
-                y: row * CELL + CELL / 2,
-            });
+            result.push({x: col * CELL + CELL / 2, y: row * CELL + CELL / 2});
         }
     }
     return result;

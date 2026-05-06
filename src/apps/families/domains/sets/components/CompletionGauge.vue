@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue';
 
-const {percentage, unknownLabel} = defineProps<{
-    percentage: number | null;
-    unknownLabel: string;
-}>();
+const {percentage, unknownLabel} = defineProps<{percentage: number | null; unknownLabel: string}>();
 
 type GaugeState = 'unknown' | 'empty' | 'partial' | 'complete';
 
