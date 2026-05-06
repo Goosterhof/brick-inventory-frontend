@@ -324,6 +324,23 @@ These are enforced by oxfmt. The config is `.oxfmtrc.json`, adopted byte-for-byt
 
 ---
 
+## TypeScript Strictness — Structural Engineering Standards
+
+The structure is project-references — `tsconfig.json` orchestrates `tsconfig.app.json` (extends `@vue/tsconfig/tsconfig.dom.json`), `tsconfig.node.json`, and `tsconfig.vitest.json` (extends app). The `@vue/tsconfig` base is sovereign — it carries `strict`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`, `useDefineForClassFields`, `jsxImportSource: vue`, and other Vue-aware defaults that a single-file canonical would clobber.
+
+War-room canonical strictness is layered onto `tsconfig.app.json` — partial adoption from `war-room/templates/tsconfig.json` on 2026-05-06 (no permit; sub-threshold config tweak per CaptainHook gate rules). The base shape is **not** adopted because it's out of scope for canonical replacement (see `war-room/templates/README.md`). The strict-mode flags layered on top:
+
+- `noImplicitReturns`
+- `noUnusedLocals` / `noUnusedParameters`
+- `noFallthroughCasesInSwitch`
+- `noUncheckedSideEffectImports` (TS 5.6+ — catches typo'd side-effect imports)
+- `allowUnreachableCode: false` / `allowUnusedLabels: false`
+- `isolatedModules: true`
+
+Not adopted from canonical: `target/module/lib/types/jsx/moduleResolution` (sovereign via `@vue/tsconfig`), `allowJs/checkJs` (BIO is all-TS), single-file `paths`/`include` shape (project references is sovereign).
+
+---
+
 ## Complexity Limits — Structural Load Ratings
 
 The building inspectors enforce these maximums:
