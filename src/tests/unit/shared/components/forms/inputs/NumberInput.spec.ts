@@ -44,7 +44,7 @@ describe('NumberInput', () => {
         // Assert
         const emitted = wrapper.emitted('update:modelValue');
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0]).toEqual([42]);
+        expect(emitted?.[0]).toStrictEqual([42]);
     });
 
     it('should emit null when input is cleared', async () => {
@@ -57,7 +57,7 @@ describe('NumberInput', () => {
         // Assert
         const emitted = wrapper.emitted('update:modelValue');
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0]).toEqual([null]);
+        expect(emitted?.[0]).toStrictEqual([null]);
     });
 
     it('should be required by default', () => {

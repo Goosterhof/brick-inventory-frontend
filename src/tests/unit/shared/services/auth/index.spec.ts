@@ -84,7 +84,7 @@ describe('auth service', () => {
             await authService.login(credentials);
 
             // Assert
-            expect(authService.user.value).toEqual({
+            expect(authService.user.value).toStrictEqual({
                 id: 1,
                 email: 'test@example.com',
                 createdAt: '2024-01-01T00:00:00Z',
@@ -220,7 +220,7 @@ describe('auth service', () => {
             await authService.checkIfLoggedIn();
 
             // Assert
-            expect(authService.user.value).toEqual({
+            expect(authService.user.value).toStrictEqual({
                 id: 1,
                 email: 'test@example.com',
                 createdAt: '2024-01-01T00:00:00Z',

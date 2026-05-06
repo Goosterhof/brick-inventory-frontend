@@ -44,7 +44,7 @@ describe('TextInput', () => {
         // Assert
         const emitted = wrapper.emitted('update:modelValue');
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0]).toEqual(['John']);
+        expect(emitted?.[0]).toStrictEqual(['John']);
     });
 
     it('should be required by default', () => {

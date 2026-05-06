@@ -42,7 +42,7 @@ describe('TextareaInput', () => {
         // Assert
         const emitted = wrapper.emitted('update:modelValue');
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0]).toEqual(['Hello world']);
+        expect(emitted?.[0]).toStrictEqual(['Hello world']);
     });
 
     it('should be required by default', () => {

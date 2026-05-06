@@ -93,7 +93,7 @@ describe('Architecture', () => {
                 }
             }
 
-            expect(violations, 'Shared code must not depend on app-specific code').toEqual([]);
+            expect(violations, 'Shared code must not depend on app-specific code').toStrictEqual([]);
         });
     });
 
@@ -126,7 +126,7 @@ describe('Architecture', () => {
                     }
                 }
 
-                expect(violations, `The ${appName} app must not import from other apps`).toEqual([]);
+                expect(violations, `The ${appName} app must not import from other apps`).toStrictEqual([]);
             });
         }
     });
@@ -149,7 +149,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Shared components must use multi-word PascalCase names (e.g., FormLabel, TextInput)',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
 
         it('should use PascalCase names ending with Page for domain pages', () => {
@@ -177,7 +177,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Page components must be PascalCase ending with Page (e.g., HomePage, LoginPage)',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
     });
 
@@ -198,9 +198,10 @@ describe('Architecture', () => {
                 }
             }
 
-            expect(violations, "Composable files must be prefixed with 'use' (e.g., useValidationErrors.ts)").toEqual(
-                [],
-            );
+            expect(
+                violations,
+                "Composable files must be prefixed with 'use' (e.g., useValidationErrors.ts)",
+            ).toStrictEqual([]);
         });
 
         it("should export a function named with the 'use' prefix", () => {
@@ -225,7 +226,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 "Composable files must export a function prefixed with 'use' (e.g., export const useAuth = ...)",
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
     });
 
@@ -277,7 +278,7 @@ describe('Architecture', () => {
                 expect(
                     violations,
                     `Domains in ${appName} must import from @app/services (barrel), not individual service files`,
-                ).toEqual([]);
+                ).toStrictEqual([]);
             });
         }
     });
@@ -331,7 +332,7 @@ describe('Architecture', () => {
                 expect(
                     violations,
                     `Domains in ${appName} must not import from other domains. Use @shared/ for shared code.`,
-                ).toEqual([]);
+                ).toStrictEqual([]);
             });
         }
     });
@@ -371,7 +372,7 @@ describe('Architecture', () => {
                     }
                 }
 
-                expect(violations, `Domain index files in ${appName} must only export routes`).toEqual([]);
+                expect(violations, `Domain index files in ${appName} must only export routes`).toStrictEqual([]);
             });
         }
     });
@@ -398,7 +399,7 @@ describe('Architecture', () => {
                     }
                 }
 
-                expect(violations, `Every domain in ${appName} must have an index.ts barrel file`).toEqual([]);
+                expect(violations, `Every domain in ${appName} must have an index.ts barrel file`).toStrictEqual([]);
             });
         }
     });
@@ -431,7 +432,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Shared services should export factory functions (e.g., createHttpService), not singletons',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
     });
 
@@ -459,7 +460,7 @@ describe('Architecture', () => {
                 }
             }
 
-            expect(violations, 'Test files must use .spec.ts extension').toEqual([]);
+            expect(violations, 'Test files must use .spec.ts extension').toStrictEqual([]);
         });
     });
 
@@ -489,7 +490,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Every outline="none" must be paired with focus-visible:brick-focus on the same element (WCAG 2.4.7)',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
     });
 
@@ -515,7 +516,9 @@ describe('Architecture', () => {
                 }
             }
 
-            expect(violations, 'Every domain directory must have a corresponding entry in domain-map.md').toEqual([]);
+            expect(violations, 'Every domain directory must have a corresponding entry in domain-map.md').toStrictEqual(
+                [],
+            );
         });
     });
 
@@ -566,7 +569,9 @@ describe('Architecture', () => {
                 }
             }
 
-            expect(violations, 'Every domain page must have a corresponding integration test (ADR-013)').toEqual([]);
+            expect(violations, 'Every domain page must have a corresponding integration test (ADR-013)').toStrictEqual(
+                [],
+            );
         });
     });
 
@@ -594,7 +599,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'The decision log index and inspector ADR Quick Reference must stay in sync. ADR-000 (meta) is exempt.',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
     });
 
@@ -655,7 +660,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Use CSS custom property tokens (e.g., bg="[var(--brick-card-bg)]") instead of hardcoded colors like bg="white" or bg="gray-200". See theme.css for available tokens.',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
 
         it("should not have hardcoded text='gray-*' in non-showcase Vue files", () => {
@@ -685,7 +690,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Use CSS custom property tokens (e.g., text="[var(--brick-muted-text)]") instead of hardcoded colors like text="gray-600". See theme.css for available tokens.',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
 
         it('should not have hardcoded bg-white in <script> computed classes in non-showcase Vue files', () => {
@@ -715,7 +720,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Computed class strings must use token-based bg values (e.g., "bg-[var(--brick-card-bg)]") instead of "bg-white" or "bg-gray-*".',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
     });
 
@@ -760,7 +765,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Unit tests must use shallowMount, not mount. Use shallowMount with explicit unstubbing where needed.',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
 
         it('integration test files should not import shallowMount from @vue/test-utils', () => {
@@ -778,7 +783,7 @@ describe('Architecture', () => {
             expect(
                 violations,
                 'Integration tests must use mount, not shallowMount. Integration tests verify component composition.',
-            ).toEqual([]);
+            ).toStrictEqual([]);
         });
     });
 });

@@ -43,7 +43,7 @@ describe('DateInput', () => {
         // Assert
         const emitted = wrapper.emitted('update:modelValue');
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0]).toEqual(['2024-01-15']);
+        expect(emitted?.[0]).toStrictEqual(['2024-01-15']);
     });
 
     it('should be required by default', () => {

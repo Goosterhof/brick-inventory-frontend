@@ -54,7 +54,11 @@ describe('auth service register', () => {
         await authService.register(registrationData);
 
         // Assert
-        expect(authService.user.value).toEqual({id: 1, email: 'john@example.com', createdAt: '2024-01-01T00:00:00Z'});
+        expect(authService.user.value).toStrictEqual({
+            id: 1,
+            email: 'john@example.com',
+            createdAt: '2024-01-01T00:00:00Z',
+        });
 
         mock.restore();
     });
@@ -130,7 +134,7 @@ describe('auth service register', () => {
         await authService.register(registrationData);
 
         // Assert
-        expect(capturedData).toEqual({
+        expect(capturedData).toStrictEqual({
             family_name: 'Smith',
             name: 'John',
             email: 'john@example.com',

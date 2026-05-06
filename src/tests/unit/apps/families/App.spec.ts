@@ -158,7 +158,7 @@ describe('App', () => {
             .findAllComponents({name: 'FamilyRouterLink'})
             .find((link) => link.text().includes('navigation.sets'));
         expect(setsLink?.exists()).toBe(true);
-        expect(setsLink?.props('to')).toEqual({name: 'sets'});
+        expect(setsLink?.props('to')).toStrictEqual({name: 'sets'});
     });
 
     it('should call logout and navigate to login on click', async () => {

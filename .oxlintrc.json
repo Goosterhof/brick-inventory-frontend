@@ -200,7 +200,16 @@
                 "no-restricted-globals": "off",
                 "max-lines-per-function": "off",
                 "max-nested-callbacks": "off",
-                "complexity": "off"
+                "complexity": "off",
+                "vitest/no-disabled-tests": "error",
+                "vitest/no-focused-tests": "error",
+                "vitest/no-identical-title": "error",
+                "vitest/prefer-strict-equal": "error",
+                "vitest/prefer-to-be": "error",
+                "vitest/prefer-to-contain": "error",
+                "vitest/no-conditional-expect": "error",
+                "vitest/valid-describe-callback": "error",
+                "vitest/no-commented-out-tests": "error"
             }
         },
         {

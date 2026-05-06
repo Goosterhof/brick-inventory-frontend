@@ -195,7 +195,7 @@ describe('SetsOverviewPage — theme grouping', () => {
 
         // Assert
         const titles = wrapper.findAllComponents(CollapsibleSection).map((s) => s.props('title'));
-        expect(titles).toEqual(['Star Wars', 'Technic']);
+        expect(titles).toStrictEqual(['Star Wars', 'Technic']);
     });
 
     it('should start collapsed and toggle on emit', async () => {

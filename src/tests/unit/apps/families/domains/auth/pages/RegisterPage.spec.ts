@@ -38,7 +38,7 @@ describe('RegisterPage', () => {
         // Assert
         const inputs = wrapper.findAllComponents(TextInput);
         expect(inputs).toHaveLength(6);
-        expect(inputs.map((i) => i.props('label'))).toEqual([
+        expect(inputs.map((i) => i.props('label'))).toStrictEqual([
             'auth.inviteCode',
             'auth.familyName',
             'auth.name',
@@ -75,7 +75,10 @@ describe('RegisterPage', () => {
         // Assert
         const passwordInputs = wrapper.findAllComponents(TextInput).filter((i) => i.props('type') === 'password');
         expect(passwordInputs).toHaveLength(2);
-        expect(passwordInputs.map((i) => i.props('label'))).toEqual(['auth.password', 'auth.passwordConfirmation']);
+        expect(passwordInputs.map((i) => i.props('label'))).toStrictEqual([
+            'auth.password',
+            'auth.passwordConfirmation',
+        ]);
     });
 
     it('should have all fields required except invite code', () => {
