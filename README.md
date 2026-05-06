@@ -2,6 +2,8 @@
 
 A Vue 3 multi-app monorepo for managing LEGO brick inventory. Built with TypeScript, Vite, and modern tooling.
 
+This repository is the **frontend SPA** ("the Plate") — one of three repositories in the project. The companion repositories are the [backend API (`Goosterhof/lego-storage`)](https://github.com/Goosterhof/lego-storage) and the [orchestrator (`Goosterhof/brick-inventory-orchestrator`)](https://github.com/Goosterhof/brick-inventory-orchestrator) which ties them together via Docker Compose for local development and Playwright E2E testing. This repo can be cloned and run standalone — the orchestrator is required only for end-to-end testing.
+
 ## Features
 
 - **Multi-App Architecture**: Supports multiple independent apps sharing common code
@@ -73,17 +75,18 @@ src/
 
 ## Available Scripts
 
-| Script                  | Description                             |
-| ----------------------- | --------------------------------------- |
-| `npm run dev`           | Start development server (families app) |
-| `npm run dev:admin`     | Start development server (admin app)    |
-| `npm run build`         | Build all apps for production           |
-| `npm run test:unit`     | Run unit tests                          |
-| `npm run test:coverage` | Run tests with coverage report          |
-| `npm run lint`          | Run linter                              |
-| `npm run format`        | Format code                             |
-| `npm run format:check`  | Check code formatting                   |
-| `npm run type-check`    | Run TypeScript type checking            |
+| Script                  | Description                                                     |
+| ----------------------- | --------------------------------------------------------------- |
+| `npm run dev`           | Start development server (families app)                         |
+| `npm run dev:admin`     | Start development server (admin app)                            |
+| `npm run dev:showcase`  | Start development server (showcase app — design-system gallery) |
+| `npm run build`         | Build all apps for production                                   |
+| `npm run test:unit`     | Run unit tests                                                  |
+| `npm run test:coverage` | Run tests with coverage report                                  |
+| `npm run lint`          | Run linter                                                      |
+| `npm run format`        | Format code                                                     |
+| `npm run format:check`  | Check code formatting                                           |
+| `npm run type-check`    | Run TypeScript type checking                                    |
 
 ## Environment Variables
 
@@ -116,6 +119,10 @@ Contributions are welcome! Please ensure your code:
 2. Passes type checking: `npm run type-check`
 3. Is properly formatted: `npm run format`
 4. Passes linting: `npm run lint`
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for the vulnerability-disclosure policy.
 
 ## License
 

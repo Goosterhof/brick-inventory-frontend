@@ -37,7 +37,7 @@ The Parts page silently drops all results beyond the first page. The backend ret
 
 ## References
 
-- War Room Context: Discovered during cross-territory pagination analysis comparing BIO and ublgenie `ResourceData` pagination patterns
+- War Room Context: Discovered during cross-territory pagination analysis comparing BIO and a sibling territory's `ResourceData` pagination patterns
 - Related Permit: `backend/.claude/records/permits/2026-03-28-cursor-pagination.md` (backend pagination implementation)
 - Related Permit: `backend/.claude/records/permits/2026-03-28-response-caching.md` (ETag caching on paginated responses)
 

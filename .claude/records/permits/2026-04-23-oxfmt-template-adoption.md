@@ -54,9 +54,9 @@ The war room has standardized an oxfmt configuration (`war-room/templates/oxfmt.
 ## References
 
 - War Room Template: `war-room/templates/oxfmt.json`
-- Precedent PRs: script-development/fs-packages#50, Goosterhof/zmuuzn#89, Goosterhof/zmuuzn-auth#45, Goosterhof/zmuuzn-helldivers#38, Goosterhof/zmuuzn-parlour#2, Goosterhof/zmuuzn-smokestacks#40, Goosterhof/zmuuzn-strava#12
+- Precedent PRs: script-development/fs-packages#50 (public package — published source), plus six prior adoptions in sibling territories (PR refs redacted for showcase posture).
 - Related Permit: none — this is a first-of-kind for Brick & Mortar.
-- War Room Context: Part of the war-room-wide oxfmt template rollout campaign (2026-04-23). Next up: entreezuil, kendo, ublgenie.
+- War Room Context: Part of the war-room-wide oxfmt template rollout campaign (2026-04-23). Three additional sibling-territory cascades scheduled to follow.
 
 ## Notes from the Issuer
 

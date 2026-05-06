@@ -103,7 +103,7 @@ Not "Excellent" tier because the husky-bundling of `component-registry.json` int
 
 - **Did not check ADR-010** — the Test Guard's coverage-mode update arguably warrants an ADR-010 amendment. I noted it as "low urgency" and left it for a follow-up, but the honest answer is I didn't want to grow scope a third time.
 - **Did not verify the Collect Guard's 1 file still-flagged situation.** The Collect Guard reported 1 file over threshold but didn't throw. Might be the same `SetsOverviewPage.spec.ts`. Could be pre-existing drift; could be something worth a Fortification permit.
-- **No cross-territory validation** — I didn't re-verify that the other six adopting territories don't have their own Building-Code-equivalent documents needing updates. Lab experiments had none (checked); fs-packages has an ADR Projections section that I didn't touch. Worth a sweep before kendo/ublgenie/entreezuil cascade.
+- **No cross-territory validation** — I didn't re-verify that the other six adopting territories don't have their own Building-Code-equivalent documents needing updates. Lab experiments had none (checked); fs-packages has an ADR Projections section that I didn't touch. Worth a sweep before the next territory cascade.
 
 ### Training Proposals
 
