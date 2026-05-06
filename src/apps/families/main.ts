@@ -17,11 +17,17 @@ app.provide('weight', 'bold');
 app.provide('size', '1.25em');
 app.provide('color', 'currentColor');
 
-familyRouterService.install();
 registerFromQueryMiddleware(familyRouterService);
 registerAuthGuard(familyAuthService, familyRouterService, 'login', 'home');
 
+// Restore the session before kicking off the initial navigation. install() pushes the
+// current URL into the router, which fires the auth guard's beforeEach. If we install
+// first, the guard reads isLoggedIn while userRef is still null and redirects every
+// authOnly route to /login — the guard only runs on navigation, so once the /me call
+// resolves the UI shows logged-in state but the route is stuck on /login.
 await familyAuthService.checkIfLoggedIn();
+
+familyRouterService.install();
 
 const {t} = familyTranslationService;
 const APP_TITLE = 'Brick Inventory';
