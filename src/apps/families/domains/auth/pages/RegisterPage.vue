@@ -11,11 +11,10 @@ import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {useFormSubmit} from '@shared/composables/useFormSubmit';
 import {useValidationErrors} from '@shared/composables/useValidationErrors';
 import {ref} from 'vue';
-import {useRoute} from 'vue-router';
 
 const {t} = familyTranslationService;
-const route = useRoute();
-const initialInviteCode = typeof route.query.invite === 'string' ? route.query.invite : '';
+const inviteQuery = familyRouterService.currentRouteRef.value.query.invite;
+const initialInviteCode = typeof inviteQuery === 'string' ? inviteQuery : '';
 const inviteCode = ref(initialInviteCode);
 const familyName = ref('');
 const name = ref('');

@@ -21,10 +21,17 @@ const partsLoading = ref(true);
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
-    const [storageOption, partsResponse] = await Promise.all([
-        storageOptionStoreModule.getOrFailById(id),
-        familyHttpService.getRequest<StorageOptionPart[]>(`/storage-options/${id}/parts`),
-    ]);
+    // Direct navigation (refresh, deep link, e2e test) lands here without the overview having
+    // hydrated the store. retrieveAll guarantees the item is loaded; only run it on the fallback
+    // path so the normal overview-then-detail flow keeps its single round-trip.
+    let storageOption: Adapted<StorageOption>;
+    try {
+        storageOption = await storageOptionStoreModule.getOrFailById(id);
+    } catch {
+        await storageOptionStoreModule.retrieveAll();
+        storageOption = await storageOptionStoreModule.getOrFailById(id);
+    }
+    const partsResponse = await familyHttpService.getRequest<StorageOptionPart[]>(`/storage-options/${id}/parts`);
     adapted.value = storageOption;
     storageParts.value = partsResponse.data;
     loading.value = false;

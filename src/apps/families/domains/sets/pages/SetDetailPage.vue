@@ -114,7 +114,14 @@ const loadParts = async (setNum: string) => {
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
-    adapted.value = await familySetStoreModule.getOrFailById(id);
+    // Direct navigation (refresh, deep link, e2e test) lands here without the overview having
+    // hydrated the store. Fall back to retrieveAll so getOrFailById has the item to return.
+    try {
+        adapted.value = await familySetStoreModule.getOrFailById(id);
+    } catch {
+        await familySetStoreModule.retrieveAll();
+        adapted.value = await familySetStoreModule.getOrFailById(id);
+    }
     loading.value = false;
 });
 

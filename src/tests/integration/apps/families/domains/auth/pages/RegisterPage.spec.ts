@@ -4,21 +4,11 @@ import TextInput from '@shared/components/forms/inputs/TextInput.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {flushPromises, mount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {createMemoryHistory, createRouter} from 'vue-router';
 
 vi.mock('@script-development/fs-http', async () => {
     const {mockHttpService} = await import('@integration/helpers/mock-server');
     return {createHttpService: () => mockHttpService};
 });
-
-const buildRouter = (initialPath = '/register') => {
-    const router = createRouter({
-        history: createMemoryHistory(),
-        routes: [{path: '/register', name: 'register', component: RegisterPage}],
-    });
-    void router.push(initialPath);
-    return router;
-};
 
 describe('RegisterPage — integration', () => {
     beforeEach(() => {
@@ -27,7 +17,7 @@ describe('RegisterPage — integration', () => {
         localStorage.clear();
     });
 
-    const mountPage = (initialPath?: string) => mount(RegisterPage, {global: {plugins: [buildRouter(initialPath)]}});
+    const mountPage = () => mount(RegisterPage);
 
     it('renders six real TextInput components for all registration fields', () => {
         const wrapper = mountPage();

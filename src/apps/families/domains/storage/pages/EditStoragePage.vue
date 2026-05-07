@@ -27,7 +27,15 @@ const {handleSubmit, submitting} = useFormSubmit(validationErrors);
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
-    adapted.value = await storageOptionStoreModule.getOrFailById(id);
+    // Direct navigation (refresh, deep link, e2e test) lands here without the overview having
+    // hydrated the store. retrieveAll guarantees the item is loaded; only run it on the fallback
+    // path so the normal overview-then-edit flow keeps its single round-trip.
+    try {
+        adapted.value = await storageOptionStoreModule.getOrFailById(id);
+    } catch {
+        await storageOptionStoreModule.retrieveAll();
+        adapted.value = await storageOptionStoreModule.getOrFailById(id);
+    }
     loading.value = false;
 });
 
