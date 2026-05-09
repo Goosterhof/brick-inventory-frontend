@@ -9,26 +9,28 @@ import {
     familyTranslationService,
 } from '@app/services';
 import {familySetStoreModule} from '@app/stores';
-import BadgeLabel from '@shared/components/BadgeLabel.vue';
 import CollapsibleSection from '@shared/components/CollapsibleSection.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
 import FilterChip from '@shared/components/FilterChip.vue';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
-import ListItemButton from '@shared/components/ListItemButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {downloadCsv, toCsv} from '@shared/helpers/csv';
 import {computed, onMounted, ref} from 'vue';
 
-import CompletionGauge from '../components/CompletionGauge.vue';
+import SetListItem from '../components/SetListItem.vue';
+
+type ViewMode = 'grouped' | 'flat';
 
 const {t} = familyTranslationService;
 const {isLoading} = familyLoadingService;
 const {getAll, retrieveAll} = familySetStoreModule;
+
 const searchQuery = ref('');
 const activeStatusFilter = ref<FamilySetStatus | null>(null);
 const activeThemeFilters = ref<Set<string>>(new Set());
 const expandedThemes = ref<Set<string>>(new Set());
+const viewMode = ref<ViewMode>('grouped');
 const completionByFamilySetId = ref<Map<number, FamilySetCompletion>>(new Map());
 const completionLoading = ref(true);
 
@@ -99,6 +101,10 @@ const groupedSets = computed(() => {
     return groups.sort((a, b) => a.theme.localeCompare(b.theme));
 });
 
+const flatSets = computed(() =>
+    [...filteredSets.value].sort((a, b) => (a.set?.name ?? a.setNum).localeCompare(b.set?.name ?? b.setNum)),
+);
+
 const toggleStatusFilter = (status: FamilySetStatus) => {
     activeStatusFilter.value = activeStatusFilter.value === status ? null : status;
 };
@@ -121,6 +127,10 @@ const toggleThemeExpanded = (theme: string) => {
         next.add(theme);
     }
     expandedThemes.value = next;
+};
+
+const setViewMode = (mode: ViewMode) => {
+    viewMode.value = mode;
 };
 
 const fetchCompletion = async (): Promise<void> => {
@@ -174,6 +184,9 @@ const toCsvRow = (s: AdaptedSet): string[] => {
     ];
 };
 
+const completionFor = (familySetId: number): number | null =>
+    completionByFamilySetId.value.get(familySetId)?.percentage ?? null;
+
 const exportCsv = () => {
     const headers = ['Set Number', 'Name', 'Year', 'Theme', 'Parts', 'Quantity', 'Status', 'Purchase Date', 'Notes'];
     downloadCsv(toCsv(headers, filteredSets.value.map(toCsvRow)), 'lego-sets.csv');
@@ -216,6 +229,15 @@ const exportCsv = () => {
                 />
 
                 <div flex gap="2" flex-wrap="wrap">
+                    <FilterChip :active="viewMode === 'grouped'" @click="setViewMode('grouped')">
+                        {{ t('sets.viewByTheme').value }}
+                    </FilterChip>
+                    <FilterChip :active="viewMode === 'flat'" @click="setViewMode('flat')">
+                        {{ t('sets.viewAllSets').value }}
+                    </FilterChip>
+                </div>
+
+                <div flex gap="2" flex-wrap="wrap">
                     <FilterChip
                         v-for="status in allStatuses"
                         :key="status"
@@ -240,7 +262,7 @@ const exportCsv = () => {
 
             <EmptyState v-if="filteredSets.length === 0" :message="t('common.noResults').value" />
 
-            <div v-else flex="~ col" gap="4">
+            <div v-else-if="viewMode === 'grouped'" flex="~ col" gap="4">
                 <CollapsibleSection
                     v-for="group in groupedSets"
                     :key="group.theme"
@@ -250,60 +272,27 @@ const exportCsv = () => {
                     @toggle="toggleThemeExpanded(group.theme)"
                 >
                     <div flex="~ col" gap="4" p="t-4">
-                        <ListItemButton
+                        <SetListItem
                             v-for="familySet in group.sets"
                             :key="familySet.id"
+                            :family-set="familySet"
+                            :completion-percentage="completionFor(familySet.id)"
+                            :completion-loading="completionLoading"
                             @click="goToDetail(familySet.id)"
-                        >
-                            <img
-                                v-if="familySet.set?.imageUrl"
-                                :src="familySet.set.imageUrl"
-                                :alt="familySet.set.name"
-                                w="20"
-                                h="20"
-                                object="contain"
-                            />
-                            <div
-                                v-else
-                                w="20"
-                                h="20"
-                                bg="[var(--brick-surface-subtle)]"
-                                flex
-                                items="center"
-                                justify="center"
-                                text="sm [var(--brick-muted-text)]"
-                            >
-                                {{ t('common.noImage').value }}
-                            </div>
-                            <div flex="1" min-w="0">
-                                <p font="bold">{{ familySet.set?.name ?? familySet.setNum }}</p>
-                                <p text="sm [var(--brick-muted-text)]">
-                                    {{ familySet.set?.setNum ?? familySet.setNum }}
-                                </p>
-                                <div flex gap="2" m="t-1" items="center">
-                                    <BadgeLabel :variant="familySet.status === 'wishlist' ? 'muted' : 'default'">{{
-                                        t(statusKey[familySet.status]).value
-                                    }}</BadgeLabel>
-                                    <span text="xs [var(--brick-muted-text)]">{{ familySet.quantity }}x</span>
-                                </div>
-                                <div v-if="familySet.status !== 'wishlist'" m="t-2" max-w="48">
-                                    <p
-                                        v-if="completionLoading"
-                                        text="xs [var(--brick-muted-text)]"
-                                        aria-label="set-completion-loading"
-                                    >
-                                        {{ t('common.loading').value }}
-                                    </p>
-                                    <CompletionGauge
-                                        v-else
-                                        :percentage="completionByFamilySetId.get(familySet.id)?.percentage ?? null"
-                                        :unknown-label="t('sets.completionUnknown').value"
-                                    />
-                                </div>
-                            </div>
-                        </ListItemButton>
+                        />
                     </div>
                 </CollapsibleSection>
+            </div>
+
+            <div v-else flex="~ col" gap="4">
+                <SetListItem
+                    v-for="familySet in flatSets"
+                    :key="familySet.id"
+                    :family-set="familySet"
+                    :completion-percentage="completionFor(familySet.id)"
+                    :completion-loading="completionLoading"
+                    @click="goToDetail(familySet.id)"
+                />
             </div>
         </template>
     </div>

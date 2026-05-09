@@ -73,6 +73,18 @@ vi.mock('@shared/components/PrimaryButton.vue', () => ({
 
 vi.mock('@shared/helpers/csv', () => ({downloadCsv: vi.fn<() => void>(), toCsv: vi.fn<() => string>()}));
 
+vi.mock('@app/domains/sets/components/SetListItem.vue', () => ({
+    default: {
+        name: 'SetListItem',
+        template:
+            '<div @click="$emit(\'click\')">' +
+            '<span>{{ familySet.set?.name ?? familySet.setNum }}</span>' +
+            '<span>{{ familySet.setNum }}</span>' +
+            '</div>',
+        props: ['familySet', 'completionPercentage', 'completionLoading'],
+    },
+}));
+
 const {mockRetrieveAll, mockAllItems, mockIsLoading} = await vi.hoisted(async () => {
     const {ref} = await import('vue');
     return {mockRetrieveAll: vi.fn<() => Promise<void>>(), mockAllItems: ref<unknown[]>([]), mockIsLoading: ref(false)};
@@ -335,8 +347,10 @@ describe('SetsOverviewPage — theme filter chips', () => {
         await flushPromises();
 
         // Assert — filtered
-        expect(wrapper.text()).toContain('Liebherr R 9800');
-        expect(wrapper.text()).not.toContain('Millennium Falcon');
+        const filteredNames = wrapper
+            .findAllComponents({name: 'SetListItem'})
+            .map((c) => (c.props('familySet') as {set?: {name?: string}; setNum: string}).set?.name);
+        expect(filteredNames).toStrictEqual(['Liebherr R 9800']);
 
         // Assert — active state
         const updatedTechnicChip = wrapper.findAllComponents(FilterChip).find((chip) => chip.text() === 'Technic');
@@ -349,8 +363,11 @@ describe('SetsOverviewPage — theme filter chips', () => {
         await flushPromises();
 
         // Assert — both visible again
-        expect(wrapper.text()).toContain('Millennium Falcon');
-        expect(wrapper.text()).toContain('Liebherr R 9800');
+        const allNames = wrapper
+            .findAllComponents({name: 'SetListItem'})
+            .map((c) => (c.props('familySet') as {set?: {name?: string}}).set?.name);
+        expect(allNames).toContain('Millennium Falcon');
+        expect(allNames).toContain('Liebherr R 9800');
     });
 
     it('should support multi-select theme filtering', async () => {
@@ -385,9 +402,12 @@ describe('SetsOverviewPage — theme filter chips', () => {
         await flushPromises();
 
         // Assert
-        expect(wrapper.text()).toContain('Millennium Falcon');
-        expect(wrapper.text()).toContain('Liebherr R 9800');
-        expect(wrapper.text()).not.toContain('Police Station');
+        const names = wrapper
+            .findAllComponents({name: 'SetListItem'})
+            .map((c) => (c.props('familySet') as {set?: {name?: string}}).set?.name);
+        expect(names).toContain('Millennium Falcon');
+        expect(names).toContain('Liebherr R 9800');
+        expect(names).not.toContain('Police Station');
     });
 
     it('should combine theme and status filters', async () => {

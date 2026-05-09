@@ -163,6 +163,8 @@ const translations = {
             scanDone: 'Done scanning',
             completionUnknown: '?',
             completionLabel: 'Build completion',
+            viewByTheme: 'By theme',
+            viewAllSets: 'All sets',
         },
         storage: {
             title: 'Storage',
@@ -451,6 +453,8 @@ const translations = {
             scanDone: 'Klaar met scannen',
             completionUnknown: '?',
             completionLabel: 'Bouwvoortgang',
+            viewByTheme: 'Per thema',
+            viewAllSets: 'Alle sets',
         },
         storage: {
             title: 'Opslag',
