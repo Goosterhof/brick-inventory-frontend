@@ -18,7 +18,7 @@
             },
             "adoption": {"apps": 2, "domains": 3},
             "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 2, "linesChanged": 22},
+            "churn": {"commits": 1, "linesChanged": 18},
             "dependencyDepth": 0
         },
         "BadgeLabel": {
@@ -90,7 +90,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [], "emits": [], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 2, "linesChanged": 7},
+            "churn": {"commits": 1, "linesChanged": 5},
             "dependencyDepth": 0
         },
         "CollapsibleSection": {
@@ -108,7 +108,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 48},
+            "churn": {"commits": 2, "linesChanged": 37},
             "dependencyDepth": 0
         },
         "ConfirmDialog": {
@@ -134,7 +134,7 @@
                 "slots": [{"name": "confirm"}, {"name": "cancel"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 69},
+            "churn": {"commits": 2, "linesChanged": 65},
             "dependencyDepth": 1
         },
         "DangerButton": {
@@ -164,7 +164,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 29},
+            "churn": {"commits": 2, "linesChanged": 25},
             "dependencyDepth": 0
         },
         "DateInput": {
@@ -196,7 +196,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 3, "linesChanged": 71},
+            "churn": {"commits": 2, "linesChanged": 67},
             "dependencyDepth": 1
         },
         "DetailRow": {
@@ -246,7 +246,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 23},
+            "churn": {"commits": 2, "linesChanged": 21},
             "dependencyDepth": 1
         },
         "FilterChip": {
@@ -269,7 +269,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 25},
+            "churn": {"commits": 1, "linesChanged": 23},
             "dependencyDepth": 0
         },
         "FormError": {
@@ -345,7 +345,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 12},
+            "churn": {"commits": 1, "linesChanged": 10},
             "dependencyDepth": 0
         },
         "LegoArch": {
@@ -444,7 +444,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 240},
+            "churn": {"commits": 3, "linesChanged": 245},
             "dependencyDepth": 0
         },
         "LegoBrickIsometricSvg": {
@@ -461,7 +461,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 4, "linesChanged": 269},
+            "churn": {"commits": 5, "linesChanged": 276},
             "dependencyDepth": 0
         },
         "LegoBrickSideSvg": {
@@ -487,7 +487,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 107},
+            "churn": {"commits": 4, "linesChanged": 111},
             "dependencyDepth": 0
         },
         "LegoBrickSvg": {
@@ -514,7 +514,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 84},
+            "churn": {"commits": 3, "linesChanged": 89},
             "dependencyDepth": 0
         },
         "LegoPlate": {
@@ -565,7 +565,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 4, "linesChanged": 118},
+            "churn": {"commits": 5, "linesChanged": 123},
             "dependencyDepth": 0
         },
         "LegoRound": {
@@ -816,7 +816,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 4, "linesChanged": 183},
+            "churn": {"commits": 5, "linesChanged": 193},
             "dependencyDepth": 0
         },
         "ListItemButton": {
@@ -832,7 +832,7 @@
             },
             "adoption": {"apps": 2, "domains": 3},
             "apiSurface": {"props": [], "emits": [{"name": "click"}], "slots": [{"name": "default"}], "models": []},
-            "churn": {"commits": 2, "linesChanged": 23},
+            "churn": {"commits": 1, "linesChanged": 21},
             "dependencyDepth": 0
         },
         "LoadingState": {
@@ -853,7 +853,7 @@
             },
             "adoption": {"apps": 2, "domains": 2},
             "apiSurface": {"props": [{"name": "message", "required": false}], "emits": [], "slots": [], "models": []},
-            "churn": {"commits": 3, "linesChanged": 36},
+            "churn": {"commits": 2, "linesChanged": 34},
             "dependencyDepth": 0
         },
         "ModalDialog": {
@@ -877,7 +877,7 @@
                 "slots": [{"name": "title"}, {"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 85},
+            "churn": {"commits": 2, "linesChanged": 81},
             "dependencyDepth": 0
         },
         "NavHeader": {
@@ -894,7 +894,7 @@
                 "slots": [{"name": "links"}, {"name": "actions"}, {"name": "mobile-links"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 77},
+            "churn": {"commits": 2, "linesChanged": 71},
             "dependencyDepth": 0
         },
         "NavLink": {
@@ -912,7 +912,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 31},
+            "churn": {"commits": 2, "linesChanged": 29},
             "dependencyDepth": 0
         },
         "NavMobileLink": {
@@ -932,7 +932,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 35},
+            "churn": {"commits": 2, "linesChanged": 31},
             "dependencyDepth": 0
         },
         "NumberInput": {
@@ -974,7 +974,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 3, "linesChanged": 97},
+            "churn": {"commits": 2, "linesChanged": 93},
             "dependencyDepth": 1
         },
         "PageHeader": {
@@ -1058,7 +1058,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 42},
+            "churn": {"commits": 2, "linesChanged": 31},
             "dependencyDepth": 0
         },
         "PrimaryButton": {
@@ -1115,7 +1115,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 53},
+            "churn": {"commits": 2, "linesChanged": 49},
             "dependencyDepth": 0
         },
         "SectionDivider": {
@@ -1127,7 +1127,7 @@
             },
             "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {"props": [], "emits": [], "slots": [], "models": []},
-            "churn": {"commits": 2, "linesChanged": 5},
+            "churn": {"commits": 1, "linesChanged": 3},
             "dependencyDepth": 0
         },
         "SelectInput": {
@@ -1160,7 +1160,7 @@
                 "slots": [{"name": "default"}],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 3, "linesChanged": 72},
+            "churn": {"commits": 2, "linesChanged": 68},
             "dependencyDepth": 1
         },
         "StatCard": {
@@ -1183,7 +1183,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 2, "linesChanged": 13},
+            "churn": {"commits": 1, "linesChanged": 11},
             "dependencyDepth": 0
         },
         "TextareaInput": {
@@ -1220,7 +1220,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 3, "linesChanged": 72},
+            "churn": {"commits": 2, "linesChanged": 68},
             "dependencyDepth": 1
         },
         "TextInput": {
@@ -1269,7 +1269,7 @@
                 "slots": [],
                 "models": [{"name": "modelValue", "required": true}]
             },
-            "churn": {"commits": 3, "linesChanged": 87},
+            "churn": {"commits": 2, "linesChanged": 83},
             "dependencyDepth": 1
         },
         "ToastMessage": {
@@ -1294,7 +1294,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 45},
+            "churn": {"commits": 2, "linesChanged": 37},
             "dependencyDepth": 0
         }
     }
