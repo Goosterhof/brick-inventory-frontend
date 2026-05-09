@@ -1,8 +1,10 @@
 import PartsUnsortedPage from '@app/domains/parts/pages/PartsUnsortedPage.vue';
+import PlacePartModal from '@app/modals/PlacePartModal.vue';
 import BackButton from '@shared/components/BackButton.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
 import FilterChip from '@shared/components/FilterChip.vue';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import ListItemButton from '@shared/components/ListItemButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
@@ -19,11 +21,12 @@ const {
     createMockFormError,
 } = await vi.hoisted(() => import('../../../../../../helpers'));
 
-const {mockGetRequest, mockGoToRoute, mockDownloadCsv, mockToCsv} = vi.hoisted(() => ({
+const {mockGetRequest, mockGoToRoute, mockDownloadCsv, mockToCsv, mockToastShow} = vi.hoisted(() => ({
     mockGetRequest: vi.fn<() => Promise<unknown>>(),
     mockGoToRoute: vi.fn<() => Promise<void>>(),
     mockDownloadCsv: vi.fn<(csv: string, filename: string) => void>(),
     mockToCsv: vi.fn<(headers: string[], rows: string[][]) => string>(() => 'csv'),
+    mockToastShow: vi.fn<(props: {message: string; variant?: 'success' | 'error'}) => string>(() => 'toast-id'),
 }));
 
 vi.mock('axios', () => createMockAxios());
@@ -66,6 +69,26 @@ vi.mock('@shared/components/PartListItem.vue', () => ({
     },
 }));
 
+vi.mock('@shared/components/ListItemButton.vue', () => ({
+    default: {name: 'ListItemButton', template: '<button @click=\'$emit("click")\'><slot /></button>'},
+}));
+
+vi.mock('@app/modals/PlacePartModal.vue', () => ({
+    default: {
+        name: 'PlacePartModal',
+        template: '<div />',
+        props: [
+            'open',
+            'partIdentity',
+            'defaultQuantity',
+            'maxQuantity',
+            'neededBySetNums',
+            'existingLocations',
+            'title',
+        ],
+    },
+}));
+
 vi.mock('@shared/components/PrimaryButton.vue', () => ({
     default: {
         name: 'PrimaryButton',
@@ -81,6 +104,7 @@ vi.mock('@app/services', () =>
         familyHttpService: {getRequest: mockGetRequest},
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute},
+        familyToastService: {show: mockToastShow},
     }),
 );
 
@@ -90,6 +114,7 @@ vi.mock('@app/services', () =>
  * framing differs ("parts to place" vs "parts to buy").
  */
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
+    partId: 100,
     partNum: '3001',
     colorId: 4,
     partName: 'Brick 2 x 4',
@@ -530,6 +555,103 @@ describe('PartsUnsortedPage', () => {
             // Assert
             const rowArg = mockToCsv.mock.calls[0]?.[1];
             expect(rowArg?.[0]?.[2]).toBe('');
+        });
+    });
+
+    describe('place modal flow', () => {
+        it('does not render the PlacePartModal until a row is clicked', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
+
+            // Act
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+        });
+
+        it('opens the PlacePartModal with the selected entry mapped to a partIdentity payload', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(
+                makePayload([
+                    makeEntry({
+                        partId: 100,
+                        partNum: '3001',
+                        partName: 'Brick 2x4',
+                        colorId: 4,
+                        colorName: 'Red',
+                        colorHex: 'C91A09',
+                        partImageUrl: 'https://example.com/3001.jpg',
+                        shortfall: 7,
+                        neededBySetNums: ['75313-1', '10497-1'],
+                    }),
+                ]),
+            );
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+
+            // Act — clicking the wrapper button is what triggers openPlaceModal.
+            await wrapper.findAllComponents(ListItemButton)[0]?.trigger('click');
+            await flushPromises();
+
+            // Assert
+            const modal = wrapper.findComponent(PlacePartModal);
+            expect(modal.exists()).toBe(true);
+            expect(modal.props('open')).toBe(true);
+            expect(modal.props('partIdentity')).toStrictEqual({
+                partId: 100,
+                partNum: '3001',
+                partName: 'Brick 2x4',
+                colorId: 4,
+                colorName: 'Red',
+                colorHex: 'C91A09',
+                partImageUrl: 'https://example.com/3001.jpg',
+            });
+            expect(modal.props('defaultQuantity')).toBe(7);
+            expect(modal.props('maxQuantity')).toBe(7);
+            expect(modal.props('neededBySetNums')).toStrictEqual(['75313-1', '10497-1']);
+        });
+
+        it('closes the modal without refetching or toasting when close fires', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+            await wrapper.findAllComponents(ListItemButton)[0]?.trigger('click');
+            await flushPromises();
+            const callsAfterOpen = mockGetRequest.mock.calls.length;
+
+            // Act
+            wrapper.findComponent(PlacePartModal).vm.$emit('close');
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+            expect(mockGetRequest.mock.calls.length).toBe(callsAfterOpen);
+            expect(mockToastShow).not.toHaveBeenCalled();
+        });
+
+        it('refetches the master shopping list, fires a success toast, and closes when assigned fires', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry({partName: 'Brick 2x4', shortfall: 7})]));
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+            await wrapper.findAllComponents(ListItemButton)[0]?.trigger('click');
+            await flushPromises();
+            const callsAfterOpen = mockGetRequest.mock.calls.length;
+
+            // Act
+            wrapper
+                .findComponent(PlacePartModal)
+                .vm.$emit('assigned', {storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 4});
+            await flushPromises();
+
+            // Assert
+            expect(mockGetRequest.mock.calls.length).toBe(callsAfterOpen + 1);
+            expect(mockGetRequest).toHaveBeenLastCalledWith('/family-sets/missing-parts');
+            expect(mockToastShow).toHaveBeenCalledWith({message: 'parts.placeSuccessToast', variant: 'success'});
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
         });
     });
 });

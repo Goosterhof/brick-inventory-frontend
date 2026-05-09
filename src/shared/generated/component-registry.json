@@ -829,7 +829,10 @@
             "category": null,
             "consumers": {
                 "families": {
-                    "parts": ["src/apps/families/domains/parts/modals/PartUsageModal.vue"],
+                    "parts": [
+                        "src/apps/families/domains/parts/modals/PartUsageModal.vue",
+                        "src/apps/families/domains/parts/pages/PartsUnsortedPage.vue"
+                    ],
                     "sets": ["src/apps/families/domains/sets/components/SetListItem.vue"],
                     "storage": ["src/apps/families/domains/storage/pages/StorageOverviewPage.vue"]
                 },
@@ -867,12 +870,12 @@
             "consumers": {
                 "families": {
                     "parts": ["src/apps/families/domains/parts/modals/PartUsageModal.vue"],
-                    "sets": ["src/apps/families/domains/sets/modals/AssignPartModal.vue"]
+                    "_root": ["src/apps/families/modals/PlacePartModal.vue"]
                 },
                 "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]},
                 "shared": {"_root": ["src/shared/components/ConfirmDialog.vue"]}
             },
-            "adoption": {"apps": 2, "domains": 2},
+            "adoption": {"apps": 2, "domains": 1},
             "apiSurface": {
                 "props": [
                     {"name": "open", "required": true},
@@ -946,14 +949,14 @@
             "consumers": {
                 "families": {
                     "sets": [
-                        "src/apps/families/domains/sets/modals/AssignPartModal.vue",
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
                         "src/apps/families/domains/sets/pages/EditSetPage.vue"
                     ],
                     "storage": [
                         "src/apps/families/domains/storage/pages/AddStoragePage.vue",
                         "src/apps/families/domains/storage/pages/EditStoragePage.vue"
-                    ]
+                    ],
+                    "_root": ["src/apps/families/modals/PlacePartModal.vue"]
                 },
                 "showcase": {
                     "_root": [
@@ -1032,7 +1035,7 @@
                 "slots": [{"name": "default"}],
                 "models": []
             },
-            "churn": {"commits": 5, "linesChanged": 215},
+            "churn": {"commits": 4, "linesChanged": 213},
             "dependencyDepth": 0
         },
         "PartListItem": {
@@ -1084,7 +1087,6 @@
                         "src/apps/families/domains/parts/pages/PartsUnsortedPage.vue"
                     ],
                     "sets": [
-                        "src/apps/families/domains/sets/modals/AssignPartModal.vue",
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
                         "src/apps/families/domains/sets/pages/EditSetPage.vue",
                         "src/apps/families/domains/sets/pages/IdentifyBrickPage.vue",
@@ -1098,7 +1100,8 @@
                         "src/apps/families/domains/storage/pages/EditStoragePage.vue",
                         "src/apps/families/domains/storage/pages/StorageDetailPage.vue",
                         "src/apps/families/domains/storage/pages/StorageOverviewPage.vue"
-                    ]
+                    ],
+                    "_root": ["src/apps/families/modals/PlacePartModal.vue"]
                 },
                 "showcase": {
                     "_root": [
@@ -1144,10 +1147,10 @@
             "consumers": {
                 "families": {
                     "sets": [
-                        "src/apps/families/domains/sets/modals/AssignPartModal.vue",
                         "src/apps/families/domains/sets/pages/AddSetPage.vue",
                         "src/apps/families/domains/sets/pages/EditSetPage.vue"
-                    ]
+                    ],
+                    "_root": ["src/apps/families/modals/PlacePartModal.vue"]
                 },
                 "showcase": {
                     "_root": [
@@ -1285,7 +1288,7 @@
             "path": "src/shared/components/ToastMessage.vue",
             "category": null,
             "consumers": {
-                "families": {"sets": ["src/apps/families/domains/sets/pages/ScanSetPage.vue"]},
+                "families": {"_root": ["src/apps/families/services/toast.ts"]},
                 "showcase": {
                     "_root": [
                         "src/apps/showcase/components/ComponentGallery.vue",
@@ -1293,7 +1296,7 @@
                     ]
                 }
             },
-            "adoption": {"apps": 2, "domains": 1},
+            "adoption": {"apps": 2, "domains": 0},
             "apiSurface": {
                 "props": [
                     {"name": "message", "required": true},

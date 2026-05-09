@@ -4,6 +4,7 @@ import {
     FamilyRouterView,
     familyAuthService,
     familyRouterService,
+    familyToastService,
     familyTranslationService,
 } from '@app/services';
 import {PhSignOut} from '@phosphor-icons/vue';
@@ -146,4 +147,6 @@ const handleLogout = async () => {
             <FamilyRouterView />
         </PageTransition>
     </main>
+
+    <component :is="familyToastService.ToastContainerComponent" />
 </template>

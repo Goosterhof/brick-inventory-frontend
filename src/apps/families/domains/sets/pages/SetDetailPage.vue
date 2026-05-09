@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type {PartIdentity} from '@app/modals/PlacePartModal.vue';
 import type {FamilySet} from '@app/types/familySet';
 import type {SetPart, SetWithParts, StorageMapEntry, StorageMapResponse} from '@app/types/part';
 import type {Adapted} from '@script-development/fs-adapter-store';
 
+import PlacePartModal from '@app/modals/PlacePartModal.vue';
 import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
 import {familySetStoreModule} from '@app/stores';
 import BackButton from '@shared/components/BackButton.vue';
@@ -10,8 +12,6 @@ import LoadingState from '@shared/components/LoadingState.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import {computed, onMounted, ref} from 'vue';
-
-import AssignPartModal from '../modals/AssignPartModal.vue';
 
 const {t} = familyTranslationService;
 const adapted = ref<Adapted<FamilySet> | null>(null);
@@ -165,6 +165,16 @@ const handleAssigned = () => {
         loadParts(adapted.value.set?.setNum ?? adapted.value.setNum);
     }
 };
+
+const toPartIdentity = (part: SetPart): PartIdentity => ({
+    partId: part.part.id,
+    partNum: part.part.partNum,
+    partName: part.part.name,
+    colorId: part.color.id,
+    colorName: part.color.name,
+    colorHex: part.color.rgb,
+    partImageUrl: part.part.imageUrl,
+});
 </script>
 
 <template>
@@ -490,11 +500,13 @@ const handleAssigned = () => {
                 </div>
             </div>
 
-            <AssignPartModal
+            <PlacePartModal
                 v-if="selectedPart"
                 :open="showAssignModal"
-                :part="selectedPart"
+                :part-identity="toPartIdentity(selectedPart)"
+                :default-quantity="selectedPart.quantity"
                 :existing-locations="getStorageLocations(selectedPart)"
+                :title="t('sets.assignPartTitle').value"
                 @close="closeAssignModal"
                 @assigned="handleAssigned"
             />

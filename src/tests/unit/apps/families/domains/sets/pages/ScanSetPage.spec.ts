@@ -37,14 +37,6 @@ vi.mock('@shared/components/PrimaryButton.vue', () => ({
 vi.mock('@shared/components/scanner/BarcodeScanner.vue', () => ({
     default: {name: 'BarcodeScanner', props: ['resetKey'], emits: ['detect'], template: '<div><slot /></div>'},
 }));
-vi.mock('@shared/components/ToastMessage.vue', () => ({
-    default: {
-        name: 'ToastMessage',
-        props: ['message', 'variant'],
-        emits: ['close'],
-        template: '<div>{{ message }}</div>',
-    },
-}));
 
 vi.mock('axios', () => createMockAxios());
 vi.mock('string-ts', () => createMockStringTs());

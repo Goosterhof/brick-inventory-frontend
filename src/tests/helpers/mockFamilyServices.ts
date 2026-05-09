@@ -17,6 +17,7 @@ export interface FamilyServicesMock {
     familySoundService: Record<string, unknown>;
     familyStorageService: Record<string, unknown>;
     familyThemeService: ThemeService;
+    familyToastService: {show: Mock; hide: Mock; ToastContainerComponent: Record<string, unknown>};
     FamilyRouterView: Record<string, unknown>;
     FamilyRouterLink: Record<string, unknown>;
 }
@@ -68,6 +69,11 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
         familySoundService: {},
         familyStorageService: {},
         familyThemeService: {isDark: ref(false), toggleTheme: vi.fn<() => void>()},
+        familyToastService: {
+            show: vi.fn<(props: {message: string; variant?: 'success' | 'error'}) => string>(() => 'toast-mock'),
+            hide: vi.fn<(id: string) => void>(),
+            ToastContainerComponent: {name: 'ToastContainer', template: '<div />'},
+        },
         FamilyRouterView: {template: '<div><slot /></div>'},
         FamilyRouterLink: {template: '<a><slot /></a>'},
     };
@@ -83,6 +89,7 @@ export const createMockFamilyServices = (overrides?: FamilyServicesOverrides): F
         familySoundService: {...defaults.familySoundService, ...overrides.familySoundService},
         familyStorageService: {...defaults.familyStorageService, ...overrides.familyStorageService},
         familyThemeService: {...defaults.familyThemeService, ...overrides.familyThemeService},
+        familyToastService: {...defaults.familyToastService, ...overrides.familyToastService},
         FamilyRouterView: {...defaults.FamilyRouterView, ...overrides.FamilyRouterView},
         FamilyRouterLink: {...defaults.FamilyRouterLink, ...overrides.FamilyRouterLink},
     };

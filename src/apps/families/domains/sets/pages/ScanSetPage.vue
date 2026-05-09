@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import type {SetSummary} from '@app/types/familySet';
 
-import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
+import {familyHttpService, familyRouterService, familyToastService, familyTranslationService} from '@app/services';
 import {familySetStoreModule} from '@app/stores';
-import {createToastService} from '@script-development/fs-toast';
 import BackButton from '@shared/components/BackButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
 import BarcodeScanner from '@shared/components/scanner/BarcodeScanner.vue';
-import ToastMessage from '@shared/components/ToastMessage.vue';
 import {computed, ref} from 'vue';
 
 const {t} = familyTranslationService;
-const toastService = createToastService(ToastMessage);
 const resetKey = ref(0);
 const scannedCode = ref('');
 const foundSet = ref<SetSummary | null>(null);
@@ -69,7 +66,7 @@ const addToCollection = async () => {
             status: 'sealed',
         });
         setsAddedCount.value++;
-        toastService.show({
+        familyToastService.show({
             message: t('sets.scanAddedToast').value.replace('{name}', setName).replace('{setNum}', setNum),
             variant: 'success',
         });
@@ -193,17 +190,5 @@ const goBack = async () => {
         </div>
 
         <PrimaryButton v-if="setsAddedCount > 0" m="t-6" @click="goBack">{{ t('sets.scanDone').value }}</PrimaryButton>
-
-        <component
-            :is="toastService.ToastContainerComponent"
-            fixed="~"
-            bottom="4"
-            right="4"
-            z="50"
-            flex="~ col"
-            gap="2"
-            w="sm"
-            max-w="[calc(100vw-2rem)]"
-        />
     </div>
 </template>

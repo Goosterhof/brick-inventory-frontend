@@ -1,11 +1,20 @@
 <script setup lang="ts">
+import type {PartIdentity, PlacedDetail} from '@app/modals/PlacePartModal.vue';
 import type {MasterShoppingListEntry, MasterShoppingListResponse} from '@app/types/part';
 
-import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from '@app/services';
+import PlacePartModal from '@app/modals/PlacePartModal.vue';
+import {
+    familyHttpService,
+    familyRouterService,
+    familySoundService,
+    familyToastService,
+    familyTranslationService,
+} from '@app/services';
 import BackButton from '@shared/components/BackButton.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
 import FilterChip from '@shared/components/FilterChip.vue';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import ListItemButton from '@shared/components/ListItemButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
@@ -21,6 +30,8 @@ const loading = ref(true);
 const loadError = ref(false);
 const searchQuery = ref('');
 const activeSortField = ref<SortField>('shortfall');
+const selectedEntry = ref<MasterShoppingListEntry | null>(null);
+const showPlaceModal = ref(false);
 
 /**
  * Reuses `/family-sets/missing-parts` — the same endpoint that powers
@@ -44,6 +55,40 @@ const fetchUnsortedParts = async (): Promise<void> => {
 };
 
 onMounted(fetchUnsortedParts);
+
+const toPartIdentity = (entry: MasterShoppingListEntry): PartIdentity => ({
+    partId: entry.partId,
+    partNum: entry.partNum,
+    partName: entry.partName,
+    colorId: entry.colorId,
+    colorName: entry.colorName,
+    colorHex: entry.colorHex,
+    partImageUrl: entry.partImageUrl,
+});
+
+const openPlaceModal = (entry: MasterShoppingListEntry) => {
+    selectedEntry.value = entry;
+    showPlaceModal.value = true;
+};
+
+const closePlaceModal = () => {
+    showPlaceModal.value = false;
+    selectedEntry.value = null;
+};
+
+const handlePlaced = async (detail: PlacedDetail) => {
+    const partName = selectedEntry.value?.partName ?? '';
+    showPlaceModal.value = false;
+    selectedEntry.value = null;
+    familyToastService.show({
+        message: t('parts.placeSuccessToast')
+            .value.replace('{quantity}', String(detail.quantity))
+            .replace('{name}', partName)
+            .replace('{location}', detail.storageOptionName),
+        variant: 'success',
+    });
+    await fetchUnsortedParts();
+};
 
 const goBackToParts = async () => {
     await familyRouterService.goToRoute('parts');
@@ -226,53 +271,69 @@ const allSortFields: SortField[] = ['shortfall', 'name', 'color'];
                     <EmptyState v-if="filteredEntries.length === 0" :message="t('parts.unsortedNoResults').value" />
 
                     <div v-else flex="~ col" gap="2">
-                        <PartListItem
+                        <ListItemButton
                             v-for="entry in filteredEntries"
                             :key="`${entry.partNum}_${entry.colorId}`"
-                            :name="entry.partName"
-                            :part-num="entry.partNum"
-                            :quantity="entry.shortfall"
-                            :image-url="entry.partImageUrl"
-                            :color-name="entry.colorName"
-                            :color-rgb="entry.colorHex"
+                            data-testid="unsorted-place-trigger"
+                            @click="openPlaceModal(entry)"
                         >
-                            <div flex gap="1" m="t-1" flex-wrap="wrap" text="xs">
-                                <span
-                                    p="x-2 y-0.5"
-                                    bg="yellow-300"
-                                    font="bold"
-                                    class="brick-border"
-                                    border="1"
-                                    text="[var(--brick-page-text)]"
-                                >
-                                    {{
-                                        t('parts.unsortedToPlaceLabel').value.replace(
-                                            '{count}',
-                                            String(entry.shortfall),
-                                        )
-                                    }}
-                                </span>
-                                <span
-                                    p="x-2 y-0.5"
-                                    bg="red-200"
-                                    font="bold"
-                                    class="brick-border"
-                                    border="1"
-                                    text="[var(--brick-page-text)]"
-                                    :title="entry.neededBySetNums.join(', ')"
-                                >
-                                    {{
-                                        t('parts.unsortedNeededBy').value.replace(
-                                            '{count}',
-                                            String(entry.neededBySetNums.length),
-                                        )
-                                    }}
-                                </span>
-                            </div>
-                        </PartListItem>
+                            <PartListItem
+                                :name="entry.partName"
+                                :part-num="entry.partNum"
+                                :quantity="entry.shortfall"
+                                :image-url="entry.partImageUrl"
+                                :color-name="entry.colorName"
+                                :color-rgb="entry.colorHex"
+                            >
+                                <div flex gap="1" m="t-1" flex-wrap="wrap" text="xs">
+                                    <span
+                                        p="x-2 y-0.5"
+                                        bg="yellow-300"
+                                        font="bold"
+                                        class="brick-border"
+                                        border="1"
+                                        text="[var(--brick-page-text)]"
+                                    >
+                                        {{
+                                            t('parts.unsortedToPlaceLabel').value.replace(
+                                                '{count}',
+                                                String(entry.shortfall),
+                                            )
+                                        }}
+                                    </span>
+                                    <span
+                                        p="x-2 y-0.5"
+                                        bg="red-200"
+                                        font="bold"
+                                        class="brick-border"
+                                        border="1"
+                                        text="[var(--brick-page-text)]"
+                                        :title="entry.neededBySetNums.join(', ')"
+                                    >
+                                        {{
+                                            t('parts.unsortedNeededBy').value.replace(
+                                                '{count}',
+                                                String(entry.neededBySetNums.length),
+                                            )
+                                        }}
+                                    </span>
+                                </div>
+                            </PartListItem>
+                        </ListItemButton>
                     </div>
                 </template>
             </template>
         </template>
+
+        <PlacePartModal
+            v-if="selectedEntry"
+            :open="showPlaceModal"
+            :part-identity="toPartIdentity(selectedEntry)"
+            :default-quantity="selectedEntry.shortfall"
+            :max-quantity="selectedEntry.shortfall"
+            :needed-by-set-nums="selectedEntry.neededBySetNums"
+            @close="closePlaceModal"
+            @assigned="handlePlaced"
+        />
     </div>
 </template>
