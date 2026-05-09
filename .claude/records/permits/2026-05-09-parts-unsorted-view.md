@@ -81,5 +81,5 @@ If you discover during implementation that the framing breaks down (e.g., shortf
 
 ---
 
-**Status:** Open
-**Journal:** _pending_
+**Status:** Complete
+**Journal:** `.claude/records/journals/2026-05-09-parts-unsorted-view.md`
