@@ -178,6 +178,10 @@ const goToMissing = async () => {
     await familyRouterService.goToRoute('parts-missing');
 };
 
+const goToUnsorted = async () => {
+    await familyRouterService.goToRoute('parts-unsorted');
+};
+
 const usageModalOpen = ref(false);
 const usagePartNum = ref('');
 const usageColorId = ref<number | null>(null);
@@ -206,6 +210,12 @@ const usageButtonLabel = (part: GroupedFamilyPart) =>
                     data-testid="parts-missing-cta"
                     @click="goToMissing"
                     >{{ t('parts.seeMissingCta').value }}</PrimaryButton
+                >
+                <PrimaryButton
+                    :sound-service="familySoundService"
+                    data-testid="parts-unsorted-cta"
+                    @click="goToUnsorted"
+                    >{{ t('parts.seeUnsortedCta').value }}</PrimaryButton
                 >
                 <PrimaryButton v-if="groupedParts.length > 0" :sound-service="familySoundService" @click="exportCsv">{{
                     t('common.export').value
