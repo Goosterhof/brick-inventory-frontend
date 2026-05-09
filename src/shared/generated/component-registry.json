@@ -30,7 +30,7 @@
             "consumers": {
                 "families": {
                     "parts": ["src/apps/families/domains/parts/modals/PartUsageModal.vue"],
-                    "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"],
+                    "sets": ["src/apps/families/domains/sets/components/SetListItem.vue"],
                     "settings": ["src/apps/families/domains/settings/pages/SettingsPage.vue"]
                 },
                 "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
@@ -830,7 +830,7 @@
             "consumers": {
                 "families": {
                     "parts": ["src/apps/families/domains/parts/modals/PartUsageModal.vue"],
-                    "sets": ["src/apps/families/domains/sets/pages/SetsOverviewPage.vue"],
+                    "sets": ["src/apps/families/domains/sets/components/SetListItem.vue"],
                     "storage": ["src/apps/families/domains/storage/pages/StorageOverviewPage.vue"]
                 },
                 "showcase": {"_root": ["src/apps/showcase/components/ComponentGallery.vue"]}
