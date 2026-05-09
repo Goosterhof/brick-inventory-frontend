@@ -30,6 +30,7 @@ vi.mock('@shared/helpers/bricklinkWantedList', () => ({
  * 2026-04-30).
  */
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
+    part_id: 100,
     part_num: '3001',
     color_id: 4,
     part_name: 'Brick 2x4',

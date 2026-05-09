@@ -98,6 +98,7 @@ vi.mock('@app/services', () =>
  * `app/Actions/FamilySet/GetFamilyMissingPartsAction.php` (Liaison M3).
  */
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
+    partId: 100,
     partNum: '3001',
     colorId: 4,
     partName: 'Brick 2 x 4',

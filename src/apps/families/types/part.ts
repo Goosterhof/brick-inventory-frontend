@@ -96,12 +96,15 @@ export interface StorageOptionPart {
  *
  * Shape mirrors `App\Http\Resources\FamilyMissingPartsResourceData`'s
  * `shortfalls` array (camelCased at the HTTP boundary by the response
- * middleware on `familyHttpService` — see ADR-016). The backend identifies
- * parts by `part_num` (LEGO catalog string id), not by a numeric `partId` —
- * there is no internal id in this payload. Likewise the backend ships
- * `color_hex` (hex RGB) from `colors.rgb`, not a separate `color_rgb` column.
+ * middleware on `familyHttpService` — see ADR-016). The backend ships both
+ * the LEGO catalog `part_num` string id AND an internal numeric `part_id`
+ * (sourced from `parts.id`, added in backend PR #178). The numeric `partId`
+ * is what the storage-options POST endpoint expects — see PlacePartModal.
+ * The backend also ships `color_hex` (hex RGB) from `colors.rgb`, not a
+ * separate `color_rgb` column.
  */
 export interface MasterShoppingListEntry {
+    partId: number;
     partNum: string;
     colorId: number;
     partName: string;

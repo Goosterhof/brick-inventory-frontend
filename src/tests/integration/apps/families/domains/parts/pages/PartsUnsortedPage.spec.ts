@@ -1,9 +1,11 @@
 import PartsUnsortedPage from '@app/domains/parts/pages/PartsUnsortedPage.vue';
+import PlacePartModal from '@app/modals/PlacePartModal.vue';
 import {mockServer} from '@integration/helpers/mock-server';
 import BackButton from '@shared/components/BackButton.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
 import FilterChip from '@shared/components/FilterChip.vue';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import ListItemButton from '@shared/components/ListItemButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
@@ -24,6 +26,7 @@ vi.mock('@shared/helpers/csv', () => ({downloadCsv: vi.fn<() => void>(), toCsv: 
  * here as "parts to place" for an owned-but-unsorted set.
  */
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
+    part_id: 100,
     part_num: '3001',
     color_id: 4,
     part_name: 'Brick 2x4',
@@ -43,6 +46,7 @@ const makePayload = (entries: Record<string, unknown>[] = [], unknownFamilySetId
 });
 
 const URL_UNSORTED = '/family-sets/missing-parts';
+const ASSIGN_URL = (id: number) => `/storage-options/${id}/parts`;
 
 describe('PartsUnsortedPage — integration', () => {
     beforeEach(() => {
@@ -199,5 +203,124 @@ describe('PartsUnsortedPage — integration', () => {
 
         expect(wrapper.find("[data-testid='unsorted-unknown-sets']").exists()).toBe(true);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+    });
+
+    describe('place modal flow', () => {
+        /**
+         * The real `PlacePartModal` runs in these tests (no `vi.mock`) — it makes
+         * its own GET `/storage-options` on mount. We register that endpoint on
+         * the mock server so the modal's options-load resolves successfully.
+         */
+        const STORAGE_OPTIONS_URL = '/storage-options';
+
+        it('does not render the PlacePartModal until a row is clicked', async () => {
+            mockServer.onGet(URL_UNSORTED, makePayload([makeEntry()]));
+            mockServer.onGet(STORAGE_OPTIONS_URL, []);
+
+            const wrapper = mount(PartsUnsortedPage);
+            await flushPromises();
+
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+        });
+
+        it('opens the PlacePartModal with the mapped partIdentity, default+max=shortfall, and neededBySetNums', async () => {
+            mockServer.onGet(
+                URL_UNSORTED,
+                makePayload([
+                    makeEntry({
+                        part_id: 100,
+                        part_num: '3001',
+                        part_name: 'Brick 2x4',
+                        color_id: 4,
+                        color_name: 'Red',
+                        color_hex: 'C91A09',
+                        part_image_url: 'https://example.com/3001.jpg',
+                        shortfall: 7,
+                        needed_by_set_nums: ['75313-1', '10497-1'],
+                    }),
+                ]),
+            );
+            mockServer.onGet(STORAGE_OPTIONS_URL, []);
+
+            const wrapper = mount(PartsUnsortedPage);
+            await flushPromises();
+
+            // Real list rows are wrapped in ListItemButton — clicking it triggers openPlaceModal.
+            await wrapper.findAllComponents(ListItemButton)[0]?.find('button').trigger('click');
+            await flushPromises();
+
+            const modal = wrapper.findComponent(PlacePartModal);
+            expect(modal.exists()).toBe(true);
+            expect(modal.props('open')).toBe(true);
+            expect(modal.props('partIdentity')).toStrictEqual({
+                partId: 100,
+                partNum: '3001',
+                partName: 'Brick 2x4',
+                colorId: 4,
+                colorName: 'Red',
+                colorHex: 'C91A09',
+                partImageUrl: 'https://example.com/3001.jpg',
+            });
+            expect(modal.props('defaultQuantity')).toBe(7);
+            expect(modal.props('maxQuantity')).toBe(7);
+            expect(modal.props('neededBySetNums')).toStrictEqual(['75313-1', '10497-1']);
+        });
+
+        it('closes the modal without refetching or toasting when the modal emits close', async () => {
+            mockServer.onGet(URL_UNSORTED, makePayload([makeEntry()]));
+            mockServer.onGet(STORAGE_OPTIONS_URL, []);
+
+            const wrapper = mount(PartsUnsortedPage);
+            await flushPromises();
+            await wrapper.findAllComponents(ListItemButton)[0]?.find('button').trigger('click');
+            await flushPromises();
+
+            const partsBefore = wrapper.findAllComponents(PartListItem).length;
+
+            wrapper.findComponent(PlacePartModal).vm.$emit('close');
+            await flushPromises();
+
+            // Modal v-if'd off via selectedEntry === null. List untouched: no refetch ran.
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+            expect(wrapper.findAllComponents(PartListItem)).toHaveLength(partsBefore);
+        });
+
+        it('places a part: POST to /storage-options/{id}/parts, refetches list, fires success toast, closes modal', async () => {
+            const {familyToastService} = await import('@app/services');
+            const toastShowSpy = vi.spyOn(familyToastService, 'show');
+
+            mockServer.onGet(
+                URL_UNSORTED,
+                makePayload([makeEntry({part_id: 100, color_id: 4, shortfall: 7, part_name: 'Brick 2x4'})]),
+            );
+            mockServer.onGet(STORAGE_OPTIONS_URL, [
+                {id: 5, name: 'Drawer A', description: null, parent_id: null, row: null, column: null, child_ids: []},
+            ]);
+            // POST handler — the page only cares that the POST succeeds; payload assertion below.
+            mockServer.onPost(ASSIGN_URL(5), {});
+
+            const wrapper = mount(PartsUnsortedPage);
+            await flushPromises();
+            await wrapper.findAllComponents(ListItemButton)[0]?.find('button').trigger('click');
+            await flushPromises();
+
+            // Drive the real modal: pick the storage option, set the quantity, submit.
+            // The modal renders its own form; submitting it fires the POST and emits assigned + close.
+            const modal = wrapper.findComponent(PlacePartModal);
+            const select = modal.find('select');
+            await select.setValue('5');
+            await flushPromises();
+
+            await modal.find('form').trigger('submit.prevent');
+            await flushPromises();
+
+            // Assert: modal closed (selectedEntry cleared in handlePlaced), list refetch ran, success toast fired.
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+            expect(toastShowSpy).toHaveBeenCalledWith({
+                message: 'Placed 7x Brick 2x4 in Drawer A.',
+                variant: 'success',
+            });
+            toastShowSpy.mockRestore();
+        });
     });
 });

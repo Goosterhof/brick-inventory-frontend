@@ -17,11 +17,22 @@ vi.mock('@script-development/fs-http', async () => {
 });
 
 /**
- * AssignPartModal is a complex modal with its own HTTP calls and store interactions.
- * Mocked to isolate the SetDetailPage integration boundary.
+ * PlacePartModal is a complex modal with its own HTTP calls. Mocked to isolate
+ * the SetDetailPage integration boundary.
  */
-vi.mock('@app/domains/sets/modals/AssignPartModal.vue', () => ({
-    default: {template: '<div />', props: ['open', 'part', 'existingLocations']},
+vi.mock('@app/modals/PlacePartModal.vue', () => ({
+    default: {
+        template: '<div />',
+        props: [
+            'open',
+            'partIdentity',
+            'defaultQuantity',
+            'maxQuantity',
+            'neededBySetNums',
+            'existingLocations',
+            'title',
+        ],
+    },
 }));
 
 /**
