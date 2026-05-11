@@ -34,6 +34,7 @@
         "lint": "oxlint --type-aware",
         "lint:vue": "node scripts/lint-vue-conventions.mjs",
         "prepare": "husky",
+        "pretest:coverage": "node -e \"require('fs').rmSync('coverage', {recursive: true, force: true})\"",
         "preview": "cross-env APP_NAME=families vite preview",
         "registry": "node scripts/generate-component-registry.mjs",
         "registry:check": "node scripts/generate-component-registry.mjs --check",

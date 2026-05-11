@@ -27,10 +27,7 @@ const studs = computed(() => {
     const result: Array<{cx: number; cy: number}> = [];
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < columns; col++) {
-            result.push({
-                cx: STROKE / 2 + PAD + CELL / 2 + col * CELL,
-                cy: STROKE / 2 + PAD + CELL / 2 + row * CELL,
-            });
+            result.push({cx: STROKE / 2 + PAD + CELL / 2 + col * CELL, cy: STROKE / 2 + PAD + CELL / 2 + row * CELL});
         }
     }
     return result;

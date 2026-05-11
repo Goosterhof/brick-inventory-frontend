@@ -175,9 +175,7 @@ const saveToken = async () => {
     tokenError.value = '';
 
     try {
-        await familyHttpService.putRequest('/family/rebrickable-token', {
-            rebrickableUserToken: rebrickableToken.value,
-        });
+        await familyHttpService.putRequest('/family/rebrickable-token', {rebrickableUserToken: rebrickableToken.value});
         tokenSaved.value = true;
         rebrickableToken.value = '';
     } catch (error: unknown) {

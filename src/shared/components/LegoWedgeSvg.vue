@@ -22,16 +22,10 @@ const viewBox = `0 0 ${bodyWidth + STROKE + SHADOW_OFFSET} ${bodyHeight + STROKE
 const studs = (() => {
     const result: Array<{cx: number; cy: number}> = [];
     for (let col = 0; col < COLUMNS; col++) {
-        result.push({
-            cx: halfStroke + PAD + CELL / 2 + col * CELL,
-            cy: halfStroke + PAD + CELL / 2,
-        });
+        result.push({cx: halfStroke + PAD + CELL / 2 + col * CELL, cy: halfStroke + PAD + CELL / 2});
     }
     for (let col = 0; col < COLUMNS - 1; col++) {
-        result.push({
-            cx: halfStroke + PAD + CELL / 2 + col * CELL,
-            cy: halfStroke + PAD + CELL + CELL / 2,
-        });
+        result.push({cx: halfStroke + PAD + CELL / 2 + col * CELL, cy: halfStroke + PAD + CELL + CELL / 2});
     }
     return result;
 })();

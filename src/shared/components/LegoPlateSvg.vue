@@ -24,10 +24,7 @@ const studs = (() => {
     const result: Array<{cx: number; cy: number}> = [];
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLUMNS; col++) {
-            result.push({
-                cx: halfStroke + PAD + CELL / 2 + col * CELL,
-                cy: halfStroke + PAD + CELL / 2 + row * CELL,
-            });
+            result.push({cx: halfStroke + PAD + CELL / 2 + col * CELL, cy: halfStroke + PAD + CELL / 2 + row * CELL});
         }
     }
     return result;

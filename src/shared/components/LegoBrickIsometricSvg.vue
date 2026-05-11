@@ -61,12 +61,7 @@ const projectedExtents = computed(() => {
     ];
     const xs = corners.map((c) => c.sx);
     const ys = corners.map((c) => c.sy);
-    return {
-        minX: Math.min(...xs),
-        maxX: Math.max(...xs),
-        minY: Math.min(...ys),
-        maxY: Math.max(...ys),
-    };
+    return {minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys)};
 });
 
 // Studs sit above the brick top. Their topmost screen-y is minY (the top brick
