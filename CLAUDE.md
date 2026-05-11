@@ -66,7 +66,7 @@ Three structures in our development:
 src/
 ├── apps/                    # Each building in our complex
 │   ├── families/            # Main tower
-│   │   ├── domains/         # Departments (auth, home, sets, storage, parts, settings, about)
+│   │   ├── domains/         # Departments (one folder per feature area)
 │   │   │   └── [domain]/
 │   │   │       ├── index.ts       # Route exports
 │   │   │       ├── pages/         # Page components
@@ -79,7 +79,7 @@ src/
 │   ├── admin/               # Corner office
 │   └── showcase/            # Showroom floor
 └── shared/                  # The supply warehouse — shared across all buildings
-    ├── components/          # Prefab wall sections (~25 reusable components)
+    ├── components/          # Prefab wall sections
     │   ├── forms/inputs/    # Standard window/door units (Text, Select, Date, Number, Textarea)
     │   └── scanner/         # Barcode scanning module
     ├── services/            # Service factories (http, auth, router, loading, toast, translation)
