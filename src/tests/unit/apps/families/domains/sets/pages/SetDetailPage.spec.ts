@@ -1,5 +1,5 @@
-import AssignPartModal from '@app/domains/sets/modals/AssignPartModal.vue';
 import SetDetailPage from '@app/domains/sets/pages/SetDetailPage.vue';
+import PlacePartModal from '@app/modals/PlacePartModal.vue';
 import BackButton from '@shared/components/BackButton.vue';
 import LoadingState from '@shared/components/LoadingState.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
@@ -17,8 +17,20 @@ vi.mock('@script-development/fs-helpers', () => createMockFsHelpers());
 
 vi.mock('@phosphor-icons/vue', () => ({PhX: {template: '<i />'}}));
 
-vi.mock('@app/domains/sets/modals/AssignPartModal.vue', () => ({
-    default: {name: 'AssignPartModal', template: '<div />', props: ['open', 'part', 'existingLocations']},
+vi.mock('@app/modals/PlacePartModal.vue', () => ({
+    default: {
+        name: 'PlacePartModal',
+        template: '<div />',
+        props: [
+            'open',
+            'partIdentity',
+            'defaultQuantity',
+            'maxQuantity',
+            'neededBySetNums',
+            'existingLocations',
+            'title',
+        ],
+    },
 }));
 
 const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockPatch} = vi.hoisted(() => ({
@@ -582,7 +594,7 @@ describe('SetDetailPage', () => {
         expect(wrapper.text()).not.toContain('sets.buildCheck');
     });
 
-    it('should open assign modal when a part is clicked', async () => {
+    it('should open the place modal with the migrated part identity when a part is clicked', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
@@ -601,13 +613,23 @@ describe('SetDetailPage', () => {
         await flushPromises();
 
         // Assert
-        const modal = wrapper.findComponent(AssignPartModal);
+        const modal = wrapper.findComponent(PlacePartModal);
         expect(modal.exists()).toBe(true);
         expect(modal.props('open')).toBe(true);
-        expect(modal.props('part')).toMatchObject({part: {name: 'Brick 2 x 4'}});
+        expect(modal.props('partIdentity')).toStrictEqual({
+            partId: 10,
+            partNum: '3001',
+            partName: 'Brick 2 x 4',
+            colorId: 1,
+            colorName: 'Red',
+            colorHex: 'CC0000',
+            partImageUrl: 'https://example.com/3001.jpg',
+        });
+        expect(modal.props('title')).toBe('sets.assignPartTitle');
+        expect(modal.props('defaultQuantity')).toBe(10);
     });
 
-    it('should close assign modal on close event', async () => {
+    it('should close the place modal on close event', async () => {
         // Arrange
         mockGetOrFailById.mockResolvedValue(createMockAdapted());
         mockGetRequest
@@ -624,10 +646,38 @@ describe('SetDetailPage', () => {
         await flushPromises();
 
         // Act
-        wrapper.findComponent(AssignPartModal).vm.$emit('close');
+        wrapper.findComponent(PlacePartModal).vm.$emit('close');
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(AssignPartModal).exists()).toBe(false);
+        expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+    });
+
+    it('should refetch parts after a successful placement', async () => {
+        // Arrange
+        mockGetOrFailById.mockResolvedValue(createMockAdapted());
+        mockGetRequest
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}})
+            .mockResolvedValueOnce({data: mockSetWithPartsResponse})
+            .mockResolvedValueOnce({data: {entries: []}});
+        const wrapper = shallowMount(SetDetailPage);
+        await flushPromises();
+        const primaryButtons = wrapper.findAllComponents(PrimaryButton);
+        const loadPartsButton = primaryButtons.find((btn) => btn.text().includes('sets.loadParts'));
+        await loadPartsButton?.trigger('click');
+        await flushPromises();
+        const partListItems = wrapper.findAllComponents(PartListItem);
+        await partListItems[0]?.trigger('click');
+        await flushPromises();
+        const callsBeforeAssign = mockGetRequest.mock.calls.length;
+
+        // Act
+        wrapper.findComponent(PlacePartModal).vm.$emit('assigned');
+        await flushPromises();
+
+        // Assert — modal closes and a fresh /parts fetch fires.
+        expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+        expect(mockGetRequest.mock.calls.length).toBeGreaterThan(callsBeforeAssign);
     });
 });

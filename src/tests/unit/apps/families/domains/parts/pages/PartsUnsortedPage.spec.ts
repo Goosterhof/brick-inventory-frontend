@@ -1,8 +1,10 @@
-import PartsMissingPage from '@app/domains/parts/pages/PartsMissingPage.vue';
+import PartsUnsortedPage from '@app/domains/parts/pages/PartsUnsortedPage.vue';
+import PlacePartModal from '@app/modals/PlacePartModal.vue';
 import BackButton from '@shared/components/BackButton.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
 import FilterChip from '@shared/components/FilterChip.vue';
 import TextInput from '@shared/components/forms/inputs/TextInput.vue';
+import ListItemButton from '@shared/components/ListItemButton.vue';
 import PageHeader from '@shared/components/PageHeader.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
 import PrimaryButton from '@shared/components/PrimaryButton.vue';
@@ -19,15 +21,13 @@ const {
     createMockFormError,
 } = await vi.hoisted(() => import('../../../../../../helpers'));
 
-const {mockGetRequest, mockGoToRoute, mockToBrickLinkXml, mockDownloadBrickLink, mockDownloadCsv, mockToCsv} =
-    vi.hoisted(() => ({
-        mockGetRequest: vi.fn<() => Promise<unknown>>(),
-        mockGoToRoute: vi.fn<() => Promise<void>>(),
-        mockToBrickLinkXml: vi.fn<(entries: readonly unknown[]) => string>(() => '<xml />'),
-        mockDownloadBrickLink: vi.fn<(xml: string, filename: string) => void>(),
-        mockDownloadCsv: vi.fn<(csv: string, filename: string) => void>(),
-        mockToCsv: vi.fn<(headers: string[], rows: string[][]) => string>(() => 'csv'),
-    }));
+const {mockGetRequest, mockGoToRoute, mockDownloadCsv, mockToCsv, mockToastShow} = vi.hoisted(() => ({
+    mockGetRequest: vi.fn<() => Promise<unknown>>(),
+    mockGoToRoute: vi.fn<() => Promise<void>>(),
+    mockDownloadCsv: vi.fn<(csv: string, filename: string) => void>(),
+    mockToCsv: vi.fn<(headers: string[], rows: string[][]) => string>(() => 'csv'),
+    mockToastShow: vi.fn<(props: {message: string; variant?: 'success' | 'error'}) => string>(() => 'toast-id'),
+}));
 
 vi.mock('axios', () => createMockAxios());
 vi.mock('string-ts', () => createMockStringTs());
@@ -69,6 +69,26 @@ vi.mock('@shared/components/PartListItem.vue', () => ({
     },
 }));
 
+vi.mock('@shared/components/ListItemButton.vue', () => ({
+    default: {name: 'ListItemButton', template: '<button @click=\'$emit("click")\'><slot /></button>'},
+}));
+
+vi.mock('@app/modals/PlacePartModal.vue', () => ({
+    default: {
+        name: 'PlacePartModal',
+        template: '<div />',
+        props: [
+            'open',
+            'partIdentity',
+            'defaultQuantity',
+            'maxQuantity',
+            'neededBySetNums',
+            'existingLocations',
+            'title',
+        ],
+    },
+}));
+
 vi.mock('@shared/components/PrimaryButton.vue', () => ({
     default: {
         name: 'PrimaryButton',
@@ -78,24 +98,20 @@ vi.mock('@shared/components/PrimaryButton.vue', () => ({
 }));
 
 vi.mock('@shared/helpers/csv', () => ({downloadCsv: mockDownloadCsv, toCsv: mockToCsv}));
-vi.mock('@shared/helpers/bricklinkWantedList', () => ({
-    toBrickLinkWantedListXml: mockToBrickLinkXml,
-    downloadBrickLinkWantedList: mockDownloadBrickLink,
-}));
 
 vi.mock('@app/services', () =>
     createMockFamilyServices({
         familyHttpService: {getRequest: mockGetRequest},
         familyAuthService: {isLoggedIn: {value: true}},
         familyRouterService: {goToRoute: mockGoToRoute},
+        familyToastService: {show: mockToastShow},
     }),
 );
 
 /**
  * Fixture mirrors the real `/family-sets/missing-parts` shortfall row shape
- * after camelCase conversion at the HTTP boundary. Verified against
- * `app/Http/Resources/FamilyMissingPartsResourceData.php` +
- * `app/Actions/FamilySet/GetFamilyMissingPartsAction.php` (Liaison M3).
+ * after camelCase conversion. Same endpoint as PartsMissingPage — only the
+ * framing differs ("parts to place" vs "parts to buy").
  */
 const makeEntry = (overrides: Record<string, unknown> = {}) => ({
     partId: 100,
@@ -116,7 +132,7 @@ const makePayload = (shortfalls: Record<string, unknown>[] = [makeEntry()], unkn
     data: {shortfalls, unknownFamilySetIds},
 });
 
-describe('PartsMissingPage', () => {
+describe('PartsUnsortedPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
@@ -126,19 +142,19 @@ describe('PartsMissingPage', () => {
         mockGetRequest.mockResolvedValue(makePayload([]));
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(PageHeader).props('title')).toBe('parts.missingTitle');
+        expect(wrapper.findComponent(PageHeader).props('title')).toBe('parts.unsortedTitle');
     });
 
-    it('fetches the master shopping list on mount', async () => {
+    it('fetches the master shopping list on mount (same endpoint as PartsMissingPage)', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([]));
 
         // Act
-        shallowMount(PartsMissingPage);
+        shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
@@ -150,10 +166,10 @@ describe('PartsMissingPage', () => {
         mockGetRequest.mockReturnValue(new Promise(() => {}));
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
 
         // Assert
-        expect(wrapper.find("[data-testid='missing-loading']").exists()).toBe(true);
+        expect(wrapper.find("[data-testid='unsorted-loading']").exists()).toBe(true);
     });
 
     it('shows the empty state when there are no entries and no unknown sets', async () => {
@@ -161,11 +177,11 @@ describe('PartsMissingPage', () => {
         mockGetRequest.mockResolvedValue(makePayload([]));
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
-        expect(wrapper.findComponent(EmptyState).props('message')).toBe('parts.missingEmpty');
+        expect(wrapper.findComponent(EmptyState).props('message')).toBe('parts.unsortedEmpty');
     });
 
     it('shows a non-intrusive error message when the fetch fails', async () => {
@@ -173,24 +189,24 @@ describe('PartsMissingPage', () => {
         mockGetRequest.mockRejectedValue(new Error('Network error'));
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("[data-testid='missing-error']").exists()).toBe(true);
+        expect(wrapper.find("[data-testid='unsorted-error']").exists()).toBe(true);
     });
 
-    it('renders one PartListItem per entry with shortfall as the quantity', async () => {
+    it('renders one PartListItem per entry with shortfall as the to-place quantity', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(
             makePayload([
-                makeEntry({partId: 1, partName: 'Brick A', shortfall: 2}),
-                makeEntry({partId: 2, partName: 'Brick B', shortfall: 5}),
+                makeEntry({partNum: '3001', partName: 'Brick A', shortfall: 2}),
+                makeEntry({partNum: '3002', partName: 'Brick B', shortfall: 5}),
             ]),
         );
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
@@ -200,7 +216,7 @@ describe('PartsMissingPage', () => {
         expect(brickB?.props('quantity')).toBe(5);
     });
 
-    it('shows the summary totals (shortfall count and distinct sets)', async () => {
+    it('shows the summary totals (to-place count and distinct sets)', async () => {
         // Arrange — three distinct LEGO set numbers across the two shortfalls.
         mockGetRequest.mockResolvedValue(
             makePayload([
@@ -210,12 +226,12 @@ describe('PartsMissingPage', () => {
         );
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
-        const summaryLine = wrapper.find('[data-total-shortfall]');
-        expect(summaryLine.attributes('data-total-shortfall')).toBe('7');
+        const summaryLine = wrapper.find('[data-total-to-place]');
+        expect(summaryLine.attributes('data-total-to-place')).toBe('7');
         expect(summaryLine.attributes('data-affected-sets')).toBe('3');
     });
 
@@ -224,11 +240,11 @@ describe('PartsMissingPage', () => {
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()], ['42', '43']));
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
-        const callout = wrapper.find("[data-testid='missing-unknown-sets']");
+        const callout = wrapper.find("[data-testid='unsorted-unknown-sets']");
         expect(callout.exists()).toBe(true);
         expect(callout.attributes('data-unknown-count')).toBe('2');
     });
@@ -238,30 +254,30 @@ describe('PartsMissingPage', () => {
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("[data-testid='missing-unknown-sets']").exists()).toBe(false);
+        expect(wrapper.find("[data-testid='unsorted-unknown-sets']").exists()).toBe(false);
     });
 
     it('renders the unknown-sets callout even when there are no entries', async () => {
-        // Arrange — an edge case: all owned sets are unsynced, no shortfall rows
+        // Arrange — edge case: all owned sets unsynced, no shortfall rows
         mockGetRequest.mockResolvedValue(makePayload([], ['11', '12']));
 
         // Act
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Assert
-        expect(wrapper.find("[data-testid='missing-unknown-sets']").exists()).toBe(true);
+        expect(wrapper.find("[data-testid='unsorted-unknown-sets']").exists()).toBe(true);
         expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
     });
 
     it('navigates back to the parts inventory when the back button is clicked', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Act
@@ -274,11 +290,11 @@ describe('PartsMissingPage', () => {
     it('navigates to settings when the unknown-sets sync link is clicked', async () => {
         // Arrange
         mockGetRequest.mockResolvedValue(makePayload([makeEntry()], ['7']));
-        const wrapper = shallowMount(PartsMissingPage);
+        const wrapper = shallowMount(PartsUnsortedPage);
         await flushPromises();
 
         // Act
-        await wrapper.find("[data-testid='missing-unknown-sets-link']").trigger('click');
+        await wrapper.find("[data-testid='unsorted-unknown-sets-link']").trigger('click');
 
         // Assert
         expect(mockGoToRoute).toHaveBeenCalledWith('settings');
@@ -288,9 +304,12 @@ describe('PartsMissingPage', () => {
         it('filters by part name (case insensitive)', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
-                makePayload([makeEntry({partId: 1, partName: 'Plate'}), makeEntry({partId: 2, partName: 'Brick'})]),
+                makePayload([
+                    makeEntry({partNum: '3001', partName: 'Plate'}),
+                    makeEntry({partNum: '3002', partName: 'Brick'}),
+                ]),
             );
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Act
@@ -305,10 +324,8 @@ describe('PartsMissingPage', () => {
 
         it('filters by part number', async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue(
-                makePayload([makeEntry({partId: 1, partNum: '3001'}), makeEntry({partId: 2, partNum: '3002'})]),
-            );
-            const wrapper = shallowMount(PartsMissingPage);
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry({partNum: '3001'}), makeEntry({partNum: '3002'})]));
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Act
@@ -322,7 +339,7 @@ describe('PartsMissingPage', () => {
         it("shows a 'no results' empty state when the search matches nothing", async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Act
@@ -331,7 +348,7 @@ describe('PartsMissingPage', () => {
 
             // Assert
             const emptyStates = wrapper.findAllComponents(EmptyState);
-            expect(emptyStates.find((e) => e.props('message') === 'parts.missingNoResults')?.exists()).toBe(true);
+            expect(emptyStates.find((e) => e.props('message') === 'parts.unsortedNoResults')?.exists()).toBe(true);
         });
     });
 
@@ -340,14 +357,14 @@ describe('PartsMissingPage', () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
-                    makeEntry({partId: 1, partName: 'Small', shortfall: 2}),
-                    makeEntry({partId: 2, partName: 'Large', shortfall: 10}),
-                    makeEntry({partId: 3, partName: 'Medium', shortfall: 5}),
+                    makeEntry({partNum: '3001', partName: 'Small', shortfall: 2}),
+                    makeEntry({partNum: '3002', partName: 'Large', shortfall: 10}),
+                    makeEntry({partNum: '3003', partName: 'Medium', shortfall: 5}),
                 ]),
             );
 
             // Act
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Assert
@@ -359,16 +376,16 @@ describe('PartsMissingPage', () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
-                    makeEntry({partId: 1, partName: 'Charlie'}),
-                    makeEntry({partId: 2, partName: 'Alpha'}),
-                    makeEntry({partId: 3, partName: 'Bravo'}),
+                    makeEntry({partNum: '3001', partName: 'Charlie'}),
+                    makeEntry({partNum: '3002', partName: 'Alpha'}),
+                    makeEntry({partNum: '3003', partName: 'Bravo'}),
                 ]),
             );
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Act
-            const nameChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === 'parts.missingSortName');
+            const nameChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === 'parts.unsortedSortName');
             nameChip?.vm.$emit('click');
             await flushPromises();
 
@@ -378,8 +395,7 @@ describe('PartsMissingPage', () => {
         });
 
         it('sorts by color name when the color chip is clicked (empty strings sort first)', async () => {
-            // Arrange — backend always ships a color name string; an empty string
-            // (defensive edge case) sorts before alphabetic names via localeCompare.
+            // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
                     makeEntry({partNum: '3001', colorName: 'Red'}),
@@ -387,11 +403,11 @@ describe('PartsMissingPage', () => {
                     makeEntry({partNum: '3003', colorName: 'Blue'}),
                 ]),
             );
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Act
-            const colorChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === 'parts.missingSortColor');
+            const colorChip = wrapper.findAllComponents(FilterChip).find((c) => c.text() === 'parts.unsortedSortColor');
             colorChip?.vm.$emit('click');
             await flushPromises();
 
@@ -405,71 +421,58 @@ describe('PartsMissingPage', () => {
             mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
 
             // Act
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Assert — shortfall is active by default
             const shortfallChip = wrapper
                 .findAllComponents(FilterChip)
-                .find((c) => c.text() === 'parts.missingSortShortfall');
+                .find((c) => c.text() === 'parts.unsortedSortShortfall');
             expect(shortfallChip?.props('active')).toBe(true);
         });
     });
 
     describe('export', () => {
-        it('shows the export buttons when there are entries', async () => {
+        it('shows the CSV export button when there are entries', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
 
             // Act
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Assert
             const labels = wrapper.findAllComponents(PrimaryButton).map((b) => b.text());
-            expect(labels).toContain('parts.missingExportBrickLink');
-            expect(labels).toContain('parts.missingExportCsv');
+            expect(labels).toContain('parts.unsortedExportCsv');
         });
 
-        it('hides the export buttons when there are no entries', async () => {
+        it('does not render a BrickLink export button — buying decisions stay on the missing-parts page', async () => {
             // Arrange
-            mockGetRequest.mockResolvedValue(makePayload([], ['1']));
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
 
             // Act
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Assert
             const labels = wrapper.findAllComponents(PrimaryButton).map((b) => b.text());
             expect(labels).not.toContain('parts.missingExportBrickLink');
-            expect(labels).not.toContain('parts.missingExportCsv');
         });
 
-        it('passes filtered entries (search + sort respected) to the BrickLink helper', async () => {
-            // Arrange — backend has no Rebrickable→BrickLink colour mapping yet, so
-            // the page emits `brickLinkColorId: null` for every entry (the helper
-            // omits `<COLOR>` for null/undefined). See bricklinkWantedList.ts CAVEAT.
-            mockGetRequest.mockResolvedValue(
-                makePayload([makeEntry({partNum: '3001', shortfall: 3}), makeEntry({partNum: '3002', shortfall: 7})]),
-            );
-            const wrapper = shallowMount(PartsMissingPage);
-            await flushPromises();
+        it('hides the CSV export button when there are no entries', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(makePayload([], ['1']));
 
             // Act
-            await wrapper.findComponent(TextInput).setValue('3002');
-            await flushPromises();
-            const exportBtn = wrapper
-                .findAllComponents(PrimaryButton)
-                .find((b) => b.text() === 'parts.missingExportBrickLink');
-            exportBtn?.vm.$emit('click');
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Assert
-            expect(mockToBrickLinkXml).toHaveBeenCalledWith([{partNum: '3002', brickLinkColorId: null, shortfall: 7}]);
-            expect(mockDownloadBrickLink).toHaveBeenCalledWith('<xml />', 'bricklink-wanted-list.xml');
+            const labels = wrapper.findAllComponents(PrimaryButton).map((b) => b.text());
+            expect(labels).not.toContain('parts.unsortedExportCsv');
         });
 
-        it('passes the full column set to the CSV helper', async () => {
+        it('passes the placement-oriented column set to the CSV helper', async () => {
             // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
@@ -484,35 +487,49 @@ describe('PartsMissingPage', () => {
                     }),
                 ]),
             );
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Act
             const exportBtn = wrapper
                 .findAllComponents(PrimaryButton)
-                .find((b) => b.text() === 'parts.missingExportCsv');
+                .find((b) => b.text() === 'parts.unsortedExportCsv');
             exportBtn?.vm.$emit('click');
             await flushPromises();
 
-            // Assert
+            // Assert — placement headers (no "Quantity Needed", "Shortfall" buying terms)
             expect(mockToCsv).toHaveBeenCalledWith(
-                [
-                    'Part Number',
-                    'Part Name',
-                    'Color',
-                    'Quantity Needed',
-                    'Quantity Stored',
-                    'Shortfall',
-                    'Needed By Sets',
-                ],
-                [['3001', 'Brick 2 x 4', 'Red', '10', '3', '7', '2']],
+                ['Part Number', 'Part Name', 'Color', 'To Place', 'Already Stored', 'Across Sets'],
+                [['3001', 'Brick 2 x 4', 'Red', '7', '3', '2']],
             );
-            expect(mockDownloadCsv).toHaveBeenCalledWith('csv', 'master-shopping-list.csv');
+            expect(mockDownloadCsv).toHaveBeenCalledWith('csv', 'parts-to-place.csv');
+        });
+
+        it('respects the active search filter when exporting CSV', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(
+                makePayload([makeEntry({partNum: '3001', shortfall: 3}), makeEntry({partNum: '3002', shortfall: 7})]),
+            );
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+
+            // Act — narrow to one entry, then export
+            await wrapper.findComponent(TextInput).setValue('3002');
+            await flushPromises();
+            const exportBtn = wrapper
+                .findAllComponents(PrimaryButton)
+                .find((b) => b.text() === 'parts.unsortedExportCsv');
+            exportBtn?.vm.$emit('click');
+            await flushPromises();
+
+            // Assert — only the filtered row appears in the CSV body
+            const rowsArg = mockToCsv.mock.calls[0]?.[1];
+            expect(rowsArg).toHaveLength(1);
+            expect(rowsArg?.[0]?.[0]).toBe('3002');
         });
 
         it('emits a CSV row with the color name verbatim (defensive empty-string case)', async () => {
-            // Arrange — defensive: if backend ever ships an empty colorName,
-            // the CSV column should reflect that without crashing.
+            // Arrange
             mockGetRequest.mockResolvedValue(
                 makePayload([
                     makeEntry({
@@ -525,19 +542,116 @@ describe('PartsMissingPage', () => {
                     }),
                 ]),
             );
-            const wrapper = shallowMount(PartsMissingPage);
+            const wrapper = shallowMount(PartsUnsortedPage);
             await flushPromises();
 
             // Act
             const exportBtn = wrapper
                 .findAllComponents(PrimaryButton)
-                .find((b) => b.text() === 'parts.missingExportCsv');
+                .find((b) => b.text() === 'parts.unsortedExportCsv');
             exportBtn?.vm.$emit('click');
             await flushPromises();
 
             // Assert
             const rowArg = mockToCsv.mock.calls[0]?.[1];
             expect(rowArg?.[0]?.[2]).toBe('');
+        });
+    });
+
+    describe('place modal flow', () => {
+        it('does not render the PlacePartModal until a row is clicked', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
+
+            // Act
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+        });
+
+        it('opens the PlacePartModal with the selected entry mapped to a partIdentity payload', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(
+                makePayload([
+                    makeEntry({
+                        partId: 100,
+                        partNum: '3001',
+                        partName: 'Brick 2x4',
+                        colorId: 4,
+                        colorName: 'Red',
+                        colorHex: 'C91A09',
+                        partImageUrl: 'https://example.com/3001.jpg',
+                        shortfall: 7,
+                        neededBySetNums: ['75313-1', '10497-1'],
+                    }),
+                ]),
+            );
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+
+            // Act — clicking the wrapper button is what triggers openPlaceModal.
+            await wrapper.findAllComponents(ListItemButton)[0]?.trigger('click');
+            await flushPromises();
+
+            // Assert
+            const modal = wrapper.findComponent(PlacePartModal);
+            expect(modal.exists()).toBe(true);
+            expect(modal.props('open')).toBe(true);
+            expect(modal.props('partIdentity')).toStrictEqual({
+                partId: 100,
+                partNum: '3001',
+                partName: 'Brick 2x4',
+                colorId: 4,
+                colorName: 'Red',
+                colorHex: 'C91A09',
+                partImageUrl: 'https://example.com/3001.jpg',
+            });
+            expect(modal.props('defaultQuantity')).toBe(7);
+            expect(modal.props('maxQuantity')).toBe(7);
+            expect(modal.props('neededBySetNums')).toStrictEqual(['75313-1', '10497-1']);
+        });
+
+        it('closes the modal without refetching or toasting when close fires', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry()]));
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+            await wrapper.findAllComponents(ListItemButton)[0]?.trigger('click');
+            await flushPromises();
+            const callsAfterOpen = mockGetRequest.mock.calls.length;
+
+            // Act
+            wrapper.findComponent(PlacePartModal).vm.$emit('close');
+            await flushPromises();
+
+            // Assert
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
+            expect(mockGetRequest.mock.calls.length).toBe(callsAfterOpen);
+            expect(mockToastShow).not.toHaveBeenCalled();
+        });
+
+        it('refetches the master shopping list, fires a success toast, and closes when assigned fires', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue(makePayload([makeEntry({partName: 'Brick 2x4', shortfall: 7})]));
+            const wrapper = shallowMount(PartsUnsortedPage);
+            await flushPromises();
+            await wrapper.findAllComponents(ListItemButton)[0]?.trigger('click');
+            await flushPromises();
+            const callsAfterOpen = mockGetRequest.mock.calls.length;
+
+            // Act
+            wrapper
+                .findComponent(PlacePartModal)
+                .vm.$emit('assigned', {storageOptionId: 5, storageOptionName: 'Drawer A', quantity: 4});
+            await flushPromises();
+
+            // Assert
+            expect(mockGetRequest.mock.calls.length).toBe(callsAfterOpen + 1);
+            expect(mockGetRequest).toHaveBeenLastCalledWith('/family-sets/missing-parts');
+            expect(mockToastShow).toHaveBeenCalledWith({message: 'parts.placeSuccessToast', variant: 'success'});
+            expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
         });
     });
 });

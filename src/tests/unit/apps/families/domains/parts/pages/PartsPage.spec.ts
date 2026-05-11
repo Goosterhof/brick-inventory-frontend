@@ -727,6 +727,47 @@ describe('PartsPage', () => {
         });
     });
 
+    describe('unsorted parts CTA', () => {
+        it('renders the CTA regardless of whether any parts are stored', async () => {
+            // Arrange — the placement-workflow CTA is discoverable from day one,
+            // even before the user has anything sorted.
+            mockGetRequest.mockResolvedValue({data: makeEnvelope([])});
+
+            // Act
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Assert
+            const cta = wrapper.find("[data-testid='parts-unsorted-cta']");
+            expect(cta.exists()).toBe(true);
+            expect(cta.text()).toBe('parts.seeUnsortedCta');
+        });
+
+        it('navigates to the parts-unsorted route when the CTA is clicked', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.find("[data-testid='parts-unsorted-cta']").trigger('click');
+
+            // Assert
+            expect(mockGoToRoute).toHaveBeenCalledWith('parts-unsorted');
+        });
+
+        it('coexists with the missing-parts CTA — both are rendered, neither replaces the other', async () => {
+            // Arrange
+            mockGetRequest.mockResolvedValue({data: makeEnvelope()});
+            const wrapper = shallowMount(PartsPage);
+            await flushPromises();
+
+            // Assert — both doors into the same data are visible side by side
+            expect(wrapper.find("[data-testid='parts-missing-cta']").exists()).toBe(true);
+            expect(wrapper.find("[data-testid='parts-unsorted-cta']").exists()).toBe(true);
+        });
+    });
+
     describe('reverse lookup modal', () => {
         it('opens PartUsageModal with the row partNum and colorId when a row is clicked', async () => {
             // Arrange

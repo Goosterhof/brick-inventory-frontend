@@ -7,4 +7,5 @@ export {familyStorageService} from './storage';
 export {familyLoadingService} from './loading';
 export {familySoundService} from './sound';
 export {familyThemeService} from './theme';
+export {familyToastService} from './toast';
 export {familyTranslationService, type Locale, type TranslationSchema} from './translation';
