@@ -4,6 +4,7 @@ import type {Adapted} from '@script-development/fs-adapter-store';
 
 import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from '@app/services';
 import {storageOptionStoreModule} from '@app/stores';
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
 import ConfirmDialog from '@shared/components/ConfirmDialog.vue';
 import DangerButton from '@shared/components/DangerButton.vue';
 import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
@@ -32,7 +33,8 @@ onMounted(async () => {
     // path so the normal overview-then-edit flow keeps its single round-trip.
     try {
         adapted.value = await storageOptionStoreModule.getOrFailById(id);
-    } catch {
+    } catch (error) {
+        if (!(error instanceof EntryNotFoundError)) throw error;
         await storageOptionStoreModule.retrieveAll();
         adapted.value = await storageOptionStoreModule.getOrFailById(id);
     }

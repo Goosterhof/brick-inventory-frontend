@@ -5,6 +5,7 @@ import type {Adapted} from '@script-development/fs-adapter-store';
 
 import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
 import {storageOptionStoreModule} from '@app/stores';
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
 import BackButton from '@shared/components/BackButton.vue';
 import DetailRow from '@shared/components/DetailRow.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
@@ -17,7 +18,6 @@ const {t} = familyTranslationService;
 const adapted = ref<Adapted<StorageOption> | null>(null);
 const storageParts = ref<StorageOptionPart[]>([]);
 const loading = ref(true);
-const partsLoading = ref(true);
 
 onMounted(async () => {
     const id = familyRouterService.currentRouteId.value;
@@ -27,7 +27,8 @@ onMounted(async () => {
     let storageOption: Adapted<StorageOption>;
     try {
         storageOption = await storageOptionStoreModule.getOrFailById(id);
-    } catch {
+    } catch (error) {
+        if (!(error instanceof EntryNotFoundError)) throw error;
         await storageOptionStoreModule.retrieveAll();
         storageOption = await storageOptionStoreModule.getOrFailById(id);
     }
@@ -35,7 +36,6 @@ onMounted(async () => {
     adapted.value = storageOption;
     storageParts.value = partsResponse.data;
     loading.value = false;
-    partsLoading.value = false;
 });
 
 const goToEdit = async () => {
@@ -83,9 +83,7 @@ const goBack = async () => {
                     {{ t('storage.parts').value }} ({{ storageParts.length }})
                 </h2>
 
-                <LoadingState v-if="partsLoading" :message="t('storage.loadingParts').value" />
-
-                <EmptyState v-else-if="storageParts.length === 0" :message="t('storage.noParts').value" />
+                <EmptyState v-if="storageParts.length === 0" :message="t('storage.noParts').value" />
 
                 <div v-else flex="~ col" gap="2">
                     <PartListItem
