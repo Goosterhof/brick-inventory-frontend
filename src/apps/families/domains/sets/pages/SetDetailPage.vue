@@ -7,6 +7,7 @@ import type {Adapted} from '@script-development/fs-adapter-store';
 import PlacePartModal from '@app/modals/PlacePartModal.vue';
 import {familyHttpService, familyRouterService, familyTranslationService} from '@app/services';
 import {familySetStoreModule} from '@app/stores';
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
 import BackButton from '@shared/components/BackButton.vue';
 import LoadingState from '@shared/components/LoadingState.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
@@ -118,7 +119,8 @@ onMounted(async () => {
     // hydrated the store. Fall back to retrieveAll so getOrFailById has the item to return.
     try {
         adapted.value = await familySetStoreModule.getOrFailById(id);
-    } catch {
+    } catch (error) {
+        if (!(error instanceof EntryNotFoundError)) throw error;
         await familySetStoreModule.retrieveAll();
         adapted.value = await familySetStoreModule.getOrFailById(id);
     }

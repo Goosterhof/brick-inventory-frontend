@@ -4,6 +4,7 @@ import type {Adapted} from '@script-development/fs-adapter-store';
 
 import {familyHttpService, familyRouterService, familySoundService, familyTranslationService} from '@app/services';
 import {familySetStoreModule} from '@app/stores';
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
 import ConfirmDialog from '@shared/components/ConfirmDialog.vue';
 import DangerButton from '@shared/components/DangerButton.vue';
 import DateInput from '@shared/components/forms/inputs/DateInput.vue';
@@ -44,7 +45,8 @@ onMounted(async () => {
     // hydrated the store. Fall back to retrieveAll so getOrFailById has the item to return.
     try {
         adapted.value = await familySetStoreModule.getOrFailById(id);
-    } catch {
+    } catch (error) {
+        if (!(error instanceof EntryNotFoundError)) throw error;
         await familySetStoreModule.retrieveAll();
         adapted.value = await familySetStoreModule.getOrFailById(id);
     }
