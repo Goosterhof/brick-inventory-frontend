@@ -1,4 +1,5 @@
 import StorageDetailPage from '@app/domains/storage/pages/StorageDetailPage.vue';
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
 import BackButton from '@shared/components/BackButton.vue';
 import DetailRow from '@shared/components/DetailRow.vue';
 import EmptyState from '@shared/components/EmptyState.vue';
@@ -16,11 +17,12 @@ vi.mock('axios', () => createMockAxios());
 vi.mock('string-ts', () => createMockStringTs());
 vi.mock('@script-development/fs-helpers', () => createMockFsHelpers());
 
-const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId} = vi.hoisted(() => ({
+const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockRetrieveAll} = vi.hoisted(() => ({
     mockGetOrFailById: vi.fn<(id: number) => Promise<unknown>>(),
     mockGetRequest: vi.fn<(endpoint: string) => Promise<unknown>>(),
     mockGoToRoute: vi.fn<() => Promise<void>>(),
     mockCurrentRouteId: {value: 5},
+    mockRetrieveAll: vi.fn<() => Promise<void>>(),
 }));
 
 vi.mock('@app/services', () =>
@@ -35,7 +37,7 @@ vi.mock('@app/stores', () =>
     createMockFamilyStores({
         storageOptionStoreModule: {
             getAll: {value: []},
-            retrieveAll: vi.fn<() => Promise<void>>(),
+            retrieveAll: mockRetrieveAll,
             getById: vi.fn<() => unknown>(),
             getOrFailById: mockGetOrFailById,
             generateNew: vi.fn<() => unknown>(),
@@ -310,5 +312,39 @@ describe('StorageDetailPage', () => {
 
         // Assert
         expect(wrapper.findComponent(EmptyState).props('message')).toBe('storage.noParts');
+    });
+
+    it('should call retrieveAll when store is empty on direct navigation (EntryNotFoundError path)', async () => {
+        // Arrange
+        mockGetOrFailById
+            .mockRejectedValueOnce(new EntryNotFoundError('StorageOption', 5))
+            .mockResolvedValueOnce(createMockAdapted());
+        mockRetrieveAll.mockResolvedValue(undefined);
+        mockGetRequest.mockResolvedValue({data: []});
+
+        // Act
+        shallowMount(StorageDetailPage);
+        await flushPromises();
+
+        // Assert
+        expect(mockRetrieveAll).toHaveBeenCalledOnce();
+        expect(mockGetOrFailById).toHaveBeenCalledTimes(2);
+    });
+
+    it('should re-throw non-EntryNotFoundError from getOrFailById on mount', async () => {
+        // Arrange
+        const unexpectedError = new Error('Unexpected error');
+        mockGetOrFailById.mockRejectedValue(unexpectedError);
+
+        // Act
+        const errorHandler = vi.fn<(err: unknown, instance: unknown, info: string) => void>();
+        const wrapper = shallowMount(StorageDetailPage);
+        wrapper.vm.$.appContext.config.errorHandler = errorHandler;
+        await flushPromises();
+
+        // Assert
+        expect(errorHandler).toHaveBeenCalled();
+        expect(errorHandler.mock.calls[0]?.[0]).toBe(unexpectedError);
+        expect(mockRetrieveAll).not.toHaveBeenCalled();
     });
 });
