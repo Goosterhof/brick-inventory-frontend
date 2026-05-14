@@ -13,9 +13,7 @@ const {familySet, completionPercentage, completionLoading} = defineProps<{
     completionLoading: boolean;
 }>();
 
-defineEmits<{
-    click: [];
-}>();
+defineEmits<{click: []}>();
 
 const {t} = familyTranslationService;
 
