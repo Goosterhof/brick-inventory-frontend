@@ -1,5 +1,6 @@
 import SetDetailPage from '@app/domains/sets/pages/SetDetailPage.vue';
 import PlacePartModal from '@app/modals/PlacePartModal.vue';
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
 import BackButton from '@shared/components/BackButton.vue';
 import LoadingState from '@shared/components/LoadingState.vue';
 import PartListItem from '@shared/components/PartListItem.vue';
@@ -33,13 +34,16 @@ vi.mock('@app/modals/PlacePartModal.vue', () => ({
     },
 }));
 
-const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockPatch} = vi.hoisted(() => ({
-    mockGetOrFailById: vi.fn<() => Promise<unknown>>(),
-    mockGetRequest: vi.fn<() => Promise<unknown>>(),
-    mockGoToRoute: vi.fn<() => Promise<void>>(),
-    mockCurrentRouteId: {value: 42},
-    mockPatch: vi.fn<() => Promise<unknown>>(),
-}));
+const {mockGetOrFailById, mockGetRequest, mockGoToRoute, mockCurrentRouteId, mockPatch, mockRetrieveAll} = vi.hoisted(
+    () => ({
+        mockGetOrFailById: vi.fn<() => Promise<unknown>>(),
+        mockGetRequest: vi.fn<() => Promise<unknown>>(),
+        mockGoToRoute: vi.fn<() => Promise<void>>(),
+        mockCurrentRouteId: {value: 42},
+        mockPatch: vi.fn<() => Promise<unknown>>(),
+        mockRetrieveAll: vi.fn<() => Promise<void>>(),
+    }),
+);
 
 vi.mock('@app/services', () =>
     createMockFamilyServices({
@@ -53,7 +57,7 @@ vi.mock('@app/stores', () =>
     createMockFamilyStores({
         familySetStoreModule: {
             getAll: {value: []},
-            retrieveAll: vi.fn<() => Promise<void>>(),
+            retrieveAll: mockRetrieveAll,
             getById: vi.fn<() => unknown>(),
             getOrFailById: mockGetOrFailById,
             generateNew: vi.fn<() => unknown>(),
@@ -679,5 +683,38 @@ describe('SetDetailPage', () => {
         // Assert — modal closes and a fresh /parts fetch fires.
         expect(wrapper.findComponent(PlacePartModal).exists()).toBe(false);
         expect(mockGetRequest.mock.calls.length).toBeGreaterThan(callsBeforeAssign);
+    });
+
+    it('should call retrieveAll when store is empty on direct navigation (EntryNotFoundError path)', async () => {
+        // Arrange
+        mockGetOrFailById
+            .mockRejectedValueOnce(new EntryNotFoundError('FamilySet', 42))
+            .mockResolvedValueOnce(createMockAdapted());
+        mockRetrieveAll.mockResolvedValue(undefined);
+
+        // Act
+        shallowMount(SetDetailPage);
+        await flushPromises();
+
+        // Assert
+        expect(mockRetrieveAll).toHaveBeenCalledOnce();
+        expect(mockGetOrFailById).toHaveBeenCalledTimes(2);
+    });
+
+    it('should re-throw non-EntryNotFoundError from getOrFailById on mount', async () => {
+        // Arrange
+        const unexpectedError = new Error('Unexpected error');
+        mockGetOrFailById.mockRejectedValue(unexpectedError);
+
+        // Act
+        const errorHandler = vi.fn<(err: unknown, instance: unknown, info: string) => void>();
+        const wrapper = shallowMount(SetDetailPage);
+        wrapper.vm.$.appContext.config.errorHandler = errorHandler;
+        await flushPromises();
+
+        // Assert
+        expect(errorHandler).toHaveBeenCalled();
+        expect(errorHandler.mock.calls[0]?.[0]).toBe(unexpectedError);
+        expect(mockRetrieveAll).not.toHaveBeenCalled();
     });
 });

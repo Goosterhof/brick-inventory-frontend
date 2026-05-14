@@ -1,4 +1,5 @@
 import EditStoragePage from '@app/domains/storage/pages/EditStoragePage.vue';
+import {EntryNotFoundError} from '@script-development/fs-adapter-store';
 import ConfirmDialog from '@shared/components/ConfirmDialog.vue';
 import DangerButton from '@shared/components/DangerButton.vue';
 import NumberInput from '@shared/components/forms/inputs/NumberInput.vue';
@@ -32,13 +33,16 @@ vi.mock('@shared/components/forms/FormError.vue', () => createMockFormError());
 vi.mock('@shared/components/forms/FormField.vue', () => createMockFormField());
 vi.mock('@shared/components/forms/FormLabel.vue', () => createMockFormLabel());
 
-const {mockGetOrFailById, mockGoToRoute, mockCurrentRouteId, mockPatch, mockDelete} = vi.hoisted(() => ({
-    mockGetOrFailById: vi.fn<() => Promise<unknown>>(),
-    mockGoToRoute: vi.fn<() => Promise<void>>(),
-    mockCurrentRouteId: {value: 5},
-    mockPatch: vi.fn<() => Promise<unknown>>(),
-    mockDelete: vi.fn<() => Promise<void>>(),
-}));
+const {mockGetOrFailById, mockGoToRoute, mockCurrentRouteId, mockPatch, mockDelete, mockRetrieveAll} = vi.hoisted(
+    () => ({
+        mockGetOrFailById: vi.fn<() => Promise<unknown>>(),
+        mockGoToRoute: vi.fn<() => Promise<void>>(),
+        mockCurrentRouteId: {value: 5},
+        mockPatch: vi.fn<() => Promise<unknown>>(),
+        mockDelete: vi.fn<() => Promise<void>>(),
+        mockRetrieveAll: vi.fn<() => Promise<void>>(),
+    }),
+);
 
 vi.mock('@app/services', () =>
     createMockFamilyServices({
@@ -51,7 +55,7 @@ vi.mock('@app/stores', () =>
     createMockFamilyStores({
         storageOptionStoreModule: {
             getAll: {value: []},
-            retrieveAll: vi.fn<() => Promise<void>>(),
+            retrieveAll: mockRetrieveAll,
             getById: vi.fn<() => unknown>(),
             getOrFailById: mockGetOrFailById,
             generateNew: vi.fn<() => unknown>(),
@@ -280,5 +284,38 @@ describe('EditStoragePage', () => {
 
         const dangerButton = wrapper.findComponent(DangerButton);
         expect(dangerButton.exists()).toBe(true);
+    });
+
+    it('should call retrieveAll when store is empty on direct navigation (EntryNotFoundError path)', async () => {
+        // Arrange
+        mockGetOrFailById
+            .mockRejectedValueOnce(new EntryNotFoundError('StorageOption', 5))
+            .mockResolvedValueOnce(createMockAdapted());
+        mockRetrieveAll.mockResolvedValue(undefined);
+
+        // Act
+        shallowMount(EditStoragePage);
+        await flushPromises();
+
+        // Assert
+        expect(mockRetrieveAll).toHaveBeenCalledOnce();
+        expect(mockGetOrFailById).toHaveBeenCalledTimes(2);
+    });
+
+    it('should re-throw non-EntryNotFoundError from getOrFailById on mount', async () => {
+        // Arrange
+        const unexpectedError = new Error('Unexpected error');
+        mockGetOrFailById.mockRejectedValue(unexpectedError);
+
+        // Act
+        const errorHandler = vi.fn<(err: unknown, instance: unknown, info: string) => void>();
+        const wrapper = shallowMount(EditStoragePage);
+        wrapper.vm.$.appContext.config.errorHandler = errorHandler;
+        await flushPromises();
+
+        // Assert
+        expect(errorHandler).toHaveBeenCalled();
+        expect(errorHandler.mock.calls[0]?.[0]).toBe(unexpectedError);
+        expect(mockRetrieveAll).not.toHaveBeenCalled();
     });
 });

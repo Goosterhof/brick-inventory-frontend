@@ -153,11 +153,7 @@ const exportCsvFile = () => {
 const sortLabelKey: Record<
     SortField,
     'parts.unsortedSortShortfall' | 'parts.unsortedSortName' | 'parts.unsortedSortColor'
-> = {
-    shortfall: 'parts.unsortedSortShortfall',
-    name: 'parts.unsortedSortName',
-    color: 'parts.unsortedSortColor',
-};
+> = {shortfall: 'parts.unsortedSortShortfall', name: 'parts.unsortedSortName', color: 'parts.unsortedSortColor'};
 const allSortFields: SortField[] = ['shortfall', 'name', 'color'];
 </script>
 
