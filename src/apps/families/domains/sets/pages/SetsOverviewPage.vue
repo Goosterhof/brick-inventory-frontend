@@ -65,7 +65,7 @@ const filteredSets = computed(() => {
     if (query) {
         result = result.filter((s) => {
             const name = (s.set?.name ?? '').toLowerCase();
-            const setNum = (s.set?.setNum ?? '').toLowerCase();
+            const setNum = (s.set?.setNum ?? s.setNum).toLowerCase();
             return name.includes(query) || setNum.includes(query);
         });
     }
