@@ -297,6 +297,29 @@ describe('SetsOverviewPage', () => {
             expect(renderedSetNames(wrapper)).toStrictEqual(['Millennium Falcon']);
         });
 
+        it('should filter wishlist sets by set number when no nested set summary exists', async () => {
+            // Arrange — wishlist item without a resolved set summary; only top-level setNum is available
+            const wishlistSet = {
+                id: 3,
+                setId: 0,
+                setNum: '40000-1',
+                quantity: 1,
+                status: 'wishlist' as const,
+                purchaseDate: null,
+                notes: null,
+            };
+            mockAllItems.value = [mockAdaptedSet, wishlistSet];
+            const wrapper = shallowMount(SetsOverviewPage);
+            await flushPromises();
+
+            // Act
+            await wrapper.findComponent({name: 'TextInput'}).setValue('40000');
+            await flushPromises();
+
+            // Assert
+            expect(renderedSetNames(wrapper)).toStrictEqual(['40000-1']);
+        });
+
         it('should filter sets by status', async () => {
             // Arrange
             mockAllItems.value = [mockAdaptedSet, mockSealedSet];
