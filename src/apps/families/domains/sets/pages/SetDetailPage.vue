@@ -20,8 +20,22 @@ const setWithParts = ref<SetWithParts | null>(null);
 const storageMap = ref<StorageMapEntry[]>([]);
 const loading = ref(true);
 const partsLoading = ref(false);
+const partsSyncing = ref(false);
+const partsError = ref<string | null>(null);
 const selectedPart = ref<SetPart | null>(null);
 const showAssignModal = ref(false);
+
+interface PartsSyncPending {
+    set_num: string;
+    status: 'pending' | 'in_progress';
+    message: string;
+}
+
+// Discriminate the parts endpoint's two success shapes: the synced payload
+// (full SetWithParts) versus the 202 polling envelope.
+const isPartsSyncPending = (data: SetWithParts | PartsSyncPending): data is PartsSyncPending =>
+    typeof (data as PartsSyncPending).status === 'string' &&
+    ['pending', 'in_progress'].includes((data as PartsSyncPending).status);
 
 const statusKey: Record<
     FamilySet['status'],
@@ -98,10 +112,45 @@ const showMissingParts = ref(false);
 const brickLinkUrl = (partNum: string): string =>
     `https://www.bricklink.com/v2/catalog/catalogitem.page?P=${encodeURIComponent(partNum)}`;
 
+const SYNC_POLL_INTERVAL_MS = 2000;
+const SYNC_POLL_MAX_ATTEMPTS = 15; // ~30 seconds before giving up
+
 const loadParts = async (setNum: string) => {
     partsLoading.value = true;
-    const response = await familyHttpService.getRequest<SetWithParts>(`/sets/${setNum}/parts`);
-    setWithParts.value = response.data;
+    partsSyncing.value = false;
+    partsError.value = null;
+
+    // Backend returns the full SetWithParts payload (HTTP 200) when parts are
+    // already synced, a pending envelope (HTTP 202) while a sync job is still
+    // running, and 5xx on a hard failure. Discriminate on payload shape
+    // (a `status` of 'pending'/'in_progress' vs. the SetWithParts shape) so
+    // the polling loop survives mock/test environments that don't surface
+    // the underlying HTTP status code.
+    for (let attempt = 1; attempt <= SYNC_POLL_MAX_ATTEMPTS; attempt++) {
+        try {
+            const response = await familyHttpService.getRequest<SetWithParts | PartsSyncPending>(
+                `/sets/${setNum}/parts`,
+            );
+
+            if (isPartsSyncPending(response.data)) {
+                partsSyncing.value = true;
+                if (attempt === SYNC_POLL_MAX_ATTEMPTS) {
+                    partsError.value = t('sets.syncTimeout').value;
+                    partsLoading.value = false;
+                    return;
+                }
+                await new Promise((resolve) => setTimeout(resolve, SYNC_POLL_INTERVAL_MS));
+                continue;
+            }
+
+            setWithParts.value = response.data;
+            break;
+        } catch {
+            partsError.value = t('sets.syncFailed').value;
+            partsLoading.value = false;
+            return;
+        }
+    }
 
     try {
         const mapResponse = await familyHttpService.getRequest<StorageMapResponse>(`/sets/${setNum}/storage-map`);
@@ -110,6 +159,7 @@ const loadParts = async (setNum: string) => {
         storageMap.value = [];
     }
 
+    partsSyncing.value = false;
     partsLoading.value = false;
 };
 
@@ -282,6 +332,7 @@ const toPartIdentity = (part: SetPart): PartIdentity => ({
                         <PrimaryButton @click="goToEdit">{{ t('sets.edit').value }}</PrimaryButton>
                         <PrimaryButton
                             v-if="!setWithParts && adapted.status !== 'wishlist'"
+                            :disabled="partsLoading"
                             @click="loadParts(adapted.set?.setNum ?? adapted.setNum)"
                         >
                             {{ t('sets.loadParts').value }}
@@ -291,7 +342,18 @@ const toPartIdentity = (part: SetPart): PartIdentity => ({
             </div>
 
             <div v-if="partsLoading" m="t-8">
-                <LoadingState :message="t('sets.loadingParts').value" />
+                <LoadingState :message="partsSyncing ? t('sets.syncingParts').value : t('sets.loadingParts').value" />
+            </div>
+
+            <div
+                v-else-if="partsError"
+                m="t-8"
+                p="4"
+                bg="brick-red-light"
+                class="brick-border brick-shadow"
+                data-testid="parts-error"
+            >
+                <p font="bold">{{ partsError }}</p>
             </div>
 
             <div v-else-if="setWithParts" m="t-8">
