@@ -24,7 +24,7 @@ const inputStateClass = computed(() => {
     if (error) {
         return 'bg-brick-red-light border-brick-red brick-shadow-error focus:brick-shadow-error-hover';
     }
-    return 'bg-[var(--brick-card-bg)] brick-shadow focus:brick-shadow-hover focus:bg-brick-yellow';
+    return 'bg-[var(--brick-card-bg)] brick-shadow focus:brick-shadow-hover focus:bg-brick-yellow focus:text-brick-ink';
 });
 </script>
 

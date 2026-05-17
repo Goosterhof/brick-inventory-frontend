@@ -99,14 +99,14 @@ const onSubmit = () => {
             <div
                 v-if="showDuplicateWarning"
                 p="4"
-                bg="yellow-100"
+                bg="[var(--brick-surface-highlight)]"
                 class="brick-border"
                 border="1"
                 flex="~ col"
                 gap="2"
                 data-testid="duplicate-warning"
             >
-                <p font="bold" text="sm">
+                <p font="bold" text="sm [var(--brick-highlight-text)]">
                     {{
                         t('sets.duplicateWarning')
                             .value.replace('{quantity}', String(duplicateMatch?.quantity ?? 0))

@@ -192,8 +192,8 @@ onUnmounted(() => {
                 <button
                     type="button"
                     p="x-4 y-2"
-                    bg="white hover:brick-yellow focus:brick-yellow"
-                    text="black"
+                    bg="[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow"
+                    text="[var(--brick-page-text)] hover:brick-ink focus:brick-ink"
                     font="bold"
                     uppercase
                     tracking="wide"
@@ -209,11 +209,17 @@ onUnmounted(() => {
             </div>
         </div>
 
+        <!--
+             Capture button: intentional dark accent that inverts to brick-yellow on hover/focus.
+             The black/white inversion is the primary affordance for the camera action and is
+             held constant across themes; only the disabled surface tokenizes (gray-600 disabled
+             text remains a fixed contrast on the disabled subtle bg).
+        -->
         <button
             type="button"
             p="x-6 y-3"
-            bg="black hover:brick-yellow focus:brick-yellow disabled:gray-200"
-            text="white hover:black focus:black disabled:gray-600"
+            bg="black hover:brick-yellow focus:brick-yellow disabled:[var(--brick-surface-subtle)]"
+            text="white hover:black focus:black disabled:[var(--brick-muted-text)]"
             font="bold"
             uppercase
             tracking="wide"

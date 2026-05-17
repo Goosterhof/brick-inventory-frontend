@@ -299,7 +299,9 @@ onUnmounted(() => {
                     <p v-if="memberRemoved" text="baseplate-green" font="bold">
                         {{ t('settings.memberRemoved').value }}
                     </p>
-                    <p v-if="removeMemberError" text="brick-red-dark" font="bold">{{ removeMemberError }}</p>
+                    <p v-if="removeMemberError" text="[var(--brick-danger-text)]" font="bold">
+                        {{ removeMemberError }}
+                    </p>
                 </div>
 
                 <ConfirmDialog
@@ -337,7 +339,7 @@ onUnmounted(() => {
                     </DangerButton>
                 </div>
 
-                <p v-if="inviteCodeError" text="brick-red-dark" font="bold">{{ inviteCodeError }}</p>
+                <p v-if="inviteCodeError" text="[var(--brick-danger-text)]" font="bold">{{ inviteCodeError }}</p>
 
                 <PrimaryButton
                     v-if="!inviteCode"
@@ -365,7 +367,7 @@ onUnmounted(() => {
                     <p v-if="inviteEmailSent" text="baseplate-green" font="bold">
                         {{ t('settings.inviteEmailSent').value }}
                     </p>
-                    <p v-if="inviteEmailError" text="brick-red-dark" font="bold">{{ inviteEmailError }}</p>
+                    <p v-if="inviteEmailError" text="[var(--brick-danger-text)]" font="bold">{{ inviteEmailError }}</p>
 
                     <PrimaryButton type="submit" :disabled="inviteEmailSubmitting" :sound-service="familySoundService">
                         {{ t('settings.sendInviteByEmail').value }}
@@ -414,7 +416,7 @@ onUnmounted(() => {
                             }).value
                         }}
                     </p>
-                    <p v-else-if="importJob.status === 'failed'" font="bold" text="brick-red-dark">
+                    <p v-else-if="importJob.status === 'failed'" font="bold" text="[var(--brick-danger-text)]">
                         {{ t('settings.importFailed').value }}
                     </p>
                     <p v-else font="bold">
@@ -431,13 +433,17 @@ onUnmounted(() => {
                         gap="1"
                         text="sm"
                     >
-                        <p v-for="(detail, index) in importJob.failedSetDetails" :key="index" text="brick-red-dark">
+                        <p
+                            v-for="(detail, index) in importJob.failedSetDetails"
+                            :key="index"
+                            text="[var(--brick-danger-text)]"
+                        >
                             {{ detail.setNum }}: {{ detail.error }}
                         </p>
                     </div>
                 </div>
 
-                <p v-if="importError" text="brick-red-dark" font="bold">{{ importError }}</p>
+                <p v-if="importError" text="[var(--brick-danger-text)]" font="bold">{{ importError }}</p>
 
                 <PrimaryButton :disabled="importing" :sound-service="familySoundService" @click="importSets">
                     {{ importing ? t('settings.importing').value : t('settings.importButton').value }}

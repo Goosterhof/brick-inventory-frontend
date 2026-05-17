@@ -27,7 +27,7 @@ const handleConfirm = () => {
                 p="x-4 y-3"
                 border="3 brick-red"
                 bg="[var(--brick-card-bg)] hover:brick-red-light focus:brick-red-light"
-                text="brick-red-dark"
+                text="[var(--brick-danger-text)]"
                 font="bold"
                 uppercase
                 tracking="wide"

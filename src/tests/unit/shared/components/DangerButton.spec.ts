@@ -53,7 +53,7 @@ describe('DangerButton', () => {
         expect(wrapper.attributes('bg')).toBe(
             '[var(--brick-card-bg)] hover:brick-red-light focus:brick-red-light disabled:[var(--brick-surface-subtle)]',
         );
-        expect(wrapper.attributes('text')).toBe('brick-red-dark disabled:[var(--brick-muted-text)]');
+        expect(wrapper.attributes('text')).toBe('[var(--brick-danger-text)] disabled:[var(--brick-muted-text)]');
         expect(wrapper.attributes('font')).toBe('bold');
         expect(wrapper.attributes('uppercase')).toBeDefined();
     });
