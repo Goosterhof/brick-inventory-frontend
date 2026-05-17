@@ -71,5 +71,5 @@ The branch is already named `claude/fix-dark-mode-contrast-cvPUo` and is the cur
 
 ---
 
-**Status:** Open
-**Journal:** _to be filed by Lead Brick Architect_
+**Status:** Complete
+**Journal:** [`.claude/records/journals/2026-05-17-dark-mode-contrast-violations.md`](../journals/2026-05-17-dark-mode-contrast-violations.md)

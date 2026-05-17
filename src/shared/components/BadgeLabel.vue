@@ -9,7 +9,13 @@ const {variant = 'default'} = defineProps<{variant?: 'default' | 'highlight' | '
         font="bold"
         :class="variant === 'muted' ? '' : 'brick-border'"
         :border="variant === 'muted' ? '1 black dashed' : '1'"
-        :bg="variant === 'highlight' ? 'brick-yellow' : variant === 'muted' ? 'gray-100' : 'gray-200'"
+        :bg="
+            variant === 'highlight'
+                ? 'brick-yellow'
+                : variant === 'muted'
+                  ? '[var(--brick-surface-subtle)]'
+                  : '[var(--brick-card-bg)]'
+        "
     >
         <slot />
     </span>

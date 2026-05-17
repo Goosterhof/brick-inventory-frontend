@@ -147,14 +147,14 @@ const goBack = async () => {
                     <div
                         v-if="showDuplicateWarning"
                         p="4"
-                        bg="yellow-100"
+                        bg="[var(--brick-surface-highlight)]"
                         class="brick-border"
                         border="1"
                         flex="~ col"
                         gap="2"
                         data-testid="duplicate-warning"
                     >
-                        <p font="bold" text="sm">
+                        <p font="bold" text="sm [var(--brick-highlight-text)]">
                             {{
                                 t('sets.duplicateWarning')
                                     .value.replace('{quantity}', String(duplicateMatch?.quantity ?? 0))
@@ -174,7 +174,7 @@ const goBack = async () => {
                         </button>
                     </div>
 
-                    <p v-if="addError" text="brick-red-dark" font="bold">{{ addError }}</p>
+                    <p v-if="addError" text="[var(--brick-danger-text)]" font="bold">{{ addError }}</p>
 
                     <PrimaryButton :disabled="isAdding" @click="addToCollection">{{
                         t('sets.addToCollection').value

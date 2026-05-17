@@ -14,12 +14,12 @@ describe('BadgeLabel', () => {
     });
 
     describe('styling', () => {
-        it('should have default gray background', () => {
+        it('should have default card-surface background', () => {
             // Arrange & Act
             const wrapper = shallowMount(BadgeLabel, {slots: {default: 'Status'}});
 
             // Assert
-            expect(wrapper.attributes('bg')).toBe('gray-200');
+            expect(wrapper.attributes('bg')).toBe('[var(--brick-card-bg)]');
         });
 
         it('should have yellow background when highlight variant', () => {
@@ -49,12 +49,12 @@ describe('BadgeLabel', () => {
             expect(wrapper.attributes('border')).toBe('1');
         });
 
-        it('should have dashed border and light background when muted variant', () => {
+        it('should have dashed border and subtle-surface background when muted variant', () => {
             // Arrange & Act
             const wrapper = shallowMount(BadgeLabel, {props: {variant: 'muted'}, slots: {default: 'Wishlist'}});
 
             // Assert
-            expect(wrapper.attributes('bg')).toBe('gray-100');
+            expect(wrapper.attributes('bg')).toBe('[var(--brick-surface-subtle)]');
             expect(wrapper.attributes('border')).toBe('1 black dashed');
             expect(wrapper.attributes('class')).not.toContain('brick-border');
         });

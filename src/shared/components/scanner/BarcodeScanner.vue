@@ -187,8 +187,8 @@ onUnmounted(() => {
                 <button
                     type="button"
                     p="x-4 y-2"
-                    bg="white hover:brick-yellow focus:brick-yellow"
-                    text="black"
+                    bg="[var(--brick-card-bg)] hover:brick-yellow focus:brick-yellow"
+                    text="[var(--brick-page-text)] hover:brick-ink focus:brick-ink"
                     font="bold"
                     uppercase
                     tracking="wide"

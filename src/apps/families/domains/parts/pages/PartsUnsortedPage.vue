@@ -216,12 +216,12 @@ const allSortFields: SortField[] = ['shortfall', 'name', 'color'];
                     <div
                         v-if="unknownFamilySetIds.length > 0"
                         p="3"
-                        bg="yellow-100"
+                        bg="[var(--brick-surface-highlight)]"
                         class="brick-border"
                         data-testid="unsorted-unknown-sets"
                         :data-unknown-count="unknownFamilySetIds.length"
                     >
-                        <p text="sm [var(--brick-page-text)]">
+                        <p text="sm [var(--brick-highlight-text)]">
                             {{
                                 t('parts.unsortedUnknownSets').value.replace(
                                     '{count}',
@@ -229,7 +229,7 @@ const allSortFields: SortField[] = ['shortfall', 'name', 'color'];
                                 )
                             }}
                             <button
-                                text="sm [var(--brick-page-text)]"
+                                text="sm [var(--brick-highlight-text)]"
                                 underline
                                 font="bold"
                                 cursor="pointer"

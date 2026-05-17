@@ -15,8 +15,12 @@ defineEmits<{close: []}>();
         :class="[variant === 'error' ? 'border-3 border-brick-red brick-shadow-error' : 'brick-border brick-shadow']"
     >
         <PhCheckCircle v-if="variant === 'success'" size="20" aria-hidden="true" />
-        <PhWarningCircle v-else size="20" text="brick-red-dark" aria-hidden="true" />
-        <p flex="1" :text="variant === 'error' ? 'brick-red-dark' : '[var(--brick-page-text)]'" font="medium">
+        <PhWarningCircle v-else size="20" text="[var(--brick-danger-text)]" aria-hidden="true" />
+        <p
+            flex="1"
+            :text="variant === 'error' ? '[var(--brick-danger-text)]' : '[var(--brick-page-text)]'"
+            font="medium"
+        >
             {{ message }}
         </p>
         <button

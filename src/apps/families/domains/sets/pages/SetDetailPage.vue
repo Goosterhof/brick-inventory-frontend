@@ -370,7 +370,7 @@ const toPartIdentity = (part: SetPart): PartIdentity => ({
                     <p
                         font="bold"
                         text="lg"
-                        :class="buildStats.canBuild ? 'text-baseplate-green' : 'text-brick-red-dark'"
+                        :class="buildStats.canBuild ? 'text-baseplate-green' : 'text-[var(--brick-danger-text)]'"
                     >
                         {{ buildStats.canBuild ? t('sets.readyToBuild').value : t('sets.notReadyToBuild').value }}
                     </p>
@@ -431,7 +431,7 @@ const toPartIdentity = (part: SetPart): PartIdentity => ({
                                         {{ part.part.partNum }} · {{ part.color.name }}
                                     </p>
                                 </div>
-                                <div text="sm" font="bold" text-color="brick-red-dark">
+                                <div text="sm" font="bold" text-color="[var(--brick-danger-text)]">
                                     {{ part.available }}/{{ part.quantity }}
                                 </div>
                                 <a

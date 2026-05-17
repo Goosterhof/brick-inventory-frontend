@@ -42,9 +42,9 @@ const labelColorClass = computed(() => {
         case 'complete':
             return 'text-baseplate-green';
         case 'empty':
-            return 'text-brick-red-dark';
+            return 'text-[var(--brick-danger-text)]';
         default:
-            return 'text-brick-ink';
+            return 'text-[var(--brick-page-text)]';
     }
 });
 </script>

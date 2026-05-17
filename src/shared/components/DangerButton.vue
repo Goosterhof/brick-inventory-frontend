@@ -9,7 +9,7 @@ const {type = 'button', disabled = false} = defineProps<{type?: 'button' | 'subm
         p="x-4 y-3"
         border="3 brick-red"
         bg="[var(--brick-card-bg)] hover:brick-red-light focus:brick-red-light disabled:[var(--brick-surface-subtle)]"
-        text="brick-red-dark disabled:[var(--brick-muted-text)]"
+        text="[var(--brick-danger-text)] disabled:[var(--brick-muted-text)]"
         font="bold"
         uppercase
         tracking="wide"
