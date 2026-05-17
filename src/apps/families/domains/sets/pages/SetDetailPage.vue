@@ -26,7 +26,7 @@ const selectedPart = ref<SetPart | null>(null);
 const showAssignModal = ref(false);
 
 interface PartsSyncPending {
-    set_num: string;
+    setNum: string;
     status: 'pending' | 'in_progress';
     message: string;
 }
@@ -113,7 +113,7 @@ const brickLinkUrl = (partNum: string): string =>
     `https://www.bricklink.com/v2/catalog/catalogitem.page?P=${encodeURIComponent(partNum)}`;
 
 const SYNC_POLL_INTERVAL_MS = 2000;
-const SYNC_POLL_MAX_ATTEMPTS = 15; // ~30 seconds before giving up
+const SYNC_POLL_MAX_ATTEMPTS = 15;
 
 const loadParts = async (setNum: string) => {
     partsLoading.value = true;
@@ -136,6 +136,7 @@ const loadParts = async (setNum: string) => {
                 partsSyncing.value = true;
                 if (attempt === SYNC_POLL_MAX_ATTEMPTS) {
                     partsError.value = t('sets.syncTimeout').value;
+                    partsSyncing.value = false;
                     partsLoading.value = false;
                     return;
                 }
@@ -147,6 +148,7 @@ const loadParts = async (setNum: string) => {
             break;
         } catch {
             partsError.value = t('sets.syncFailed').value;
+            partsSyncing.value = false;
             partsLoading.value = false;
             return;
         }
