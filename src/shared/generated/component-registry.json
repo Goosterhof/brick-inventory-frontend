@@ -492,7 +492,7 @@
                 "slots": [],
                 "models": []
             },
-            "churn": {"commits": 3, "linesChanged": 15},
+            "churn": {"commits": 2, "linesChanged": 8},
             "dependencyDepth": 0
         },
         "LegoBrickSvg": {
